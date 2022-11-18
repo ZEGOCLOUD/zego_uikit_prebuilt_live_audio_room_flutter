@@ -11,8 +11,6 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_translation.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/seat_manager.dart';
-import 'defines.dart';
-import 'dialogs.dart';
 
 class ZegoPopUpSheetMenu extends StatefulWidget {
   const ZegoPopUpSheetMenu({

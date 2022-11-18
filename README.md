@@ -15,7 +15,7 @@ This will add a line like this to your project's `pubspec.yaml` file (and Flutte
 
 ```dart
 dependencies:
-  zego_uikit_prebuilt_live_audio_room: ^1.0.0 # Add this line
+  zego_uikit_prebuilt_live_audio_room: ^1.0.1 # Add this line
 ```
 
 ### Import the SDK
@@ -52,7 +52,7 @@ Widget build(BuildContext context) {
 }
 ```
 
-**Now, you can start a live stream, other people who enter the same '*live name*' can watch your live stream.**
+**Now, you can start a live audio room, other people who enter the same '*live name*' can watch your live audio room.**
 
 ## How to run
 

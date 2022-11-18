@@ -263,25 +263,29 @@ class ZegoLiveSeatManager {
 
     debugPrint("[seat manager] local is on seat $localSeatIndex, leaving..");
 
-    isLeaveSeatDialogVisible = true;
-    var dialogInfo = translationText.leaveSeatDialogInfo;
-    await showLiveDialog(
-      context: contextQuery(),
-      title: dialogInfo.title,
-      content: dialogInfo.message,
-      leftButtonText: dialogInfo.cancelButtonName,
-      leftButtonCallback: () {
-        isLeaveSeatDialogVisible = false;
-        Navigator.of(contextQuery()).pop(false);
-      },
-      rightButtonText: dialogInfo.confirmButtonName,
-      rightButtonCallback: () async {
-        isLeaveSeatDialogVisible = false;
-        Navigator.of(contextQuery()).pop(true);
+    if (showDialog) {
+      isLeaveSeatDialogVisible = true;
+      var dialogInfo = translationText.leaveSeatDialogInfo;
+      await showLiveDialog(
+        context: contextQuery(),
+        title: dialogInfo.title,
+        content: dialogInfo.message,
+        leftButtonText: dialogInfo.cancelButtonName,
+        leftButtonCallback: () {
+          isLeaveSeatDialogVisible = false;
+          Navigator.of(contextQuery()).pop(false);
+        },
+        rightButtonText: dialogInfo.confirmButtonName,
+        rightButtonCallback: () async {
+          isLeaveSeatDialogVisible = false;
+          Navigator.of(contextQuery()).pop(true);
 
-        await takeOffSeat(localSeatIndex);
-      },
-    );
+          await takeOffSeat(localSeatIndex);
+        },
+      );
+    } else {
+      await takeOffSeat(localSeatIndex);
+    }
   }
 
   Future<void> takeOffSeat(int index, {bool fromHost = false}) async {
