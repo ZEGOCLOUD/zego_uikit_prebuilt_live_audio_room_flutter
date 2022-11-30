@@ -17,6 +17,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/dialogs.dart'
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/live_page.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/plugins.dart';
 import 'live_audio_room_config.dart';
 import 'seat/seat_manager.dart';
@@ -77,10 +78,12 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
   void initState() {
     super.initState();
 
+    correctConfigValue();
+
     WidgetsBinding.instance.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log("version: zego_uikit_prebuilt_live_audio_room:1.0.1; $version");
+      log("version: zego_uikit_prebuilt_live_audio_room:1.0.2; $version");
     });
 
     plugins = ZegoPrebuiltPlugins(
@@ -92,6 +95,8 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       plugins: [ZegoUIKitSignalingPlugin()],
     );
     seatManager = ZegoLiveSeatManager(
+      userID: widget.userID,
+      plugins: plugins,
       config: widget.config,
       translationText: widget.config.translationText,
       contextQuery: () {
@@ -99,17 +104,17 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       },
     );
 
-    plugins.init().then((value) {
-      debugPrint("[live audio room] plugins init done");
-
-      seatManager.init();
-
-      if (ZegoLiveAudioRoomRole.host == widget.config.role) {
-        seatManager.setHostAttribute(true, widget.userID);
-      }
-    });
-
     initToast();
+
+    plugins.init().then((value) {
+      checkPermissions().then((value) {
+        debugPrint("[live audio room] plugins init done");
+        seatManager.init().then((value) {
+          debugPrint("[live audio room] seat manager init done");
+          seatManager.initRoleAndSeat();
+        });
+      });
+    });
     initContext();
   }
 
@@ -166,7 +171,50 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     );
   }
 
-  Future<void> initPermissions() async {
+  void correctConfigValue() {
+    if (widget.config.bottomMenuBarConfig.maxCount > 5) {
+      widget.config.bottomMenuBarConfig.maxCount = 5;
+      debugPrint(
+          'menu bar buttons limited count\'s value  is exceeding the maximum limit');
+    }
+
+    for (var rowConfig in widget.config.layoutConfig.rowConfigs) {
+      if (rowConfig.count < 1) {
+        rowConfig.count = 1;
+        debugPrint(
+            "[live audio room] config column count(${rowConfig.count}) is small than 0, set to 1");
+      }
+      if (rowConfig.count > 4) {
+        rowConfig.count = 4;
+        debugPrint(
+            "[live audio room] config column count(${rowConfig.count}) is bigger than 4, set to 4");
+      }
+    }
+    if (widget.config.layoutConfig.rowSpacing < 0) {
+      widget.config.layoutConfig.rowSpacing = 0;
+      debugPrint(
+          "[live audio room] config row spacing(${widget.config.layoutConfig.rowSpacing}) is not valid, set to 0");
+    }
+
+    int totalSeatCount = widget.config.layoutConfig.rowConfigs
+        .fold(0, (totalCount, rowConfig) => totalCount + rowConfig.count);
+    var isSeatIndexValid = widget.config.seatIndex >= 0 &&
+        widget.config.seatIndex < totalSeatCount;
+    if (!isSeatIndexValid) {
+      debugPrint(
+          "[live audio room] config seat index is not valid, change role to audience and seat index set to -1");
+      widget.config.role = ZegoLiveAudioRoomRole.audience;
+      widget.config.seatIndex = -1;
+    }
+    if (widget.config.role == ZegoLiveAudioRoomRole.audience &&
+        isSeatIndexValid) {
+      debugPrint(
+          "[live audio room] audience config seat index is not valid, set to -1");
+      widget.config.seatIndex = -1;
+    }
+  }
+
+  Future<void> checkPermissions() async {
     bool isMicrophoneGranted = true;
     if (widget.config.turnOnMicrophoneWhenJoining) {
       isMicrophoneGranted = await requestPermission(Permission.microphone);
@@ -183,16 +231,14 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
   void initContext() {
     if (!kIsWeb) {
       assert(widget.appSign.isNotEmpty);
-      initPermissions().then((value) {
-        ZegoUIKit().login(widget.userID, widget.userName).then((value) {
-          ZegoUIKit()
-              .init(
-                appID: widget.appID,
-                appSign: widget.appSign,
-                scenario: ZegoScenario.Live,
-              )
-              .then(onContextInit);
-        });
+      ZegoUIKit().login(widget.userID, widget.userName).then((value) {
+        ZegoUIKit()
+            .init(
+              appID: widget.appID,
+              appSign: widget.appSign,
+              scenario: ZegoScenario.Live,
+            )
+            .then(onContextInit);
       });
     } else {
       assert(widget.tokenServerUrl.isNotEmpty);
@@ -262,7 +308,8 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
   }
 
   Future<bool> onLeaveConfirmation(BuildContext context) async {
-    if (widget.config.confirmDialogInfo == null) {
+    if (widget.config.confirmDialogInfo == null ||
+        seatManager.localRole.value != ZegoLiveAudioRoomRole.host) {
       return true;
     }
 

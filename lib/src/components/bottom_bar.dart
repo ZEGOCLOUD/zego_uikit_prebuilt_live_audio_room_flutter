@@ -18,12 +18,14 @@ import 'message/in_room_message_button.dart';
 
 class ZegoBottomBar extends StatefulWidget {
   final Size buttonSize;
+  final double height;
 
   final ZegoLiveSeatManager seatManager;
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
 
   const ZegoBottomBar({
     Key? key,
+    required this.height,
     required this.config,
     required this.buttonSize,
     required this.seatManager,
@@ -53,32 +55,28 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(color: Colors.transparent),
-      height: 124.r,
+      height: widget.height,
       child: Stack(
         children: [
-          widget.config.showInRoomMessageButton
-              ? SizedBox(
-                  height: 124.r,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      zegoLiveButtonPadding,
-                      const ZegoInRoomMessageButton(),
-                    ],
-                  ),
-                )
-              : const SizedBox(),
-          ZegoLiveAudioRoomRole.host == widget.config.role
-              ? rightToolbar(context)
-              : ValueListenableBuilder<ZegoLiveAudioRoomRole>(
-                  valueListenable: widget.seatManager.role,
-                  builder: (context, role, _) {
-                    updateButtonsByRole();
+          SizedBox(
+            height: 124.r,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                zegoLiveButtonPadding,
+                const ZegoInRoomMessageButton(),
+              ],
+            ),
+          ),
+          ValueListenableBuilder<ZegoLiveAudioRoomRole>(
+            valueListenable: widget.seatManager.localRole,
+            builder: (context, role, _) {
+              updateButtonsByRole();
 
-                    return rightToolbar(context);
-                  },
-                ),
+              return rightToolbar(context);
+            },
+          ),
         ],
       ),
     );
@@ -178,14 +176,14 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                 PrebuiltLiveAudioRoomIconUrls.toolbarMember),
             backgroundColor: Colors.white,
           ),
-          avatarBuilder: widget.config.avatarBuilder,
+          avatarBuilder: widget.config.seatConfig.avatarBuilder,
           seatManager: widget.seatManager,
           translationText: widget.config.translationText,
         );
       case ZegoMenuBarButtonName.toggleMicrophoneButton:
         var microphoneDefaultOn = widget.config.turnOnMicrophoneWhenJoining;
         var localUserID = ZegoUIKit().getLocalUser().id;
-        if (widget.seatManager.hostsNotifier.value.contains(localUserID) ||
+        if (widget.seatManager.isAttributeHost(ZegoUIKit().getLocalUser()) ||
             widget.seatManager.seatsUserMapNotifier.value.values
                 .contains(localUserID)) {
           microphoneDefaultOn = true;
@@ -233,7 +231,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
   }
 
   void updateButtonsByRole() {
-    switch (widget.seatManager.role.value) {
+    switch (widget.seatManager.localRole.value) {
       case ZegoLiveAudioRoomRole.host:
         buttons = widget.config.bottomMenuBarConfig.hostButtons;
         extendButtons = widget.config.bottomMenuBarConfig.hostExtendButtons;

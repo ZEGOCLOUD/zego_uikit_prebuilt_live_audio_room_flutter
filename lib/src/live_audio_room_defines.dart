@@ -6,6 +6,12 @@ enum ZegoMenuBarButtonName {
   soundEffectButton,
 }
 
+enum ZegoLiveAudioRoomRole {
+  host,
+  speaker,
+  audience,
+}
+
 class ZegoDialogInfo {
   final String title;
   final String message;

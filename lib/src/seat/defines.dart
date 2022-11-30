@@ -1,3 +1,3 @@
 // Package imports:
 
-String get attributeKeyHost => "isHost";
+String get attributeKeyRole => "role";

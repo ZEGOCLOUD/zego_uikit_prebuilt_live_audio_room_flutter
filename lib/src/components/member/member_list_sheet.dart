@@ -46,10 +46,15 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
           Container(height: 1.r, color: Colors.white.withOpacity(0.15)),
           SizedBox(
             height: constraints.maxHeight - 1.r - 98.h,
-            child: ValueListenableBuilder<Map<String, String>>(
-              valueListenable: widget.seatManager.seatsUserMapNotifier,
+            child: ValueListenableBuilder<List<String>>(
+              valueListenable: widget.seatManager.hostsNotifier,
               builder: (context, _, __) {
-                return memberListView();
+                return ValueListenableBuilder<Map<String, String>>(
+                  valueListenable: widget.seatManager.seatsUserMapNotifier,
+                  builder: (context, _, __) {
+                    return memberListView();
+                  },
+                );
               },
             ),
           ),
@@ -66,7 +71,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
         /// host(isHost attribute)
         List<ZegoUIKitUser> hostUsers = [];
         remoteUsers.removeWhere((user) {
-          if (!widget.seatManager.isHost(user)) {
+          if (!widget.seatManager.isAttributeHost(user)) {
             return false;
           }
 
@@ -87,22 +92,17 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
 
         List<ZegoUIKitUser> sortUsers = [];
 
-        var localIsHost = widget.seatManager.isHost(localUser);
+        var localIsHost = widget.seatManager.isAttributeHost(localUser);
         if (localIsHost) {
           sortUsers.add(localUser);
         }
         sortUsers += hostUsers;
 
-        var localIsSpeaker = widget.seatManager.isSpeaker(localUser);
-        if (!localIsHost && localIsSpeaker) {
+        if (!localIsHost) {
           sortUsers.add(localUser);
         }
+
         sortUsers += speakers;
-
-        if (!localIsHost && !localIsSpeaker) {
-          sortUsers.add(localUser);
-        }
-
         sortUsers += remoteUsers;
 
         return sortUsers;
@@ -167,7 +167,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
     if (ZegoUIKit().getLocalUser().id == user.id) {
       extensions.add("You");
     }
-    if (widget.seatManager.isHost(user)) {
+    if (widget.seatManager.isAttributeHost(user)) {
       extensions.add("Host");
     } else if (widget.seatManager.isSpeaker(user)) {
       extensions.add("Speaker");

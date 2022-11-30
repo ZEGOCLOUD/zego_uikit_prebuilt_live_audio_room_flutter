@@ -65,11 +65,20 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
       onTap: () async {
         debugPrint("[pop-up sheet] click ${popupItem.text}");
 
+        Navigator.of(context).pop();
+
         switch (popupItem.value) {
           case PopupItemValue.takeOnSeat:
-            widget.seatManager.takeOnSeat(popupItem.data as int);
+            widget.seatManager.takeOnSeat(
+              popupItem.data as int,
+              isForce: false,
+              isDeleteAfterOwnerLeft: true,
+            );
             break;
           case PopupItemValue.takeOffSeat:
+            // clear popup sheet info
+            widget.seatManager
+                .setKickSeatDialogInfo(KickSeatDialogInfo.empty());
             await widget.seatManager.kickSeat(popupItem.data as int);
             break;
           case PopupItemValue.leaveSeat:
@@ -80,8 +89,6 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
         }
 
         widget.onPressed?.call(popupItem.value);
-
-        Navigator.of(context).pop();
       },
       child: Container(
         width: double.infinity,
@@ -112,11 +119,26 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
 }
 
 void showPopUpSheet({
+  required String userID,
   required BuildContext context,
   required List<PopupItem> popupItems,
   required ZegoTranslationText translationText,
   required ZegoLiveSeatManager seatManager,
 }) {
+  seatManager.setPopUpSheetVisible(true);
+
+  var takeOffSeatItemIndex = popupItems
+      .indexWhere((popupItem) => popupItem.value == PopupItemValue.takeOffSeat);
+  if (-1 != takeOffSeatItemIndex) {
+    /// seat user leave, will auto pop this sheet
+    seatManager.setKickSeatDialogInfo(
+      KickSeatDialogInfo(
+        userIndex: popupItems[takeOffSeatItemIndex].data as int,
+        userID: userID,
+      ),
+    );
+  }
+
   showModalBottomSheet(
     barrierColor: ZegoUIKitDefaultTheme.viewBarrierColor,
     backgroundColor: const Color(0xff111014),
@@ -145,5 +167,7 @@ void showPopUpSheet({
         ),
       );
     },
-  );
+  ).whenComplete(() {
+    seatManager.setPopUpSheetVisible(false);
+  });
 }

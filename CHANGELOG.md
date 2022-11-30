@@ -5,3 +5,8 @@
 ## 1.0.1
 
 * fix some bugs
+
+## 1.0.2
+
+* fix some bugs
+* support more layout

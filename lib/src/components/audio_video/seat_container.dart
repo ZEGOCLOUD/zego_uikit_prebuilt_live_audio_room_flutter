@@ -9,22 +9,24 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/seat_manager.dart';
-import 'layout_grid.dart';
+import 'audio_room_layout.dart';
+import 'defines.dart';
 
 /// container of seat
 class ZegoSeatContainer extends StatefulWidget {
   const ZegoSeatContainer({
     Key? key,
     required this.seatManager,
-    required this.layout,
+    required this.layoutConfig,
     this.foregroundBuilder,
     this.backgroundBuilder,
     this.sortAudioVideo,
+    this.avatarBuilder,
   }) : super(key: key);
 
   final ZegoLiveSeatManager seatManager;
 
-  final ZegoLayoutGridConfig layout;
+  final ZegoLiveAudioRoomLayoutConfig layoutConfig;
 
   /// foreground builder of audio video view
   final ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;
@@ -34,12 +36,14 @@ class ZegoSeatContainer extends StatefulWidget {
 
   /// sorter
   final ZegoAudioVideoViewSorter? sortAudioVideo;
+  final ZegoAvatarBuilder? avatarBuilder;
 
   @override
   State<ZegoSeatContainer> createState() => _ZegoAudioVideoContainerState();
 }
 
 class _ZegoAudioVideoContainerState extends State<ZegoSeatContainer> {
+  bool pendingUsers = false;
   List<ZegoUIKitUser> userList = [];
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
@@ -48,7 +52,8 @@ class _ZegoAudioVideoContainerState extends State<ZegoSeatContainer> {
     super.initState();
 
     widget.seatManager.seatsUserMapNotifier.addListener(onSeatsUserChanged);
-    widget.seatManager.hostsNotifier.addListener(onSeatsUserChanged);
+    subscriptions
+        .add(ZegoUIKit().getUserListStream().listen(onUserListUpdated));
   }
 
   @override
@@ -56,7 +61,6 @@ class _ZegoAudioVideoContainerState extends State<ZegoSeatContainer> {
     super.dispose();
 
     widget.seatManager.seatsUserMapNotifier.removeListener(onSeatsUserChanged);
-    widget.seatManager.hostsNotifier.removeListener(onSeatsUserChanged);
 
     for (var subscription in subscriptions) {
       subscription?.cancel();
@@ -65,41 +69,45 @@ class _ZegoAudioVideoContainerState extends State<ZegoSeatContainer> {
 
   @override
   Widget build(BuildContext context) {
-    updateUserList(
-      widget.seatManager.seatsUserMapNotifier.value,
-      widget.seatManager.hostsNotifier.value,
-    );
+    updateUserList(widget.seatManager.seatsUserMapNotifier.value);
 
     return StreamBuilder<List<ZegoUIKitUser>>(
       stream: ZegoUIKit().getAudioVideoListStream(),
       builder: (context, snapshot) {
-        return ZegoLayoutGrid(
-          layoutConfig: widget.layout,
+        return ZegoAudioRoomLayout(
+          layoutConfig: widget.layoutConfig,
           backgroundBuilder: widget.backgroundBuilder,
           foregroundBuilder: widget.foregroundBuilder,
           userList: userList,
           usersItemIndex: getUsersItemIndexIfSpecify(),
+          avatarBuilder: widget.avatarBuilder,
         );
       },
     );
   }
 
   void onSeatsUserChanged() {
+    pendingUsers = false;
     setState(() {
-      updateUserList(
-        widget.seatManager.seatsUserMapNotifier.value,
-        widget.seatManager.hostsNotifier.value,
-      );
+      updateUserList(widget.seatManager.seatsUserMapNotifier.value);
     });
+  }
+
+  void onUserListUpdated(List<ZegoUIKitUser> users) {
+    if (!pendingUsers) {
+      return;
+    }
+
+    onSeatsUserChanged();
   }
 
   Map<String, int> getUsersItemIndexIfSpecify() {
     /// specify user item index by seat index
     Map<String, int> usersItemIndex = {}; //  map<user id, item index>
 
-    if (widget.seatManager.hostsNotifier.value.isNotEmpty) {
-      usersItemIndex[widget.seatManager.hostsNotifier.value.first] = 0;
-    }
+    // if (widget.seatManager.hostsNotifier.value.isNotEmpty) {
+    //   usersItemIndex[widget.seatManager.hostsNotifier.value.first] = 0;
+    // }
 
     widget.seatManager.seatsUserMapNotifier.value.forEach((seatIndex, userID) {
       usersItemIndex[userID] = int.parse(seatIndex);
@@ -108,19 +116,15 @@ class _ZegoAudioVideoContainerState extends State<ZegoSeatContainer> {
     return usersItemIndex;
   }
 
-  void updateUserList(Map<String, String> seatsUser, List<String> hosts) {
+  void updateUserList(Map<String, String> seatsUser) {
     userList.clear();
 
-    for (var hostID in hosts) {
-      var host = ZegoUIKit().getUser(hostID);
-      if (null != host) {
-        userList.add(host);
-      }
-    }
     seatsUser.forEach((seatIndex, seatUserID) {
       var seatUser = ZegoUIKit().getUser(seatUserID);
       if (null != seatUser) {
         userList.add(seatUser);
+      } else {
+        pendingUsers = true;
       }
     });
 

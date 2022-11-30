@@ -9,12 +9,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/seat_manager.dart';
 import 'audio_video/background.dart';
 import 'audio_video/foreground.dart';
-import 'audio_video/layout_grid.dart';
 import 'audio_video/seat_container.dart';
 import 'bottom_bar.dart';
 import 'defines.dart';
@@ -61,8 +61,6 @@ class ZegoLivePageState extends State<ZegoLivePage>
   @override
   void initState() {
     super.initState();
-
-    correctConfigValue();
   }
 
   @override
@@ -88,7 +86,10 @@ class ZegoLivePageState extends State<ZegoLivePage>
                 return Stack(
                   children: [
                     background(constraints.maxHeight),
-                    audioVideoContainer(),
+                    audioVideoContainer(
+                      constraints.maxWidth,
+                      constraints.maxHeight,
+                    ),
                     topBar(),
                     bottomBar(),
                     messageList(),
@@ -100,14 +101,6 @@ class ZegoLivePageState extends State<ZegoLivePage>
         ),
       ),
     );
-  }
-
-  void correctConfigValue() {
-    if (widget.config.bottomMenuBarConfig.maxCount > 5) {
-      widget.config.bottomMenuBarConfig.maxCount = 5;
-      debugPrint('menu bar buttons limited count\'s value  is exceeding the '
-          'maximum limit');
-    }
   }
 
   Widget clickListener({required Widget child}) {
@@ -141,22 +134,22 @@ class ZegoLivePageState extends State<ZegoLivePage>
     );
   }
 
-  Widget audioVideoContainer() {
-    int fixedRow = 2;
-    int fixedColumn = 4;
-    double width = 152.w * fixedColumn + (fixedColumn - 1) * 7.5.w;
-    double height = 171.r * fixedRow + 32.r * (fixedRow - 1);
+  Widget audioVideoContainer(double maxWidth, double maxHeight) {
+    maxHeight -= 169.r; // top position
+    maxHeight -= 124.r; // bottom bar
 
-    var audioVideoContainerLayout = ZegoLayoutGridConfig(
-      fixedRow: fixedRow,
-      fixedColumn: fixedColumn,
-      itemPadding: 10.r,
-      layoutPadding: 0,
-    );
+    bool scrollable = false;
+    int fixedRow = widget.config.layoutConfig.rowConfigs.length;
+    double containerHeight = seatItemHeight * fixedRow +
+        widget.config.layoutConfig.rowSpacing * (fixedRow - 1);
+    if (containerHeight > maxHeight) {
+      containerHeight = maxHeight;
+      scrollable = true;
+    }
 
     var seatContainer = ZegoSeatContainer(
       seatManager: widget.seatManager,
-      layout: audioVideoContainerLayout,
+      layoutConfig: widget.config.layoutConfig,
       foregroundBuilder: (BuildContext context, Size size, ZegoUIKitUser? user,
           Map extraInfo) {
         return ZegoSeatForeground(
@@ -178,23 +171,26 @@ class ZegoLivePageState extends State<ZegoLivePage>
         );
       },
       sortAudioVideo: audioVideoViewSorter,
+      avatarBuilder: widget.config.seatConfig.avatarBuilder,
     );
 
     return Positioned(
       top: 169.r,
       left: 50.w,
       child: SizedBox(
-        width: width,
-        height: height,
-        child: CustomScrollView(
-          scrollDirection: Axis.vertical,
-          slivers: [
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: seatContainer,
-            ),
-          ],
-        ),
+        width: maxWidth - 50.w * 2,
+        height: containerHeight,
+        child: scrollable
+            ? CustomScrollView(
+                scrollDirection: Axis.vertical,
+                slivers: [
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: seatContainer,
+                  ),
+                ],
+              )
+            : seatContainer,
       ),
     );
   }
@@ -227,6 +223,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
     return Align(
       alignment: Alignment.bottomCenter,
       child: ZegoBottomBar(
+        height: 124.r,
         buttonSize: zegoLiveButtonSize,
         config: widget.config,
         seatManager: widget.seatManager,
@@ -240,7 +237,9 @@ class ZegoLivePageState extends State<ZegoLivePage>
       bottom: 124.r,
       child: ConstrainedBox(
         constraints: BoxConstraints.loose(Size(540.r, 400.r)),
-        child: const ZegoInRoomLiveCommentingView(),
+        child: ZegoInRoomLiveCommentingView(
+          itemBuilder: widget.config.inRoomMessageViewConfig.itemBuilder,
+        ),
       ),
     );
   }

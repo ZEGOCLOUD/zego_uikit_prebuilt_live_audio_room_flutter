@@ -40,9 +40,15 @@ class ZegoLeaveAudioRoomButton extends StatelessWidget {
             backgroundColor: ZegoUIKitDefaultTheme.buttonBackgroundColor,
           ),
       onLeaveConfirmation: (context) async {
+        if (seatManager.isRoomAttributesBatching) {
+          debugPrint("[leave] room attribute is batching, ignore");
+          return false;
+        }
+
         var canLeave = await config.onLeaveConfirmation?.call(context) ?? true;
         if (canLeave) {
-          seatManager.clearLocalAttribute();
+          /// take off seat when leave room
+          await seatManager.leaveSeat(showDialog: false);
         }
 
         return canLeave;

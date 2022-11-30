@@ -11,8 +11,10 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_sheet_menu.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/seat_manager.dart';
-import 'layout_grid.dart';
+import 'audio_room_layout.dart';
+import 'defines.dart';
 
 class ZegoSeatForeground extends StatefulWidget {
   final Size size;
@@ -42,7 +44,7 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
       onTap: onClicked,
       child: Stack(
         children: [
-          widget.config.audioVideoViewConfig.foregroundBuilder
+          widget.config.seatConfig.foregroundBuilder
                   ?.call(context, widget.size, widget.user, widget.extraInfo) ??
               Container(color: Colors.transparent),
           widget.user == null
@@ -55,13 +57,24 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
                           bottom: 0,
                           child: userName(context, constraints.maxWidth),
                         ),
-                        widget.seatManager.hostsNotifier.value
-                                .contains(widget.user?.id)
-                            ? Positioned(
-                                bottom: 28.r + 14.r,
+                        ValueListenableBuilder<Map<String, String>>(
+                            valueListenable: ZegoUIKit()
+                                .getInRoomUserAttributesNotifier(
+                                    widget.user?.id ?? ""),
+                            builder: (context, inRoomAttributes, _) {
+                              if (!widget.seatManager
+                                  .isAttributeHost(widget.user)) {
+                                return Container();
+                              }
+
+                              return Positioned(
+                                top: seatItemHeight -
+                                    seatUserNameFontSize -
+                                    seatHostFlagHeight -
+                                    3.r, //  spacing
                                 child: hostFlag(context, constraints.maxWidth),
-                              )
-                            : Container(),
+                              );
+                            }),
                       ],
                     );
                   }),
@@ -82,25 +95,27 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
     List<PopupItem> popupItems = [];
 
     if (null == widget.user) {
-      if (-1 !=
-              widget.seatManager
-                  .getIndexByUserID(ZegoUIKit().getLocalUser().id) &&
-          // 0 index is for host
-          widget.seatManager.hostIndex != index) {
-        widget.seatManager.switchToSeat(index);
-      } else if (ZegoLiveAudioRoomRole.host != widget.config.role &&
-          // 0 index is for host
-          widget.seatManager.hostIndex != index) {
-        /// local is not a host, because host is fixed and default on
-        /// so local user can take on or switch seat if not a host
-        popupItems.add(PopupItem(
-          PopupItemValue.takeOnSeat,
-          widget.config.translationText.takeSeatMenuButton,
-          data: index,
-        ));
+      /// empty seat
+      /// forbid host switch seat and speaker/audience take locked seat
+      if (!widget.seatManager.localIsAHost &&
+          !widget.seatManager.isSeatHostLocked(index)) {
+        if (-1 !=
+            widget.seatManager
+                .getIndexByUserID(ZegoUIKit().getLocalUser().id)) {
+          /// local user is on seat
+          widget.seatManager.switchToSeat(index);
+        } else {
+          /// local user is not on seat
+          popupItems.add(PopupItem(
+            PopupItemValue.takeOnSeat,
+            widget.config.translationText.takeSeatMenuButton,
+            data: index,
+          ));
+        }
       }
     } else {
-      if (ZegoLiveAudioRoomRole.host == widget.config.role &&
+      /// have a user on seat
+      if (ZegoLiveAudioRoomRole.host == widget.seatManager.localRole.value &&
           widget.user?.id != ZegoUIKit().getLocalUser().id) {
         /// host can kick others off seat
         popupItems.add(PopupItem(
@@ -113,8 +128,9 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
           data: index,
         ));
       } else if (ZegoUIKit().getLocalUser().id ==
-          widget.seatManager.getUserByIndex(index)?.id) {
-        /// local leave seat
+              widget.seatManager.getUserByIndex(index)?.id &&
+          ZegoLiveAudioRoomRole.host != widget.seatManager.localRole.value) {
+        /// speaker can local leave seat
         popupItems.add(PopupItem(
           PopupItemValue.leaveSeat,
           widget.config.translationText.leaveSeatDialogInfo.title,
@@ -133,6 +149,7 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
 
     showPopUpSheet(
       context: context,
+      userID: widget.user?.id ?? "",
       popupItems: popupItems,
       seatManager: widget.seatManager,
       translationText: widget.config.translationText,
@@ -141,7 +158,7 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
 
   Widget hostFlag(BuildContext context, double maxWidth) {
     return ConstrainedBox(
-      constraints: BoxConstraints.loose(Size(maxWidth, 23.r)),
+      constraints: BoxConstraints.loose(Size(maxWidth, seatHostFlagHeight)),
       child: Center(
         child: PrebuiltLiveAudioRoomImage.asset(
           PrebuiltLiveAudioRoomIconUrls.seatHost,
@@ -158,7 +175,7 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
         textAlign: TextAlign.center,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(
-          fontSize: 22.0.r,
+          fontSize: seatUserNameFontSize,
           color: Colors.black,
           decoration: TextDecoration.none,
         ),

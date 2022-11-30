@@ -5,26 +5,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'components/audio_video/defines.dart';
 import 'live_audio_room_defines.dart';
 import 'live_audio_room_translation.dart';
-
-enum ZegoLiveAudioRoomRole {
-  host,
-  speaker,
-  audience,
-}
 
 class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   ZegoUIKitPrebuiltLiveAudioRoomConfig.host()
       : role = ZegoLiveAudioRoomRole.host,
+        seatIndex = 0,
         turnOnMicrophoneWhenJoining = true,
         useSpeakerWhenJoining = true,
-        showInRoomMessageButton = true,
-        audioVideoViewConfig = ZegoPrebuiltAudioVideoViewConfig(
-          showSoundWavesInAudioMode: true,
-        ),
+        seatConfig = ZegoLiveAudioRoomSeatConfig(),
+        layoutConfig = ZegoLiveAudioRoomLayoutConfig(),
+        lockSeatIndexesForHost = const [0],
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(),
-        memberListConfig = ZegoMemberListConfig(),
         inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
         effectConfig = ZegoEffectConfig(),
         translationText = ZegoTranslationText(),
@@ -39,12 +33,10 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
       : role = ZegoLiveAudioRoomRole.audience,
         turnOnMicrophoneWhenJoining = false,
         useSpeakerWhenJoining = true,
-        showInRoomMessageButton = true,
-        audioVideoViewConfig = ZegoPrebuiltAudioVideoViewConfig(
-          showSoundWavesInAudioMode: true,
-        ),
+        seatConfig = ZegoLiveAudioRoomSeatConfig(),
+        layoutConfig = ZegoLiveAudioRoomLayoutConfig(),
+        lockSeatIndexesForHost = const [0],
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(),
-        memberListConfig = ZegoMemberListConfig(),
         inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
         effectConfig = ZegoEffectConfig(),
         translationText = ZegoTranslationText();
@@ -52,21 +44,19 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   ZegoUIKitPrebuiltLiveAudioRoomConfig({
     this.turnOnMicrophoneWhenJoining = true,
     this.useSpeakerWhenJoining = true,
-    ZegoPrebuiltAudioVideoViewConfig? audioVideoViewConfig,
+    ZegoLiveAudioRoomSeatConfig? seatConfig,
     ZegoBottomMenuBarConfig? bottomMenuBarConfig,
-    ZegoMemberListConfig? memberListConfig,
+    ZegoLiveAudioRoomLayoutConfig? layoutConfig,
     ZegoInRoomMessageViewConfig? messageConfig,
     ZegoEffectConfig? effectConfig,
-    this.showInRoomMessageButton = true,
+    this.lockSeatIndexesForHost = const [0],
     this.confirmDialogInfo,
     this.onLeaveConfirmation,
     this.onLeaveLiveAudioRoom,
-    this.avatarBuilder,
     ZegoTranslationText? translationText,
-  })  : audioVideoViewConfig =
-            audioVideoViewConfig ?? ZegoPrebuiltAudioVideoViewConfig(),
+  })  : seatConfig = seatConfig ?? ZegoLiveAudioRoomSeatConfig(),
         bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig(),
-        memberListConfig = memberListConfig ?? ZegoMemberListConfig(),
+        layoutConfig = layoutConfig ?? ZegoLiveAudioRoomLayoutConfig(),
         inRoomMessageViewConfig =
             messageConfig ?? ZegoInRoomMessageViewConfig(),
         effectConfig = effectConfig ?? ZegoEffectConfig(),
@@ -74,6 +64,9 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
 
   /// specify if a host or audience, speaker
   ZegoLiveAudioRoomRole role = ZegoLiveAudioRoomRole.audience;
+
+  /// specify seat index, only work if host or speaker
+  int seatIndex = -1;
 
   /// whether to enable the microphone by default, the default value is true
   bool turnOnMicrophoneWhenJoining;
@@ -83,15 +76,6 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
 
   /// configs about bottom menu bar
   ZegoBottomMenuBarConfig bottomMenuBarConfig;
-
-  /// support :
-  /// 1. Face beautification
-  /// 2. Voice changing
-  /// 3. Reverb
-  ZegoEffectConfig effectConfig;
-
-  /// support message if set true
-  bool showInRoomMessageButton;
 
   /// alert dialog information of leave
   /// if confirm info is not null, APP will pop alert dialog when you hang up
@@ -105,6 +89,35 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
 
   /// customize handling after leave audio room
   VoidCallback? onLeaveLiveAudioRoom;
+
+  /// support :
+  /// 1. Face beautification
+  /// 2. Voice changing
+  /// 3. Reverb
+  ZegoEffectConfig effectConfig;
+
+  /// configs about seat
+  ZegoLiveAudioRoomSeatConfig seatConfig;
+
+  /// you can use the layout configuration to achieve the layout you want
+  /// the layout uses a row/column configuration
+  ZegoLiveAudioRoomLayoutConfig layoutConfig;
+
+  /// For audience and speakers, these seat index are prohibited.
+  /// The default is[0].
+  List<int> lockSeatIndexesForHost;
+
+  /// configs about message view
+  ZegoInRoomMessageViewConfig inRoomMessageViewConfig;
+
+  ZegoTranslationText translationText;
+}
+
+class ZegoLiveAudioRoomSeatConfig {
+  bool showSoundWavesInAudioMode = true;
+
+  ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;
+  ZegoAudioVideoViewBackgroundBuilder? backgroundBuilder;
 
   /// customize your user's avatar, default we use userID's first character as avatar
   /// User avatars are generally stored in your server, ZegoUIKitPrebuiltLiveAudioRoom does not know each user's avatar, so by default, ZegoUIKitPrebuiltLiveAudioRoom will use the first letter of the user name to draw the default user avatar, as shown in the following figure,
@@ -137,38 +150,11 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   ///
   ZegoAvatarBuilder? avatarBuilder;
 
-  /// configs about audio video view
-  ZegoPrebuiltAudioVideoViewConfig audioVideoViewConfig;
-
-  /// configs about member list
-  ZegoMemberListConfig memberListConfig;
-
-  /// configs about message view
-  ZegoInRoomMessageViewConfig inRoomMessageViewConfig;
-
-  ZegoTranslationText translationText;
-}
-
-class ZegoPrebuiltAudioVideoViewConfig {
-  /// hide avatar of audio video view if set false
-  bool showAvatarInAudioMode;
-
-  /// hide sound level of audio video view if set false
-  bool showSoundWavesInAudioMode;
-
-  /// customize your foreground of audio video view, which is the top widget of stack
-  /// <br><img src="https://doc.oa.zego.im/Pics/ZegoUIKit/Flutter/_default_avatar_nowave.jpg" width="5%">
-  /// you can return any widget, then we will put it on top of audio video view
-  ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;
-
-  /// customize your background of audio video view, which is the bottom widget of stack
-  ZegoAudioVideoViewBackgroundBuilder? backgroundBuilder;
-
-  ZegoPrebuiltAudioVideoViewConfig({
+  ZegoLiveAudioRoomSeatConfig({
+    this.showSoundWavesInAudioMode = true,
+    this.avatarBuilder,
     this.foregroundBuilder,
     this.backgroundBuilder,
-    this.showAvatarInAudioMode = true,
-    this.showSoundWavesInAudioMode = true,
   });
 }
 
@@ -207,19 +193,6 @@ class ZegoBottomMenuBarConfig {
     this.speakerExtendButtons = const [],
     this.audienceExtendButtons = const [],
     this.maxCount = 5,
-  });
-}
-
-class ZegoMemberListConfig {
-  /// show microphone state or not
-  bool showMicrophoneState;
-
-  /// customize your item view of member list
-  ZegoMemberListItemBuilder? itemBuilder;
-
-  ZegoMemberListConfig({
-    this.showMicrophoneState = true,
-    this.itemBuilder,
   });
 }
 

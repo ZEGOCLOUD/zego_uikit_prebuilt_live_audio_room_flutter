@@ -4,14 +4,13 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/seat_manager.dart';
-import 'avatar.dart';
+import 'defines.dart';
 
 class ZegoSeatBackground extends StatefulWidget {
   final Size size;
@@ -39,23 +38,21 @@ class _ZegoSeatForegroundState extends State<ZegoSeatBackground> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        widget.config.audioVideoViewConfig.backgroundBuilder
+        widget.config.seatConfig.backgroundBuilder
                 ?.call(context, widget.size, widget.user, widget.extraInfo) ??
             Container(color: Colors.transparent),
-        ...null == widget.user
-            ? [emptySeat()]
-            : [avatar(), microphoneOffFlag()],
+        ...null == widget.user ? [emptySeat()] : [microphoneOffFlag()],
       ],
     );
   }
 
   Widget emptySeat() {
     return Positioned(
-      top: 22.r,
-      left: 22.r,
+      top: avatarPosTop,
+      left: avatarPosLeft,
       child: Container(
-        width: 108.r,
-        height: 108.r,
+        width: seatIconWidth,
+        height: seatIconWidth,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: const Color(0xffE6E6E6).withOpacity(0.5),
@@ -77,11 +74,11 @@ class _ZegoSeatForegroundState extends State<ZegoSeatBackground> {
         }
 
         return Positioned(
-          top: 22.r,
-          left: 22.r,
+          top: avatarPosTop,
+          left: avatarPosLeft,
           child: Container(
-            width: 108.r,
-            height: 108.r,
+            width: seatIconWidth,
+            height: seatIconWidth,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.black.withOpacity(0.5),
@@ -92,26 +89,6 @@ class _ZegoSeatForegroundState extends State<ZegoSeatBackground> {
           ),
         );
       },
-    );
-  }
-
-  Widget avatar() {
-    return Positioned(
-      top: 22.r,
-      left: 22.r,
-      child: SizedBox(
-        width: 108.r,
-        height: 108.r,
-        child: ZegoAvatar(
-          avatarSize: Size(108.r, 108.r),
-          user: widget.user,
-          showAvatar: widget.config.audioVideoViewConfig.showAvatarInAudioMode,
-          showSoundLevel:
-              widget.config.audioVideoViewConfig.showSoundWavesInAudioMode,
-          avatarBuilder: widget.config.avatarBuilder,
-          soundLevelSize: widget.size,
-        ),
-      ),
     );
   }
 }

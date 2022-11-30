@@ -40,8 +40,10 @@ class ZegoPrebuiltPlugins {
 
   PluginNetworkState networkState = PluginNetworkState.unknown;
   List<StreamSubscription<dynamic>?> subscriptions = [];
-  PluginConnectionState pluginConnectionState =
-      PluginConnectionState.disconnected;
+  var pluginConnectionStateNotifier =
+      ValueNotifier<PluginConnectionState>(PluginConnectionState.disconnected);
+  var roomStateNotifier =
+      ValueNotifier<PluginRoomState>(PluginRoomState.disconnected);
 
   bool get isEnabled => plugins.isNotEmpty;
 
@@ -53,41 +55,62 @@ class ZegoPrebuiltPlugins {
       });
     }
 
-    subscriptions.add(ZegoUIKitSignalingPluginImp.shared
-        .getInvitationConnectionStateStream()
-        .listen(onInvitationConnectionState));
-
     subscriptions
-        .add(ZegoUIKit().getNetworkModeStream().listen(onNetworkModeChanged));
+      ..add(ZegoUIKit()
+          .getSignalingPlugin()
+          .getInvitationConnectionStateStream()
+          .listen(onInvitationConnectionState))
+      ..add(ZegoUIKit()
+          .getSignalingPlugin()
+          .getRoomStateStream()
+          .listen(onRoomState))
+      ..add(ZegoUIKit().getNetworkModeStream().listen(onNetworkModeChanged));
   }
 
   Future<void> init() async {
     debugPrint("[plugin] plugins init");
 
-    await ZegoUIKitSignalingPluginImp.shared
+    await ZegoUIKit()
+        .getSignalingPlugin()
         .init(appID, appSign: appSign)
         .then((value) {
       debugPrint("[plugin] plugins init done");
     });
 
-    await ZegoUIKitSignalingPluginImp.shared
+    debugPrint("[plugin] plugins init, login...");
+    await ZegoUIKit()
+        .getSignalingPlugin()
         .login(userID, userName)
         .then((value) async {
-      debugPrint("[plugin] plugins login done");
-      await ZegoUIKitSignalingPluginImp.shared.joinRoom(liveID).then((result) {
-        if (result.code.isNotEmpty) {
-          showToast(
-              "join signaling room failed, ${result.code} ${result.message}");
-        }
-      });
+      debugPrint("[plugin] plugins login done, join room...");
+      return joinRoom();
     });
+
     debugPrint("[plugin] plugins init done");
   }
 
+  Future<bool> joinRoom() async {
+    debugPrint("[plugin] plugins joinRoom");
+
+    return await ZegoUIKit()
+        .getSignalingPlugin()
+        .joinRoom(liveID)
+        .then((result) {
+      debugPrint(
+          "[plugin] plugins login result: ${result.code} ${result.message}");
+      if (result.code.isNotEmpty) {
+        showToast(
+            "join signaling login room failed, ${result.code} ${result.message}");
+      }
+
+      return result.code.isEmpty;
+    });
+  }
+
   Future<void> uninit() async {
-    await ZegoUIKitSignalingPluginImp.shared.leaveRoom();
-    await ZegoUIKitSignalingPluginImp.shared.logout();
-    await ZegoUIKitSignalingPluginImp.shared.uninit();
+    await ZegoUIKit().getSignalingPlugin().leaveRoom();
+    await ZegoUIKit().getSignalingPlugin().logout();
+    await ZegoUIKit().getSignalingPlugin().uninit();
 
     for (var streamSubscription in subscriptions) {
       streamSubscription?.cancel();
@@ -101,17 +124,26 @@ class ZegoPrebuiltPlugins {
       return;
     }
 
-    await ZegoUIKitSignalingPluginImp.shared.logout();
-    await ZegoUIKitSignalingPluginImp.shared.login(userID, userName);
+    await ZegoUIKit().getSignalingPlugin().logout();
+    await ZegoUIKit().getSignalingPlugin().login(userID, userName);
   }
 
   void onInvitationConnectionState(Map params) {
     debugPrint("[plugin] onInvitationConnectionState, param: $params");
 
-    pluginConnectionState = PluginConnectionState.values[params['state']!];
+    pluginConnectionStateNotifier.value =
+        PluginConnectionState.values[params['state']!];
 
     debugPrint(
-        "[plugin] onInvitationConnectionState, state: $pluginConnectionState");
+        "[plugin] onInvitationConnectionState, state: ${pluginConnectionStateNotifier.value}");
+  }
+
+  void onRoomState(Map params) {
+    debugPrint("[plugin] onRoomState, param: $params");
+
+    roomStateNotifier.value = PluginRoomState.values[params['state']!];
+
+    debugPrint("[plugin] onRoomState, state: ${roomStateNotifier.value}");
   }
 
   void onNetworkModeChanged(ZegoNetworkMode networkMode) {
@@ -139,11 +171,12 @@ class ZegoPrebuiltPlugins {
 
   void reconnectIfDisconnected() {
     debugPrint(
-        "[plugin] reconnectIfDisconnected, state:$pluginConnectionState");
-    if (pluginConnectionState == PluginConnectionState.disconnected) {
+        "[plugin] reconnectIfDisconnected, state:${pluginConnectionStateNotifier.value}");
+    if (pluginConnectionStateNotifier.value ==
+        PluginConnectionState.disconnected) {
       debugPrint("[plugin] reconnect, id:$userID, name:$userName");
-      ZegoUIKitSignalingPluginImp.shared.logout().then((value) {
-        ZegoUIKitSignalingPluginImp.shared.login(userID, userName);
+      ZegoUIKit().getSignalingPlugin().logout().then((value) {
+        ZegoUIKit().getSignalingPlugin().login(userID, userName);
       });
     }
   }
