@@ -1,6 +1,6 @@
 name: zego_uikit_prebuilt_live_audio_room
 description: PrebuiltLiveAudioRoom is a Live Audio Room kit that provides a ready-made group voice chat that supports up to 8 hosts and co-hosts to connect with millions of users downstage.
-version: 1.0.2
+version: 1.0.3
 homepage: https://www.zegocloud.com/
 repository: https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_live_audio_room
 
@@ -14,8 +14,8 @@ dependencies:
   http: ^0.13.4
   flutter_screenutil: ^5.5.3+2
   flutter_styled_toast: ^2.1.3
-  zego_uikit: ^1.7.1
-  zego_uikit_signaling_plugin: ^1.0.15
+  zego_uikit: ^1.7.2
+  zego_uikit_signaling_plugin: ^1.0.16
 
 dev_dependencies:
   flutter_test:

@@ -10,3 +10,7 @@
 
 * fix some bugs
 * support more layout
+
+## 1.0.3
+
+* update a dependency to the latest release
