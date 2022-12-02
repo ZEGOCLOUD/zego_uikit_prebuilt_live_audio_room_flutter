@@ -6,7 +6,6 @@ class ZegoTranslationText {
   final String param_1 = "%0";
 
   String takeSeatMenuButton;
-  String prebuiltTitle;
 
   String removeSpeakerMenuDialogButton;
   String cancelMenuDialogButton;
@@ -31,7 +30,6 @@ class ZegoTranslationText {
     ZegoDialogInfo? removeFromSeatDialogInfo,
     ZegoDialogInfo? leaveSeatDialogInfo,
   })  : takeSeatMenuButton = takeSeatMenuButton ?? "Take the seat",
-        prebuiltTitle = prebuiltTitle ?? "Live Audio Room",
         removeSpeakerMenuDialogButton =
             removeSpeakerMenuDialogButton ?? "Remove %0 from seat",
         cancelMenuDialogButton = cancelMenuDialogButton ?? "Cancel",

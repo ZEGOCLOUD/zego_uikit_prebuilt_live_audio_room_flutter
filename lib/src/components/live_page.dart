@@ -85,7 +85,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
               child: LayoutBuilder(builder: (context, constraints) {
                 return Stack(
                   children: [
-                    background(constraints.maxHeight),
+                    background(context, constraints.maxHeight),
                     audioVideoContainer(
                       constraints.maxWidth,
                       constraints.maxHeight,
@@ -120,7 +120,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
     );
   }
 
-  Widget background(double height) {
+  Widget background(BuildContext context, double height) {
     return Positioned(
       top: 0,
       left: 0,
@@ -130,6 +130,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
         decoration: const BoxDecoration(
           color: Color(0xffF4F4F6),
         ),
+        child: widget.config.background,
       ),
     );
   }
@@ -208,8 +209,6 @@ class ZegoLivePageState extends State<ZegoLivePage>
         valueListenable: ZegoUIKit().getRoomStateStream(),
         builder: (context, roomState, _) {
           return ZegoTopBar(
-            roomID: ZegoUIKit().getRoom().id,
-            roomTitle: widget.config.translationText.prebuiltTitle,
             config: widget.config,
             seatManager: widget.seatManager,
             translationText: widget.config.translationText,

@@ -68,8 +68,7 @@ class ZegoLiveSeatManager {
 
   bool get localIsAHost => ZegoLiveAudioRoomRole.host == localRole.value;
 
-  bool isSeatHostLocked(int index) =>
-      config.lockSeatIndexesForHost.contains(index);
+  bool isAHostSeat(int index) => config.hostSeatIndexes.contains(index);
 
   var seatsUserMapNotifier =
       ValueNotifier<Map<String, String>>({}); //  <seat id, user id>
@@ -128,9 +127,10 @@ class ZegoLiveSeatManager {
 
     if (localRole.value == ZegoLiveAudioRoomRole.host ||
         localRole.value == ZegoLiveAudioRoomRole.speaker) {
-      debugPrint("[seat manager] try init seat ${config.seatIndex}");
+      debugPrint(
+          "[seat manager] try init seat ${config.takeSeatIndexWhenJoining}");
       await takeOnSeat(
-        config.seatIndex,
+        config.takeSeatIndexWhenJoining,
         isForce: true,
         isUpdateOwner: true,
         isDeleteAfterOwnerLeft: true,
@@ -148,10 +148,13 @@ class ZegoLiveSeatManager {
                   "[live audio room] init role ${success ? "success" : "failed"}");
               if (!success) {
                 debugPrint(
-                    "[live audio room] reset to audience and take off seat ${config.seatIndex}");
+                    "[live audio room] reset to audience and take off seat ${config.takeSeatIndexWhenJoining}");
 
                 localRole.value = ZegoLiveAudioRoomRole.audience;
-                await takeOffSeat(config.seatIndex, isForce: true);
+                await takeOffSeat(
+                  config.takeSeatIndexWhenJoining,
+                  isForce: true,
+                );
               }
             });
           }

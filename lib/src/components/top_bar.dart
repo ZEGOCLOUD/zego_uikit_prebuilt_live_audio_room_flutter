@@ -17,13 +17,8 @@ class ZegoTopBar extends StatefulWidget {
   final ZegoLiveSeatManager seatManager;
   final ZegoTranslationText translationText;
 
-  final String roomTitle;
-  final String roomID;
-
   const ZegoTopBar({
     Key? key,
-    required this.roomTitle,
-    required this.roomID,
     required this.config,
     required this.seatManager,
     required this.translationText,
@@ -52,8 +47,6 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SizedBox(width: 36.r),
-          roomInfo(),
           const Expanded(child: SizedBox()),
           closeButton(),
           SizedBox(width: 34.r),
@@ -73,36 +66,6 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
       ),
       config: widget.config,
       seatManager: widget.seatManager,
-    );
-  }
-
-  Widget roomInfo() {
-    return SizedBox(
-      width: 501.r,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            widget.roomTitle,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: const Color(0xff1B1B1B),
-              fontSize: 32.r,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          Text(
-            "ID: ${widget.roomID}",
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: const Color(0xff606060),
-              fontSize: 20.r,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

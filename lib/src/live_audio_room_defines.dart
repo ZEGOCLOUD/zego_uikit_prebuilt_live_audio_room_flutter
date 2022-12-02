@@ -1,3 +1,6 @@
+// Flutter imports:
+import 'package:flutter/cupertino.dart';
+
 /// prefab button on menu bar
 enum ZegoMenuBarButtonName {
   leaveButton,
@@ -25,3 +28,9 @@ class ZegoDialogInfo {
     this.confirmButtonName = "OK",
   });
 }
+
+typedef ZegoLiveAudioRoomBackgroundBuilder = Widget Function(
+  BuildContext context,
+  Size size,
+  Map extraInfo,
+);

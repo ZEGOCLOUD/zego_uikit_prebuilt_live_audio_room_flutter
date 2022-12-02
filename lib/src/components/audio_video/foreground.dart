@@ -98,7 +98,7 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
       /// empty seat
       /// forbid host switch seat and speaker/audience take locked seat
       if (!widget.seatManager.localIsAHost &&
-          !widget.seatManager.isSeatHostLocked(index)) {
+          !widget.seatManager.isAHostSeat(index)) {
         if (-1 !=
             widget.seatManager
                 .getIndexByUserID(ZegoUIKit().getLocalUser().id)) {

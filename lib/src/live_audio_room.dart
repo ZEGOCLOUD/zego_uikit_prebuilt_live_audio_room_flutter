@@ -198,19 +198,28 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     int totalSeatCount = widget.config.layoutConfig.rowConfigs
         .fold(0, (totalCount, rowConfig) => totalCount + rowConfig.count);
-    var isSeatIndexValid = widget.config.seatIndex >= 0 &&
-        widget.config.seatIndex < totalSeatCount;
+    var isSeatIndexValid = widget.config.takeSeatIndexWhenJoining >= 0 &&
+        widget.config.takeSeatIndexWhenJoining < totalSeatCount;
     if (!isSeatIndexValid) {
       debugPrint(
           "[live audio room] config seat index is not valid, change role to audience and seat index set to -1");
       widget.config.role = ZegoLiveAudioRoomRole.audience;
-      widget.config.seatIndex = -1;
+      widget.config.takeSeatIndexWhenJoining = -1;
     }
     if (widget.config.role == ZegoLiveAudioRoomRole.audience &&
         isSeatIndexValid) {
       debugPrint(
-          "[live audio room] audience config seat index is not valid, set to -1");
-      widget.config.seatIndex = -1;
+          "[live audio room] audience config should not on seat default, set to -1");
+      widget.config.takeSeatIndexWhenJoining = -1;
+    }
+    if (ZegoLiveAudioRoomRole.host != widget.config.role &&
+        widget.config.hostSeatIndexes
+            .contains(widget.config.takeSeatIndexWhenJoining)) {
+      debugPrint(
+          "[live audio room] config ${widget.config.role.toString()}'s index is not valid, "
+          "change role to audience and seat index set to -1");
+      widget.config.role = ZegoLiveAudioRoomRole.audience;
+      widget.config.takeSeatIndexWhenJoining = -1;
     }
   }
 

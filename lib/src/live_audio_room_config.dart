@@ -12,15 +12,15 @@ import 'live_audio_room_translation.dart';
 class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   ZegoUIKitPrebuiltLiveAudioRoomConfig.host()
       : role = ZegoLiveAudioRoomRole.host,
-        seatIndex = 0,
+        takeSeatIndexWhenJoining = 0,
         turnOnMicrophoneWhenJoining = true,
         useSpeakerWhenJoining = true,
         seatConfig = ZegoLiveAudioRoomSeatConfig(),
         layoutConfig = ZegoLiveAudioRoomLayoutConfig(),
-        lockSeatIndexesForHost = const [0],
+        hostSeatIndexes = const [0],
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(),
         inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
-        effectConfig = ZegoEffectConfig(),
+        effectConfig = ZegoAudioEffectConfig(),
         translationText = ZegoTranslationText(),
         confirmDialogInfo = ZegoDialogInfo(
           title: "Stop the live",
@@ -35,10 +35,10 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         useSpeakerWhenJoining = true,
         seatConfig = ZegoLiveAudioRoomSeatConfig(),
         layoutConfig = ZegoLiveAudioRoomLayoutConfig(),
-        lockSeatIndexesForHost = const [0],
+        hostSeatIndexes = const [0],
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(),
         inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
-        effectConfig = ZegoEffectConfig(),
+        effectConfig = ZegoAudioEffectConfig(),
         translationText = ZegoTranslationText();
 
   ZegoUIKitPrebuiltLiveAudioRoomConfig({
@@ -48,8 +48,8 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
     ZegoBottomMenuBarConfig? bottomMenuBarConfig,
     ZegoLiveAudioRoomLayoutConfig? layoutConfig,
     ZegoInRoomMessageViewConfig? messageConfig,
-    ZegoEffectConfig? effectConfig,
-    this.lockSeatIndexesForHost = const [0],
+    ZegoAudioEffectConfig? effectConfig,
+    this.hostSeatIndexes = const [0],
     this.confirmDialogInfo,
     this.onLeaveConfirmation,
     this.onLeaveLiveAudioRoom,
@@ -59,20 +59,47 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         layoutConfig = layoutConfig ?? ZegoLiveAudioRoomLayoutConfig(),
         inRoomMessageViewConfig =
             messageConfig ?? ZegoInRoomMessageViewConfig(),
-        effectConfig = effectConfig ?? ZegoEffectConfig(),
+        effectConfig = effectConfig ?? ZegoAudioEffectConfig(),
         translationText = translationText ?? ZegoTranslationText();
 
   /// specify if a host or audience, speaker
   ZegoLiveAudioRoomRole role = ZegoLiveAudioRoomRole.audience;
 
   /// specify seat index, only work if host or speaker
-  int seatIndex = -1;
+  int takeSeatIndexWhenJoining = -1;
+
+  /// configs about seat
+  ZegoLiveAudioRoomSeatConfig seatConfig;
+
+  /// you can use the layout configuration to achieve the layout you want
+  /// the layout uses a row/column configuration
+  ZegoLiveAudioRoomLayoutConfig layoutConfig;
+
+  /// these seat indexes if for host
+  /// for audience and speakers, these seat index are prohibited.
+  /// The default is[0].
+  List<int> hostSeatIndexes;
 
   /// whether to enable the microphone by default, the default value is true
   bool turnOnMicrophoneWhenJoining;
 
   /// whether to use the speaker by default, the default value is true;
   bool useSpeakerWhenJoining;
+
+  /// you can customize any background you wanted
+  /// ```dart
+  ///
+  ///  // eg:
+  /// ..background = Container(
+  ///     width: size.width,
+  ///     height: size.height,
+  ///     decoration: const BoxDecoration(
+  ///       image: DecorationImage(
+  ///         fit: BoxFit.fitHeight,
+  ///         image: ,
+  ///       )));
+  /// ```
+  Widget? background;
 
   /// configs about bottom menu bar
   ZegoBottomMenuBarConfig bottomMenuBarConfig;
@@ -90,27 +117,15 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// customize handling after leave audio room
   VoidCallback? onLeaveLiveAudioRoom;
 
-  /// support :
-  /// 1. Face beautification
-  /// 2. Voice changing
-  /// 3. Reverb
-  ZegoEffectConfig effectConfig;
-
-  /// configs about seat
-  ZegoLiveAudioRoomSeatConfig seatConfig;
-
-  /// you can use the layout configuration to achieve the layout you want
-  /// the layout uses a row/column configuration
-  ZegoLiveAudioRoomLayoutConfig layoutConfig;
-
-  /// For audience and speakers, these seat index are prohibited.
-  /// The default is[0].
-  List<int> lockSeatIndexesForHost;
-
   /// configs about message view
   ZegoInRoomMessageViewConfig inRoomMessageViewConfig;
 
   ZegoTranslationText translationText;
+
+  /// support :
+  /// 1. Voice changing
+  /// 2. Reverb
+  ZegoAudioEffectConfig effectConfig;
 }
 
 class ZegoLiveAudioRoomSeatConfig {
@@ -205,11 +220,11 @@ class ZegoInRoomMessageViewConfig {
   });
 }
 
-class ZegoEffectConfig {
+class ZegoAudioEffectConfig {
   List<VoiceChangerType> voiceChangeEffect;
   List<ReverbType> reverbEffect;
 
-  ZegoEffectConfig({
+  ZegoAudioEffectConfig({
     this.voiceChangeEffect = const [
       VoiceChangerType.littleGirl,
       VoiceChangerType.deep,
@@ -239,7 +254,7 @@ class ZegoEffectConfig {
     ],
   });
 
-  ZegoEffectConfig.none({
+  ZegoAudioEffectConfig.none({
     this.voiceChangeEffect = const [],
     this.reverbEffect = const [],
   });

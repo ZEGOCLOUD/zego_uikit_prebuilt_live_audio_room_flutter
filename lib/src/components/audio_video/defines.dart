@@ -26,6 +26,7 @@ class ZegoLiveAudioRoomLayoutRowConfig {
   /// seat count of a row, range is [1~4]
   int count;
 
+  // int seatSpacing;
   ZegoLiveAudioRoomLayoutAlignment alignment;
 
   ZegoLiveAudioRoomLayoutRowConfig({
@@ -35,11 +36,11 @@ class ZegoLiveAudioRoomLayoutRowConfig {
 }
 
 class ZegoLiveAudioRoomLayoutConfig {
-  /// the max row count is 4
-  List<ZegoLiveAudioRoomLayoutRowConfig> rowConfigs;
-
-  /// row spacing
+  /// row spacing, should be positive
   int rowSpacing;
+
+  /// rows
+  List<ZegoLiveAudioRoomLayoutRowConfig> rowConfigs;
 
   ZegoLiveAudioRoomLayoutConfig({
     this.rowSpacing = 0,
