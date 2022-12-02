@@ -14,10 +14,10 @@ final double avatarPosTop = 15.r;
 final double avatarPosLeft = 22.r;
 
 enum ZegoLiveAudioRoomLayoutAlignment {
-  spaceAround,
   start,
   end,
   center,
+  spaceAround,
   spaceBetween,
   spaceEvenly,
 }
@@ -26,17 +26,21 @@ class ZegoLiveAudioRoomLayoutRowConfig {
   /// seat count of a row, range is [1~4]
   int count;
 
-  // int seatSpacing;
+  ///  spacing between seats, should be positive
+  int seatSpacing = 0;
+
+  /// seat alignment
   ZegoLiveAudioRoomLayoutAlignment alignment;
 
   ZegoLiveAudioRoomLayoutRowConfig({
     this.count = 4,
+    this.seatSpacing = 0,
     this.alignment = ZegoLiveAudioRoomLayoutAlignment.spaceAround,
   });
 }
 
 class ZegoLiveAudioRoomLayoutConfig {
-  /// row spacing, should be positive
+  ///  spacing between rows, should be positive
   int rowSpacing;
 
   /// rows

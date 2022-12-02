@@ -306,12 +306,13 @@ class ZegoLiveSeatManager {
         .getSignalingPlugin()
         .endRoomAttributesBatchOperation()
         .then((result) {
+      isRoomAttributesBatching = false;
+
       if (result.code.isNotEmpty) {
         showToast("take on seat error, ${result.code} ${result.message}");
         return;
       }
 
-      isRoomAttributesBatching = false;
       debugPrint(
           "[seat manager] take on seat, room attribute batch is finished");
     });
@@ -353,12 +354,13 @@ class ZegoLiveSeatManager {
         .getSignalingPlugin()
         .endRoomAttributesBatchOperation()
         .then((result) {
+      isRoomAttributesBatching = false;
+
       if (result.code.isNotEmpty) {
         showToast("switch seat error, ${result.code} ${result.message}");
         return;
       }
 
-      isRoomAttributesBatching = false;
       debugPrint(
           "[seat manager] switch seat, room attribute batch is finished");
     });
@@ -480,12 +482,13 @@ class ZegoLiveSeatManager {
         .getSignalingPlugin()
         .endRoomAttributesBatchOperation()
         .then((result) {
+      isRoomAttributesBatching = false;
+
       if (result.code.isNotEmpty) {
         showToast("take off seat error, ${result.code} ${result.message}");
         return;
       }
 
-      isRoomAttributesBatching = false;
       debugPrint(
           "[seat manager] take off seat, room attribute batch is finished");
     });

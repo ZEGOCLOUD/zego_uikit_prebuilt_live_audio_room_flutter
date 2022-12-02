@@ -217,8 +217,8 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         );
       case ZegoMenuBarButtonName.soundEffectButton:
         return ZegoSoundEffectButton(
-          voiceChangeEffect: widget.config.effectConfig.voiceChangeEffect,
-          reverbEffect: widget.config.effectConfig.reverbEffect,
+          voiceChangeEffect: widget.config.audioEffectConfig.voiceChangeEffect,
+          reverbEffect: widget.config.audioEffectConfig.reverbEffect,
           buttonSize: buttonSize,
           iconSize: iconSize,
           icon: ButtonIcon(

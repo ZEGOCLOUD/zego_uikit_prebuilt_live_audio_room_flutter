@@ -14,3 +14,8 @@
 ## 1.0.3
 
 * update a dependency to the latest release
+
+## 1.0.4
+
+* fix some bugs
+* add custom background feature

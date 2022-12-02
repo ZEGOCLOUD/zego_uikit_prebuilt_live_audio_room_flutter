@@ -1,6 +1,6 @@
 name: zego_uikit_prebuilt_live_audio_room
 description: PrebuiltLiveAudioRoom is a Live Audio Room kit that provides a ready-made group voice chat that supports up to 8 hosts and co-hosts to connect with millions of users downstage.
-version: 1.0.3
+version: 1.0.4
 homepage: https://www.zegocloud.com/
 repository: https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_live_audio_room
 

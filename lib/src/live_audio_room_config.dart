@@ -20,7 +20,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         hostSeatIndexes = const [0],
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(),
         inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
-        effectConfig = ZegoAudioEffectConfig(),
+        audioEffectConfig = ZegoAudioEffectConfig(),
         translationText = ZegoTranslationText(),
         confirmDialogInfo = ZegoDialogInfo(
           title: "Stop the live",
@@ -38,7 +38,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         hostSeatIndexes = const [0],
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(),
         inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
-        effectConfig = ZegoAudioEffectConfig(),
+        audioEffectConfig = ZegoAudioEffectConfig(),
         translationText = ZegoTranslationText();
 
   ZegoUIKitPrebuiltLiveAudioRoomConfig({
@@ -59,7 +59,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         layoutConfig = layoutConfig ?? ZegoLiveAudioRoomLayoutConfig(),
         inRoomMessageViewConfig =
             messageConfig ?? ZegoInRoomMessageViewConfig(),
-        effectConfig = effectConfig ?? ZegoAudioEffectConfig(),
+        audioEffectConfig = effectConfig ?? ZegoAudioEffectConfig(),
         translationText = translationText ?? ZegoTranslationText();
 
   /// specify if a host or audience, speaker
@@ -125,7 +125,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// support :
   /// 1. Voice changing
   /// 2. Reverb
-  ZegoAudioEffectConfig effectConfig;
+  ZegoAudioEffectConfig audioEffectConfig;
 }
 
 class ZegoLiveAudioRoomSeatConfig {

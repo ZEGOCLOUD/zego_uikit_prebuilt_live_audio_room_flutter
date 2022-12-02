@@ -70,15 +70,18 @@ class _ZegoAudioRoomLayoutState extends State<ZegoAudioRoomLayout> {
       }
     });
 
+    int baseIndex = 0;
     int currentRowIndex = -1;
-    int currentItemIndex = -1;
     return Column(
       children: widget.layoutConfig.rowConfigs
           .map((ZegoLiveAudioRoomLayoutRowConfig rowConfig) {
+        var rowUsers = users.sublist(0, rowConfig.count);
+        users.removeRange(0, rowConfig.count);
+
         currentRowIndex += 1;
         var addMargin =
             currentRowIndex < (widget.layoutConfig.rowConfigs.length - 1);
-        return Container(
+        var rowWidget = Container(
           margin: addMargin
               ? EdgeInsets.only(
                   bottom: widget.layoutConfig.rowSpacing.toDouble(),
@@ -86,51 +89,81 @@ class _ZegoAudioRoomLayoutState extends State<ZegoAudioRoomLayout> {
               : null,
           child: Row(
             mainAxisAlignment: getRowAlignment(rowConfig.alignment),
-            children: List<Widget>.generate(
-              rowConfig.count,
-              (int index) {
-                // return Text(index.toString());
-                currentItemIndex += 1;
-                var itemIndex = currentItemIndex;
-                var targetUser = users.elementAt(itemIndex);
-                return SizedBox(
-                  width: seatItemWidth,
-                  height: seatItemHeight,
-                  child: ValueListenableBuilder<bool>(
-                      valueListenable: ZegoUIKit()
-                          .getMicrophoneStateNotifier(targetUser?.id ?? ""),
-                      builder: (context, isMicrophoneEnabled, _) {
-                        return ZegoAudioVideoView(
-                          user: targetUser,
-                          borderRadius: widget.borderRadius,
-                          borderColor: Colors.transparent,
-                          extraInfo: {layoutGridItemIndexKey: itemIndex},
-                          foregroundBuilder: widget.foregroundBuilder,
-                          backgroundBuilder: widget.backgroundBuilder,
-                          avatarConfig: ZegoAvatarConfig(
-                            showInAudioMode: isMicrophoneEnabled,
-                            showSoundWavesInAudioMode: true,
-                            builder: widget.avatarBuilder,
-                            soundWaveColor: const Color(0xff2254f6),
-                            size: Size(seatIconWidth, seatIconHeight),
-                            verticalAlignment: ZegoAvatarAlignment.start,
-                          ),
-                        );
-                      }),
-                );
-              },
-            ),
+            children: getRowChildren(rowUsers, rowConfig, baseIndex),
           ),
         );
+
+        baseIndex += rowConfig.count;
+
+        return rowWidget;
       }).toList(),
     );
+  }
+
+  List<Widget> getRowChildren(
+    List<ZegoUIKitUser?> users,
+    ZegoLiveAudioRoomLayoutRowConfig rowConfig,
+    int baseIndex,
+  ) {
+    var children = List<Widget>.generate(
+      rowConfig.count,
+      (int index) {
+        var targetUser = users.elementAt(index);
+        return SizedBox(
+          width: seatItemWidth,
+          height: seatItemHeight,
+          child: ValueListenableBuilder<bool>(
+              valueListenable:
+                  ZegoUIKit().getMicrophoneStateNotifier(targetUser?.id ?? ""),
+              builder: (context, isMicrophoneEnabled, _) {
+                return ZegoAudioVideoView(
+                  user: targetUser,
+                  borderRadius: widget.borderRadius,
+                  borderColor: Colors.transparent,
+                  extraInfo: {layoutGridItemIndexKey: baseIndex + index},
+                  foregroundBuilder: widget.foregroundBuilder,
+                  backgroundBuilder: widget.backgroundBuilder,
+                  avatarConfig: ZegoAvatarConfig(
+                    showInAudioMode: isMicrophoneEnabled,
+                    showSoundWavesInAudioMode: true,
+                    builder: widget.avatarBuilder,
+                    soundWaveColor: const Color(0xff2254f6),
+                    size: Size(seatIconWidth, seatIconHeight),
+                    verticalAlignment: ZegoAvatarAlignment.start,
+                  ),
+                );
+              }),
+        );
+      },
+    );
+
+    if (children.isEmpty) {
+      return children;
+    }
+
+    if ([
+      ZegoLiveAudioRoomLayoutAlignment.start,
+      ZegoLiveAudioRoomLayoutAlignment.end,
+      ZegoLiveAudioRoomLayoutAlignment.center,
+    ].contains(rowConfig.alignment)) {
+      var rowSpaceIndexes = List<int>.generate(children.length, (i) => i);
+      rowSpaceIndexes.removeAt(0);
+      for (var rowSpaceIndex in rowSpaceIndexes.reversed) {
+        children.insert(
+          rowSpaceIndex,
+          SizedBox(
+            width: rowConfig.seatSpacing.toDouble(),
+          ),
+        );
+      }
+    }
+
+    return children;
   }
 
   MainAxisAlignment getRowAlignment(
       ZegoLiveAudioRoomLayoutAlignment alignment) {
     switch (alignment) {
-      case ZegoLiveAudioRoomLayoutAlignment.spaceAround:
-        return MainAxisAlignment.spaceAround;
       case ZegoLiveAudioRoomLayoutAlignment.start:
         return MainAxisAlignment.start;
       case ZegoLiveAudioRoomLayoutAlignment.end:
@@ -139,6 +172,8 @@ class _ZegoAudioRoomLayoutState extends State<ZegoAudioRoomLayout> {
         return MainAxisAlignment.center;
       case ZegoLiveAudioRoomLayoutAlignment.spaceBetween:
         return MainAxisAlignment.spaceBetween;
+      case ZegoLiveAudioRoomLayoutAlignment.spaceAround:
+        return MainAxisAlignment.spaceAround;
       case ZegoLiveAudioRoomLayoutAlignment.spaceEvenly:
         return MainAxisAlignment.spaceEvenly;
     }
