@@ -38,17 +38,16 @@ class ZegoLiveSeatManager {
       ..add(ZegoUIKit().getUserListStream().listen(onUserListUpdated))
       ..add(ZegoUIKit()
           .getSignalingPlugin()
-          .getRoomAttributesStream()
+          .getRoomPropertiesStream()
           .listen(onRoomAttributesUpdated))
       ..add(ZegoUIKit()
           .getSignalingPlugin()
-          .getRoomBatchAttributesStream()
+          .getRoomBatchPropertiesStream()
           .listen(onRoomBatchAttributesUpdated))
       ..add(ZegoUIKit()
           .getSignalingPlugin()
           .getUsersInRoomAttributesStream()
-          .listen(onUsersAttributesUpdated))
-      ..add(ZegoUIKit().getNetworkModeStream().listen(onNetworkModeChanged));
+          .listen(onUsersAttributesUpdated));
   }
 
   KickSeatDialogInfo kickSeatDialogInfo = KickSeatDialogInfo.empty();
@@ -57,7 +56,6 @@ class ZegoLiveSeatManager {
   bool isPopUpSheetVisible = false;
   bool isRoomAttributesBatching = false;
   bool hostSeatAttributeInitialed = false;
-  bool isNetworkOnline = true;
 
   Map<String, Map<String, String>> pendingUserRoomAttributes = {};
   List<StreamSubscription<dynamic>?> subscriptions = [];
@@ -76,7 +74,7 @@ class ZegoLiveSeatManager {
   Future<void> init() async {
     debugPrint("[seat manager] init");
 
-    await queryUsersInRoomAttributesList();
+    await queryUsersInRoomAttributes();
 
     localRole.addListener(onRoleChanged);
     seatsUserMapNotifier.addListener(onSeatUsersChanged);
@@ -89,9 +87,8 @@ class ZegoLiveSeatManager {
 
     seatsUserMapNotifier.value.clear();
     hostSeatAttributeInitialed = false;
+    isRoomAttributesBatching = false;
 
-    plugins.pluginConnectionStateNotifier
-        .removeListener(waitPluginsConnectedQueryRoomAttribute);
     seatsUserMapNotifier.removeListener(onSeatUsersChanged);
     localRole.removeListener(onRoleChanged);
     for (var subscription in subscriptions) {
@@ -99,22 +96,24 @@ class ZegoLiveSeatManager {
     }
   }
 
-  Future<bool> queryUsersInRoomAttributesList({bool withToast = true}) async {
+  Future<bool> queryUsersInRoomAttributes({bool withToast = true}) async {
     debugPrint("[seat manager] query init users in-room attributes");
     return await ZegoUIKit()
         .getSignalingPlugin()
-        .queryUsersInRoomAttributesList()
+        .queryUsersInRoomAttributes()
         .then((result) {
       debugPrint(
           "[seat manager] query finish, code:${result.code}, message: ${result.message} , result:${result.result as Map<String, Map<String, String>>}");
+
       if (withToast && result.code.isNotEmpty) {
-        showToast(
+        showDebugToast(
             "query users in-room attributes error, ${result.code} ${result.message}");
-        return false;
       }
 
-      updateRoleFromUserAttributes(
-          result.result as Map<String, Map<String, String>>);
+      if (result.code.isEmpty) {
+        updateRoleFromUserAttributes(
+            result.result as Map<String, Map<String, String>>);
+      }
 
       return result.code.isEmpty;
     });
@@ -244,11 +243,15 @@ class ZegoLiveSeatManager {
 
     var success =
         await ZegoUIKit().getSignalingPlugin().setUsersInRoomAttributes(
-      {"role": role.index.toString()},
+      attributeKeyRole,
+      role.index.toString(),
       [targetUserID],
     ).then((result) {
+      debugPrint(
+          "host set in-room attribute result, code:${result.code}, message:${result.message}");
+
       if (result.code.isNotEmpty) {
-        showToast(
+        showDebugToast(
             "host set in-room attribute failed, ${result.code} ${result.message}");
       }
 
@@ -287,34 +290,36 @@ class ZegoLiveSeatManager {
     }}");
 
     isRoomAttributesBatching = true;
-    ZegoUIKit().getSignalingPlugin().beginRoomAttributesBatchOperation(
+    ZegoUIKit().getSignalingPlugin().beginRoomPropertiesBatchOperation(
           isForce: isForce,
           isUpdateOwner: isUpdateOwner,
           isDeleteAfterOwnerLeft: isDeleteAfterOwnerLeft,
         );
     ZegoUIKit()
         .getSignalingPlugin()
-        .setRoomAttributes({index.toString(): userID}).then((result) {
+        .updateRoomProperty(index.toString(), userID)
+        .then((result) {
       debugPrint(
           "[seat manager] local user take on seat $index result:${result.code} ${result.message}");
+
       if (result.code.isNotEmpty) {
-        showToast(
+        showDebugToast(
             "take on $index seat is failed, ${result.code} ${result.message}");
       }
     });
     await ZegoUIKit()
         .getSignalingPlugin()
-        .endRoomAttributesBatchOperation()
+        .endRoomPropertiesBatchOperation()
         .then((result) {
       isRoomAttributesBatching = false;
 
-      if (result.code.isNotEmpty) {
-        showToast("take on seat error, ${result.code} ${result.message}");
-        return;
-      }
-
+      debugPrint("[seat manager] room attribute batch is finished");
       debugPrint(
-          "[seat manager] take on seat, room attribute batch is finished");
+          "[seat manager] take on seat result, code:${result.code}, message ${result.message}");
+
+      if (result.code.isNotEmpty) {
+        showDebugToast("take on seat error, ${result.code} ${result.message}");
+      }
     });
 
     return true;
@@ -334,35 +339,38 @@ class ZegoLiveSeatManager {
         "target room attributes:${{index.toString(): userID}}");
 
     isRoomAttributesBatching = true;
-    ZegoUIKit().getSignalingPlugin().beginRoomAttributesBatchOperation(
+    ZegoUIKit().getSignalingPlugin().beginRoomPropertiesBatchOperation(
           isDeleteAfterOwnerLeft: true,
         );
     ZegoUIKit()
         .getSignalingPlugin()
-        .setRoomAttributes({index.toString(): userID}).then((result) {
+        .updateRoomProperty(index.toString(), userID)
+        .then((result) {
       debugPrint(
           "[seat manager] local user switch on seat $index result:${result.code} ${result.message}");
+
       if (result.code.isNotEmpty) {
-        showToast(
+        showDebugToast(
             "switch on $index seat is failed, ${result.code} ${result.message}");
       }
     });
     ZegoUIKit()
         .getSignalingPlugin()
-        .deleteRoomAttributes([oldSeatIndex.toString()]);
+        .deleteRoomProperties([oldSeatIndex.toString()]);
     await ZegoUIKit()
         .getSignalingPlugin()
-        .endRoomAttributesBatchOperation()
+        .endRoomPropertiesBatchOperation()
         .then((result) {
       isRoomAttributesBatching = false;
 
-      if (result.code.isNotEmpty) {
-        showToast("switch seat error, ${result.code} ${result.message}");
-        return;
-      }
-
       debugPrint(
           "[seat manager] switch seat, room attribute batch is finished");
+      debugPrint(
+          "[seat manager] switch seat result, code:${result.code}, message:${result.message}");
+
+      if (result.code.isNotEmpty) {
+        showDebugToast("switch seat error, ${result.code} ${result.message}");
+      }
     });
 
     return true;
@@ -462,12 +470,12 @@ class ZegoLiveSeatManager {
         "[seat manager] take off ${targetUser.toString()} from seat $index");
 
     isRoomAttributesBatching = true;
-    ZegoUIKit().getSignalingPlugin().beginRoomAttributesBatchOperation(
+    ZegoUIKit().getSignalingPlugin().beginRoomPropertiesBatchOperation(
           isForce: isForce,
         );
     ZegoUIKit()
         .getSignalingPlugin()
-        .deleteRoomAttributes([index.toString()]).then((result) {
+        .deleteRoomProperties([index.toString()]).then((result) {
       debugPrint(
           "[seat manager] take off ${targetUser.toString()} from seat $index result:"
           "${result.code} ${result.message}");
@@ -480,17 +488,18 @@ class ZegoLiveSeatManager {
     });
     await ZegoUIKit()
         .getSignalingPlugin()
-        .endRoomAttributesBatchOperation()
+        .endRoomPropertiesBatchOperation()
         .then((result) {
       isRoomAttributesBatching = false;
 
-      if (result.code.isNotEmpty) {
-        showToast("take off seat error, ${result.code} ${result.message}");
-        return;
-      }
-
       debugPrint(
           "[seat manager] take off seat, room attribute batch is finished");
+      debugPrint(
+          "[seat manager] take off seat result, code:${result.code}, message:${result.message}");
+
+      if (result.code.isNotEmpty) {
+        showDebugToast("take off seat error, ${result.code} ${result.message}");
+      }
     });
 
     return true;
@@ -652,11 +661,18 @@ class ZegoLiveSeatManager {
         roomAttribute.forEach((key, value) {
           var seatIndex = int.tryParse(key);
           if (seatIndex != null) {
-            var userId = value;
+            var seatUserId = value;
 
             switch (action) {
               case ZIMRoomAttributesUpdateAction.set:
-                seatsUsersMap[seatIndex.toString()] = userId;
+                if (seatsUsersMap.values.contains(seatUserId)) {
+                  /// old seat user
+                  debugPrint(
+                      "[seat manager] user($seatUserId) has old data$seatsUsersMap, clear it");
+                  seatsUsersMap
+                      .removeWhere((key, value) => value == seatUserId);
+                }
+                seatsUsersMap[seatIndex.toString()] = seatUserId;
                 break;
               case ZIMRoomAttributesUpdateAction.delete:
                 if (kickSeatDialogInfo.isExist(userIndex: seatIndex)) {
@@ -711,98 +727,27 @@ class ZegoLiveSeatManager {
     this.kickSeatDialogInfo = kickSeatDialogInfo;
   }
 
-  void onNetworkModeChanged(ZegoNetworkMode networkMode) async {
-    return;
-
-    debugPrint("[seat manager] onNetworkModeChanged $networkMode, "
-        "previous network state: $isNetworkOnline");
-
-    switch (networkMode) {
-      case ZegoNetworkMode.Offline:
-      case ZegoNetworkMode.Unknown:
-        isNetworkOnline = false;
-        break;
-      case ZegoNetworkMode.Ethernet:
-      case ZegoNetworkMode.WiFi:
-      case ZegoNetworkMode.Mode2G:
-      case ZegoNetworkMode.Mode3G:
-      case ZegoNetworkMode.Mode4G:
-      case ZegoNetworkMode.Mode5G:
-        if (!isNetworkOnline) {
-          debugPrint(
-              "[seat manager] plugin connection state: ${plugins.pluginConnectionStateNotifier.value}");
-          if (PluginConnectionState.connected ==
-                  plugins.pluginConnectionStateNotifier.value &&
-              PluginRoomState.connected == plugins.roomStateNotifier.value) {
-            debugPrint(
-                "[seat manager] plugin is connected and room is connected, try query room all attributes");
-            queryRoomAllAttributes(withToast: false);
-          } else if (PluginConnectionState.connected !=
-              plugins.pluginConnectionStateNotifier.value) {
-            debugPrint(
-                "[seat manager] plugin is not connected, waiting connected..");
-            plugins.pluginConnectionStateNotifier
-                .addListener(waitPluginsConnectedQueryRoomAttribute);
-          }
-        }
-        isNetworkOnline = true;
-        break;
-    }
-  }
-
-  void waitPluginsConnectedQueryRoomAttribute() async {
-    debugPrint(
-        "[seat manager] waitPluginsConnectedQueryRoomAttribute, ${plugins.pluginConnectionStateNotifier.value}");
-
-    if (PluginConnectionState.connected ==
-        plugins.pluginConnectionStateNotifier.value) {
-      debugPrint(
-          "[seat manager] waitPluginsConnectedQueryRoomAttribute, connected");
-
-      plugins.pluginConnectionStateNotifier
-          .removeListener(waitPluginsConnectedQueryRoomAttribute);
-
-      if (PluginRoomState.connected != plugins.roomStateNotifier.value) {
-        debugPrint(
-            "[seat manager] waitPluginsConnectedQueryRoomAttribute,room is not connected, try re-enter room..");
-        await plugins.joinRoom().then((result) async {
-          if (!result) {
-            showToast("failed to re-enter room");
-            return;
-          }
-
-          debugPrint(
-              "[seat manager] waitPluginsConnectedQueryRoomAttribute, room re-entered, query room all attributes...");
-          await queryRoomAllAttributes(withToast: false);
-        });
-      } else {
-        debugPrint(
-            "[seat manager] waitPluginsConnectedQueryRoomAttribute, query room all attributes...");
-        await queryRoomAllAttributes(withToast: false);
-      }
-    }
-  }
-
   Future<bool> queryRoomAllAttributes({bool withToast = true}) async {
     debugPrint("[seat manager]  query room all attributes");
     return await ZegoUIKit()
         .getSignalingPlugin()
-        .queryRoomAllAttributes()
+        .queryRoomProperties()
         .then((result) {
-      if (withToast && result.code.isNotEmpty) {
-        showToast(
-            "query users in-room attributes error, ${result.code} ${result.message}");
-        return false;
-      }
-
       debugPrint(
           "[seat manager] query room all attributes finish, code:${result.code}, message: ${result.message} , result:${result.result as Map<String, String>}");
 
-      updateSeatUsersByRoomAttributes({
-        ZIMRoomAttributesUpdateAction.set: [
-          result.result as Map<String, String>
-        ]
-      });
+      if (withToast && result.code.isNotEmpty) {
+        showDebugToast(
+            "query users in-room attributes error, ${result.code} ${result.message}");
+      }
+
+      if (result.code.isEmpty) {
+        updateSeatUsersByRoomAttributes({
+          ZIMRoomAttributesUpdateAction.set: [
+            result.result as Map<String, String>
+          ]
+        });
+      }
 
       return result.code.isEmpty;
     });

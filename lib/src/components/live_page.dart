@@ -177,9 +177,9 @@ class ZegoLivePageState extends State<ZegoLivePage>
 
     return Positioned(
       top: 169.r,
-      left: 50.w,
+      left: 35.w,
       child: SizedBox(
-        width: maxWidth - 50.w * 2,
+        width: maxWidth - 35.w * 2,
         height: containerHeight,
         child: scrollable
             ? CustomScrollView(

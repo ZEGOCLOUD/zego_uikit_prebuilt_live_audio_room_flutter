@@ -58,17 +58,19 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
       height: widget.height,
       child: Stack(
         children: [
-          SizedBox(
-            height: 124.r,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                zegoLiveButtonPadding,
-                const ZegoInRoomMessageButton(),
-              ],
-            ),
-          ),
+          widget.config.bottomMenuBarConfig.showInRoomMessageButton
+              ? SizedBox(
+                  height: 124.r,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      zegoLiveButtonPadding,
+                      const ZegoInRoomMessageButton(),
+                    ],
+                  ),
+                )
+              : const SizedBox(),
           ValueListenableBuilder<ZegoLiveAudioRoomRole>(
             valueListenable: widget.seatManager.localRole,
             builder: (context, role, _) {

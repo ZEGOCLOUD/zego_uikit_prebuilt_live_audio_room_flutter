@@ -1,6 +1,8 @@
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 
+export 'seat/defines.dart';
+
 /// prefab button on menu bar
 enum ZegoMenuBarButtonName {
   leaveButton,

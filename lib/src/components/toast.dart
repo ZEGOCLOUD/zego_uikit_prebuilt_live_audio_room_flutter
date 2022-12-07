@@ -2,6 +2,7 @@
 import 'dart:core';
 
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -42,8 +43,12 @@ class ZegoToast {
   }
 }
 
-showToast(String message) {
-  ZegoToast.instance.show(message);
+showToast(String message) {}
+
+showDebugToast(String message) {
+  if (kDebugMode) {
+    ZegoToast.instance.show(message);
+  }
 }
 
 showSuccess(String message) {

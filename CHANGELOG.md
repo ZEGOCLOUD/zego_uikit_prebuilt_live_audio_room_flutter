@@ -19,3 +19,8 @@
 
 * fix some bugs
 * add custom background feature
+
+## 1.0.5
+
+* fix some bugs
+* update a dependency to the latest release

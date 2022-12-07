@@ -1,6 +1,16 @@
 # Quick start
+![/Pics/ZegoUIKit/Flutter/run_flutter_project.jpg](https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/audio_room/final_sublist.gif)
 
 - - -
+
+## Prerequisites
+
+- Go to [ZEGOCLOUD Admin Console\|_blank](https://console.zegocloud.com), and do the following:
+  - Create a project, get the **AppID** and **AppSign**.
+  - Activate the **In-app Chat** service (as shown in the following figure).
+![ActivateZIMinConsole2](https://storage.zego.im/sdk-doc/Pics/InappChat/ActivateZIMinConsole2.png)
+
+
 ## Integrate the SDK
 
 ### Add ZegoUIKitPrebuiltLiveAudioRoom as dependencies
@@ -15,7 +25,7 @@ This will add a line like this to your project's `pubspec.yaml` file (and Flutte
 
 ```dart
 dependencies:
-  zego_uikit_prebuilt_live_audio_room: ^1.0.4 # Add this line
+  zego_uikit_prebuilt_live_audio_room: ^1.0.5 # Add this line
 ```
 
 ### Import the SDK
@@ -52,7 +62,7 @@ Widget build(BuildContext context) {
 }
 ```
 
-**Now, you can start a live audio room, other people who enter the same '*live name*' can watch your live audio room.**
+**Now, you can start a live audio room, other people who enter the same '*live id*' can enter your live audio room.**
 
 ## How to run
 

@@ -17,8 +17,8 @@ enum ZegoLiveAudioRoomLayoutAlignment {
   start,
   end,
   center,
-  spaceAround,
   spaceBetween,
+  spaceAround,
   spaceEvenly,
 }
 

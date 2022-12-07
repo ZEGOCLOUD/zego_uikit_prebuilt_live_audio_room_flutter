@@ -23,10 +23,10 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         audioEffectConfig = ZegoAudioEffectConfig(),
         translationText = ZegoTranslationText(),
         confirmDialogInfo = ZegoDialogInfo(
-          title: "Stop the live",
-          message: "Are you sure to stop the live?",
+          title: "Leave the room",
+          message: "Are you sure to leave the room?",
           cancelButtonName: "Cancel",
-          confirmButtonName: "Stop it",
+          confirmButtonName: "OK",
         );
 
   ZegoUIKitPrebuiltLiveAudioRoomConfig.audience()
@@ -68,17 +68,17 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// specify seat index, only work if host or speaker
   int takeSeatIndexWhenJoining = -1;
 
-  /// configs about seat
-  ZegoLiveAudioRoomSeatConfig seatConfig;
+  /// these seat indexes if for host
+  /// for audience and speakers, these seat index are prohibited.
+  /// The default is[0].
+  List<int> hostSeatIndexes;
 
   /// you can use the layout configuration to achieve the layout you want
   /// the layout uses a row/column configuration
   ZegoLiveAudioRoomLayoutConfig layoutConfig;
 
-  /// these seat indexes if for host
-  /// for audience and speakers, these seat index are prohibited.
-  /// The default is[0].
-  List<int> hostSeatIndexes;
+  /// configs about seat
+  ZegoLiveAudioRoomSeatConfig seatConfig;
 
   /// whether to enable the microphone by default, the default value is true
   bool turnOnMicrophoneWhenJoining;
@@ -129,7 +129,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
 }
 
 class ZegoLiveAudioRoomSeatConfig {
-  bool showSoundWavesInAudioMode = true;
+  bool showSoundWaveInAudioMode = true;
 
   ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;
   ZegoAudioVideoViewBackgroundBuilder? backgroundBuilder;
@@ -166,7 +166,7 @@ class ZegoLiveAudioRoomSeatConfig {
   ZegoAvatarBuilder? avatarBuilder;
 
   ZegoLiveAudioRoomSeatConfig({
-    this.showSoundWavesInAudioMode = true,
+    this.showSoundWaveInAudioMode = true,
     this.avatarBuilder,
     this.foregroundBuilder,
     this.backgroundBuilder,
@@ -174,6 +174,9 @@ class ZegoLiveAudioRoomSeatConfig {
 }
 
 class ZegoBottomMenuBarConfig {
+  /// support message if set true
+  bool showInRoomMessageButton;
+
   /// these buttons will displayed on the menu bar, order by the list
   List<ZegoMenuBarButtonName> hostButtons = [];
   List<ZegoMenuBarButtonName> speakerButtons = [];
@@ -191,6 +194,7 @@ class ZegoBottomMenuBarConfig {
   int maxCount;
 
   ZegoBottomMenuBarConfig({
+    this.showInRoomMessageButton = true,
     this.hostButtons = const [
       ZegoMenuBarButtonName.soundEffectButton,
       ZegoMenuBarButtonName.toggleMicrophoneButton,

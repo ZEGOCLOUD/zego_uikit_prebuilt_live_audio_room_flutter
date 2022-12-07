@@ -23,27 +23,32 @@ class ZegoPrebuiltPlugins {
   final String userID;
   final String userName;
 
-  final String liveID;
+  final String roomID;
 
   final List<IZegoUIKitPlugin> plugins;
 
-  ZegoPrebuiltPlugins({
-    required this.appID,
-    required this.appSign,
-    required this.userID,
-    required this.liveID,
-    required this.userName,
-    required this.plugins,
-  }) {
+  final VoidCallback? onPluginReLogin;
+
+  ZegoPrebuiltPlugins(
+      {required this.appID,
+      required this.appSign,
+      required this.userID,
+      required this.roomID,
+      required this.userName,
+      required this.plugins,
+      this.onPluginReLogin}) {
     _install();
   }
 
   PluginNetworkState networkState = PluginNetworkState.unknown;
   List<StreamSubscription<dynamic>?> subscriptions = [];
-  var pluginConnectionStateNotifier =
+  var pluginUserStateNotifier =
       ValueNotifier<PluginConnectionState>(PluginConnectionState.disconnected);
   var roomStateNotifier =
       ValueNotifier<PluginRoomState>(PluginRoomState.disconnected);
+  bool tryReLogging = false;
+  bool initialized = false;
+  bool roomHasInitLogin = false;
 
   bool get isEnabled => plugins.isNotEmpty;
 
@@ -58,8 +63,8 @@ class ZegoPrebuiltPlugins {
     subscriptions
       ..add(ZegoUIKit()
           .getSignalingPlugin()
-          .getInvitationConnectionStateStream()
-          .listen(onInvitationConnectionState))
+          .getConnectionStateStream()
+          .listen(onUserConnectionState))
       ..add(ZegoUIKit()
           .getSignalingPlugin()
           .getRoomStateStream()
@@ -69,6 +74,7 @@ class ZegoPrebuiltPlugins {
 
   Future<void> init() async {
     debugPrint("[plugin] plugins init");
+    initialized = true;
 
     await ZegoUIKit()
         .getSignalingPlugin()
@@ -83,7 +89,9 @@ class ZegoPrebuiltPlugins {
         .login(userID, userName)
         .then((value) async {
       debugPrint("[plugin] plugins login done, join room...");
-      return joinRoom();
+      return joinRoom().then((value) {
+        roomHasInitLogin = true;
+      });
     });
 
     debugPrint("[plugin] plugins init done");
@@ -94,13 +102,12 @@ class ZegoPrebuiltPlugins {
 
     return await ZegoUIKit()
         .getSignalingPlugin()
-        .joinRoom(liveID)
+        .joinRoom(roomID)
         .then((result) {
       debugPrint(
           "[plugin] plugins login result: ${result.code} ${result.message}");
       if (result.code.isNotEmpty) {
-        showToast(
-            "join signaling login room failed, ${result.code} ${result.message}");
+        showDebugToast("login room failed, ${result.code} ${result.message}");
       }
 
       return result.code.isEmpty;
@@ -108,6 +115,12 @@ class ZegoPrebuiltPlugins {
   }
 
   Future<void> uninit() async {
+    debugPrint("[plugin] uninit");
+    initialized = false;
+
+    roomHasInitLogin = false;
+    tryReLogging = false;
+
     await ZegoUIKit().getSignalingPlugin().leaveRoom();
     await ZegoUIKit().getSignalingPlugin().logout();
     await ZegoUIKit().getSignalingPlugin().uninit();
@@ -128,14 +141,22 @@ class ZegoPrebuiltPlugins {
     await ZegoUIKit().getSignalingPlugin().login(userID, userName);
   }
 
-  void onInvitationConnectionState(Map params) {
-    debugPrint("[plugin] onInvitationConnectionState, param: $params");
+  void onUserConnectionState(Map params) {
+    debugPrint("[plugin] onUserConnectionState, param: $params");
 
-    pluginConnectionStateNotifier.value =
+    pluginUserStateNotifier.value =
         PluginConnectionState.values[params['state']!];
 
     debugPrint(
-        "[plugin] onInvitationConnectionState, state: ${pluginConnectionStateNotifier.value}");
+        "[plugin] onUserConnectionState, user state: ${pluginUserStateNotifier.value}");
+
+    if (tryReLogging &&
+        pluginUserStateNotifier.value == PluginConnectionState.connected) {
+      tryReLogging = false;
+      onPluginReLogin?.call();
+    }
+
+    tryReEnterRoom();
   }
 
   void onRoomState(Map params) {
@@ -143,12 +164,15 @@ class ZegoPrebuiltPlugins {
 
     roomStateNotifier.value = PluginRoomState.values[params['state']!];
 
-    debugPrint("[plugin] onRoomState, state: ${roomStateNotifier.value}");
+    debugPrint(
+        "[plugin] onRoomState, state: ${roomStateNotifier.value}, networkState:$networkState");
+
+    tryReEnterRoom();
   }
 
   void onNetworkModeChanged(ZegoNetworkMode networkMode) {
-    debugPrint("[plugin] onNetworkModeChanged $networkMode, "
-        "network state: $networkState");
+    debugPrint(
+        "[plugin] onNetworkModeChanged $networkMode, previous network state: $networkState");
 
     switch (networkMode) {
       case ZegoNetworkMode.Offline:
@@ -162,22 +186,73 @@ class ZegoPrebuiltPlugins {
       case ZegoNetworkMode.Mode4G:
       case ZegoNetworkMode.Mode5G:
         if (PluginNetworkState.offline == networkState) {
-          reconnectIfDisconnected();
+          tryReLogin();
         }
+
         networkState = PluginNetworkState.online;
         break;
     }
   }
 
-  void reconnectIfDisconnected() {
-    debugPrint(
-        "[plugin] reconnectIfDisconnected, state:${pluginConnectionStateNotifier.value}");
-    if (pluginConnectionStateNotifier.value ==
-        PluginConnectionState.disconnected) {
-      debugPrint("[plugin] reconnect, id:$userID, name:$userName");
-      ZegoUIKit().getSignalingPlugin().logout().then((value) {
-        ZegoUIKit().getSignalingPlugin().login(userID, userName);
-      });
+  Future<void> tryReLogin() async {
+    debugPrint("[plugin] tryReLogin, state:${pluginUserStateNotifier.value}");
+
+    if (!initialized) {
+      debugPrint("[plugin] tryReLogin, plugin is not init");
+      return;
     }
+
+    if (pluginUserStateNotifier.value != PluginConnectionState.disconnected) {
+      debugPrint("[plugin] tryReLogin, user state is not disconnected");
+      return;
+    }
+
+    debugPrint("[plugin] re-login, id:$userID, name:$userName");
+    tryReLogging = true;
+    return await ZegoUIKit().getSignalingPlugin().logout().then((value) async {
+      await ZegoUIKit().getSignalingPlugin().login(userID, userName);
+    });
+  }
+
+  Future<bool> tryReEnterRoom() async {
+    debugPrint(
+        "[plugin] tryReEnterRoom, room state: ${roomStateNotifier.value}, networkState:$networkState");
+
+    if (!initialized) {
+      debugPrint("[plugin] tryReEnterRoom, plugin is not init");
+      return false;
+    }
+    if (!roomHasInitLogin) {
+      debugPrint("[plugin] tryReEnterRoom, first login room has not finished");
+      return false;
+    }
+
+    if (PluginRoomState.disconnected != roomStateNotifier.value) {
+      debugPrint("[plugin] tryReEnterRoom, room state is not disconnected");
+      return false;
+    }
+
+    if (networkState != PluginNetworkState.online) {
+      debugPrint("[plugin] tryReEnterRoom, network is not connected");
+      return false;
+    }
+
+    if (pluginUserStateNotifier.value != PluginConnectionState.connected) {
+      debugPrint("[plugin] tryReEnterRoom, user state is not connected");
+      return false;
+    }
+
+    debugPrint("[plugin] try re-enter room");
+    return await joinRoom().then((result) {
+      debugPrint("[plugin] re-enter room result:$result");
+
+      if (!result) {
+        return false;
+      }
+
+      onPluginReLogin?.call();
+
+      return true;
+    });
   }
 }

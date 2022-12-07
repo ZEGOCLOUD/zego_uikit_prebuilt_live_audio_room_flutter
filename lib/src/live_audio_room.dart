@@ -29,7 +29,7 @@ class ZegoUIKitPrebuiltLiveAudioRoom extends StatefulWidget {
     required this.appSign,
     required this.userID,
     required this.userName,
-    required this.liveID,
+    required this.roomID,
     required this.config,
     this.tokenServerUrl = '',
   }) : super(key: key);
@@ -60,7 +60,7 @@ class ZegoUIKitPrebuiltLiveAudioRoom extends StatefulWidget {
 
   /// You can customize the liveName arbitrarily,
   /// just need to know: users who use the same liveName can talk with each other.
-  final String liveID;
+  final String roomID;
 
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
 
@@ -83,7 +83,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     WidgetsBinding.instance.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log("version: zego_uikit_prebuilt_live_audio_room: 1.0.4; $version");
+      log("version: zego_uikit_prebuilt_live_audio_room: 1.0.5; $version");
     });
 
     plugins = ZegoPrebuiltPlugins(
@@ -91,8 +91,13 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       appSign: widget.appSign,
       userID: widget.userID,
       userName: widget.userName,
-      liveID: widget.liveID,
+      roomID: widget.roomID,
       plugins: [ZegoUIKitSignalingPlugin()],
+      onPluginReLogin: () {
+        seatManager.queryRoomAllAttributes(withToast: false).then((value) {
+          seatManager.initRoleAndSeat();
+        });
+      },
     );
     seatManager = ZegoLiveSeatManager(
       userID: widget.userID,
@@ -145,7 +150,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     switch (state) {
       case AppLifecycleState.resumed:
-        plugins.reconnectIfDisconnected();
+        plugins.tryReLogin();
         break;
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
@@ -163,7 +168,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       appSign: widget.appSign,
       userID: widget.userID,
       userName: widget.userName,
-      liveID: widget.liveID,
+      liveID: widget.roomID,
       config: widget.config,
       tokenServerUrl: widget.tokenServerUrl,
       plugins: plugins,
@@ -270,13 +275,13 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       ..setAudioOutputToSpeaker(widget.config.useSpeakerWhenJoining);
 
     if (!kIsWeb) {
-      ZegoUIKit().joinRoom(widget.liveID).then((result) async {
+      ZegoUIKit().joinRoom(widget.roomID).then((result) async {
         await onRoomLogin(result);
       });
     } else {
       getToken(widget.userID).then((token) {
         assert(token.isNotEmpty);
-        ZegoUIKit().joinRoom(widget.liveID, token: token).then((result) async {
+        ZegoUIKit().joinRoom(widget.roomID, token: token).then((result) async {
           await onRoomLogin(result);
         });
       });

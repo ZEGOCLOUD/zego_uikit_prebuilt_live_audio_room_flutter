@@ -42,45 +42,56 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onClicked,
-      child: Stack(
-        children: [
-          widget.config.seatConfig.foregroundBuilder
-                  ?.call(context, widget.size, widget.user, widget.extraInfo) ??
-              Container(color: Colors.transparent),
-          widget.user == null
-              ? Container(color: Colors.transparent)
-              : LayoutBuilder(
-                  builder: ((context, constraints) {
-                    return Stack(
-                      children: [
-                        Positioned(
-                          bottom: 0,
-                          child: userName(context, constraints.maxWidth),
-                        ),
-                        ValueListenableBuilder<Map<String, String>>(
-                            valueListenable: ZegoUIKit()
-                                .getInRoomUserAttributesNotifier(
-                                    widget.user?.id ?? ""),
-                            builder: (context, inRoomAttributes, _) {
-                              if (!widget.seatManager
-                                  .isAttributeHost(widget.user)) {
-                                return Container();
-                              }
-
-                              return Positioned(
-                                top: seatItemHeight -
-                                    seatUserNameFontSize -
-                                    seatHostFlagHeight -
-                                    3.r, //  spacing
-                                child: hostFlag(context, constraints.maxWidth),
-                              );
-                            }),
-                      ],
-                    );
-                  }),
-                ),
-        ],
+      child: ValueListenableBuilder<Map<String, String>>(
+        valueListenable:
+            ZegoUIKit().getInRoomUserAttributesNotifier(widget.user?.id ?? ""),
+        builder: (context, inRoomAttributes, _) {
+          return Container(
+            color: Colors.transparent,
+            child: Stack(
+              children: [
+                widget.config.seatConfig.foregroundBuilder?.call(
+                      context,
+                      widget.size,
+                      ZegoUIKit().getUser(widget.user?.id ?? ""),
+                      widget.extraInfo,
+                    ) ??
+                    foreground(
+                      context,
+                      widget.size,
+                      ZegoUIKit().getUser(widget.user?.id ?? ""),
+                      widget.extraInfo,
+                    ),
+              ],
+            ),
+          );
+        },
       ),
+    );
+  }
+
+  Widget foreground(
+      BuildContext context, Size size, ZegoUIKitUser? user, Map extraInfo) {
+    return LayoutBuilder(
+      builder: ((context, constraints) {
+        return Stack(
+          children: [
+            Positioned(
+              bottom: 0,
+              child: userName(context, constraints.maxWidth),
+            ),
+            widget.seatManager.isAttributeHost(user)
+                ? Positioned(
+                    top: seatItemHeight -
+                        seatUserNameFontSize -
+                        seatHostFlagHeight -
+                        3.r, //  spacing
+                    child: hostFlag(context, constraints.maxWidth),
+                  )
+                : Container(),
+          ],
+        );
+      }),
     );
   }
 
