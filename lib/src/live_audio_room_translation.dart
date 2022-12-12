@@ -54,8 +54,8 @@ class ZegoTranslationText {
                 ),
         removeFromSeatDialogInfo = removeFromSeatDialogInfo ??
             ZegoDialogInfo(
-              title: "Remove from speaker seat",
-              message: "Are you sure to remove %0 from the speaker seat?",
+              title: "Remove the speaker",
+              message: "Are you sure to remove %0 from the seat?",
               cancelButtonName: "Cancel",
               confirmButtonName: "OK",
             ),

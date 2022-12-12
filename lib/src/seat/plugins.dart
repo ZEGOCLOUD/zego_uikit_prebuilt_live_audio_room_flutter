@@ -33,8 +33,8 @@ class ZegoPrebuiltPlugins {
       {required this.appID,
       required this.appSign,
       required this.userID,
-      required this.roomID,
       required this.userName,
+      required this.roomID,
       required this.plugins,
       this.onPluginReLogin}) {
     _install();
@@ -90,6 +90,7 @@ class ZegoPrebuiltPlugins {
         .then((value) async {
       debugPrint("[plugin] plugins login done, join room...");
       return joinRoom().then((value) {
+        debugPrint("[plugin] plugins room joined");
         roomHasInitLogin = true;
       });
     });

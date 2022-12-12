@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/dialogs.dart';
@@ -15,7 +14,6 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_translation.dart';
-import 'defines.dart';
 import 'plugins.dart';
 
 class ZegoLiveSeatManager {
@@ -525,15 +523,13 @@ class ZegoLiveSeatManager {
     return !seatsUserMapNotifier.value.containsKey(index.toString());
   }
 
-  void onUsersAttributesUpdated(Map params) {
-    debugPrint("[seat manager] onUsersAttributesUpdated params: $params");
-
-    var infos = params['infos']! as Map<String, Map<String, String>>;
-    var editor = params['editor'] as ZegoUIKitUser?;
+  void onUsersAttributesUpdated(
+      ZegoSignalingUserInRoomAttributesData attributesData) {
     debugPrint(
-        "[seat manager] onUsersAttributesUpdated editor:${editor.toString()}, infos:$infos");
+        "[seat manager] onUsersAttributesUpdated editor:${attributesData.editor.toString()},"
+        " infos:${attributesData.infos}");
 
-    updateRoleFromUserAttributes(infos);
+    updateRoleFromUserAttributes(attributesData.infos);
   }
 
   /// users attributes only contain 'host' now
@@ -624,14 +620,13 @@ class ZegoLiveSeatManager {
     }
   }
 
-  void onRoomAttributesUpdated(Map _roomAttributes) {
-    debugPrint(
-        "[seat manager] onRoomAttributesUpdated room attributes: $_roomAttributes");
+  void onRoomAttributesUpdated(ZegoSignalingRoomPropertiesData propertiesData) {
+    debugPrint("[seat manager] onRoomAttributesUpdated room attributes: "
+        "${propertiesData.actionDataMap}");
 
-    Map<ZIMRoomAttributesUpdateAction, List<Map<String, String>>>
+    Map<ZegoSignalingRoomAttributesUpdateAction, List<Map<String, String>>>
         roomAttributes = {};
-    (_roomAttributes as Map<ZIMRoomAttributesUpdateAction, Map<String, String>>)
-        .forEach((action, attributes) {
+    propertiesData.actionDataMap.forEach((action, attributes) {
       if (roomAttributes.containsKey(action)) {
         roomAttributes[action]!.add(attributes);
       } else {
@@ -641,16 +636,16 @@ class ZegoLiveSeatManager {
     updateSeatUsersByRoomAttributes(roomAttributes);
   }
 
-  void onRoomBatchAttributesUpdated(Map batchRoomAttributes) {
+  void onRoomBatchAttributesUpdated(
+      ZegoSignalingRoomBatchPropertiesData propertiesData) {
     debugPrint(
-        "[seat manager] onRoomBatchAttributesUpdated, batch room attributes: $batchRoomAttributes");
+        "[seat manager] onRoomBatchAttributesUpdated, batch room attributes: ${propertiesData.actionDataMap}");
 
-    updateSeatUsersByRoomAttributes(batchRoomAttributes
-        as Map<ZIMRoomAttributesUpdateAction, List<Map<String, String>>>);
+    updateSeatUsersByRoomAttributes(propertiesData.actionDataMap);
   }
 
   void updateSeatUsersByRoomAttributes(
-      Map<ZIMRoomAttributesUpdateAction, List<Map<String, String>>>
+      Map<ZegoSignalingRoomAttributesUpdateAction, List<Map<String, String>>>
           seatsRoomAttributes) {
     debugPrint(
         "[seat manager] onRoomSeatAttributesUpdated, seats room attributes: $seatsRoomAttributes");
@@ -664,7 +659,7 @@ class ZegoLiveSeatManager {
             var seatUserId = value;
 
             switch (action) {
-              case ZIMRoomAttributesUpdateAction.set:
+              case ZegoSignalingRoomAttributesUpdateAction.set:
                 if (seatsUsersMap.values.contains(seatUserId)) {
                   /// old seat user
                   debugPrint(
@@ -674,7 +669,7 @@ class ZegoLiveSeatManager {
                 }
                 seatsUsersMap[seatIndex.toString()] = seatUserId;
                 break;
-              case ZIMRoomAttributesUpdateAction.delete:
+              case ZegoSignalingRoomAttributesUpdateAction.delete:
                 if (kickSeatDialogInfo.isExist(userIndex: seatIndex)) {
                   debugPrint("[seat manager] close kick seat dialog");
                   kickSeatDialogInfo.clear();
@@ -743,7 +738,7 @@ class ZegoLiveSeatManager {
 
       if (result.code.isEmpty) {
         updateSeatUsersByRoomAttributes({
-          ZIMRoomAttributesUpdateAction.set: [
+          ZegoSignalingRoomAttributesUpdateAction.set: [
             result.result as Map<String, String>
           ]
         });

@@ -24,3 +24,7 @@
 
 * fix some bugs
 * update a dependency to the latest release
+
+## 1.0.6
+
+* update a dependency to the latest release
