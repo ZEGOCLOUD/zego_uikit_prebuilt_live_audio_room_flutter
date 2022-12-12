@@ -25,7 +25,7 @@ And it includes the business logic along with the UI, enabling you to customize 
     > Add or remove features accordingly 
 
 
-To build a live audio app from scratch, you may check our [Voice Call](http://doc.oa.zego.im/!ExpressAudioSDK-Overview/Overview).
+To build a live audio app from scratch, you may check our [Voice Call](https://docs.zegocloud.com/article/13257).
 
 ## Embedded features
 
@@ -42,10 +42,10 @@ To build a live audio app from scratch, you may check our [Voice Call](http://do
 ## Recommended resources
 
 
-* I want to [get started](http://doc.oa.zego.im/!LiveAudioRoomKit_QuickStart) to implement a live audio room swiftly
-* To [configure prebuilt UI](http://doc.oa.zego.im/!LiveAudioRoomKit_CustomPrebuiltUI) for a custom experience
+* I want to [get started](https://docs.zegocloud.com/article/15079) to implement a live audio room swiftly
+* To [configure prebuilt UI](https://docs.zegocloud.com/article/15083) for a custom experience
 * I want to get the [Sample Code](https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_live_audio_room_example_flutter)
-* To make a fully customized Live Audio app, you may try [this SDK](http://doc.oa.zego.im/!ExpressAudioSDK-Overview/Overview)
+* To make a fully customized Live Audio app, you may try [this SDK](https://docs.zegocloud.com/article/13257)
 
 
 - - -
@@ -219,7 +219,7 @@ Now you can simply click the **Run** or **Debug** button to run and test your Ap
 
 ## Related guide
 
-[Custom prebuilt UI](!LiveAudioRoomKit_CustomPrebuiltUI)
+[Custom prebuilt UI](https://docs.zegocloud.com/article/15083)
 
 ## Resources
 
