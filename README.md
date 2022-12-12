@@ -55,7 +55,7 @@ To build a live audio app from scratch, you may check our [Voice Call](https://d
 
 ## Prerequisites
 
-- Go to [ZEGOCLOUD Admin Console\|_blank](https://console.zegocloud.com), and do the following:
+- Go to [ZEGOCLOUD Admin Console](https://console.zegocloud.com), and do the following:
   - Create a project, get the **AppID** and **AppSign**.
   - Activate the **In-app Chat** service (as shown in the following figure).
 ![ActivateZIMinConsole2.png](https://storage.zego.im/sdk-doc/Pics/InappChat/ActivateZIMinConsole2.png)
