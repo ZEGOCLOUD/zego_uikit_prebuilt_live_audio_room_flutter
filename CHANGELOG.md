@@ -28,3 +28,9 @@
 ## 1.0.6
 
 * update a dependency to the latest release
+
+## 1.0.7
+* fix bugs
+* update resources
+* update a dependency to the latest release
+* support sdk log

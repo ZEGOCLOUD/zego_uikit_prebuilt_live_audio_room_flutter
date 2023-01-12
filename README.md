@@ -7,8 +7,7 @@
 And it includes the business logic along with the UI, enabling you to customize your live audio apps faster with more flexibility. 
 
 
-![overview.gif](images/final_sublist.gif)
-
+![overview.gif](https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/audio_room/final_sublist.gif)
 
 ## When do you need the Live Audio Room Kit
 
