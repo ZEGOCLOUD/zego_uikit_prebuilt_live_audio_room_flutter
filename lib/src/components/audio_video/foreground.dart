@@ -99,7 +99,11 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
     var index =
         int.tryParse(widget.extraInfo[layoutGridItemIndexKey].toString()) ?? -1;
     if (-1 == index) {
-      debugPrint("ERROR!!! click seat index is invalid");
+      ZegoLoggerService.logInfo(
+        "ERROR!!! click seat index is invalid",
+        tag: "audio room",
+        subTag: "foreground",
+      );
       return;
     }
 

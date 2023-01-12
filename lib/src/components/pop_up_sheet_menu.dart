@@ -63,7 +63,11 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
   Widget popUpItemWidget(int index, PopupItem popupItem) {
     return GestureDetector(
       onTap: () async {
-        debugPrint("[pop-up sheet] click ${popupItem.text}");
+        ZegoLoggerService.logInfo(
+          "click ${popupItem.text}",
+          tag: "audio room",
+          subTag: "pop-up sheet",
+        );
 
         Navigator.of(context).pop();
 

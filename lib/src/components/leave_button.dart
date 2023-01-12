@@ -41,7 +41,11 @@ class ZegoLeaveAudioRoomButton extends StatelessWidget {
           ),
       onLeaveConfirmation: (context) async {
         if (seatManager.isRoomAttributesBatching) {
-          debugPrint("[leave] room attribute is batching, ignore");
+          ZegoLoggerService.logInfo(
+            "room attribute is batching, ignore",
+            tag: "audio room",
+            subTag: "leave button",
+          );
           return false;
         }
 

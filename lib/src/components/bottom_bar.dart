@@ -117,11 +117,23 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
       displayButtonList =
           buttonList.sublist(0, widget.config.bottomMenuBarConfig.maxCount - 1);
 
-      buttonList.removeRange(0, widget.config.bottomMenuBarConfig.maxCount - 1);
       displayButtonList.add(
         buttonWrapper(
           child: ZegoMoreButton(
-            menuButtonList: buttonList,
+            menuButtonListFunc: () {
+              List<Widget> buttonList = [
+                ...getDefaultButtons(context, microphoneDefaultValueFunc: () {
+                  return ZegoUIKit()
+                      .getMicrophoneStateNotifier(ZegoUIKit().getLocalUser().id)
+                      .value;
+                }),
+                ...extendButtons
+              ];
+
+              buttonList.removeRange(
+                  0, widget.config.bottomMenuBarConfig.maxCount - 1);
+              return buttonList;
+            },
             icon: ButtonIcon(
               icon: PrebuiltLiveAudioRoomImage.asset(
                   PrebuiltLiveAudioRoomIconUrls.toolbarMore),
@@ -151,23 +163,34 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
     );
   }
 
-  List<Widget> getDefaultButtons(BuildContext context) {
+  List<Widget> getDefaultButtons(
+    BuildContext context, {
+    bool Function()? microphoneDefaultValueFunc,
+  }) {
     if (buttons.isEmpty) {
       return [];
     }
 
     return buttons
         .map((type) => buttonWrapper(
-              child: generateDefaultButtonsByEnum(context, type),
+              child: generateDefaultButtonsByEnum(
+                context,
+                type,
+                microphoneDefaultValueFunc: microphoneDefaultValueFunc,
+              ),
               type: type,
             ))
         .toList();
   }
 
   Widget generateDefaultButtonsByEnum(
-      BuildContext context, ZegoMenuBarButtonName type) {
+    BuildContext context,
+    ZegoMenuBarButtonName type, {
+    bool Function()? microphoneDefaultValueFunc,
+  }) {
     var buttonSize = zegoLiveButtonSize;
     var iconSize = zegoLiveButtonIconSize;
+
     switch (type) {
       case ZegoMenuBarButtonName.showMemberListButton:
         return ZegoMemberButton(
@@ -190,6 +213,10 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                 .contains(localUserID)) {
           microphoneDefaultOn = true;
         }
+
+        microphoneDefaultOn =
+            microphoneDefaultValueFunc?.call() ?? microphoneDefaultOn;
+
         return ZegoToggleMicrophoneButton(
           buttonSize: buttonSize,
           iconSize: iconSize,
