@@ -172,6 +172,26 @@ void showPopUpSheet({
       );
     },
   ).whenComplete(() {
+    var takeOffSeatItemIndex = popupItems.indexWhere(
+        (popupItem) => popupItem.value == PopupItemValue.takeOffSeat);
+    if (-1 != takeOffSeatItemIndex) {
+      /// clear kickSeatDialogInfo
+      if (seatManager.kickSeatDialogInfo.isExist(
+        userID: seatManager.seatsUserMapNotifier
+                .value[seatManager.kickSeatDialogInfo.userIndex.toString()] ??
+            '',
+        userIndex: seatManager.kickSeatDialogInfo.userIndex,
+        allSame: true,
+      )) {
+        ZegoLoggerService.logInfo(
+          'clear seat dialog info when popup sheet complete',
+          tag: 'audio room',
+          subTag: 'seat manager',
+        );
+        seatManager.kickSeatDialogInfo.clear();
+      }
+    }
+
     seatManager.setPopUpSheetVisible(false);
   });
 }

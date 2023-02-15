@@ -23,6 +23,12 @@ enum ZegoLiveAudioRoomLayoutAlignment {
 }
 
 class ZegoLiveAudioRoomLayoutRowConfig {
+  ZegoLiveAudioRoomLayoutRowConfig({
+    this.count = 4,
+    this.seatSpacing = 0,
+    this.alignment = ZegoLiveAudioRoomLayoutAlignment.spaceAround,
+  });
+
   /// seat count of a row, range is [1~4]
   int count;
 
@@ -31,33 +37,21 @@ class ZegoLiveAudioRoomLayoutRowConfig {
 
   /// seat alignment
   ZegoLiveAudioRoomLayoutAlignment alignment;
-
-  ZegoLiveAudioRoomLayoutRowConfig({
-    this.count = 4,
-    this.seatSpacing = 0,
-    this.alignment = ZegoLiveAudioRoomLayoutAlignment.spaceAround,
-  });
 }
 
 class ZegoLiveAudioRoomLayoutConfig {
-  ///  spacing between rows, should be positive
-  int rowSpacing;
-
-  /// rows
-  List<ZegoLiveAudioRoomLayoutRowConfig> rowConfigs;
-
   ZegoLiveAudioRoomLayoutConfig({
     this.rowSpacing = 0,
     List<ZegoLiveAudioRoomLayoutRowConfig>? rowConfigs,
   }) : rowConfigs = rowConfigs ??
             [
-              ZegoLiveAudioRoomLayoutRowConfig(
-                count: 4,
-                alignment: ZegoLiveAudioRoomLayoutAlignment.spaceAround,
-              ),
-              ZegoLiveAudioRoomLayoutRowConfig(
-                count: 4,
-                alignment: ZegoLiveAudioRoomLayoutAlignment.spaceAround,
-              ),
+              ZegoLiveAudioRoomLayoutRowConfig(),
+              ZegoLiveAudioRoomLayoutRowConfig(),
             ];
+
+  ///  spacing between rows, should be positive
+  int rowSpacing;
+
+  /// rows
+  List<ZegoLiveAudioRoomLayoutRowConfig> rowConfigs;
 }

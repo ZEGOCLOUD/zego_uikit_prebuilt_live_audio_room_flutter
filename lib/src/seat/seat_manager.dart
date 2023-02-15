@@ -14,17 +14,12 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_translation.dart';
-import 'plugins.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/plugins.dart';
 
 class ZegoLiveSeatManager {
-  final String userID;
-  final ZegoPrebuiltPlugins plugins;
-  final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
-  final BuildContext Function() contextQuery;
-  final ZegoTranslationText translationText;
-
   ZegoLiveSeatManager({
     required this.userID,
+    required this.roomID,
     required this.plugins,
     required this.config,
     required this.translationText,
@@ -47,6 +42,12 @@ class ZegoLiveSeatManager {
           .getUsersInRoomAttributesStream()
           .listen(onUsersAttributesUpdated));
   }
+  final String userID;
+  final String roomID;
+  final ZegoPrebuiltPlugins plugins;
+  final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
+  final BuildContext Function() contextQuery;
+  final ZegoTranslationText translationText;
 
   KickSeatDialogInfo kickSeatDialogInfo = KickSeatDialogInfo.empty();
 
@@ -58,22 +59,22 @@ class ZegoLiveSeatManager {
   Map<String, Map<String, String>> pendingUserRoomAttributes = {};
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
-  var hostsNotifier = ValueNotifier<List<String>>([]);
-  var localRole =
+  ValueNotifier<List<String>> hostsNotifier = ValueNotifier<List<String>>([]);
+  ValueNotifier<ZegoLiveAudioRoomRole> localRole =
       ValueNotifier<ZegoLiveAudioRoomRole>(ZegoLiveAudioRoomRole.audience);
 
   bool get localIsAHost => ZegoLiveAudioRoomRole.host == localRole.value;
 
   bool isAHostSeat(int index) => config.hostSeatIndexes.contains(index);
 
-  var seatsUserMapNotifier =
+  ValueNotifier<Map<String, String>> seatsUserMapNotifier =
       ValueNotifier<Map<String, String>>({}); //  <seat id, user id>
 
   Future<void> init() async {
     ZegoLoggerService.logInfo(
-      "init",
-      tag: "audio room",
-      subTag: "seat manager",
+      'init',
+      tag: 'audio room',
+      subTag: 'seat manager',
     );
 
     await queryUsersInRoomAttributes();
@@ -84,9 +85,9 @@ class ZegoLiveSeatManager {
 
   Future<void> uninit() async {
     ZegoLoggerService.logInfo(
-      "uninit",
-      tag: "audio room",
-      subTag: "seat manager",
+      'uninit',
+      tag: 'audio room',
+      subTag: 'seat manager',
     );
 
     ZegoUIKit().turnMicrophoneOn(false);
@@ -97,38 +98,45 @@ class ZegoLiveSeatManager {
 
     seatsUserMapNotifier.removeListener(onSeatUsersChanged);
     localRole.removeListener(onRoleChanged);
-    for (var subscription in subscriptions) {
+    for (final subscription in subscriptions) {
       subscription?.cancel();
     }
   }
 
   Future<bool> queryUsersInRoomAttributes({bool withToast = true}) async {
     ZegoLoggerService.logInfo(
-      "query init users in-room attributes",
-      tag: "audio room",
-      subTag: "seat manager",
+      'query init users in-room attributes',
+      tag: 'audio room',
+      subTag: 'seat manager',
     );
     return await ZegoUIKit()
         .getSignalingPlugin()
-        .queryUsersInRoomAttributes()
+        .queryUsersInRoomAttributes(
+          roomID: roomID,
+        )
         .then((result) {
+      final success = result.error == null;
       ZegoLoggerService.logInfo(
-        "query finish, code:${result.code}, message: ${result.message} , result:${result.result as Map<String, Map<String, String>>}",
-        tag: "audio room",
-        subTag: "seat manager",
+        'query finish, result:$result',
+        tag: 'audio room',
+        subTag: 'seat manager',
       );
 
-      if (withToast && result.code.isNotEmpty) {
-        showDebugToast(
-            "query users in-room attributes error, ${result.code} ${result.message}");
+      ZegoLoggerService.logInfo(
+        'query finish, result:$result',
+        tag: 'audio room',
+        subTag: 'seat manager',
+      );
+      if (success) {
+        updateRoleFromUserAttributes(result.attributes);
+      } else {
+        if (withToast) {
+          showDebugToast(
+              'query users in-room attributes error, ${result.error}');
+        }
       }
 
-      if (result.code.isEmpty) {
-        updateRoleFromUserAttributes(
-            result.result as Map<String, Map<String, String>>);
-      }
-
-      return result.code.isEmpty;
+      return success;
     });
   }
 
@@ -140,9 +148,9 @@ class ZegoLiveSeatManager {
     if (localRole.value == ZegoLiveAudioRoomRole.host ||
         localRole.value == ZegoLiveAudioRoomRole.speaker) {
       ZegoLoggerService.logInfo(
-        "try init seat ${config.takeSeatIndexWhenJoining}",
-        tag: "audio room",
-        subTag: "seat manager",
+        'try init seat ${config.takeSeatIndexWhenJoining}',
+        tag: 'audio room',
+        subTag: 'seat manager',
       );
       await takeOnSeat(
         config.takeSeatIndexWhenJoining,
@@ -154,28 +162,28 @@ class ZegoLiveSeatManager {
 
         ZegoLoggerService.logInfo(
           "[live audio room] init seat index ${success ? "success" : "failed"}",
-          tag: "audio room",
-          subTag: "seat manager",
+          tag: 'audio room',
+          subTag: 'seat manager',
         );
         if (success) {
           if (localRole.value == ZegoLiveAudioRoomRole.host) {
             ZegoLoggerService.logInfo(
-              "[live audio room] try init role ${localRole.value}",
-              tag: "audio room",
-              subTag: "seat manager",
+              '[live audio room] try init role ${localRole.value}',
+              tag: 'audio room',
+              subTag: 'seat manager',
             );
             await setRoleAttribute(localRole.value, userID)
                 .then((success) async {
               ZegoLoggerService.logInfo(
                 "[live audio room] init role ${success ? "success" : "failed"}",
-                tag: "audio room",
-                subTag: "seat manager",
+                tag: 'audio room',
+                subTag: 'seat manager',
               );
               if (!success) {
                 ZegoLoggerService.logInfo(
-                  "[live audio room] reset to audience and take off seat ${config.takeSeatIndexWhenJoining}",
-                  tag: "audio room",
-                  subTag: "seat manager",
+                  '[live audio room] reset to audience and take off seat ${config.takeSeatIndexWhenJoining}',
+                  tag: 'audio room',
+                  subTag: 'seat manager',
                 );
 
                 localRole.value = ZegoLiveAudioRoomRole.audience;
@@ -193,9 +201,9 @@ class ZegoLiveSeatManager {
 
   void onRoleChanged() {
     ZegoLoggerService.logInfo(
-      "local user role changed to ${localRole.value}",
-      tag: "audio room",
-      subTag: "seat manager",
+      'local user role changed to ${localRole.value}',
+      tag: 'audio room',
+      subTag: 'seat manager',
     );
 
     if (ZegoLiveAudioRoomRole.host == localRole.value ||
@@ -206,34 +214,34 @@ class ZegoLiveSeatManager {
         isShowDialog: true,
       ).then((value) {
         ZegoLoggerService.logInfo(
-          "local is speaker now, turn on microphone",
-          tag: "audio room",
-          subTag: "seat manager",
+          'local is speaker now, turn on microphone',
+          tag: 'audio room',
+          subTag: 'seat manager',
         );
         ZegoUIKit().turnMicrophoneOn(true);
       });
     } else {
       ZegoLoggerService.logInfo(
-        "local is audience now, turn off microphone",
-        tag: "audio room",
-        subTag: "seat manager",
+        'local is audience now, turn off microphone',
+        tag: 'audio room',
+        subTag: 'seat manager',
       );
       ZegoUIKit().turnMicrophoneOn(false);
 
       if (isLeaveSeatDialogVisible) {
         ZegoLoggerService.logInfo(
-          "close leave seat dialog",
-          tag: "audio room",
-          subTag: "seat manager",
+          'close leave seat dialog',
+          tag: 'audio room',
+          subTag: 'seat manager',
         );
         isLeaveSeatDialogVisible = false;
         Navigator.of(contextQuery()).pop(false);
       }
       if (isPopUpSheetVisible) {
         ZegoLoggerService.logInfo(
-          "close pop up sheet",
-          tag: "audio room",
-          subTag: "seat manager",
+          'close pop up sheet',
+          tag: 'audio room',
+          subTag: 'seat manager',
         );
         isPopUpSheetVisible = false;
         Navigator.of(contextQuery()).pop(false);
@@ -243,16 +251,16 @@ class ZegoLiveSeatManager {
 
   void onSeatUsersChanged() {
     ZegoLoggerService.logInfo(
-      "seat users changed to ${seatsUserMapNotifier.value}",
-      tag: "audio room",
-      subTag: "seat manager",
+      'seat users changed to ${seatsUserMapNotifier.value}',
+      tag: 'audio room',
+      subTag: 'seat manager',
     );
 
     if (!seatsUserMapNotifier.value.values.contains(userID)) {
       ZegoLoggerService.logInfo(
-        "local is not on seat now, turn off microphone",
-        tag: "audio room",
-        subTag: "seat manager",
+        'local is not on seat now, turn off microphone',
+        tag: 'audio room',
+        subTag: 'seat manager',
       );
       ZegoUIKit().turnMicrophoneOn(false);
     }
@@ -260,14 +268,14 @@ class ZegoLiveSeatManager {
     if (kickSeatDialogInfo.isExist(
       userID:
           seatsUserMapNotifier.value[kickSeatDialogInfo.userIndex.toString()] ??
-              "",
+              '',
       userIndex: kickSeatDialogInfo.userIndex,
       allSame: true,
     )) {
       ZegoLoggerService.logInfo(
-        "close kick seat dialog",
-        tag: "audio room",
-        subTag: "seat manager",
+        'close kick seat dialog',
+        tag: 'audio room',
+        subTag: 'seat manager',
       );
       kickSeatDialogInfo.clear();
       Navigator.of(contextQuery()).pop(false);
@@ -283,7 +291,7 @@ class ZegoLiveSeatManager {
       return false;
     }
 
-    var inRoomAttributes =
+    final inRoomAttributes =
         ZegoUIKit().getInRoomUserAttributesNotifier(user.id).value;
     if (!inRoomAttributes.containsKey(attributeKeyRole)) {
       return false;
@@ -298,32 +306,36 @@ class ZegoLiveSeatManager {
     String targetUserID,
   ) async {
     ZegoLoggerService.logInfo(
-      "$targetUserID set role in-room attribute: $role",
-      tag: "audio room",
-      subTag: "seat manager",
+      '$targetUserID set role in-room attribute: $role',
+      tag: 'audio room',
+      subTag: 'seat manager',
     );
 
-    var success =
-        await ZegoUIKit().getSignalingPlugin().setUsersInRoomAttributes(
-      attributeKeyRole,
-      role.index.toString(),
-      [targetUserID],
+    return ZegoUIKit().getSignalingPlugin().setUsersInRoomAttributes(
+      roomID: roomID,
+      key: attributeKeyRole,
+      value: role.index.toString(),
+      userIDs: [targetUserID],
     ).then((result) {
-      ZegoLoggerService.logInfo(
-        "host set in-room attribute result, code:${result.code}, message:${result.message}",
-        tag: "audio room",
-        subTag: "seat manager",
-      );
+      final success = result.error == null;
+      if (success) {
+        ZegoLoggerService.logInfo(
+          'host set in-room attribute result success',
+          tag: 'audio room',
+          subTag: 'seat manager',
+        );
+      } else {
+        ZegoLoggerService.logInfo(
+          'host set in-room attribute result '
+          'faild, error:${result.error}',
+          tag: 'audio room',
+          subTag: 'seat manager',
+        );
 
-      if (result.code.isNotEmpty) {
-        showDebugToast(
-            "host set in-room attribute failed, ${result.code} ${result.message}");
+        showDebugToast('host set in-room attribute failed, ${result.error}');
       }
-
-      return result.code.isEmpty;
+      return success;
     });
-
-    return success;
   }
 
   Future<bool> takeOnSeat(
@@ -334,75 +346,84 @@ class ZegoLiveSeatManager {
   }) async {
     if (!isForce && !isSeatEmpty(index)) {
       ZegoLoggerService.logInfo(
-        "take on seat, seat $index is not empty",
-        tag: "audio room",
-        subTag: "seat manager",
+        'take on seat, seat $index is not empty',
+        tag: 'audio room',
+        subTag: 'seat manager',
       );
       return false;
     }
 
     if (-1 != getIndexByUserID(userID)) {
       ZegoLoggerService.logInfo(
-        "take on seat, user is on seat , switch to $index",
-        tag: "audio room",
-        subTag: "seat manager",
+        'take on seat, user is on seat , switch to $index',
+        tag: 'audio room',
+        subTag: 'seat manager',
       );
       return switchToSeat(index);
     }
 
     if (isRoomAttributesBatching) {
       ZegoLoggerService.logInfo(
-        "take on seat, room attribute is batching, ignore",
-        tag: "audio room",
-        subTag: "seat manager",
+        'take on seat, room attribute is batching, ignore',
+        tag: 'audio room',
+        subTag: 'seat manager',
       );
       return false;
     }
 
     ZegoLoggerService.logInfo(
-      "local user take on seat $index, target room attribute:${{
+      'local user take on seat $index, target room attribute:${{
         index.toString(): userID
-      }}",
-      tag: "audio room",
-      subTag: "seat manager",
+      }}',
+      tag: 'audio room',
+      subTag: 'seat manager',
     );
 
     isRoomAttributesBatching = true;
     ZegoUIKit().getSignalingPlugin().beginRoomPropertiesBatchOperation(
+          roomID: roomID,
           isForce: isForce,
           isUpdateOwner: isUpdateOwner,
           isDeleteAfterOwnerLeft: isDeleteAfterOwnerLeft,
         );
     ZegoUIKit()
         .getSignalingPlugin()
-        .updateRoomProperty(index.toString(), userID)
+        .updateRoomProperty(
+            roomID: roomID, key: index.toString(), value: userID)
         .then((result) {
-      ZegoLoggerService.logInfo(
-        "local user take on seat $index result:${result.code} ${result.message}",
-        tag: "audio room",
-        subTag: "seat manager",
-      );
-
-      if (result.code.isNotEmpty) {
-        showDebugToast(
-            "take on $index seat is failed, ${result.code} ${result.message}");
+      if (result.error != null) {
+        ZegoLoggerService.logInfo(
+          'take on $index seat is failed, ${result.error}',
+          tag: 'audio room',
+          subTag: 'seat manager',
+        );
+      } else {
+        ZegoLoggerService.logInfo(
+          'local user take on seat $index success',
+          tag: 'audio room',
+          subTag: 'seat manager',
+        );
       }
     });
     await ZegoUIKit()
         .getSignalingPlugin()
-        .endRoomPropertiesBatchOperation()
+        .endRoomPropertiesBatchOperation(roomID: roomID)
         .then((result) {
       isRoomAttributesBatching = false;
-
-      ZegoLoggerService.logInfo("room attribute batch is finished");
-      ZegoLoggerService.logInfo(
-        "take on seat result, code:${result.code}, message ${result.message}",
-        tag: "audio room",
-        subTag: "seat manager",
-      );
-
-      if (result.code.isNotEmpty) {
-        showDebugToast("take on seat error, ${result.code} ${result.message}");
+      ZegoLoggerService.logInfo('room attribute batch is finished');
+      if (result.error != null) {
+        ZegoLoggerService.logInfo(
+          'take on seat result, error:${result.error}',
+          tag: 'audio room',
+          subTag: 'seat manager',
+        );
+        showDebugToast('take on seat error, ${result.error}');
+      } else {
+        ZegoLoggerService.logInfo(
+          'room attribute batch success finished',
+          tag: 'audio room',
+          subTag: 'seat manager',
+        );
       }
     });
 
@@ -412,63 +433,100 @@ class ZegoLiveSeatManager {
   Future<bool> switchToSeat(int index) async {
     if (isRoomAttributesBatching) {
       ZegoLoggerService.logInfo(
-        "switch seat, room attribute is batching, ignore",
-        tag: "audio room",
-        subTag: "seat manager",
+        'switch seat, room attribute is batching, ignore',
+        tag: 'audio room',
+        subTag: 'seat manager',
       );
       return false;
     }
 
-    var oldSeatIndex = getIndexByUserID(userID);
+    final oldSeatIndex = getIndexByUserID(userID);
 
     ZegoLoggerService.logInfo(
-      "local user switch on seat from $oldSeatIndex to $index, "
-      "target room attributes:${{index.toString(): userID}}",
-      tag: "audio room",
-      subTag: "seat manager",
+      'local user switch on seat from $oldSeatIndex to $index, '
+      'target room attributes:${{index.toString(): userID}}',
+      tag: 'audio room',
+      subTag: 'seat manager',
     );
 
     isRoomAttributesBatching = true;
     ZegoUIKit().getSignalingPlugin().beginRoomPropertiesBatchOperation(
+          roomID: roomID,
           isDeleteAfterOwnerLeft: true,
         );
     ZegoUIKit()
         .getSignalingPlugin()
-        .updateRoomProperty(index.toString(), userID)
+        .updateRoomProperty(
+            roomID: roomID, key: index.toString(), value: userID)
         .then((result) {
-      ZegoLoggerService.logInfo(
-        "local user switch on seat $index result:${result.code} ${result.message}",
-        tag: "audio room",
-        subTag: "seat manager",
-      );
+      if (result.error != null) {
+        ZegoLoggerService.logInfo(
+          'switch seat $index, '
+          'updateRoomProperty faild, error:${result.error}',
+          tag: 'audio room',
+          subTag: 'seat manager',
+        );
 
-      if (result.code.isNotEmpty) {
-        showDebugToast(
-            "switch on $index seat is failed, ${result.code} ${result.message}");
+        showDebugToast('switch seat $index, '
+            'updateRoomProperty faild, error:${result.error}');
+      } else {
+        ZegoLoggerService.logInfo(
+          'switch seat $index '
+          'updateRoomProperty success',
+          tag: 'audio room',
+          subTag: 'seat manager',
+        );
       }
     });
-    ZegoUIKit()
-        .getSignalingPlugin()
-        .deleteRoomProperties([oldSeatIndex.toString()]);
+    ZegoUIKit().getSignalingPlugin().deleteRoomProperties(
+        roomID: roomID, keys: [oldSeatIndex.toString()]).then((result) {
+      if (result.error != null) {
+        ZegoLoggerService.logInfo(
+          'switch seat $index, '
+          'deleteRoomProperties faild, error:${result.error}',
+          tag: 'audio room',
+          subTag: 'seat manager',
+        );
+
+        showDebugToast('switch seat $index, '
+            'deleteRoomProperties faild, error:${result.error}');
+      } else {
+        ZegoLoggerService.logInfo(
+          'switch seat $index '
+          'deleteRoomProperties success',
+          tag: 'audio room',
+          subTag: 'seat manager',
+        );
+      }
+    });
     await ZegoUIKit()
         .getSignalingPlugin()
-        .endRoomPropertiesBatchOperation()
+        .endRoomPropertiesBatchOperation(roomID: roomID)
         .then((result) {
       isRoomAttributesBatching = false;
-
       ZegoLoggerService.logInfo(
-        "switch seat, room attribute batch is finished",
-        tag: "audio room",
-        subTag: "seat manager",
-      );
-      ZegoLoggerService.logInfo(
-        "switch seat result, code:${result.code}, message:${result.message}",
-        tag: "audio room",
-        subTag: "seat manager",
+        'switch seat, room attribute batch is finished',
+        tag: 'audio room',
+        subTag: 'seat manager',
       );
 
-      if (result.code.isNotEmpty) {
-        showDebugToast("switch seat error, ${result.code} ${result.message}");
+      if (result.error != null) {
+        ZegoLoggerService.logInfo(
+          'switch seat $index, '
+          'endRoomPropertiesBatchOperation faild, error:${result.error}',
+          tag: 'audio room',
+          subTag: 'seat manager',
+        );
+
+        showDebugToast('switch seat $index, '
+            'endRoomPropertiesBatchOperation faild, error:${result.error}');
+      } else {
+        ZegoLoggerService.logInfo(
+          'switch seat $index '
+          'endRoomPropertiesBatchOperation success',
+          tag: 'audio room',
+          subTag: 'seat manager',
+        );
       }
     });
 
@@ -476,28 +534,28 @@ class ZegoLiveSeatManager {
   }
 
   Future<void> kickSeat(int index) async {
-    var targetUser = getUserByIndex(index);
+    final targetUser = getUserByIndex(index);
     if (null == targetUser) {
       ZegoLoggerService.logInfo(
-        "seat $index user id is empty",
-        tag: "audio room",
-        subTag: "seat manager",
+        'seat $index user id is empty',
+        tag: 'audio room',
+        subTag: 'seat manager',
       );
       return;
     }
 
     if (kickSeatDialogInfo.isNotEmpty) {
       ZegoLoggerService.logInfo(
-        "kick seat, dialog is visible",
-        tag: "audio room",
-        subTag: "seat manager",
+        'kick seat, dialog is visible',
+        tag: 'audio room',
+        subTag: 'seat manager',
       );
       return;
     }
 
     kickSeatDialogInfo =
         KickSeatDialogInfo(userID: targetUser.id, userIndex: index);
-    var dialogInfo = translationText.removeFromSeatDialogInfo;
+    final dialogInfo = translationText.removeFromSeatDialogInfo;
     await showLiveDialog(
       context: contextQuery(),
       title: dialogInfo.title,
@@ -522,34 +580,34 @@ class ZegoLiveSeatManager {
 
   Future<void> leaveSeat({bool showDialog = true}) async {
     /// take off seat when leave room
-    var localSeatIndex = getIndexByUserID(ZegoUIKit().getLocalUser().id);
+    final localSeatIndex = getIndexByUserID(ZegoUIKit().getLocalUser().id);
     if (-1 == localSeatIndex) {
       ZegoLoggerService.logInfo(
-        "local is not on seat, not need to leave",
-        tag: "audio room",
-        subTag: "seat manager",
+        'local is not on seat, not need to leave',
+        tag: 'audio room',
+        subTag: 'seat manager',
       );
       return;
     }
 
     if (showDialog && isLeaveSeatDialogVisible) {
       ZegoLoggerService.logInfo(
-        "leave seat, dialog is visible",
-        tag: "audio room",
-        subTag: "seat manager",
+        'leave seat, dialog is visible',
+        tag: 'audio room',
+        subTag: 'seat manager',
       );
       return;
     }
 
     ZegoLoggerService.logInfo(
-      "local is on seat $localSeatIndex, leaving..",
-      tag: "audio room",
-      subTag: "seat manager",
+      'local is on seat $localSeatIndex, leaving..',
+      tag: 'audio room',
+      subTag: 'seat manager',
     );
 
     if (showDialog) {
       isLeaveSeatDialogVisible = true;
-      var dialogInfo = translationText.leaveSeatDialogInfo;
+      final dialogInfo = translationText.leaveSeatDialogInfo;
       await showLiveDialog(
         context: contextQuery(),
         title: dialogInfo.title,
@@ -573,73 +631,80 @@ class ZegoLiveSeatManager {
   }
 
   Future<bool> takeOffSeat(int index, {bool isForce = false}) async {
-    var targetUser = getUserByIndex(index);
+    final targetUser = getUserByIndex(index);
     if (null == targetUser) {
       ZegoLoggerService.logInfo(
-        "seat $index user id is empty",
-        tag: "audio room",
-        subTag: "seat manager",
+        'seat $index user id is empty',
+        tag: 'audio room',
+        subTag: 'seat manager',
       );
       return false;
     }
 
     if (isRoomAttributesBatching) {
       ZegoLoggerService.logInfo(
-        "take off seat, room attribute is batching, ignore",
-        tag: "audio room",
-        subTag: "seat manager",
+        'take off seat, room attribute is batching, ignore',
+        tag: 'audio room',
+        subTag: 'seat manager',
       );
       return false;
     }
 
     ZegoLoggerService.logInfo(
-      "take off ${targetUser.toString()} from seat $index",
-      tag: "audio room",
-      subTag: "seat manager",
+      'take off ${targetUser.toString()} from seat $index',
+      tag: 'audio room',
+      subTag: 'seat manager',
     );
 
     isRoomAttributesBatching = true;
     ZegoUIKit().getSignalingPlugin().beginRoomPropertiesBatchOperation(
+          roomID: roomID,
           isForce: isForce,
         );
-    ZegoUIKit()
-        .getSignalingPlugin()
-        .deleteRoomProperties([index.toString()]).then((result) {
-      ZegoLoggerService.logInfo(
-        "take off ${targetUser.toString()} from seat $index result:"
-        "${result.code} ${result.message}",
-        tag: "audio room",
-        subTag: "seat manager",
-      );
-      if (result.code.isNotEmpty) {
+    ZegoUIKit().getSignalingPlugin().deleteRoomProperties(
+        roomID: roomID, keys: [index.toString()]).then((result) {
+      if (result.error != null) {
         showError(translationText.removeSpeakerFailedToast
             .replaceFirst(translationText.param_1, targetUser.name));
         ZegoLoggerService.logInfo(
-          "take off ${targetUser.name} from $index seat is failed, ${result.code} ${result.message}",
-          tag: "audio room",
-          subTag: "seat manager",
+          'take off ${targetUser.name} from $index seat '
+          ' failed, ${result.error}',
+          tag: 'audio room',
+          subTag: 'seat manager',
+        );
+      } else {
+        ZegoLoggerService.logInfo(
+          'take off ${targetUser.toString()} from seat '
+          '$index success',
+          tag: 'audio room',
+          subTag: 'seat manager',
         );
       }
     });
     await ZegoUIKit()
         .getSignalingPlugin()
-        .endRoomPropertiesBatchOperation()
+        .endRoomPropertiesBatchOperation(roomID: roomID)
         .then((result) {
       isRoomAttributesBatching = false;
-
       ZegoLoggerService.logInfo(
-        "take off seat, room attribute batch is finished",
-        tag: "audio room",
-        subTag: "seat manager",
-      );
-      ZegoLoggerService.logInfo(
-        "take off seat result, code:${result.code}, message:${result.message}",
-        tag: "audio room",
-        subTag: "seat manager",
+        'take off seat, room attribute batch is finished',
+        tag: 'audio room',
+        subTag: 'seat manager',
       );
 
-      if (result.code.isNotEmpty) {
-        showDebugToast("take off seat error, ${result.code} ${result.message}");
+      if (result.error != null) {
+        ZegoLoggerService.logInfo(
+          'take off seat faild, error: ${result.error}',
+          tag: 'audio room',
+          subTag: 'seat manager',
+        );
+        showDebugToast('take off seat faild, error: ${result.error}');
+      } else {
+        ZegoLoggerService.logInfo(
+          'take off seat success',
+          tag: 'audio room',
+          subTag: 'seat manager',
+        );
       }
     });
 
@@ -648,11 +713,11 @@ class ZegoLiveSeatManager {
 
   ZegoUIKitUser? getUserByIndex(int index) {
     return ZegoUIKit()
-        .getUser(seatsUserMapNotifier.value[index.toString()] ?? "");
+        .getUser(seatsUserMapNotifier.value[index.toString()] ?? '');
   }
 
   int getIndexByUserID(String userID) {
-    int queryUserIndex = -1;
+    var queryUserIndex = -1;
     seatsUserMapNotifier.value.forEach((seatIndex, seatUserID) {
       if (seatUserID == userID) {
         queryUserIndex = int.parse(seatIndex);
@@ -667,33 +732,33 @@ class ZegoLiveSeatManager {
   }
 
   void onUsersAttributesUpdated(
-      ZegoSignalingUserInRoomAttributesData attributesData) {
+      ZegoSignalingPluginUsersInRoomAttributesUpdatedEvent event) {
     ZegoLoggerService.logInfo(
-      "onUsersAttributesUpdated editor:${attributesData.editor.toString()},"
-      " infos:${attributesData.infos}",
-      tag: "audio room",
-      subTag: "seat manager",
+      'onUsersAttributesUpdated $event',
+      tag: 'audio room',
+      subTag: 'seat manager',
     );
 
-    updateRoleFromUserAttributes(attributesData.infos);
+    updateRoleFromUserAttributes(event.attributes);
   }
 
   /// users attributes only contain 'host' now
   void updateRoleFromUserAttributes(Map<String, Map<String, String>> infos) {
     ZegoLoggerService.logInfo(
-      "updateUserAttributes:$infos",
-      tag: "audio room",
-      subTag: "seat manager",
+      'updateUserAttributes:$infos',
+      tag: 'audio room',
+      subTag: 'seat manager',
     );
 
     infos.forEach((updateUserID, updateUserAttributes) {
-      var updateUser = ZegoUIKit().getUser(updateUserID);
+      final updateUser = ZegoUIKit().getUser(updateUserID);
       if (null == updateUser) {
         pendingUserRoomAttributes[updateUserID] = updateUserAttributes;
         ZegoLoggerService.logInfo(
-          "updateUserAttributes, but user($updateUserID) is not exist, deal when user enter",
-          tag: "audio room",
-          subTag: "seat manager",
+          'updateUserAttributes, but user($updateUserID) '
+          'is not exist, deal when user enter',
+          tag: 'audio room',
+          subTag: 'seat manager',
         );
         return;
       }
@@ -711,9 +776,9 @@ class ZegoLiveSeatManager {
               int.parse(updateUserAttributes[attributeKeyRole]!.toString())];
         }
         ZegoLoggerService.logInfo(
-          "update local role:${localRole.value}",
-          tag: "audio room",
-          subTag: "seat manager",
+          'update local role:${localRole.value}',
+          tag: 'audio room',
+          subTag: 'seat manager',
         );
       }
     });
@@ -724,7 +789,7 @@ class ZegoLiveSeatManager {
     Map<String, String> updateUserAttributes,
   ) {
     /// update host
-    var currentHosts = List<String>.from(hostsNotifier.value);
+    final currentHosts = List<String>.from(hostsNotifier.value);
     if (currentHosts.contains(updateUser.id)) {
       /// local is host
       if (
@@ -745,119 +810,99 @@ class ZegoLiveSeatManager {
     }
     hostsNotifier.value = currentHosts;
     ZegoLoggerService.logInfo(
-      "hosts is :${hostsNotifier.value}",
-      tag: "audio room",
-      subTag: "seat manager",
+      'hosts is :${hostsNotifier.value}',
+      tag: 'audio room',
+      subTag: 'seat manager',
     );
   }
 
   void onUserListUpdated(List<ZegoUIKitUser> users) {
-    var doneUserIDs = <String>[];
-    pendingUserRoomAttributes.forEach((userID, userAttributes) {
-      ZegoLoggerService.logInfo(
-        "exist pending user attribute, user id: $userID, attributes: $userAttributes",
-        tag: "audio room",
-        subTag: "seat manager",
-      );
-
-      var user = ZegoUIKit().getUser(userID);
-      if (user != null && !user.isEmpty()) {
-        updateRoleFromUserAttributes({userID: userAttributes});
-
-        doneUserIDs.add(userID);
-      }
-    });
-
+    final doneUserIDs = <String>[];
     pendingUserRoomAttributes
-        .removeWhere((userID, userAttributes) => doneUserIDs.contains(userID));
+      ..forEach((userID, userAttributes) {
+        ZegoLoggerService.logInfo(
+          'exist pending user attribute, user '
+          'id: $userID, attributes: $userAttributes',
+          tag: 'audio room',
+          subTag: 'seat manager',
+        );
+
+        final user = ZegoUIKit().getUser(userID);
+        if (user != null && !user.isEmpty()) {
+          updateRoleFromUserAttributes({userID: userAttributes});
+
+          doneUserIDs.add(userID);
+        }
+      })
+      ..removeWhere((userID, userAttributes) => doneUserIDs.contains(userID));
 
     if (doneUserIDs.isNotEmpty) {
       /// force update layout
-      var seatsUsersMap = Map<String, String>.from(seatsUserMapNotifier.value);
+      final seatsUsersMap =
+          Map<String, String>.from(seatsUserMapNotifier.value);
       seatsUserMapNotifier.value = seatsUsersMap;
     }
   }
 
-  void onRoomAttributesUpdated(ZegoSignalingRoomPropertiesData propertiesData) {
+  void onRoomAttributesUpdated(
+      ZegoSignalingPluginRoomPropertiesUpdatedEvent propertiesData) {
     ZegoLoggerService.logInfo(
-      "onRoomAttributesUpdated room attributes: "
-      "${propertiesData.actionDataMap}",
-      tag: "audio room",
-      subTag: "seat manager",
+      'onRoomAttributesUpdated $propertiesData',
+      tag: 'audio room',
+      subTag: 'seat manager',
     );
-
-    Map<ZegoSignalingRoomAttributesUpdateAction, List<Map<String, String>>>
-        roomAttributes = {};
-    propertiesData.actionDataMap.forEach((action, attributes) {
-      if (roomAttributes.containsKey(action)) {
-        roomAttributes[action]!.add(attributes);
-      } else {
-        roomAttributes[action] = [attributes];
-      }
-    });
-    updateSeatUsersByRoomAttributes(roomAttributes);
+    updateSeatUsersByRoomAttributes(
+        propertiesData.setProperties, propertiesData.deleteProperties);
   }
 
   void onRoomBatchAttributesUpdated(
-      ZegoSignalingRoomBatchPropertiesData propertiesData) {
+      ZegoSignalingPluginRoomPropertiesBatchUpdatedEvent propertiesData) {
     ZegoLoggerService.logInfo(
-      "onRoomBatchAttributesUpdated, batch room attributes: ${propertiesData.actionDataMap}",
-      tag: "audio room",
-      subTag: "seat manager",
+      'onRoomBatchAttributesUpdated, $propertiesData}',
+      tag: 'audio room',
+      subTag: 'seat manager',
     );
-
-    updateSeatUsersByRoomAttributes(propertiesData.actionDataMap);
+    updateSeatUsersByRoomAttributes(
+        propertiesData.setProperties, propertiesData.deleteProperties);
   }
 
   void updateSeatUsersByRoomAttributes(
-      Map<ZegoSignalingRoomAttributesUpdateAction, List<Map<String, String>>>
-          seatsRoomAttributes) {
-    ZegoLoggerService.logInfo(
-      "onRoomSeatAttributesUpdated, seats room attributes: $seatsRoomAttributes",
-      tag: "audio room",
-      subTag: "seat manager",
-    );
+      Map<String, String> setProperties, Map<String, String> deleteProperties) {
+    final seatsUsersMap = Map<String, String>.from(seatsUserMapNotifier.value);
 
-    var seatsUsersMap = Map<String, String>.from(seatsUserMapNotifier.value);
-    seatsRoomAttributes.forEach((action, roomAttributes) {
-      for (var roomAttribute in roomAttributes) {
-        roomAttribute.forEach((key, value) {
-          var seatIndex = int.tryParse(key);
-          if (seatIndex != null) {
-            var seatUserId = value;
-
-            switch (action) {
-              case ZegoSignalingRoomAttributesUpdateAction.set:
-                if (seatsUsersMap.values.contains(seatUserId)) {
-                  /// old seat user
-                  ZegoLoggerService.logInfo(
-                    "user($seatUserId) has old data$seatsUsersMap, clear it",
-                    tag: "audio room",
-                    subTag: "seat manager",
-                  );
-                  seatsUsersMap
-                      .removeWhere((key, value) => value == seatUserId);
-                }
-                seatsUsersMap[seatIndex.toString()] = seatUserId;
-                break;
-              case ZegoSignalingRoomAttributesUpdateAction.delete:
-                if (kickSeatDialogInfo.isExist(userIndex: seatIndex)) {
-                  ZegoLoggerService.logInfo(
-                    "close kick seat dialog",
-                    tag: "audio room",
-                    subTag: "seat manager",
-                  );
-                  kickSeatDialogInfo.clear();
-                  Navigator.of(contextQuery()).pop(false);
-                }
-
-                seatsUsersMap.remove(seatIndex.toString());
-                break;
-            }
-          }
-        });
+    setProperties.forEach((key, value) {
+      final seatIndex = int.tryParse(key);
+      if (seatIndex != null) {
+        final seatUserId = value;
+        if (seatsUsersMap.values.contains(seatUserId)) {
+          /// old seat user
+          ZegoLoggerService.logInfo(
+            'user($seatUserId) has '
+            'old data$seatsUsersMap, clear it',
+            tag: 'audio room',
+            subTag: 'seat manager',
+          );
+          seatsUsersMap.removeWhere((key, value) => value == seatUserId);
+        }
+        seatsUsersMap[seatIndex.toString()] = seatUserId;
       }
     });
+    deleteProperties.forEach((key, value) {
+      final seatIndex = int.tryParse(key);
+      if (seatIndex != null) {
+        if (kickSeatDialogInfo.isExist(userIndex: seatIndex)) {
+          ZegoLoggerService.logInfo(
+            'close kick seat dialog',
+            tag: 'audio room',
+            subTag: 'seat manager',
+          );
+          kickSeatDialogInfo.clear();
+          Navigator.of(contextQuery()).pop(false);
+        }
+        seatsUsersMap.remove(seatIndex.toString());
+      }
+    });
+
     seatsUserMapNotifier.value = seatsUsersMap;
 
     if (localRole.value == ZegoLiveAudioRoomRole.host &&
@@ -865,8 +910,8 @@ class ZegoLiveSeatManager {
       if (hostSeatAttributeInitialed) {
         ZegoLoggerService.logInfo(
           "host's seat is been take off, set host to an audience",
-          tag: "audio room",
-          subTag: "seat manager",
+          tag: 'audio room',
+          subTag: 'seat manager',
         );
 
         setRoleAttribute(ZegoLiveAudioRoomRole.audience, userID)
@@ -877,8 +922,8 @@ class ZegoLiveSeatManager {
                 : ZegoLiveAudioRoomRole.audience;
             ZegoLoggerService.logInfo(
               "local host's role change by room attribute: ${localRole.value}",
-              tag: "audio room",
-              subTag: "seat manager",
+              tag: 'audio room',
+              subTag: 'seat manager',
             );
           }
         });
@@ -889,17 +934,17 @@ class ZegoLiveSeatManager {
             ? ZegoLiveAudioRoomRole.speaker
             : ZegoLiveAudioRoomRole.audience;
         ZegoLoggerService.logInfo(
-          "local user role change by room attribute: ${localRole.value}",
-          tag: "audio room",
-          subTag: "seat manager",
+          'local user role change by room attribute: ${localRole.value}',
+          tag: 'audio room',
+          subTag: 'seat manager',
         );
       }
     }
 
     ZegoLoggerService.logInfo(
-      "seats users is: ${seatsUserMapNotifier.value}",
-      tag: "audio room",
-      subTag: "seat manager",
+      'seats users is: ${seatsUserMapNotifier.value}',
+      tag: 'audio room',
+      subTag: 'seat manager',
     );
   }
 
@@ -913,56 +958,52 @@ class ZegoLiveSeatManager {
 
   Future<bool> queryRoomAllAttributes({bool withToast = true}) async {
     ZegoLoggerService.logInfo(
-      " query room all attributes",
-      tag: "audio room",
-      subTag: "seat manager",
+      ' query room all attributes',
+      tag: 'audio room',
+      subTag: 'seat manager',
     );
-    return await ZegoUIKit()
+    return ZegoUIKit()
         .getSignalingPlugin()
-        .queryRoomProperties()
+        .queryRoomProperties(roomID: roomID)
         .then((result) {
+      final success = result.error == null;
       ZegoLoggerService.logInfo(
-        "query room all attributes finish, code:${result.code}, message: ${result.message} , result:${result.result as Map<String, String>}",
-        tag: "audio room",
-        subTag: "seat manager",
+        'query room all attributes finish, result: $result',
+        tag: 'audio room',
+        subTag: 'seat manager',
       );
 
-      if (withToast && result.code.isNotEmpty) {
-        showDebugToast(
-            "query users in-room attributes error, ${result.code} ${result.message}");
+      if (success) {
+        updateSeatUsersByRoomAttributes(result.properties, {});
+      } else {
+        if (withToast) {
+          showDebugToast(
+              'query users in-room attributes error, ${result.error}');
+        }
       }
 
-      if (result.code.isEmpty) {
-        updateSeatUsersByRoomAttributes({
-          ZegoSignalingRoomAttributesUpdateAction.set: [
-            result.result as Map<String, String>
-          ]
-        });
-      }
-
-      return result.code.isEmpty;
+      return success;
     });
   }
 }
 
 class KickSeatDialogInfo {
-  int userIndex = -1;
-  String userID = "";
-
   KickSeatDialogInfo({
-    this.userID = "",
+    this.userID = '',
     this.userIndex = -1,
   });
 
   KickSeatDialogInfo.empty();
+  int userIndex = -1;
+  String userID = '';
 
   bool get isEmpty => -1 == userIndex || userID.isEmpty;
 
   bool get isNotEmpty => -1 != userIndex && userID.isNotEmpty;
 
   bool isExist({
-    userID,
-    userIndex,
+    String? userID,
+    int? userIndex,
     bool allSame = false,
   }) {
     if (isEmpty) {
@@ -977,7 +1018,7 @@ class KickSeatDialogInfo {
   }
 
   void clear() {
-    userID = "";
+    userID = '';
     userIndex = -1;
   }
 }

@@ -12,11 +12,10 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart' as styled_toast;
 typedef ContextQuery = BuildContext Function();
 
 class ZegoToast {
-  ContextQuery? contextQuery;
+  factory ZegoToast() => instance;
 
   ZegoToast._internal();
-
-  factory ZegoToast() => instance;
+  ContextQuery? contextQuery;
   static final ZegoToast instance = ZegoToast._internal();
 
   TextStyle get textStyle => TextStyle(
@@ -25,11 +24,12 @@ class ZegoToast {
         fontWeight: FontWeight.w500,
       );
 
-  init({required ContextQuery contextQuery}) {
+  // ignore: use_setters_to_change_properties
+  void init({required ContextQuery contextQuery}) {
     this.contextQuery = contextQuery;
   }
 
-  show(String message, {Color? backgroundColor}) {
+  void show(String message, {Color? backgroundColor}) {
     styled_toast.showToast(
       message,
       duration: const Duration(seconds: 3),
@@ -43,18 +43,19 @@ class ZegoToast {
   }
 }
 
-showToast(String message) {}
+// ignore: no-empty-block
+void showToast(String message) {}
 
-showDebugToast(String message) {
+void showDebugToast(String message) {
   if (kDebugMode) {
     ZegoToast.instance.show(message);
   }
 }
 
-showSuccess(String message) {
+void showSuccess(String message) {
   ZegoToast.instance.show(message, backgroundColor: const Color(0xff55BC9E));
 }
 
-showError(String message) {
+void showError(String message) {
   ZegoToast.instance.show(message, backgroundColor: const Color(0xffBD5454));
 }

@@ -39,7 +39,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: ((context, constraints) {
+    return LayoutBuilder(builder: (context, constraints) {
       return Column(
         children: [
           header(98.h),
@@ -60,7 +60,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
           ),
         ],
       );
-    }));
+    });
   }
 
   Widget memberListView() {
@@ -69,7 +69,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
       showMicrophoneState: false,
       sortUserList: (ZegoUIKitUser localUser, List<ZegoUIKitUser> remoteUsers) {
         /// host(isHost attribute)
-        List<ZegoUIKitUser> hostUsers = [];
+        final hostUsers = <ZegoUIKitUser>[];
         remoteUsers.removeWhere((user) {
           if (!widget.seatManager.isAttributeHost(user)) {
             return false;
@@ -80,7 +80,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
         });
 
         /// speaker(seat attribute)
-        List<ZegoUIKitUser> speakers = [];
+        final speakers = <ZegoUIKitUser>[];
         remoteUsers.removeWhere((user) {
           if (!widget.seatManager.isSpeaker(user)) {
             return false;
@@ -90,9 +90,9 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
           return true;
         });
 
-        List<ZegoUIKitUser> sortUsers = [];
+        var sortUsers = <ZegoUIKitUser>[];
 
-        var localIsHost = widget.seatManager.isAttributeHost(localUser);
+        final localIsHost = widget.seatManager.isAttributeHost(localUser);
         if (localIsHost) {
           sortUsers.add(localUser);
         }
@@ -149,7 +149,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
               stream: ZegoUIKit().getUserListStream(),
               builder: (context, snapshot) {
                 return Text(
-                  "${widget.translationText.memberListTitle} (${ZegoUIKit().getAllUsers().length})",
+                  '${widget.translationText.memberListTitle} (${ZegoUIKit().getAllUsers().length})',
                   style: TextStyle(
                     fontSize: 36.0.r,
                     color: const Color(0xffffffff),
@@ -163,14 +163,14 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
   }
 
   Widget userNameItem(ZegoUIKitUser user) {
-    List<String> extensions = [];
+    final extensions = <String>[];
     if (ZegoUIKit().getLocalUser().id == user.id) {
-      extensions.add("You");
+      extensions.add('You');
     }
     if (widget.seatManager.isAttributeHost(user)) {
-      extensions.add("Host");
+      extensions.add('Host');
     } else if (widget.seatManager.isSpeaker(user)) {
-      extensions.add("Speaker");
+      extensions.add('Speaker');
     }
 
     return Row(
@@ -186,7 +186,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
         ),
         SizedBox(width: 5.r),
         Text(
-          extensions.isEmpty ? "" : "(${extensions.join(",")})",
+          extensions.isEmpty ? '' : "(${extensions.join(",")})",
           style: TextStyle(
             fontSize: 32.0.r,
             color: const Color(0xffA7A6B7),
@@ -210,7 +210,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
       child: Center(
         child: builder?.call(context, Size(92.r, 92.r), user, {}) ??
             Text(
-              user.name.isNotEmpty ? user.name.characters.first : "",
+              user.name.isNotEmpty ? user.name.characters.first : '',
               style: TextStyle(
                 fontSize: 32.0.r,
                 color: const Color(0xff222222),

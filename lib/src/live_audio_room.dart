@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:http/http.dart' as http;
 import 'package:zego_uikit/zego_uikit.dart';
-import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/dialogs.dart';
@@ -19,8 +18,9 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/permissions.d
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/plugins.dart';
-import 'live_audio_room_config.dart';
-import 'seat/seat_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/seat_manager.dart';
+import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 class ZegoUIKitPrebuiltLiveAudioRoom extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveAudioRoom({
@@ -83,7 +83,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     WidgetsBinding.instance.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
-      log("version: zego_uikit_prebuilt_live_audio_room: 1.0.7; $version");
+      log('version: zego_uikit_prebuilt_live_audio_room: 1.0.7; $version');
     });
 
     plugins = ZegoPrebuiltPlugins(
@@ -101,6 +101,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     );
     seatManager = ZegoLiveSeatManager(
       userID: widget.userID,
+      roomID: widget.roomID,
       plugins: plugins,
       config: widget.config,
       translationText: widget.config.translationText,
@@ -114,15 +115,15 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     plugins.init().then((value) {
       checkPermissions().then((value) {
         ZegoLoggerService.logInfo(
-          "plugins init done",
-          tag: "audio room",
-          subTag: "prebuilt",
+          'plugins init done',
+          tag: 'audio room',
+          subTag: 'prebuilt',
         );
         seatManager.init().then((value) {
           ZegoLoggerService.logInfo(
-            "seat manager init done",
-            tag: "audio room",
-            subTag: "prebuilt",
+            'seat manager init done',
+            tag: 'audio room',
+            subTag: 'prebuilt',
           );
           seatManager.initRoleAndSeat();
         });
@@ -135,7 +136,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
   void dispose() async {
     super.dispose();
 
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
 
     await seatManager.uninit();
     await plugins.uninit();
@@ -155,9 +156,9 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     super.didChangeAppLifecycleState(state);
 
     ZegoLoggerService.logInfo(
-      "didChangeAppLifecycleState $state",
-      tag: "audio room",
-      subTag: "prebuilt",
+      'didChangeAppLifecycleState $state',
+      tag: 'audio room',
+      subTag: 'prebuilt',
     );
 
     switch (state) {
@@ -192,48 +193,50 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     if (widget.config.bottomMenuBarConfig.maxCount > 5) {
       widget.config.bottomMenuBarConfig.maxCount = 5;
       ZegoLoggerService.logInfo(
-        'menu bar buttons limited count\'s value  is exceeding the maximum limit',
-        tag: "audio room",
-        subTag: "prebuilt",
+        "menu bar buttons limited count's value is exceeding the maximum limit",
+        tag: 'audio room',
+        subTag: 'prebuilt',
       );
     }
 
-    for (var rowConfig in widget.config.layoutConfig.rowConfigs) {
+    for (final rowConfig in widget.config.layoutConfig.rowConfigs) {
       if (rowConfig.count < 1) {
         rowConfig.count = 1;
         ZegoLoggerService.logInfo(
-          "config column count(${rowConfig.count}) is small than 0, set to 1",
-          tag: "audio room",
-          subTag: "prebuilt",
+          'config column count(${rowConfig.count}) is small than 0, set to 1',
+          tag: 'audio room',
+          subTag: 'prebuilt',
         );
       }
       if (rowConfig.count > 4) {
         rowConfig.count = 4;
         ZegoLoggerService.logInfo(
-          "config column count(${rowConfig.count}) is bigger than 4, set to 4",
-          tag: "audio room",
-          subTag: "prebuilt",
+          'config column count(${rowConfig.count}) is bigger than 4, set to 4',
+          tag: 'audio room',
+          subTag: 'prebuilt',
         );
       }
     }
     if (widget.config.layoutConfig.rowSpacing < 0) {
       widget.config.layoutConfig.rowSpacing = 0;
       ZegoLoggerService.logInfo(
-        "config row spacing(${widget.config.layoutConfig.rowSpacing}) is not valid, set to 0",
-        tag: "audio room",
-        subTag: "prebuilt",
+        'config row spacing(${widget.config.layoutConfig.rowSpacing}) '
+        'is not valid, set to 0',
+        tag: 'audio room',
+        subTag: 'prebuilt',
       );
     }
 
-    int totalSeatCount = widget.config.layoutConfig.rowConfigs
-        .fold(0, (totalCount, rowConfig) => totalCount + rowConfig.count);
-    var isSeatIndexValid = widget.config.takeSeatIndexWhenJoining >= 0 &&
+    final totalSeatCount = widget.config.layoutConfig.rowConfigs
+        .fold<int>(0, (totalCount, rowConfig) => totalCount + rowConfig.count);
+    final isSeatIndexValid = widget.config.takeSeatIndexWhenJoining >= 0 &&
         widget.config.takeSeatIndexWhenJoining < totalSeatCount;
     if (!isSeatIndexValid) {
       ZegoLoggerService.logInfo(
-        "config seat index is not valid, change role to audience and seat index set to -1",
-        tag: "audio room",
-        subTag: "prebuilt",
+        'config seat index is not valid, change role to audience '
+        'and seat index set to -1',
+        tag: 'audio room',
+        subTag: 'prebuilt',
       );
       widget.config.role = ZegoLiveAudioRoomRole.audience;
       widget.config.takeSeatIndexWhenJoining = -1;
@@ -241,9 +244,9 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     if (widget.config.role == ZegoLiveAudioRoomRole.audience &&
         isSeatIndexValid) {
       ZegoLoggerService.logInfo(
-        "audience config should not on seat default, set to -1",
-        tag: "audio room",
-        subTag: "prebuilt",
+        'audience config should not on seat default, set to -1',
+        tag: 'audio room',
+        subTag: 'prebuilt',
       );
       widget.config.takeSeatIndexWhenJoining = -1;
     }
@@ -252,9 +255,9 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
             .contains(widget.config.takeSeatIndexWhenJoining)) {
       ZegoLoggerService.logInfo(
         "config ${widget.config.role.toString()}'s index is not valid, "
-        "change role to audience and seat index set to -1",
-        tag: "audio room",
-        subTag: "prebuilt",
+        'change role to audience and seat index set to -1',
+        tag: 'audio room',
+        subTag: 'prebuilt',
       );
       widget.config.role = ZegoLiveAudioRoomRole.audience;
       widget.config.takeSeatIndexWhenJoining = -1;
@@ -262,7 +265,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
   }
 
   Future<void> checkPermissions() async {
-    bool isMicrophoneGranted = true;
+    var isMicrophoneGranted = true;
     if (widget.config.turnOnMicrophoneWhenJoining) {
       isMicrophoneGranted = await requestPermission(Permission.microphone);
     }
@@ -323,7 +326,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
   Future<void> onRoomLogin(ZegoRoomLoginResult result) async {
     if (0 != result.errorCode) {
-      showToast("join room failed, ${result.errorCode} ${result.extendedData}");
+      showToast('join room failed, ${result.errorCode} ${result.extendedData}');
     }
   }
 
@@ -335,7 +338,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       final jsonObj = json.decode(response.body);
       return jsonObj['token'];
     } else {
-      return "";
+      return '';
     }
   }
 
