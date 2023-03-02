@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_translation.dart';
-import 'dialogs.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
 
 Future<void> checkPermissions({
   required BuildContext context,
-  required ZegoTranslationText translationText,
+  required ZegoInnerText translationText,
   bool isShowDialog = false,
   List<Permission> checkStatuses = const [Permission.microphone],
 }) async {
@@ -44,7 +44,7 @@ Future<void> checkPermissions({
 
 Future<void> requestPermissions({
   required BuildContext context,
-  required ZegoTranslationText translationText,
+  required ZegoInnerText innerText,
   bool isShowDialog = false,
   List<Permission> checkStatuses = const [Permission.microphone],
 }) async {
@@ -56,7 +56,7 @@ Future<void> requestPermissions({
       if (isShowDialog) {
         await showAppSettingsDialog(
           context,
-          translationText.cameraPermissionSettingDialogInfo,
+          innerText.cameraPermissionSettingDialogInfo,
         );
       }
     }
@@ -66,7 +66,7 @@ Future<void> requestPermissions({
       if (isShowDialog) {
         await showAppSettingsDialog(
           context,
-          translationText.microphonePermissionSettingDialogInfo,
+          innerText.microphonePermissionSettingDialogInfo,
         );
       }
     }
@@ -77,7 +77,7 @@ Future<bool> showAppSettingsDialog(
   BuildContext context,
   ZegoDialogInfo dialogInfo,
 ) async {
-  return await showLiveDialog(
+  return showLiveDialog(
     context: context,
     title: dialogInfo.title,
     content: dialogInfo.message,

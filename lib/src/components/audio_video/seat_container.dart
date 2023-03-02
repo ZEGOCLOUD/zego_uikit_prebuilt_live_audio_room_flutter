@@ -8,9 +8,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/audio_room_layout.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/seat_manager.dart';
-import 'audio_room_layout.dart';
-import 'defines.dart';
 
 /// container of seat
 class ZegoSeatContainer extends StatefulWidget {
@@ -62,7 +62,7 @@ class _ZegoAudioVideoContainerState extends State<ZegoSeatContainer> {
 
     widget.seatManager.seatsUserMapNotifier.removeListener(onSeatsUserChanged);
 
-    for (var subscription in subscriptions) {
+    for (final subscription in subscriptions) {
       subscription?.cancel();
     }
   }
@@ -103,7 +103,7 @@ class _ZegoAudioVideoContainerState extends State<ZegoSeatContainer> {
 
   Map<String, int> getUsersItemIndexIfSpecify() {
     /// specify user item index by seat index
-    Map<String, int> usersItemIndex = {}; //  map<user id, item index>
+    final usersItemIndex = <String, int>{}; //  map<user id, item index>
 
     // if (widget.seatManager.hostsNotifier.value.isNotEmpty) {
     //   usersItemIndex[widget.seatManager.hostsNotifier.value.first] = 0;
@@ -120,7 +120,7 @@ class _ZegoAudioVideoContainerState extends State<ZegoSeatContainer> {
     userList.clear();
 
     seatsUser.forEach((seatIndex, seatUserID) {
-      var seatUser = ZegoUIKit().getUser(seatUserID);
+      final seatUser = ZegoUIKit().getUser(seatUserID);
       if (null != seatUser) {
         userList.add(seatUser);
       } else {

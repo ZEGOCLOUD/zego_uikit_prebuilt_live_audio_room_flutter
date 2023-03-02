@@ -18,12 +18,13 @@ Future<bool> showLiveDialog({
   required String rightButtonText,
   required VoidCallback rightButtonCallback,
 }) async {
-  return await showAlertDialog(
+  return showAlertDialog(
     context,
     title,
     content,
     [
       CupertinoDialogAction(
+        onPressed: leftButtonCallback,
         child: Text(
           leftButtonText,
           style: TextStyle(
@@ -32,9 +33,9 @@ Future<bool> showLiveDialog({
             fontWeight: FontWeight.w500,
           ),
         ),
-        onPressed: leftButtonCallback,
       ),
       CupertinoDialogAction(
+        onPressed: rightButtonCallback,
         child: Text(
           rightButtonText,
           style: TextStyle(
@@ -43,7 +44,6 @@ Future<bool> showLiveDialog({
             fontWeight: FontWeight.w500,
           ),
         ),
-        onPressed: rightButtonCallback,
       ),
     ],
     titleStyle: TextStyle(

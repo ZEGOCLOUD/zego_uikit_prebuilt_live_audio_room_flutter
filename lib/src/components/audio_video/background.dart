@@ -7,15 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/seat_manager.dart';
-import 'defines.dart';
 
 class ZegoSeatBackground extends StatefulWidget {
   final Size size;
   final ZegoUIKitUser? user;
-  final Map extraInfo;
+  final Map<String, dynamic> extraInfo;
 
   final ZegoLiveSeatManager seatManager;
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
@@ -40,17 +40,23 @@ class _ZegoSeatForegroundState extends State<ZegoSeatBackground> {
       children: [
         ValueListenableBuilder<Map<String, String>>(
             valueListenable: ZegoUIKit()
-                .getInRoomUserAttributesNotifier(widget.user?.id ?? ""),
+                .getInRoomUserAttributesNotifier(widget.user?.id ?? ''),
             builder: (context, inRoomAttributes, _) {
               return widget.config.seatConfig.backgroundBuilder?.call(
                     context,
                     widget.size,
-                    ZegoUIKit().getUser(widget.user?.id ?? ""),
+                    ZegoUIKit().getUser(widget.user?.id ?? ''),
                     widget.extraInfo,
                   ) ??
                   Container(color: Colors.transparent);
             }),
-        ...null == widget.user ? [emptySeat()] : [microphoneOffFlag()],
+        ...null == widget.user
+            ? [
+                emptySeat(),
+              ]
+            : [
+                microphoneOffFlag(),
+              ],
       ],
     );
   }
@@ -66,8 +72,15 @@ class _ZegoSeatForegroundState extends State<ZegoSeatBackground> {
           shape: BoxShape.circle,
           color: const Color(0xffE6E6E6).withOpacity(0.5),
         ),
-        child: PrebuiltLiveAudioRoomImage.asset(
-          PrebuiltLiveAudioRoomIconUrls.seatEmpty,
+        child: ValueListenableBuilder<bool>(
+          valueListenable: widget.seatManager.isSeatLockedNotifier,
+          builder: (context, isSeatLocked, _) {
+            return PrebuiltLiveAudioRoomImage.asset(
+              isSeatLocked
+                  ? PrebuiltLiveAudioRoomIconUrls.seatLock
+                  : PrebuiltLiveAudioRoomIconUrls.seatEmpty,
+            );
+          },
         ),
       ),
     );
@@ -76,7 +89,7 @@ class _ZegoSeatForegroundState extends State<ZegoSeatBackground> {
   Widget microphoneOffFlag() {
     return ValueListenableBuilder<bool>(
       valueListenable:
-          ZegoUIKit().getMicrophoneStateNotifier(widget.user?.id ?? ""),
+          ZegoUIKit().getMicrophoneStateNotifier(widget.user?.id ?? ''),
       builder: (context, isMicrophoneEnabled, _) {
         if (isMicrophoneEnabled) {
           return Container();

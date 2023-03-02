@@ -7,7 +7,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
-import 'in_room_message_input_board.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/in_room_message_input_board.dart';
 
 class ZegoInRoomMessageButton extends StatefulWidget {
   final Size? iconSize;

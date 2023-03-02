@@ -5,31 +5,33 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/audio_room_layout.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_sheet_menu.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/seat_manager.dart';
-import 'audio_room_layout.dart';
-import 'defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
 
 class ZegoSeatForeground extends StatefulWidget {
   final Size size;
   final ZegoUIKitUser? user;
-  final Map extraInfo;
+  final Map<String, dynamic> extraInfo;
 
   final ZegoLiveSeatManager seatManager;
+  final ZegoLiveConnectManager connectManager;
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
+  final ZegoLiveAudioRoomController? prebuiltController;
 
   const ZegoSeatForeground({
     Key? key,
     this.user,
     this.extraInfo = const {},
+    this.prebuiltController,
     required this.size,
     required this.seatManager,
+    required this.connectManager,
     required this.config,
   }) : super(key: key);
 
@@ -44,7 +46,7 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
       onTap: onClicked,
       child: ValueListenableBuilder<Map<String, String>>(
         valueListenable:
-            ZegoUIKit().getInRoomUserAttributesNotifier(widget.user?.id ?? ""),
+            ZegoUIKit().getInRoomUserAttributesNotifier(widget.user?.id ?? ''),
         builder: (context, inRoomAttributes, _) {
           return Container(
             color: Colors.transparent,
@@ -53,13 +55,13 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
                 widget.config.seatConfig.foregroundBuilder?.call(
                       context,
                       widget.size,
-                      ZegoUIKit().getUser(widget.user?.id ?? ""),
+                      ZegoUIKit().getUser(widget.user?.id ?? ''),
                       widget.extraInfo,
                     ) ??
                     foreground(
                       context,
                       widget.size,
-                      ZegoUIKit().getUser(widget.user?.id ?? ""),
+                      ZegoUIKit().getUser(widget.user?.id ?? ''),
                       widget.extraInfo,
                     ),
               ],
@@ -71,43 +73,59 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
   }
 
   Widget foreground(
-      BuildContext context, Size size, ZegoUIKitUser? user, Map extraInfo) {
+    BuildContext context,
+    Size size,
+    ZegoUIKitUser? user,
+    Map<String, dynamic> extraInfo,
+  ) {
     return LayoutBuilder(
-      builder: ((context, constraints) {
+      builder: (context, constraints) {
         return Stack(
           children: [
             Positioned(
               bottom: 0,
               child: userName(context, constraints.maxWidth),
             ),
-            widget.seatManager.isAttributeHost(user)
-                ? Positioned(
-                    top: seatItemHeight -
-                        seatUserNameFontSize -
-                        seatHostFlagHeight -
-                        3.r, //  spacing
-                    child: hostFlag(context, constraints.maxWidth),
-                  )
-                : Container(),
+            if (widget.seatManager.isAttributeHost(user))
+              Positioned(
+                top: seatItemHeight -
+                    seatUserNameFontSize -
+                    seatHostFlagHeight -
+                    3.r, //  spacing
+                child: hostFlag(context, constraints.maxWidth),
+              )
+            else
+              Container(),
           ],
         );
-      }),
+      },
     );
   }
 
   void onClicked() {
-    var index =
+    final index =
         int.tryParse(widget.extraInfo[layoutGridItemIndexKey].toString()) ?? -1;
     if (-1 == index) {
       ZegoLoggerService.logInfo(
-        "ERROR!!! click seat index is invalid",
-        tag: "audio room",
-        subTag: "foreground",
+        'ERROR!!! click seat index is invalid',
+        tag: 'audio room',
+        subTag: 'foreground',
       );
       return;
     }
 
-    List<PopupItem> popupItems = [];
+    if (widget.prebuiltController?.onSeatClicked != null) {
+      ZegoLoggerService.logInfo(
+        'ERROR!!! click seat event is deal outside',
+        tag: 'audio room',
+        subTag: 'foreground',
+      );
+
+      widget.prebuiltController?.onSeatClicked!.call(index, widget.user);
+      return;
+    }
+
+    final popupItems = <PopupItem>[];
 
     if (null == widget.user) {
       /// empty seat
@@ -121,34 +139,49 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
           widget.seatManager.switchToSeat(index);
         } else {
           /// local user is not on seat
-          popupItems.add(PopupItem(
-            PopupItemValue.takeOnSeat,
-            widget.config.translationText.takeSeatMenuButton,
-            data: index,
-          ));
+          if (!widget.seatManager.isSeatLockedNotifier.value) {
+            /// only seat is not locked
+            /// if locked, can't apply by click seat
+            popupItems.add(PopupItem(
+              PopupItemValue.takeOnSeat,
+              widget.config.innerText.takeSeatMenuButton,
+              data: index,
+            ));
+          }
         }
       }
     } else {
       /// have a user on seat
       if (ZegoLiveAudioRoomRole.host == widget.seatManager.localRole.value &&
           widget.user?.id != ZegoUIKit().getLocalUser().id) {
-        /// host can kick others off seat
-        popupItems.add(PopupItem(
-          PopupItemValue.takeOffSeat,
-          widget.config.translationText.removeSpeakerMenuDialogButton
-              .replaceFirst(
-            widget.config.translationText.param_1,
-            widget.user?.name ?? "",
-          ),
-          data: index,
-        ));
+        popupItems
+
+          /// host can kick others off seat
+          ..add(PopupItem(
+            PopupItemValue.takeOffSeat,
+            widget.config.innerText.removeSpeakerMenuDialogButton.replaceFirst(
+              widget.config.innerText.param_1,
+              widget.user?.name ?? '',
+            ),
+            data: index,
+          ))
+
+          /// host can mute others
+          ..add(PopupItem(
+            PopupItemValue.muteSeat,
+            widget.config.innerText.muteSpeakerMenuDialogButton.replaceFirst(
+              widget.config.innerText.param_1,
+              widget.user?.name ?? '',
+            ),
+            data: index,
+          ));
       } else if (ZegoUIKit().getLocalUser().id ==
               widget.seatManager.getUserByIndex(index)?.id &&
           ZegoLiveAudioRoomRole.host != widget.seatManager.localRole.value) {
         /// speaker can local leave seat
         popupItems.add(PopupItem(
           PopupItemValue.leaveSeat,
-          widget.config.translationText.leaveSeatDialogInfo.title,
+          widget.config.innerText.leaveSeatDialogInfo.title,
         ));
       }
     }
@@ -159,15 +192,16 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
 
     popupItems.add(PopupItem(
       PopupItemValue.cancel,
-      widget.config.translationText.cancelMenuDialogButton,
+      widget.config.innerText.cancelMenuDialogButton,
     ));
 
     showPopUpSheet(
       context: context,
-      userID: widget.user?.id ?? "",
+      userID: widget.user?.id ?? '',
       popupItems: popupItems,
       seatManager: widget.seatManager,
-      translationText: widget.config.translationText,
+      connectManager: widget.connectManager,
+      innerText: widget.config.innerText,
     );
   }
 
@@ -186,7 +220,7 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
     return SizedBox(
       width: maxWidth,
       child: Text(
-        widget.user?.name ?? "",
+        widget.user?.name ?? '',
         textAlign: TextAlign.center,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(

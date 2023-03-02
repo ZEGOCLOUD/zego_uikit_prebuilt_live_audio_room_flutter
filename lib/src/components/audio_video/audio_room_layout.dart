@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
 
-const layoutGridItemIndexKey = "index";
+const layoutGridItemIndexKey = 'index';
 
 /// picture in picture layout
 class ZegoAudioRoomLayout extends StatefulWidget {
@@ -46,42 +46,42 @@ class _ZegoAudioRoomLayoutState extends State<ZegoAudioRoomLayout> {
 
   @override
   Widget build(BuildContext context) {
-    var users = List<ZegoUIKitUser?>.from(widget.userList);
+    final users = List<ZegoUIKitUser?>.from(widget.userList);
 
     /// fill empty cell
-    int totalCount = widget.layoutConfig.rowConfigs
+    final int totalCount = widget.layoutConfig.rowConfigs
         .fold(0, (totalCount, rowConfig) => totalCount + rowConfig.count);
-    for (int diff = totalCount - users.length; diff > 0; diff--) {
+    for (var diff = totalCount - users.length; diff > 0; diff--) {
       users.add(null);
     }
 
     /// swap users if specify the user cell index
     widget.usersItemIndex.forEach((targetUserID, targetItemIndex) {
-      var targetUserCurrentIndex =
+      final targetUserCurrentIndex =
           users.indexWhere((user) => user?.id == targetUserID);
       if (-1 == targetUserCurrentIndex) {
         return;
       }
 
       if (targetUserCurrentIndex != targetItemIndex) {
-        var targetUser = users[targetUserCurrentIndex];
+        final targetUser = users[targetUserCurrentIndex];
         users[targetUserCurrentIndex] = users[targetItemIndex];
         users[targetItemIndex] = targetUser;
       }
     });
 
-    int baseIndex = 0;
-    int currentRowIndex = -1;
+    var baseIndex = 0;
+    var currentRowIndex = -1;
     return Column(
       children: widget.layoutConfig.rowConfigs
           .map((ZegoLiveAudioRoomLayoutRowConfig rowConfig) {
-        var rowUsers = users.sublist(0, rowConfig.count);
+        final rowUsers = users.sublist(0, rowConfig.count);
         users.removeRange(0, rowConfig.count);
 
         currentRowIndex += 1;
-        var addMargin =
+        final addMargin =
             currentRowIndex < (widget.layoutConfig.rowConfigs.length - 1);
-        var rowWidget = Container(
+        final rowWidget = Container(
           margin: addMargin
               ? EdgeInsets.only(
                   bottom: widget.layoutConfig.rowSpacing.toDouble(),
@@ -105,16 +105,16 @@ class _ZegoAudioRoomLayoutState extends State<ZegoAudioRoomLayout> {
     ZegoLiveAudioRoomLayoutRowConfig rowConfig,
     int baseIndex,
   ) {
-    var children = List<Widget>.generate(
+    final children = List<Widget>.generate(
       rowConfig.count,
       (int index) {
-        var targetUser = users.elementAt(index);
+        final targetUser = users.elementAt(index);
         return SizedBox(
           width: seatItemWidth,
           height: seatItemHeight,
           child: ValueListenableBuilder<bool>(
               valueListenable:
-                  ZegoUIKit().getMicrophoneStateNotifier(targetUser?.id ?? ""),
+                  ZegoUIKit().getMicrophoneStateNotifier(targetUser?.id ?? ''),
               builder: (context, isMicrophoneEnabled, _) {
                 return ZegoAudioVideoView(
                   user: targetUser,
@@ -146,9 +146,9 @@ class _ZegoAudioRoomLayoutState extends State<ZegoAudioRoomLayout> {
       ZegoLiveAudioRoomLayoutAlignment.end,
       ZegoLiveAudioRoomLayoutAlignment.center,
     ].contains(rowConfig.alignment)) {
-      var rowSpaceIndexes = List<int>.generate(children.length, (i) => i);
-      rowSpaceIndexes.removeAt(0);
-      for (var rowSpaceIndex in rowSpaceIndexes.reversed) {
+      final rowSpaceIndexes = List<int>.generate(children.length, (i) => i)
+        ..removeAt(0);
+      for (final rowSpaceIndex in rowSpaceIndexes.reversed) {
         children.insert(
           rowSpaceIndex,
           SizedBox(

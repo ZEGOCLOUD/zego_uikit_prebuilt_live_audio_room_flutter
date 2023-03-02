@@ -9,6 +9,10 @@ enum ZegoMenuBarButtonName {
   toggleMicrophoneButton,
   showMemberListButton,
   soundEffectButton,
+  applyToTakeSeatButton,
+
+  ///  lock/unlock seat
+  closeSeatButton,
 }
 
 enum ZegoLiveAudioRoomRole {
@@ -26,13 +30,13 @@ class ZegoDialogInfo {
   ZegoDialogInfo({
     required this.title,
     required this.message,
-    this.cancelButtonName = "Cancel",
-    this.confirmButtonName = "OK",
+    this.cancelButtonName = 'Cancel',
+    this.confirmButtonName = 'OK',
   });
 }
 
 typedef ZegoLiveAudioRoomBackgroundBuilder = Widget Function(
   BuildContext context,
   Size size,
-  Map extraInfo,
+  Map<String, dynamic> extraInfo,
 );

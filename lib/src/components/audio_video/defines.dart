@@ -37,6 +37,11 @@ class ZegoLiveAudioRoomLayoutRowConfig {
 
   /// seat alignment
   ZegoLiveAudioRoomLayoutAlignment alignment;
+
+  @override
+  String toString() {
+    return 'row config:{count:$count, spacing:$seatSpacing, alignment:$alignment}';
+  }
 }
 
 class ZegoLiveAudioRoomLayoutConfig {
@@ -54,4 +59,9 @@ class ZegoLiveAudioRoomLayoutConfig {
 
   /// rows
   List<ZegoLiveAudioRoomLayoutRowConfig> rowConfigs;
+
+  @override
+  String toString() {
+    return 'spacing:$rowSpacing, row configs:${rowConfigs.map((e) => e.toString()).toList()}';
+  }
 }

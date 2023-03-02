@@ -9,22 +9,26 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_translation.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/connect/connect_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/seat_manager.dart';
 
 class ZegoPopUpSheetMenu extends StatefulWidget {
   const ZegoPopUpSheetMenu({
     Key? key,
     required this.popupItems,
-    required this.translationText,
+    required this.innerText,
     required this.seatManager,
+    required this.connectManager,
     this.onPressed,
   }) : super(key: key);
 
   final List<PopupItem> popupItems;
   final ZegoLiveSeatManager seatManager;
+  final ZegoLiveConnectManager connectManager;
+
   final void Function(PopupItemValue)? onPressed;
-  final ZegoTranslationText translationText;
+  final ZegoInnerText innerText;
 
   @override
   State<ZegoPopUpSheetMenu> createState() => _ZegoPopUpSheetMenuState();
@@ -43,7 +47,7 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: ((context, constraints) {
+    return LayoutBuilder(builder: (context, constraints) {
       return MediaQuery.removePadding(
         context: context,
         removeTop: true,
@@ -52,32 +56,40 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
           shrinkWrap: true,
           itemCount: widget.popupItems.length,
           itemBuilder: (context, index) {
-            var popupItem = widget.popupItems[index];
+            final popupItem = widget.popupItems[index];
             return popUpItemWidget(index, popupItem);
           },
         ),
       );
-    }));
+    });
   }
 
   Widget popUpItemWidget(int index, PopupItem popupItem) {
     return GestureDetector(
       onTap: () async {
         ZegoLoggerService.logInfo(
-          "click ${popupItem.text}",
-          tag: "audio room",
-          subTag: "pop-up sheet",
+          'click ${popupItem.text}',
+          tag: 'audio room',
+          subTag: 'pop-up sheet',
         );
 
         Navigator.of(context).pop();
 
         switch (popupItem.value) {
           case PopupItemValue.takeOnSeat:
-            widget.seatManager.takeOnSeat(
-              popupItem.data as int,
-              isForce: false,
-              isDeleteAfterOwnerLeft: true,
-            );
+            if (widget.seatManager.isSeatLockedNotifier.value) {
+              ZegoLoggerService.logInfo(
+                'take on seat, but seat is locked',
+                tag: 'audio room',
+                subTag: 'seat manager',
+              );
+            } else {
+              widget.seatManager.takeOnSeat(
+                popupItem.data as int,
+                isForce: false,
+                isDeleteAfterOwnerLeft: true,
+              );
+            }
             break;
           case PopupItemValue.takeOffSeat:
             // clear popup sheet info
@@ -88,7 +100,15 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
           case PopupItemValue.leaveSeat:
             await widget.seatManager.leaveSeat(showDialog: true);
             break;
-          default:
+          case PopupItemValue.muteSeat:
+            await widget.seatManager.muteSeat(popupItem.data as int);
+            break;
+          case PopupItemValue.inviteLink:
+            await widget.connectManager.inviteAudienceConnect(
+                ZegoUIKit().getUser(popupItem.data as String? ?? '') ??
+                    ZegoUIKitUser.empty());
+            break;
+          case PopupItemValue.cancel:
             break;
         }
 
@@ -126,12 +146,13 @@ void showPopUpSheet({
   required String userID,
   required BuildContext context,
   required List<PopupItem> popupItems,
-  required ZegoTranslationText translationText,
+  required ZegoInnerText innerText,
   required ZegoLiveSeatManager seatManager,
+  required ZegoLiveConnectManager connectManager,
 }) {
   seatManager.setPopUpSheetVisible(true);
 
-  var takeOffSeatItemIndex = popupItems
+  final takeOffSeatItemIndex = popupItems
       .indexWhere((popupItem) => popupItem.value == PopupItemValue.takeOffSeat);
   if (-1 != takeOffSeatItemIndex) {
     /// seat user leave, will auto pop this sheet
@@ -161,18 +182,19 @@ void showPopUpSheet({
         padding: MediaQuery.of(context).viewInsets,
         duration: const Duration(milliseconds: 50),
         child: Container(
-          height: (101 * popupItems.length).r,
+          height: (popupItems.length * 101).r,
           padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
           child: ZegoPopUpSheetMenu(
             popupItems: popupItems,
-            translationText: translationText,
+            innerText: innerText,
             seatManager: seatManager,
+            connectManager: connectManager,
           ),
         ),
       );
     },
   ).whenComplete(() {
-    var takeOffSeatItemIndex = popupItems.indexWhere(
+    final takeOffSeatItemIndex = popupItems.indexWhere(
         (popupItem) => popupItem.value == PopupItemValue.takeOffSeat);
     if (-1 != takeOffSeatItemIndex) {
       /// clear kickSeatDialogInfo

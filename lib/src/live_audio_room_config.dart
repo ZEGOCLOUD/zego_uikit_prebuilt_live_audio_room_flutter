@@ -5,14 +5,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'components/audio_video/defines.dart';
-import 'live_audio_room_defines.dart';
-import 'live_audio_room_translation.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
 
 class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   ZegoUIKitPrebuiltLiveAudioRoomConfig.host()
       : role = ZegoLiveAudioRoomRole.host,
         takeSeatIndexWhenJoining = 0,
+        closeSeatsWhenJoining = true,
         turnOnMicrophoneWhenJoining = true,
         useSpeakerWhenJoining = true,
         seatConfig = ZegoLiveAudioRoomSeatConfig(),
@@ -21,17 +22,18 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(),
         inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
         audioEffectConfig = ZegoAudioEffectConfig(),
-        translationText = ZegoTranslationText(),
+        innerText = ZegoInnerText(),
         confirmDialogInfo = ZegoDialogInfo(
-          title: "Leave the room",
-          message: "Are you sure to leave the room?",
-          cancelButtonName: "Cancel",
-          confirmButtonName: "OK",
+          title: 'Leave the room',
+          message: 'Are you sure to leave the room?',
+          cancelButtonName: 'Cancel',
+          confirmButtonName: 'OK',
         );
 
   ZegoUIKitPrebuiltLiveAudioRoomConfig.audience()
       : role = ZegoLiveAudioRoomRole.audience,
         turnOnMicrophoneWhenJoining = false,
+        closeSeatsWhenJoining = false,
         useSpeakerWhenJoining = true,
         seatConfig = ZegoLiveAudioRoomSeatConfig(),
         layoutConfig = ZegoLiveAudioRoomLayoutConfig(),
@@ -39,11 +41,12 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(),
         inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
         audioEffectConfig = ZegoAudioEffectConfig(),
-        translationText = ZegoTranslationText();
+        innerText = ZegoInnerText();
 
   ZegoUIKitPrebuiltLiveAudioRoomConfig({
     this.turnOnMicrophoneWhenJoining = true,
     this.useSpeakerWhenJoining = true,
+    this.closeSeatsWhenJoining = true,
     ZegoLiveAudioRoomSeatConfig? seatConfig,
     ZegoBottomMenuBarConfig? bottomMenuBarConfig,
     ZegoLiveAudioRoomLayoutConfig? layoutConfig,
@@ -53,20 +56,23 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
     this.confirmDialogInfo,
     this.onLeaveConfirmation,
     this.onLeaveLiveAudioRoom,
-    ZegoTranslationText? translationText,
+    ZegoInnerText? translationText,
   })  : seatConfig = seatConfig ?? ZegoLiveAudioRoomSeatConfig(),
         bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig(),
         layoutConfig = layoutConfig ?? ZegoLiveAudioRoomLayoutConfig(),
         inRoomMessageViewConfig =
             messageConfig ?? ZegoInRoomMessageViewConfig(),
         audioEffectConfig = effectConfig ?? ZegoAudioEffectConfig(),
-        translationText = translationText ?? ZegoTranslationText();
+        innerText = translationText ?? ZegoInnerText();
 
   /// specify if a host or audience, speaker
   ZegoLiveAudioRoomRole role = ZegoLiveAudioRoomRole.audience;
 
   /// specify seat index, only work if host or speaker
   int takeSeatIndexWhenJoining = -1;
+
+  /// only host set!! Specifies whether to lock the seat automatically after entering the room
+  bool closeSeatsWhenJoining;
 
   /// these seat indexes if for host
   /// for audience and speakers, these seat index are prohibited.
@@ -117,10 +123,16 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// customize handling after leave audio room
   VoidCallback? onLeaveLiveAudioRoom;
 
+  /// if return true, will directly open the microphone
+  /// when received onTurnOnYourMicrophoneRequest
+  /// default is false
+  Future<bool> Function(BuildContext context)?
+      onMicrophoneTurnOnByOthersConfirmation;
+
   /// configs about message view
   ZegoInRoomMessageViewConfig inRoomMessageViewConfig;
 
-  ZegoTranslationText translationText;
+  ZegoInnerText innerText;
 
   /// support :
   /// 1. Voice changing
@@ -130,6 +142,15 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
 
 class ZegoLiveAudioRoomSeatConfig {
   bool showSoundWaveInAudioMode = true;
+
+  /// 默认值是设计默认颜色。包含麦位为空、锁定、上麦但是没设置avatar属性的坐席颜色
+  Color? foregroundColor;
+
+  ///默认设计给的，没人上麦的图标
+  Icon? openIcon;
+
+  /// 默认设计给的，麦位锁定的图标
+  Icon? closeIcon;
 
   ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;
   ZegoAudioVideoViewBackgroundBuilder? backgroundBuilder;
@@ -199,6 +220,7 @@ class ZegoBottomMenuBarConfig {
       ZegoMenuBarButtonName.soundEffectButton,
       ZegoMenuBarButtonName.toggleMicrophoneButton,
       ZegoMenuBarButtonName.showMemberListButton,
+      ZegoMenuBarButtonName.closeSeatButton,
     ],
     this.speakerButtons = const [
       ZegoMenuBarButtonName.soundEffectButton,
@@ -207,6 +229,7 @@ class ZegoBottomMenuBarConfig {
     ],
     this.audienceButtons = const [
       ZegoMenuBarButtonName.showMemberListButton,
+      ZegoMenuBarButtonName.applyToTakeSeatButton,
     ],
     this.hostExtendButtons = const [],
     this.speakerExtendButtons = const [],
@@ -216,10 +239,14 @@ class ZegoBottomMenuBarConfig {
 }
 
 class ZegoInRoomMessageViewConfig {
+  /// hide message view if invisible
+  bool visible;
+
   /// customize your item view of message list
   ZegoInRoomMessageItemBuilder? itemBuilder;
 
   ZegoInRoomMessageViewConfig({
+    this.visible = true,
     this.itemBuilder,
   });
 }

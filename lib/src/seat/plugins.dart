@@ -27,6 +27,7 @@ class ZegoPrebuiltPlugins {
       this.onPluginReLogin}) {
     _install();
   }
+
   final int appID;
   final String appSign;
 
@@ -64,17 +65,6 @@ class ZegoPrebuiltPlugins {
         );
       });
     }
-
-    subscriptions
-      ..add(ZegoUIKit()
-          .getSignalingPlugin()
-          .getConnectionStateStream()
-          .listen(onUserConnectionState))
-      ..add(ZegoUIKit()
-          .getSignalingPlugin()
-          .getRoomStateStream()
-          .listen(onRoomState))
-      ..add(ZegoUIKit().getNetworkModeStream().listen(onNetworkModeChanged));
   }
 
   Future<void> init() async {
@@ -89,6 +79,17 @@ class ZegoPrebuiltPlugins {
         .getSignalingPlugin()
         .init(appID, appSign: appSign)
         .then((value) {
+      subscriptions
+        ..add(ZegoUIKit()
+            .getSignalingPlugin()
+            .getConnectionStateStream()
+            .listen(onUserConnectionState))
+        ..add(ZegoUIKit()
+            .getSignalingPlugin()
+            .getRoomStateStream()
+            .listen(onRoomState))
+        ..add(ZegoUIKit().getNetworkModeStream().listen(onNetworkModeChanged));
+
       ZegoLoggerService.logInfo(
         'plugins init done',
         tag: 'audio room',
@@ -129,14 +130,14 @@ class ZegoPrebuiltPlugins {
 
   Future<bool> joinRoom() async {
     ZegoLoggerService.logInfo(
-      'plugins joinRoom',
+      'plugins login room',
       tag: 'audio room',
       subTag: 'plugin',
     );
 
     return ZegoUIKit().getSignalingPlugin().joinRoom(roomID).then((result) {
       ZegoLoggerService.logInfo(
-        'plugins login result: $result',
+        'plugins login room result: $result',
         tag: 'audio room',
         subTag: 'plugin',
       );
@@ -170,6 +171,46 @@ class ZegoPrebuiltPlugins {
 
   Future<void> onUserInfoUpdate(String userID, String userName) async {
     final localUser = ZegoUIKit().getLocalUser();
+
+    ZegoLoggerService.logInfo(
+      'on user info update, '
+      'target user($userID, $userName), '
+      'local user:(${localUser.toString()})'
+      'initialized:$initialized, '
+      'user state:${pluginUserStateNotifier.value}'
+      'room state:${roomStateNotifier.value}',
+      tag: 'live streaming',
+      subTag: 'plugin',
+    );
+
+    if (!initialized) {
+      ZegoLoggerService.logInfo(
+        'onUserInfoUpdate, plugin is not init',
+        tag: 'audio room',
+        subTag: 'plugin',
+      );
+      return;
+    }
+
+    if (pluginUserStateNotifier.value !=
+        ZegoSignalingPluginConnectionState.connected) {
+      ZegoLoggerService.logInfo(
+        'onUserInfoUpdate, user state is not connected',
+        tag: 'audio room',
+        subTag: 'plugin',
+      );
+      return;
+    }
+
+    if (ZegoSignalingPluginRoomState.connected != roomStateNotifier.value) {
+      ZegoLoggerService.logInfo(
+        'onUserInfoUpdate, room state is not connected',
+        tag: 'audio room',
+        subTag: 'plugin',
+      );
+      return;
+    }
+
     if (localUser.id == userID && localUser.name == userName) {
       ZegoLoggerService.logInfo(
         'same user, cancel this re-login',
@@ -348,7 +389,7 @@ class ZegoPrebuiltPlugins {
       tag: 'audio room',
       subTag: 'plugin',
     );
-    return await joinRoom().then((result) {
+    return joinRoom().then((result) {
       ZegoLoggerService.logInfo(
         're-enter room result:$result',
         tag: 'audio room',
