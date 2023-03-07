@@ -56,6 +56,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
     this.confirmDialogInfo,
     this.onLeaveConfirmation,
     this.onLeaveLiveAudioRoom,
+    this.background,
     ZegoInnerText? translationText,
   })  : seatConfig = seatConfig ?? ZegoLiveAudioRoomSeatConfig(),
         bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig(),

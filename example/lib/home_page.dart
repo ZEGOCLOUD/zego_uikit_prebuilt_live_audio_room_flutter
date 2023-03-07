@@ -4,8 +4,9 @@ import 'dart:math';
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-import 'live_page.dart';
+// Project imports:
 import 'constants.dart';
+import 'live_page.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
@@ -18,7 +19,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var buttonStyle = ElevatedButton.styleFrom(
+    final buttonStyle = ElevatedButton.styleFrom(
       fixedSize: const Size(120, 60),
       backgroundColor: const Color(0xff2C2F3E).withOpacity(0.6),
     );
@@ -36,7 +37,7 @@ class HomePage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  const Text("Layout : "),
+                  const Text('Layout : '),
                   switchDropList<LayoutMode>(
                     layoutValueNotifier,
                     [
@@ -55,7 +56,7 @@ class HomePage extends StatelessWidget {
             ),
             TextFormField(
               controller: roomIDTextCtrl,
-              decoration: const InputDecoration(labelText: "join a live by id"),
+              decoration: const InputDecoration(labelText: 'join a live by id'),
             ),
             const SizedBox(height: 20),
             // click me to navigate to LivePage
@@ -85,7 +86,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  jumpToLivePage(BuildContext context,
+  void jumpToLivePage(BuildContext context,
       {required String roomID, required bool isHost}) {
     Navigator.push(
       context,

@@ -2,9 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/in_room_live_commenting_view_item.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
 
+// Project imports:
 import 'constants.dart';
 
 class LivePage extends StatelessWidget {
@@ -106,8 +107,24 @@ class LivePage extends StatelessWidget {
         debugPrint(
             'live audio room controller: on seat taking request canceled, audience:${audience.toString()}');
       },
-      onHostInviteToTakeSeat: () {
-        debugPrint('live audio room controller: on host invite to take seat');
+      onInviteAudienceToTakeSeatFailed: () {
+        debugPrint(
+            'live audio room controller: on invite audience to take seat failed');
+      },
+      onSeatTakingInviteRejected: () {
+        debugPrint(
+            'live audio room controller: on seat taking invite rejected');
+      },
+      onSeatTakingRequestFailed: () {
+        debugPrint('live audio room controller: on seat taking request failed');
+      },
+      onSeatTakingRequestRejected: () {
+        debugPrint(
+            'live audio room controller: on seat taking request rejected');
+      },
+      onHostSeatTakingInviteSent: () {
+        debugPrint(
+            'live audio room controller: on host seat taking invite sent');
       },
 
       /// WARNING: will override prebuilt logic
@@ -131,8 +148,12 @@ class LivePage extends StatelessWidget {
   ZegoLiveAudioRoomSeatConfig getSeatConfig() {
     if (layoutMode == LayoutMode.hostTopCenter) {
       return ZegoLiveAudioRoomSeatConfig(
-        backgroundBuilder: (BuildContext context, Size size,
-            ZegoUIKitUser? user, Map extraInfo) {
+        backgroundBuilder: (
+          BuildContext context,
+          Size size,
+          ZegoUIKitUser? user,
+          Map<String, dynamic> extraInfo,
+        ) {
           return Container(color: Colors.grey);
         },
       );
@@ -140,9 +161,6 @@ class LivePage extends StatelessWidget {
 
     return ZegoLiveAudioRoomSeatConfig(
       avatarBuilder: avatarBuilder,
-      // onSeatClicked: (int index, ZegoUIKitUser? user) {
-      //   debugPrint('seat index $index, use \'${user?.toString()}\' is clicked');
-      // },
     );
   }
 
@@ -179,7 +197,11 @@ class LivePage extends StatelessWidget {
   }
 
   Widget avatarBuilder(
-      BuildContext context, Size size, ZegoUIKitUser? user, Map extraInfo) {
+    BuildContext context,
+    Size size,
+    ZegoUIKitUser? user,
+    Map<String, dynamic> extraInfo,
+  ) {
     return CircleAvatar(
       maxRadius: size.width,
       backgroundImage: Image.asset(
@@ -205,7 +227,7 @@ class LivePage extends StatelessWidget {
   }
 
   ZegoLiveAudioRoomLayoutConfig getLayoutConfig() {
-    var config = ZegoLiveAudioRoomLayoutConfig();
+    final config = ZegoLiveAudioRoomLayoutConfig();
     switch (layoutMode) {
       case LayoutMode.defaultLayout:
         break;
