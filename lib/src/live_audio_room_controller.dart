@@ -16,7 +16,11 @@ class ZegoLiveAudioRoomController {
     this.onSeatsChanged,
     this.onSeatTakingRequested,
     this.onSeatTakingRequestCanceled,
-    this.onHostInviteToTakeSeat,
+    this.onInviteAudienceToTakeSeatFailed,
+    this.onSeatTakingInviteRejected,
+    this.onSeatTakingRequestFailed,
+    this.onSeatTakingRequestRejected,
+    this.onHostSeatTakingInviteSent,
     this.onMemberListMoreButtonPressed,
   });
 
@@ -41,14 +45,26 @@ class ZegoLiveAudioRoomController {
     List<int> untakenSeats,
   )? onSeatsChanged;
 
-  /// someone's take seat request
+  /// host receive, some audience's take seat request
   void Function(ZegoUIKitUser audience)? onSeatTakingRequested;
 
-  /// someone's take seat request had canceled
+  /// host receive, audience's take seat request had canceled
   void Function(ZegoUIKitUser audience)? onSeatTakingRequestCanceled;
 
-  /// host invite someone's to take seat
-  VoidCallback? onHostInviteToTakeSeat;
+  /// host receive, host's invite is failed
+  VoidCallback? onInviteAudienceToTakeSeatFailed;
+
+  /// host receive, host's invite is rejected by audience
+  VoidCallback? onSeatTakingInviteRejected;
+
+  /// audience receive, audience's request is failed
+  VoidCallback? onSeatTakingRequestFailed;
+
+  /// audience receive, audience's request is rejected by host
+  VoidCallback? onSeatTakingRequestRejected;
+
+  /// audience receive, host invite audience to take seat
+  VoidCallback? onHostSeatTakingInviteSent;
 
   /// customize the member list more button click event
   /// WARNING: will override prebuilt logic
@@ -85,7 +101,8 @@ class ZegoLiveAudioRoomController {
     return await _seatManager?.lockSeat(false) ?? false;
   }
 
-  /// audience applied to the host for seats
+  ///--------start of audience request take seat's api--------------
+  /// audience request take seat from the host
   Future<bool> applyToTakeSeat() async {
     if (_seatManager?.hostsNotifier.value.isEmpty ?? false) {
       ZegoLoggerService.logInfo(
@@ -115,7 +132,11 @@ class ZegoLiveAudioRoomController {
         subTag: 'controller',
       );
 
-      return result.error?.code.isNotEmpty ?? true;
+      if (result.error != null) {
+        onSeatTakingRequestFailed?.call();
+      }
+
+      return result.error == null;
     });
   }
 
@@ -124,7 +145,7 @@ class ZegoLiveAudioRoomController {
     return await _connectManager?.audienceCancelTakeSeatRequest() ?? false;
   }
 
-  /// host granted the audience's request to be seated
+  /// host accept the audience's request to be seated
   Future<bool> acceptSeatTakingRequest(String audienceUserID) async {
     return ZegoUIKit()
         .getSignalingPlugin()
@@ -151,6 +172,7 @@ class ZegoLiveAudioRoomController {
     });
   }
 
+  /// host reject the audience's request to be seated
   Future<bool> rejectSeatTakingRequest(String audienceUserID) async {
     return ZegoUIKit()
         .getSignalingPlugin()
@@ -178,6 +200,10 @@ class ZegoLiveAudioRoomController {
     });
   }
 
+  ///--------end of audience request take seat's api--------------
+
+  ///--------start of host invite audience to take seat's api--------------
+  /// host invite audience to take seat
   Future<bool> inviteAudienceToTakeSeat(String userID) async {
     return await _connectManager?.inviteAudienceConnect(
           ZegoUIKit().getUser(userID) ?? ZegoUIKitUser.empty(),
@@ -233,4 +259,6 @@ class ZegoLiveAudioRoomController {
       });
     });
   }
+
+  ///--------end of host invite audience to take seat's api--------------
 }

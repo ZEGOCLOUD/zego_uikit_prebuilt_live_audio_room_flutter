@@ -116,6 +116,9 @@ class _ZegoAudienceConnectButtonState extends State<ZegoAudienceConnectButton> {
         List<String> errorInvitees,
       ) {
         if (code.isNotEmpty) {
+          widget.connectManager.prebuiltController?.onSeatTakingRequestFailed
+              ?.call();
+
           showDebugToast('Failed to apply for take seat, $code $message');
         } else {
           showDebugToast(

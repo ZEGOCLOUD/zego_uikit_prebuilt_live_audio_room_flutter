@@ -128,6 +128,8 @@ class ZegoLiveConnectManager {
       if (result.error != null) {
         _audienceIDsInvitedTakeSeatByHost.remove(invitee.id);
 
+        prebuiltController?.onInviteAudienceToTakeSeatFailed?.call();
+
         showDebugToast('Failed to invite take seat, please try again.');
       }
 
@@ -192,7 +194,7 @@ class ZegoLiveConnectManager {
       return;
     }
 
-    prebuiltController?.onHostInviteToTakeSeat?.call();
+    prebuiltController?.onHostSeatTakingInviteSent?.call();
 
     /// self-cancellation if requesting when host invite you
     ZegoLoggerService.logInfo(
@@ -382,9 +384,15 @@ class ZegoLiveConnectManager {
     if (seatManager.localIsAHost) {
       _audienceIDsInvitedTakeSeatByHost.remove(invitee.id);
 
+      /// host's invite is rejected by audience
+      prebuiltController?.onSeatTakingInviteRejected?.call();
+
       showDebugToast(
           'Your request to take seat has been refused by ${ZegoUIKit().getUser(invitee.id)?.name ?? ''}');
     } else {
+      /// audience's request is rejected by host
+      prebuiltController?.onSeatTakingRequestRejected?.call();
+
       showDebugToast('Your request to take seat has been refused.');
       updateAudienceConnectState(ConnectState.idle);
     }
@@ -429,6 +437,8 @@ class ZegoLiveConnectManager {
         _audienceIDsInvitedTakeSeatByHost.remove(invitee.id);
       }
     } else {
+      prebuiltController?.onSeatTakingRequestFailed?.call();
+
       updateAudienceConnectState(ConnectState.idle);
     }
   }
