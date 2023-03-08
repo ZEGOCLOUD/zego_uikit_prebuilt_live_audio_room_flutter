@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:core';
 
 // Flutter imports:
@@ -66,6 +67,8 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
   late final ZegoLiveSeatManager seatManager;
   late final ZegoLiveConnectManager connectManager;
 
+  List<StreamSubscription<dynamic>?> subscriptions = [];
+
   @override
   void initState() {
     super.initState();
@@ -76,11 +79,15 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 2.1.1; $version',
+        'version: zego_uikit_prebuilt_live_audio_room: 2.2.0; $version',
         tag: 'audio room',
         subTag: 'prebuilt',
       );
     });
+
+    subscriptions
+      ..add(ZegoUIKit().getUserJoinStream().listen(onUserJoined))
+      ..add(ZegoUIKit().getUserLeaveStream().listen(onUserLeave));
 
     plugins = ZegoPrebuiltPlugins(
       appID: widget.appID,
@@ -158,6 +165,10 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     plugins.uninit();
 
     uninitContext();
+
+    for (final subscription in subscriptions) {
+      subscription?.cancel();
+    }
 
     if (widget.appDesignSize != null) {
       ScreenUtil.init(context, designSize: widget.appDesignSize!);
@@ -371,5 +382,29 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
         Navigator.of(context).pop(true);
       },
     );
+  }
+
+  void onUserJoined(List<ZegoUIKitUser> users) {
+    onInRoomUserAttributesUpdated();
+
+    for (final user in users) {
+      ZegoUIKit()
+          .getInRoomUserAttributesNotifier(user.id)
+          .addListener(onInRoomUserAttributesUpdated);
+    }
+  }
+
+  void onUserLeave(List<ZegoUIKitUser> users) {
+    for (final user in users) {
+      ZegoUIKit()
+          .getInRoomUserAttributesNotifier(user.id)
+          .removeListener(onInRoomUserAttributesUpdated);
+    }
+
+    onInRoomUserAttributesUpdated();
+  }
+
+  void onInRoomUserAttributesUpdated() {
+    widget.config.onUserCountOrPropertyChanged?.call(ZegoUIKit().getAllUsers());
   }
 }

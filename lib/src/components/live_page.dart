@@ -250,6 +250,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
         connectManager: widget.connectManager,
         prebuiltController: widget.prebuiltController,
         isPluginEnabled: widget.plugins?.isEnabled ?? false,
+        avatarBuilder: widget.config.seatConfig.avatarBuilder,
       ),
     );
   }
@@ -291,4 +292,5 @@ class ZegoLivePageState extends State<ZegoLivePage>
       ZegoUIKit().turnMicrophoneOn(true);
     }
   }
+
 }

@@ -101,6 +101,9 @@ class ZegoLiveSeatManager {
 
     await queryRoomAllAttributes(withToast: false);
     await queryUsersInRoomAttributes();
+
+    await initLocalAvatarAttribute();
+    await initLocalInRoomAttributes();
   }
 
   Future<void> uninit() async {
@@ -181,9 +184,12 @@ class ZegoLiveSeatManager {
     });
   }
 
-  Future<bool> queryUsersInRoomAttributes({bool withToast = true}) async {
+  Future<bool> queryUsersInRoomAttributes({
+    bool withToast = true,
+    String nextFlag = '',
+  }) async {
     ZegoLoggerService.logInfo(
-      'query init users in-room attributes',
+      'query init users in-room attributes, next flag:$nextFlag',
       tag: 'audio room',
       subTag: 'seat manager',
     );
@@ -191,8 +197,9 @@ class ZegoLiveSeatManager {
         .getSignalingPlugin()
         .queryUsersInRoomAttributes(
           roomID: roomID,
+          nextFlag: nextFlag,
         )
-        .then((result) {
+        .then((result) async {
       final success = result.error == null;
       ZegoLoggerService.logInfo(
         'query finish, result:$result',
@@ -201,12 +208,25 @@ class ZegoLiveSeatManager {
       );
 
       ZegoLoggerService.logInfo(
-        'query finish, result:$result',
+        'query finish, result:$result, nextFlag: ${result.nextFlag}',
         tag: 'audio room',
         subTag: 'seat manager',
       );
       if (success) {
         updateRoleFromUserAttributes(result.attributes);
+
+        if (result.nextFlag.isNotEmpty) {
+          ZegoLoggerService.logInfo(
+            'query has next flag, query next..',
+            tag: 'audio room',
+            subTag: 'seat manager',
+          );
+
+          return queryUsersInRoomAttributes(
+            withToast: withToast,
+            nextFlag: result.nextFlag,
+          );
+        }
       } else {
         if (withToast) {
           showDebugToast(
@@ -415,8 +435,7 @@ class ZegoLiveSeatManager {
       return false;
     }
 
-    final inRoomAttributes =
-        ZegoUIKit().getInRoomUserAttributesNotifier(user.id).value;
+    final inRoomAttributes = user.inRoomAttributes.value;
     if (!inRoomAttributes.containsKey(attributeKeyRole)) {
       return false;
     }
@@ -954,9 +973,11 @@ class ZegoLiveSeatManager {
 
       /// update local role
       if (localUserID == updateUserID) {
-        if (!updateUserAttributes.containsKey(attributeKeyRole) ||
-            updateUserAttributes[attributeKeyRole]!.isEmpty) {
-          localRole.value = ZegoLiveAudioRoomRole.audience;
+        if (updateUserAttributes[attributeKeyRole]?.isEmpty ?? true) {
+          if (localRole.value != ZegoLiveAudioRoomRole.host ||
+              _hostSeatAttributeInitialed) {
+            localRole.value = ZegoLiveAudioRoomRole.audience;
+          }
         } else {
           localRole.value = ZegoLiveAudioRoomRole.values[
               int.parse(updateUserAttributes[attributeKeyRole]!.toString())];
@@ -1218,6 +1239,75 @@ class ZegoLiveSeatManager {
       }
 
       return success;
+    });
+  }
+
+  Future<bool> initLocalAvatarAttribute() async {
+    ZegoLoggerService.logInfo(
+      'set local user avatar attribute: ${config.userAvatarUrl ?? ''}',
+      tag: 'audio room',
+      subTag: 'prebuilt',
+    );
+
+    return ZegoUIKit().getSignalingPlugin().setUsersInRoomAttributes(
+      roomID: roomID,
+      key: attributeKeyAvatar,
+      value: config.userAvatarUrl ?? '',
+      userIDs: [localUserID],
+    ).then((result) {
+      final success = result.error == null;
+      if (success) {
+        ZegoLoggerService.logInfo(
+          'set local user avatar attribute result success',
+          tag: 'audio room',
+          subTag: 'prebuilt',
+        );
+      } else {
+        ZegoLoggerService.logInfo(
+          'set local user avatar attribute result failed, error:${result.error}',
+          tag: 'audio room',
+          subTag: 'prebuilt',
+        );
+
+        showDebugToast(
+            'set local user avatar attribute failed, ${result.error}');
+      }
+      return success;
+    });
+  }
+
+  Future<void> initLocalInRoomAttributes() async {
+    ZegoLoggerService.logInfo(
+      'init local user in-room attributes: ${config.userInRoomAttributes}',
+      tag: 'audio room',
+      subTag: 'prebuilt',
+    );
+
+    config.userInRoomAttributes.forEach((key, value) async {
+      return ZegoUIKit().getSignalingPlugin().setUsersInRoomAttributes(
+        roomID: roomID,
+        key: key,
+        value: value,
+        userIDs: [localUserID],
+      ).then((result) async {
+        final success = result.error == null;
+        if (success) {
+          ZegoLoggerService.logInfo(
+            'init local user in-room attributes{$key, $value}: result success',
+            tag: 'audio room',
+            subTag: 'prebuilt',
+          );
+        } else {
+          ZegoLoggerService.logInfo(
+            'init local user in-room attributes{$key, $value}: result failed, error:${result.error}',
+            tag: 'audio room',
+            subTag: 'prebuilt',
+          );
+
+          showDebugToast(
+              'init local user in-room attributes{$key, $value}: failed, ${result.error}');
+        }
+      });
     });
   }
 }

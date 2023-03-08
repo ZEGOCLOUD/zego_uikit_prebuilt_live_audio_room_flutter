@@ -1,3 +1,13 @@
+## 2.2.0
+- support avatar url setting
+- support user in-room attributes setting
+- add user count update notify
+- add user attribute update notify
+- fix some bugs
+
+## 2.1.1
+- add more callbacks
+
 ## 2.1.0
 
 - support request to take seat

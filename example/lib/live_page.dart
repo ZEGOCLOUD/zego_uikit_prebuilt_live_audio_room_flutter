@@ -37,7 +37,13 @@ class LivePage extends StatelessWidget {
           ..layoutConfig = getLayoutConfig()
           ..seatConfig = getSeatConfig()
           ..background = background()
-          ..inRoomMessageViewConfig = getMessageViewConfig(),
+          ..inRoomMessageViewConfig = getMessageViewConfig()
+          ..userAvatarUrl =
+              isHost ? 'https://my5353.com/4Gp7g' : 'https://my5353.com/QXsYT'
+          ..onUserCountOrPropertyChanged = (List<ZegoUIKitUser> users) {
+            debugPrint(
+                'onUserCountOrPropertyChanged:${users.map((e) => e.toString())}');
+          },
         controller: getController(context),
       ),
     );

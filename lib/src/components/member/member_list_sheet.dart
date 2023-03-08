@@ -7,6 +7,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/avatar_default_item.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_sheet_menu.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/connect/connect_manager.dart';
@@ -148,7 +149,14 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
                 margin: EdgeInsets.only(bottom: 36.r),
                 child: Row(
                   children: [
-                    avatarItem(context, user, widget.avatarBuilder),
+                    SizedBox(
+                      width: 92.r,
+                      height: 92.r,
+                      child: ZegoAvatarDefaultItem(
+                        user: user,
+                        avatarBuilder: widget.avatarBuilder,
+                      ),
+                    ),
                     SizedBox(width: 24.r),
                     userNameItem(user),
                     const Expanded(child: SizedBox()),
@@ -227,30 +235,6 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget avatarItem(
-    BuildContext context,
-    ZegoUIKitUser user,
-    ZegoAvatarBuilder? builder,
-  ) {
-    return Container(
-      width: 92.r,
-      height: 92.r,
-      decoration:
-          const BoxDecoration(color: Color(0xffDBDDE3), shape: BoxShape.circle),
-      child: Center(
-        child: builder?.call(context, Size(92.r, 92.r), user, {}) ??
-            Text(
-              user.name.isNotEmpty ? user.name.characters.first : '',
-              style: TextStyle(
-                fontSize: 32.0.r,
-                color: const Color(0xff222222),
-                decoration: TextDecoration.none,
-              ),
-            ),
-      ),
     );
   }
 

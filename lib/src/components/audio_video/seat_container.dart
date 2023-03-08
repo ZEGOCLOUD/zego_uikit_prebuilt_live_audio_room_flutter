@@ -18,10 +18,10 @@ class ZegoSeatContainer extends StatefulWidget {
     Key? key,
     required this.seatManager,
     required this.layoutConfig,
+    this.avatarBuilder,
     this.foregroundBuilder,
     this.backgroundBuilder,
     this.sortAudioVideo,
-    this.avatarBuilder,
   }) : super(key: key);
 
   final ZegoLiveSeatManager seatManager;

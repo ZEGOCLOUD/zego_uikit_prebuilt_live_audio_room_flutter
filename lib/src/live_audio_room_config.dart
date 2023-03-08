@@ -16,6 +16,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         closeSeatsWhenJoining = true,
         turnOnMicrophoneWhenJoining = true,
         useSpeakerWhenJoining = true,
+        userInRoomAttributes = const {},
         seatConfig = ZegoLiveAudioRoomSeatConfig(),
         layoutConfig = ZegoLiveAudioRoomLayoutConfig(),
         hostSeatIndexes = const [0],
@@ -35,6 +36,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         turnOnMicrophoneWhenJoining = false,
         closeSeatsWhenJoining = false,
         useSpeakerWhenJoining = true,
+        userInRoomAttributes = const {},
         seatConfig = ZegoLiveAudioRoomSeatConfig(),
         layoutConfig = ZegoLiveAudioRoomLayoutConfig(),
         hostSeatIndexes = const [0],
@@ -57,6 +59,9 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
     this.onLeaveConfirmation,
     this.onLeaveLiveAudioRoom,
     this.background,
+    this.userAvatarUrl,
+    this.userInRoomAttributes = const {},
+    this.onUserCountOrPropertyChanged,
     ZegoInnerText? translationText,
   })  : seatConfig = seatConfig ?? ZegoLiveAudioRoomSeatConfig(),
         bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig(),
@@ -139,6 +144,15 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// 1. Voice changing
   /// 2. Reverb
   ZegoAudioEffectConfig audioEffectConfig;
+
+  /// avatar url of local user, Value is not larger than 64 bytes
+  String? userAvatarUrl;
+
+  /// in-room attributes of local user
+  Map<String, String> userInRoomAttributes;
+
+  /// user count or user attribute changed callback
+  void Function(List<ZegoUIKitUser> users)? onUserCountOrPropertyChanged;
 }
 
 class ZegoLiveAudioRoomSeatConfig {

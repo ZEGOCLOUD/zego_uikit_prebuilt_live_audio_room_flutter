@@ -15,12 +15,12 @@ class ZegoAudioRoomLayout extends StatefulWidget {
     Key? key,
     required this.userList,
     required this.layoutConfig,
+    this.avatarBuilder,
     this.backgroundColor,
     this.borderRadius,
     this.usersItemIndex = const {},
     this.foregroundBuilder,
     this.backgroundBuilder,
-    this.avatarBuilder,
   }) : super(key: key);
 
   final List<ZegoUIKitUser> userList;

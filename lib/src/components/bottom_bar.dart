@@ -25,9 +25,11 @@ class ZegoBottomBar extends StatefulWidget {
   final ZegoLiveConnectManager connectManager;
   final ZegoLiveAudioRoomController? prebuiltController;
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
+  final ZegoAvatarBuilder? avatarBuilder;
 
   const ZegoBottomBar({
     Key? key,
+    this.avatarBuilder,
     required this.config,
     required this.isPluginEnabled,
     required this.seatManager,
@@ -267,7 +269,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                 PrebuiltLiveAudioRoomIconUrls.toolbarMember),
             backgroundColor: Colors.white,
           ),
-          avatarBuilder: widget.config.seatConfig.avatarBuilder,
+          avatarBuilder: widget.avatarBuilder,
           isPluginEnabled: widget.isPluginEnabled,
           seatManager: widget.seatManager,
           connectManager: widget.connectManager,
