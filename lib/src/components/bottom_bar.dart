@@ -66,6 +66,14 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
       height: widget.height,
       child: Stack(
         children: [
+          ValueListenableBuilder<ZegoLiveAudioRoomRole>(
+            valueListenable: widget.seatManager.localRole,
+            builder: (context, role, _) {
+              updateButtonsByRole();
+
+              return rightToolbar(context);
+            },
+          ),
           if (widget.config.bottomMenuBarConfig.showInRoomMessageButton)
             SizedBox(
               height: 124.r,
@@ -80,14 +88,6 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
             )
           else
             const SizedBox(),
-          ValueListenableBuilder<ZegoLiveAudioRoomRole>(
-            valueListenable: widget.seatManager.localRole,
-            builder: (context, role, _) {
-              updateButtonsByRole();
-
-              return rightToolbar(context);
-            },
-          ),
         ],
       ),
     );
@@ -95,7 +95,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
 
   Widget rightToolbar(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 120.0.r),
+      // margin: EdgeInsets.only(left: 120.0.r),
       child: CustomScrollView(
         scrollDirection: Axis.horizontal,
         slivers: [
@@ -274,8 +274,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           seatManager: widget.seatManager,
           connectManager: widget.connectManager,
           innerText: widget.config.innerText,
-          onMoreButtonPressed:
-              widget.prebuiltController?.onMemberListMoreButtonPressed,
+          onMoreButtonPressed: widget.config.onMemberListMoreButtonPressed,
         );
       case ZegoMenuBarButtonName.toggleMicrophoneButton:
         var microphoneDefaultOn = widget.config.turnOnMicrophoneWhenJoining;
@@ -318,6 +317,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         );
       case ZegoMenuBarButtonName.soundEffectButton:
         return ZegoSoundEffectButton(
+          innerText: widget.config.innerText,
           voiceChangeEffect: widget.config.audioEffectConfig.voiceChangeEffect,
           reverbEffect: widget.config.audioEffectConfig.reverbEffect,
           buttonSize: buttonSize,

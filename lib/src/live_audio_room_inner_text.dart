@@ -28,6 +28,40 @@ class ZegoInnerText {
   String inviteToTakeSeatMenuDialogButton;
   ZegoDialogInfo hostInviteTakeSeatDialog;
 
+  /// effect
+  String audioEffectTitle;
+  String audioEffectReverbTitle;
+  String audioEffectVoiceChangingTitle;
+
+  /// voice effect
+  String voiceChangerNoneTitle;
+  String voiceChangerLittleBoyTitle;
+  String voiceChangerLittleGirlTitle;
+  String voiceChangerDeepTitle;
+  String voiceChangerCrystalClearTitle;
+  String voiceChangerRobotTitle;
+  String voiceChangerEtherealTitle;
+  String voiceChangerFemaleTitle;
+  String voiceChangerMaleTitle;
+  String voiceChangerOptimusPrimeTitle;
+  String voiceChangerCMajorTitle;
+  String voiceChangerAMajorTitle;
+  String voiceChangerHarmonicMinorTitle;
+
+  /// revert effect
+  String reverbTypeNoneTitle;
+  String reverbTypeKTVTitle;
+  String reverbTypeHallTitle;
+  String reverbTypeConcertTitle;
+  String reverbTypeRockTitle;
+  String reverbTypeSmallRoomTitle;
+  String reverbTypeLargeRoomTitle;
+  String reverbTypeValleyTitle;
+  String reverbTypeRecordingStudioTitle;
+  String reverbTypeBasementTitle;
+  String reverbTypePopularTitle;
+  String reverbTypeGramophoneTitle;
+
   ZegoInnerText({
     String? takeSeatMenuButton,
     String? disagreeButton,
@@ -47,6 +81,34 @@ class ZegoInnerText {
     ZegoDialogInfo? removeFromSeatDialogInfo,
     ZegoDialogInfo? leaveSeatDialogInfo,
     ZegoDialogInfo? hostInviteTakeSeatDialog,
+    String? audioEffectTitle,
+    String? audioEffectReverbTitle,
+    String? audioEffectVoiceChangingTitle,
+    String? voiceChangerNoneTitle,
+    String? voiceChangerLittleBoyTitle,
+    String? voiceChangerLittleGirlTitle,
+    String? voiceChangerDeepTitle,
+    String? voiceChangerCrystalClearTitle,
+    String? voiceChangerRobotTitle,
+    String? voiceChangerEtherealTitle,
+    String? voiceChangerFemaleTitle,
+    String? voiceChangerMaleTitle,
+    String? voiceChangerOptimusPrimeTitle,
+    String? voiceChangerCMajorTitle,
+    String? voiceChangerAMajorTitle,
+    String? voiceChangerHarmonicMinorTitle,
+    String? reverbTypeNoneTitle,
+    String? reverbTypeKTVTitle,
+    String? reverbTypeHallTitle,
+    String? reverbTypeConcertTitle,
+    String? reverbTypeRockTitle,
+    String? reverbTypeSmallRoomTitle,
+    String? reverbTypeLargeRoomTitle,
+    String? reverbTypeValleyTitle,
+    String? reverbTypeRecordingStudioTitle,
+    String? reverbTypeBasementTitle,
+    String? reverbTypePopularTitle,
+    String? reverbTypeGramophoneTitle,
   })  : takeSeatMenuButton = takeSeatMenuButton ?? 'Take the seat',
         disagreeButton = disagreeButton ?? 'Disagree',
         agreeButton = agreeButton ?? 'Agree',
@@ -100,5 +162,39 @@ class ZegoInnerText {
               message: 'The host is inviting you to take seat',
               cancelButtonName: 'Disagree',
               confirmButtonName: 'Agree',
-            );
+            ),
+        audioEffectTitle = audioEffectTitle ?? 'Audio effect',
+        audioEffectReverbTitle = audioEffectReverbTitle ?? 'Reverb',
+        audioEffectVoiceChangingTitle =
+            audioEffectVoiceChangingTitle ?? 'Voice changing',
+        voiceChangerNoneTitle = voiceChangerNoneTitle ?? 'None',
+        voiceChangerLittleBoyTitle = voiceChangerLittleBoyTitle ?? 'Little boy',
+        voiceChangerLittleGirlTitle =
+            voiceChangerLittleGirlTitle ?? 'Little girl',
+        voiceChangerDeepTitle = voiceChangerDeepTitle ?? 'Deep',
+        voiceChangerCrystalClearTitle =
+            voiceChangerCrystalClearTitle ?? 'Crystal-clear',
+        voiceChangerRobotTitle = voiceChangerRobotTitle ?? 'Robot',
+        voiceChangerEtherealTitle = voiceChangerEtherealTitle ?? 'Ethereal',
+        voiceChangerFemaleTitle = voiceChangerFemaleTitle ?? 'Female',
+        voiceChangerMaleTitle = voiceChangerMaleTitle ?? 'Male',
+        voiceChangerOptimusPrimeTitle =
+            voiceChangerOptimusPrimeTitle ?? 'Optimus Prime',
+        voiceChangerCMajorTitle = voiceChangerCMajorTitle ?? 'C major',
+        voiceChangerAMajorTitle = voiceChangerAMajorTitle ?? 'A major',
+        voiceChangerHarmonicMinorTitle =
+            voiceChangerHarmonicMinorTitle ?? 'Harmonic minor',
+        reverbTypeNoneTitle = reverbTypeNoneTitle ?? 'None',
+        reverbTypeKTVTitle = reverbTypeKTVTitle ?? 'Karaoke',
+        reverbTypeHallTitle = reverbTypeHallTitle ?? 'Hall',
+        reverbTypeConcertTitle = reverbTypeConcertTitle ?? 'Concert',
+        reverbTypeRockTitle = reverbTypeRockTitle ?? 'Rock',
+        reverbTypeSmallRoomTitle = reverbTypeSmallRoomTitle ?? 'Small room',
+        reverbTypeLargeRoomTitle = reverbTypeLargeRoomTitle ?? 'Large room',
+        reverbTypeValleyTitle = reverbTypeValleyTitle ?? 'Valley',
+        reverbTypeRecordingStudioTitle =
+            reverbTypeRecordingStudioTitle ?? 'Recording studio',
+        reverbTypeBasementTitle = reverbTypeBasementTitle ?? 'Basement',
+        reverbTypePopularTitle = reverbTypePopularTitle ?? 'Pop',
+        reverbTypeGramophoneTitle = reverbTypeGramophoneTitle ?? 'Gramophone';
 }

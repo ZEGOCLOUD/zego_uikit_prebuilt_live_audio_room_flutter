@@ -62,6 +62,18 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
     this.userAvatarUrl,
     this.userInRoomAttributes = const {},
     this.onUserCountOrPropertyChanged,
+    this.onSeatClosed,
+    this.onSeatsOpened,
+    this.onSeatClicked,
+    this.onSeatsChanged,
+    this.onSeatTakingRequested,
+    this.onSeatTakingRequestCanceled,
+    this.onInviteAudienceToTakeSeatFailed,
+    this.onSeatTakingInviteRejected,
+    this.onSeatTakingRequestFailed,
+    this.onSeatTakingRequestRejected,
+    this.onHostSeatTakingInviteSent,
+    this.onMemberListMoreButtonPressed,
     ZegoInnerText? translationText,
   })  : seatConfig = seatConfig ?? ZegoLiveAudioRoomSeatConfig(),
         bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig(),
@@ -120,21 +132,6 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// if confirm info is not null, APP will pop alert dialog when you hang up
   ZegoDialogInfo? confirmDialogInfo;
 
-  /// It is often used to customize the process before exiting the live interface.
-  /// The liveback will triggered when user click hang up button or use system's return,
-  /// If you need to handle custom logic, you can set this liveback to handle (such as showAlertDialog to let user determine).
-  /// if you return true in the liveback, prebuilt page will quit and return to your previous page, otherwise will ignore.
-  Future<bool> Function(BuildContext context)? onLeaveConfirmation;
-
-  /// customize handling after leave audio room
-  VoidCallback? onLeaveLiveAudioRoom;
-
-  /// if return true, will directly open the microphone
-  /// when received onTurnOnYourMicrophoneRequest
-  /// default is false
-  Future<bool> Function(BuildContext context)?
-      onMicrophoneTurnOnByOthersConfirmation;
-
   /// configs about message view
   ZegoInRoomMessageViewConfig inRoomMessageViewConfig;
 
@@ -151,8 +148,66 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// in-room attributes of local user
   Map<String, String> userInRoomAttributes;
 
+  /// It is often used to customize the process before exiting the live interface.
+  /// The liveback will triggered when user click hang up button or use system's return,
+  /// If you need to handle custom logic, you can set this liveback to handle (such as showAlertDialog to let user determine).
+  /// if you return true in the liveback, prebuilt page will quit and return to your previous page, otherwise will ignore.
+  Future<bool> Function(BuildContext context)? onLeaveConfirmation;
+
+  /// customize handling after leave audio room
+  VoidCallback? onLeaveLiveAudioRoom;
+
+  /// if return true, will directly open the microphone
+  /// when received onTurnOnYourMicrophoneRequest
+  /// default is false
+  Future<bool> Function(BuildContext context)?
+  onMicrophoneTurnOnByOthersConfirmation;
+
   /// user count or user attribute changed callback
   void Function(List<ZegoUIKitUser> users)? onUserCountOrPropertyChanged;
+
+  /// audio room's seat is closed, audience need apply to take
+  VoidCallback? onSeatClosed;
+
+  /// audio room's seat is opened, audience can take on by click empty seat
+  VoidCallback? onSeatsOpened;
+
+  /// customize the seat click event
+  /// WARNING: will override prebuilt logic
+  void Function(int index, ZegoUIKitUser? user)? onSeatClicked;
+
+  /// triggered when someone gets on/gets off/switches seat
+  /// @param takenSeats {seat index, seat user}
+  /// @param untakenSeats [seat index]
+  void Function(
+      Map<int, ZegoUIKitUser> takenSeats,
+      List<int> untakenSeats,
+      )? onSeatsChanged;
+
+  /// host receive, some audience's take seat request
+  void Function(ZegoUIKitUser audience)? onSeatTakingRequested;
+
+  /// host receive, audience's take seat request had canceled
+  void Function(ZegoUIKitUser audience)? onSeatTakingRequestCanceled;
+
+  /// host receive, host's invite is failed
+  VoidCallback? onInviteAudienceToTakeSeatFailed;
+
+  /// host receive, host's invite is rejected by audience
+  VoidCallback? onSeatTakingInviteRejected;
+
+  /// audience receive, audience's request is failed
+  VoidCallback? onSeatTakingRequestFailed;
+
+  /// audience receive, audience's request is rejected by host
+  VoidCallback? onSeatTakingRequestRejected;
+
+  /// audience receive, host invite audience to take seat
+  VoidCallback? onHostSeatTakingInviteSent;
+
+  /// customize the member list more button click event
+  /// WARNING: will override prebuilt logic
+  void Function(ZegoUIKitUser user)? onMemberListMoreButtonPressed;
 }
 
 class ZegoLiveAudioRoomSeatConfig {

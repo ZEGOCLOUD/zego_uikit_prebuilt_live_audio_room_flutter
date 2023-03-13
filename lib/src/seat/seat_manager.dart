@@ -396,7 +396,7 @@ class ZegoLiveSeatManager {
       takenSeats[int.tryParse(seatIndex) ?? -1] =
           ZegoUIKit().getUser(seatUserID) ?? ZegoUIKitUser.empty();
     });
-    prebuiltController?.onSeatsChanged?.call(
+    config.onSeatsChanged?.call(
       takenSeats,
       List<int>.generate(
           config.layoutConfig.rowConfigs
@@ -422,8 +422,8 @@ class ZegoLiveSeatManager {
     _connectManager?.onSeatLockedChanged(isSeatLockedNotifier.value);
 
     isSeatLockedNotifier.value
-        ? prebuiltController?.onSeatClosed?.call()
-        : prebuiltController?.onSeatsOpened?.call();
+        ? config.onSeatClosed?.call()
+        : config.onSeatsOpened?.call();
   }
 
   bool isSpeaker(ZegoUIKitUser user) {

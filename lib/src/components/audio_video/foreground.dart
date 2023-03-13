@@ -96,6 +96,7 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
               )
             else
               Container(),
+            ...null == widget.user ? [] : [microphoneOffFlag()],
           ],
         );
       },
@@ -114,14 +115,14 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
       return;
     }
 
-    if (widget.prebuiltController?.onSeatClicked != null) {
+    if (widget.config.onSeatClicked != null) {
       ZegoLoggerService.logInfo(
         'ERROR!!! click seat event is deal outside',
         tag: 'audio room',
         subTag: 'foreground',
       );
 
-      widget.prebuiltController?.onSeatClicked!.call(index, widget.user);
+      widget.config.onSeatClicked!.call(index, widget.user);
       return;
     }
 
@@ -229,6 +230,34 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
           decoration: TextDecoration.none,
         ),
       ),
+    );
+  }
+
+  Widget microphoneOffFlag() {
+    return ValueListenableBuilder<bool>(
+      valueListenable:
+          ZegoUIKit().getMicrophoneStateNotifier(widget.user?.id ?? ''),
+      builder: (context, isMicrophoneEnabled, _) {
+        if (isMicrophoneEnabled) {
+          return Container();
+        }
+
+        return Positioned(
+          top: avatarPosTop,
+          left: avatarPosLeft,
+          child: Container(
+            width: seatIconWidth,
+            height: seatIconWidth,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.black.withOpacity(0.5),
+            ),
+            child: PrebuiltLiveAudioRoomImage.asset(
+              PrebuiltLiveAudioRoomIconUrls.seatMicrophoneOff,
+            ),
+          ),
+        );
+      },
     );
   }
 }

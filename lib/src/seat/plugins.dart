@@ -105,15 +105,15 @@ class ZegoPrebuiltPlugins {
     await ZegoUIKit()
         .getSignalingPlugin()
         .login(id: userID, name: userName)
-        .then((value) async {
+        .then((result) async {
       ZegoLoggerService.logInfo(
-        'plugins login done, join room...',
+        'plugins login done, login result:$result, try to join room...',
         tag: 'audio room',
         subTag: 'plugin',
       );
-      return joinRoom().then((value) {
+      return joinRoom().then((result) {
         ZegoLoggerService.logInfo(
-          'plugins room joined',
+          'plugins room joined, join result:$result',
           tag: 'audio room',
           subTag: 'plugin',
         );
@@ -327,8 +327,8 @@ class ZegoPrebuiltPlugins {
       subTag: 'plugin',
     );
     tryReLogging = true;
-    return ZegoUIKit().getSignalingPlugin().logout().then((value) async {
-      return ZegoUIKit().getSignalingPlugin().login(id: userID, name: userName);
+    await ZegoUIKit().getSignalingPlugin().logout().then((value) async {
+      await ZegoUIKit().getSignalingPlugin().login(id: userID, name: userName);
     });
   }
 

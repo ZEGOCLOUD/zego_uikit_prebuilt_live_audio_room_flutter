@@ -1,3 +1,10 @@
+## 2.2.1
+- move controller's callbacks to config
+- add turnMicrophoneOn function in controller
+- fixed an issue where the avatar was not visible when the microphone was off
+- support RTL text direction
+- add voice effect text customization
+
 ## 2.2.0
 - support avatar url setting
 - support user in-room attributes setting

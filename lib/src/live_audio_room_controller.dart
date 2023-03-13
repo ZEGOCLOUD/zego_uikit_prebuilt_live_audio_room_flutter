@@ -9,79 +9,13 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
 
 class ZegoLiveAudioRoomController {
-  ZegoLiveAudioRoomController({
-    this.onSeatClosed,
-    this.onSeatsOpened,
-    this.onSeatClicked,
-    this.onSeatsChanged,
-    this.onSeatTakingRequested,
-    this.onSeatTakingRequestCanceled,
-    this.onInviteAudienceToTakeSeatFailed,
-    this.onSeatTakingInviteRejected,
-    this.onSeatTakingRequestFailed,
-    this.onSeatTakingRequestRejected,
-    this.onHostSeatTakingInviteSent,
-    this.onMemberListMoreButtonPressed,
-  });
-
   ZegoLiveConnectManager? _connectManager;
   ZegoLiveSeatManager? _seatManager;
 
-  /// audio room's seat is closed, audience need apply to take
-  VoidCallback? onSeatClosed;
-
-  /// audio room's seat is opened, audience can take on by click empty seat
-  VoidCallback? onSeatsOpened;
-
-  /// customize the seat click event
-  /// WARNING: will override prebuilt logic
-  void Function(int index, ZegoUIKitUser? user)? onSeatClicked;
-
-  /// triggered when someone gets on/gets off/switches seat
-  /// @param takenSeats {seat index, seat user}
-  /// @param untakenSeats [seat index]
-  void Function(
-    Map<int, ZegoUIKitUser> takenSeats,
-    List<int> untakenSeats,
-  )? onSeatsChanged;
-
-  /// host receive, some audience's take seat request
-  void Function(ZegoUIKitUser audience)? onSeatTakingRequested;
-
-  /// host receive, audience's take seat request had canceled
-  void Function(ZegoUIKitUser audience)? onSeatTakingRequestCanceled;
-
-  /// host receive, host's invite is failed
-  VoidCallback? onInviteAudienceToTakeSeatFailed;
-
-  /// host receive, host's invite is rejected by audience
-  VoidCallback? onSeatTakingInviteRejected;
-
-  /// audience receive, audience's request is failed
-  VoidCallback? onSeatTakingRequestFailed;
-
-  /// audience receive, audience's request is rejected by host
-  VoidCallback? onSeatTakingRequestRejected;
-
-  /// audience receive, host invite audience to take seat
-  VoidCallback? onHostSeatTakingInviteSent;
-
-  /// customize the member list more button click event
-  /// WARNING: will override prebuilt logic
-  void Function(ZegoUIKitUser user)? onMemberListMoreButtonPressed;
-
-  /// prebuilt assign value to internal variables
-  void initByPrebuilt({
-    ZegoLiveConnectManager? connectManager,
-    ZegoLiveSeatManager? seatManager,
-  }) {
-    _connectManager = connectManager;
-    _seatManager = seatManager;
-  }
-
-  void uninitByPrebuilt() {
-    _connectManager = null;
-    _seatManager = null;
+  /// turn on/off microphone
+  /// @param userID, if null or empty, turn on/off local microphone
+  void turnMicrophoneOn(bool isOn, {String? userID}) {
+    ZegoUIKit().turnMicrophoneOn(isOn, userID: userID);
   }
 
   Future<bool> leaveSeat({bool showDialog = true}) async {
@@ -133,7 +67,7 @@ class ZegoLiveAudioRoomController {
       );
 
       if (result.error != null) {
-        onSeatTakingRequestFailed?.call();
+        _seatManager?.config.onSeatTakingRequestFailed?.call();
       }
 
       return result.error == null;
@@ -261,4 +195,23 @@ class ZegoLiveAudioRoomController {
   }
 
   ///--------end of host invite audience to take seat's api--------------
+
+  /// DO NOT CALL
+  /// Call Inside By Prebuilt
+  /// prebuilt assign value to internal variables
+  void initByPrebuilt({
+    ZegoLiveConnectManager? connectManager,
+    ZegoLiveSeatManager? seatManager,
+  }) {
+    _connectManager = connectManager;
+    _seatManager = seatManager;
+  }
+
+  /// DO NOT CALL
+  /// Call Inside By Prebuilt
+  /// prebuilt assign value to internal variables
+  void uninitByPrebuilt() {
+    _connectManager = null;
+    _seatManager = null;
+  }
 }

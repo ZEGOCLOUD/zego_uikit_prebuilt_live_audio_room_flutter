@@ -8,8 +8,11 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/effects/effect_grid.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
 
 class ZegoSoundEffectSheet extends StatefulWidget {
+  final ZegoInnerText innerText;
+
   final List<VoiceChangerType> voiceChangerEffect;
   final ValueNotifier<String> voiceChangerSelectedIDNotifier;
 
@@ -18,6 +21,7 @@ class ZegoSoundEffectSheet extends StatefulWidget {
 
   const ZegoSoundEffectSheet({
     Key? key,
+    required this.innerText,
     required this.voiceChangerEffect,
     required this.voiceChangerSelectedIDNotifier,
     required this.reverbEffect,
@@ -109,7 +113,7 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
     }
 
     voiceChangerModel = ZegoEffectGridModel(
-      title: 'Voice changing',
+      title: widget.innerText.audioEffectVoiceChangingTitle,
       selectedID: widget.voiceChangerSelectedIDNotifier,
       items: voiceChangerEffect
           .map(
@@ -124,7 +128,7 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
                 icon: PrebuiltLiveAudioRoomImage.asset(
                     'assets/icons/voice_changer_${effect.name}_selected.png'),
               ),
-              iconText: effect.text,
+              iconText: voiceChangerTypeText(effect),
               onPressed: () {
                 ZegoUIKit().setVoiceChangerType(effect.key);
               },
@@ -148,7 +152,7 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
     }
 
     reverbPresetModel = ZegoEffectGridModel(
-      title: 'Reverb',
+      title: widget.innerText.audioEffectReverbTitle,
       selectedID: widget.reverbSelectedIDNotifier,
       items: reverbEffect
           .map(
@@ -159,7 +163,7 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
                 icon: PrebuiltLiveAudioRoomImage.asset(
                     'assets/icons/reverb_preset_${effect.name}.png'),
               ),
-              iconText: effect.text,
+              iconText: reverbTypeText(effect),
               onPressed: () {
                 ZegoUIKit().setReverbType(effect.key);
               },
@@ -168,10 +172,71 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
           .toList(),
     );
   }
+
+  String voiceChangerTypeText(VoiceChangerType voiceChangerType) {
+    switch (voiceChangerType) {
+      case VoiceChangerType.none:
+        return widget.innerText.voiceChangerNoneTitle;
+      case VoiceChangerType.littleBoy:
+        return widget.innerText.voiceChangerLittleBoyTitle;
+      case VoiceChangerType.littleGirl:
+        return widget.innerText.voiceChangerLittleGirlTitle;
+      case VoiceChangerType.deep:
+        return widget.innerText.voiceChangerDeepTitle;
+      case VoiceChangerType.crystalClear:
+        return widget.innerText.voiceChangerCrystalClearTitle;
+      case VoiceChangerType.robot:
+        return widget.innerText.voiceChangerRobotTitle;
+      case VoiceChangerType.ethereal:
+        return widget.innerText.voiceChangerEtherealTitle;
+      case VoiceChangerType.female:
+        return widget.innerText.voiceChangerFemaleTitle;
+      case VoiceChangerType.male:
+        return widget.innerText.voiceChangerMaleTitle;
+      case VoiceChangerType.optimusPrime:
+        return widget.innerText.voiceChangerOptimusPrimeTitle;
+      case VoiceChangerType.cMajor:
+        return widget.innerText.voiceChangerCMajorTitle;
+      case VoiceChangerType.aMajor:
+        return widget.innerText.voiceChangerAMajorTitle;
+      case VoiceChangerType.harmonicMinor:
+        return widget.innerText.voiceChangerHarmonicMinorTitle;
+    }
+  }
+
+  String reverbTypeText(ReverbType reverbType) {
+    switch (reverbType) {
+      case ReverbType.none:
+        return widget.innerText.reverbTypeNoneTitle;
+      case ReverbType.ktv:
+        return widget.innerText.reverbTypeKTVTitle;
+      case ReverbType.hall:
+        return widget.innerText.reverbTypeHallTitle;
+      case ReverbType.concert:
+        return widget.innerText.reverbTypeConcertTitle;
+      case ReverbType.rock:
+        return widget.innerText.reverbTypeRockTitle;
+      case ReverbType.smallRoom:
+        return widget.innerText.reverbTypeSmallRoomTitle;
+      case ReverbType.largeRoom:
+        return widget.innerText.reverbTypeLargeRoomTitle;
+      case ReverbType.valley:
+        return widget.innerText.reverbTypeValleyTitle;
+      case ReverbType.recordingStudio:
+        return widget.innerText.reverbTypeRecordingStudioTitle;
+      case ReverbType.basement:
+        return widget.innerText.reverbTypeBasementTitle;
+      case ReverbType.popular:
+        return widget.innerText.reverbTypePopularTitle;
+      case ReverbType.gramophone:
+        return widget.innerText.reverbTypeGramophoneTitle;
+    }
+  }
 }
 
 void showSoundEffectSheet(
   BuildContext context, {
+  required ZegoInnerText innerText,
   required List<VoiceChangerType> voiceChangeEffect,
   required List<ReverbType> reverbEffect,
   required ValueNotifier<String> voiceChangerSelectedIDNotifier,
@@ -198,6 +263,7 @@ void showSoundEffectSheet(
           child: SizedBox(
             height: 600.r,
             child: ZegoSoundEffectSheet(
+              innerText: innerText,
               voiceChangerEffect: voiceChangeEffect,
               voiceChangerSelectedIDNotifier: voiceChangerSelectedIDNotifier,
               reverbEffect: reverbEffect,

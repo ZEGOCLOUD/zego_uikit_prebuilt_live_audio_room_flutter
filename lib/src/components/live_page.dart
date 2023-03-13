@@ -261,7 +261,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
     }
 
     return Positioned(
-      left: 32.r,
+      // left: 32.r,
       bottom: 124.r,
       child: ConstrainedBox(
         constraints: BoxConstraints.loose(Size(540.r, 400.r)),

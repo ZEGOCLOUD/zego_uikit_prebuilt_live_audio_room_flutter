@@ -54,9 +54,7 @@ class _ZegoSeatForegroundState extends State<ZegoSeatBackground> {
             ? [
                 emptySeat(),
               ]
-            : [
-                microphoneOffFlag(),
-              ],
+            : [],
       ],
     );
   }
@@ -83,34 +81,6 @@ class _ZegoSeatForegroundState extends State<ZegoSeatBackground> {
           },
         ),
       ),
-    );
-  }
-
-  Widget microphoneOffFlag() {
-    return ValueListenableBuilder<bool>(
-      valueListenable:
-          ZegoUIKit().getMicrophoneStateNotifier(widget.user?.id ?? ''),
-      builder: (context, isMicrophoneEnabled, _) {
-        if (isMicrophoneEnabled) {
-          return Container();
-        }
-
-        return Positioned(
-          top: avatarPosTop,
-          left: avatarPosLeft,
-          child: Container(
-            width: seatIconWidth,
-            height: seatIconWidth,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.black.withOpacity(0.5),
-            ),
-            child: PrebuiltLiveAudioRoomImage.asset(
-              PrebuiltLiveAudioRoomIconUrls.seatMicrophoneOff,
-            ),
-          ),
-        );
-      },
     );
   }
 }

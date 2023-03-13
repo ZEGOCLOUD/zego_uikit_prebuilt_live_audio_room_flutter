@@ -8,8 +8,11 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/effects/sound_effect_sheet.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
 
 class ZegoSoundEffectButton extends StatefulWidget {
+  final ZegoInnerText innerText;
+
   final List<VoiceChangerType> voiceChangeEffect;
   final List<ReverbType> reverbEffect;
 
@@ -19,6 +22,7 @@ class ZegoSoundEffectButton extends StatefulWidget {
 
   const ZegoSoundEffectButton({
     Key? key,
+    required this.innerText,
     required this.voiceChangeEffect,
     required this.reverbEffect,
     this.iconSize,
@@ -42,6 +46,7 @@ class _ZegoSoundEffectButtonState extends State<ZegoSoundEffectButton> {
       onTap: () async {
         showSoundEffectSheet(
           context,
+          innerText: widget.innerText,
           voiceChangeEffect: widget.voiceChangeEffect,
           voiceChangerSelectedIDNotifier: voiceChangerSelectedIDNotifier,
           reverbEffect: widget.reverbEffect,

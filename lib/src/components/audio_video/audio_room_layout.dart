@@ -124,7 +124,7 @@ class _ZegoAudioRoomLayoutState extends State<ZegoAudioRoomLayout> {
                   foregroundBuilder: widget.foregroundBuilder,
                   backgroundBuilder: widget.backgroundBuilder,
                   avatarConfig: ZegoAvatarConfig(
-                    showInAudioMode: isMicrophoneEnabled,
+                    showInAudioMode: true,
                     showSoundWavesInAudioMode: true,
                     builder: widget.avatarBuilder,
                     soundWaveColor: const Color(0xff2254f6),
