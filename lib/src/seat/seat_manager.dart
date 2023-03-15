@@ -137,6 +137,11 @@ class ZegoLiveSeatManager {
 
   Future<bool> lockSeat(bool isLocked) async {
     if (localRole.value != ZegoLiveAudioRoomRole.host) {
+      ZegoLoggerService.logInfo(
+        'only host can ${isLocked ? 'lock' : 'unlock'} seat',
+        tag: 'audio room',
+        subTag: 'seat manager',
+      );
       return false;
     }
 
@@ -167,7 +172,7 @@ class ZegoLiveSeatManager {
         )
         .then((result) {
       if (result.error != null) {
-        ZegoLoggerService.logInfo(
+        ZegoLoggerService.logError(
           '${isLocked ? 'lock' : 'unlock'} seat is failed, ${result.error} ',
           tag: 'audio room',
           subTag: 'seat manager',
@@ -468,9 +473,8 @@ class ZegoLiveSeatManager {
           subTag: 'seat manager',
         );
       } else {
-        ZegoLoggerService.logInfo(
-          'host set in-room attribute result '
-          'faild, error:${result.error}',
+        ZegoLoggerService.logError(
+          'host set in-room attribute result failed, error:${result.error}',
           tag: 'audio room',
           subTag: 'seat manager',
         );
@@ -544,7 +548,7 @@ class ZegoLiveSeatManager {
             roomID: roomID, key: index.toString(), value: localUserID)
         .then((result) {
       if (result.error != null) {
-        ZegoLoggerService.logInfo(
+        ZegoLoggerService.logError(
           'take on $index seat is failed, ${result.error}',
           tag: 'audio room',
           subTag: 'seat manager',
@@ -564,7 +568,7 @@ class ZegoLiveSeatManager {
       _isRoomAttributesBatching = false;
       ZegoLoggerService.logInfo('room attribute batch is finished');
       if (result.error != null) {
-        ZegoLoggerService.logInfo(
+        ZegoLoggerService.logError(
           'take on seat result, error:${result.error}',
           tag: 'audio room',
           subTag: 'seat manager',
@@ -625,15 +629,15 @@ class ZegoLiveSeatManager {
             roomID: roomID, key: index.toString(), value: localUserID)
         .then((result) {
       if (result.error != null) {
-        ZegoLoggerService.logInfo(
+        ZegoLoggerService.logError(
           'switch seat $index, '
-          'updateRoomProperty faild, error:${result.error}',
+          'updateRoomProperty failed, error:${result.error}',
           tag: 'audio room',
           subTag: 'seat manager',
         );
 
         showDebugToast('switch seat $index, '
-            'updateRoomProperty faild, error:${result.error}');
+            'updateRoomProperty failed, error:${result.error}');
       } else {
         ZegoLoggerService.logInfo(
           'switch seat $index '
@@ -646,15 +650,15 @@ class ZegoLiveSeatManager {
     ZegoUIKit().getSignalingPlugin().deleteRoomProperties(
         roomID: roomID, keys: [oldSeatIndex.toString()]).then((result) {
       if (result.error != null) {
-        ZegoLoggerService.logInfo(
+        ZegoLoggerService.logError(
           'switch seat $index, '
-          'deleteRoomProperties faild, error:${result.error}',
+          'deleteRoomProperties failed, error:${result.error}',
           tag: 'audio room',
           subTag: 'seat manager',
         );
 
         showDebugToast('switch seat $index, '
-            'deleteRoomProperties faild, error:${result.error}');
+            'deleteRoomProperties failed, error:${result.error}');
       } else {
         ZegoLoggerService.logInfo(
           'switch seat $index '
@@ -676,15 +680,15 @@ class ZegoLiveSeatManager {
       );
 
       if (result.error != null) {
-        ZegoLoggerService.logInfo(
+        ZegoLoggerService.logError(
           'switch seat $index, '
-          'endRoomPropertiesBatchOperation faild, error:${result.error}',
+          'endRoomPropertiesBatchOperation failed, error:${result.error}',
           tag: 'audio room',
           subTag: 'seat manager',
         );
 
         showDebugToast('switch seat $index, '
-            'endRoomPropertiesBatchOperation faild, error:${result.error}');
+            'endRoomPropertiesBatchOperation failed, error:${result.error}');
       } else {
         ZegoLoggerService.logInfo(
           'switch seat $index '
@@ -858,12 +862,12 @@ class ZegoLiveSeatManager {
       );
 
       if (result.error != null) {
-        ZegoLoggerService.logInfo(
-          'take off seat faild, error: ${result.error}',
+        ZegoLoggerService.logError(
+          'take off seat failed, error: ${result.error}',
           tag: 'audio room',
           subTag: 'seat manager',
         );
-        showDebugToast('take off seat faild, error: ${result.error}');
+        showDebugToast('take off seat failed, error: ${result.error}');
       } else {
         if (targetUser.id == ZegoUIKit().getLocalUser().id) {
           _connectManager?.updateAudienceConnectState(ConnectState.idle);
@@ -1263,7 +1267,7 @@ class ZegoLiveSeatManager {
           subTag: 'prebuilt',
         );
       } else {
-        ZegoLoggerService.logInfo(
+        ZegoLoggerService.logError(
           'set local user avatar attribute result failed, error:${result.error}',
           tag: 'audio room',
           subTag: 'prebuilt',
@@ -1298,7 +1302,7 @@ class ZegoLiveSeatManager {
             subTag: 'prebuilt',
           );
         } else {
-          ZegoLoggerService.logInfo(
+          ZegoLoggerService.logError(
             'init local user in-room attributes{$key, $value}: result failed, error:${result.error}',
             tag: 'audio room',
             subTag: 'prebuilt',

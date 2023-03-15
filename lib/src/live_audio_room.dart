@@ -79,7 +79,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 2.2.1; $version',
+        'version: zego_uikit_prebuilt_live_audio_room: 2.2.2; $version',
         tag: 'audio room',
         subTag: 'prebuilt',
       );
@@ -318,8 +318,13 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
   }
 
   void initContext() {
+    assert(widget.userID.isNotEmpty);
+    assert(widget.userName.isNotEmpty);
+    assert(widget.appID > 0);
     assert(widget.appSign.isNotEmpty);
+
     ZegoUIKit().login(widget.userID, widget.userName);
+
     ZegoUIKit()
         .init(
           appID: widget.appID,
@@ -342,8 +347,13 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
   }
 
   Future<void> onRoomLogin(ZegoRoomLoginResult result) async {
-    if (0 != result.errorCode) {
-      showToast('join room failed, ${result.errorCode} ${result.extendedData}');
+    assert(result.errorCode == 0);
+    if (result.errorCode != 0) {
+      ZegoLoggerService.logInfo(
+        'failed to login room:${result.errorCode},${result.extendedData}',
+        tag: 'audio room',
+        subTag: 'prebuilt',
+      );
     }
   }
 

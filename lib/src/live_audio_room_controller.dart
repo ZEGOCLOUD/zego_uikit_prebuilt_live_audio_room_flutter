@@ -22,6 +22,16 @@ class ZegoLiveAudioRoomController {
     return await _seatManager?.leaveSeat(showDialog: showDialog) ?? false;
   }
 
+  Future<bool> takeSeat(int index) async {
+    return await _seatManager?.takeOnSeat(
+          index,
+          isForce: true,
+          isUpdateOwner: true,
+          isDeleteAfterOwnerLeft: true,
+        ) ??
+        false;
+  }
+
   Future<void> removeSpeakerFromSeat(String userID) async {
     final index = _seatManager?.getIndexByUserID(userID) ?? -1;
     return _seatManager?.kickSeat(index);

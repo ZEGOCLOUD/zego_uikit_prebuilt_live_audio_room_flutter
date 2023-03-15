@@ -1,3 +1,9 @@
+## 2.2.2
+- fixed avatarURL occasionally not working
+- seat config adds foreground color/openIcon/closeIcon configuration options
+- controller adds a take seat method
+- add assert to key parameters to ensure prebuilt run normally
+
 ## 2.2.1
 - move controller's callbacks to config
 - add turnMicrophoneOn function in controller

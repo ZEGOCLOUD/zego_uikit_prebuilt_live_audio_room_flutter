@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart' as styled_toast;
 
 typedef ContextQuery = BuildContext Function();
@@ -18,8 +17,8 @@ class ZegoToast {
   ContextQuery? contextQuery;
   static final ZegoToast instance = ZegoToast._internal();
 
-  TextStyle get textStyle => TextStyle(
-        fontSize: 28.r,
+  TextStyle get textStyle => const TextStyle(
+        fontSize: 14,
         color: Colors.white,
         fontWeight: FontWeight.w500,
       );

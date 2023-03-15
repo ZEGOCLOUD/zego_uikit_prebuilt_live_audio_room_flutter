@@ -161,7 +161,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// when received onTurnOnYourMicrophoneRequest
   /// default is false
   Future<bool> Function(BuildContext context)?
-  onMicrophoneTurnOnByOthersConfirmation;
+      onMicrophoneTurnOnByOthersConfirmation;
 
   /// user count or user attribute changed callback
   void Function(List<ZegoUIKitUser> users)? onUserCountOrPropertyChanged;
@@ -180,9 +180,9 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// @param takenSeats {seat index, seat user}
   /// @param untakenSeats [seat index]
   void Function(
-      Map<int, ZegoUIKitUser> takenSeats,
-      List<int> untakenSeats,
-      )? onSeatsChanged;
+    Map<int, ZegoUIKitUser> takenSeats,
+    List<int> untakenSeats,
+  )? onSeatsChanged;
 
   /// host receive, some audience's take seat request
   void Function(ZegoUIKitUser audience)? onSeatTakingRequested;
@@ -213,14 +213,13 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
 class ZegoLiveAudioRoomSeatConfig {
   bool showSoundWaveInAudioMode = true;
 
-  /// 默认值是设计默认颜色。包含麦位为空、锁定、上麦但是没设置avatar属性的坐席颜色
   Color? foregroundColor;
 
-  ///默认设计给的，没人上麦的图标
-  Icon? openIcon;
+  /// custom seat un-locked(no one on the seat) icon
+  Image? openIcon;
 
-  /// 默认设计给的，麦位锁定的图标
-  Icon? closeIcon;
+  /// custom seat locked icon
+  Image? closeIcon;
 
   ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;
   ZegoAudioVideoViewBackgroundBuilder? backgroundBuilder;
@@ -257,8 +256,11 @@ class ZegoLiveAudioRoomSeatConfig {
   ZegoAvatarBuilder? avatarBuilder;
 
   ZegoLiveAudioRoomSeatConfig({
+    this.openIcon,
+    this.closeIcon,
     this.showSoundWaveInAudioMode = true,
     this.avatarBuilder,
+    this.foregroundColor,
     this.foregroundBuilder,
     this.backgroundBuilder,
   });

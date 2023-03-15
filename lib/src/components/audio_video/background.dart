@@ -73,11 +73,15 @@ class _ZegoSeatForegroundState extends State<ZegoSeatBackground> {
         child: ValueListenableBuilder<bool>(
           valueListenable: widget.seatManager.isSeatLockedNotifier,
           builder: (context, isSeatLocked, _) {
-            return PrebuiltLiveAudioRoomImage.asset(
-              isSeatLocked
-                  ? PrebuiltLiveAudioRoomIconUrls.seatLock
-                  : PrebuiltLiveAudioRoomIconUrls.seatEmpty,
-            );
+            return isSeatLocked
+                ? (widget.config.seatConfig.closeIcon ??
+                    PrebuiltLiveAudioRoomImage.asset(
+                      PrebuiltLiveAudioRoomIconUrls.seatLock,
+                    ))
+                : (widget.config.seatConfig.openIcon ??
+                    PrebuiltLiveAudioRoomImage.asset(
+                      PrebuiltLiveAudioRoomIconUrls.seatEmpty,
+                    ));
           },
         ),
       ),

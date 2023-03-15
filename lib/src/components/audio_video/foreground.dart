@@ -82,6 +82,10 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
       builder: (context, constraints) {
         return Stack(
           children: [
+            Container(
+              color: widget.config.seatConfig.foregroundColor ??
+                  Colors.transparent,
+            ),
             Positioned(
               bottom: 0,
               child: userName(context, constraints.maxWidth),

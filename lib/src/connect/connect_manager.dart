@@ -46,11 +46,23 @@ class ZegoLiveConnectManager {
   final List<StreamSubscription<dynamic>?> _subscriptions = [];
 
   void init() {
+    ZegoLoggerService.logInfo(
+      'init',
+      tag: 'live audio',
+      subTag: 'connect manager',
+    );
+
     _subscriptions
         .add(ZegoUIKit().getUserLeaveStream().listen(onUserListLeaveUpdated));
   }
 
   void uninit() {
+    ZegoLoggerService.logInfo(
+      'uninit',
+      tag: 'live audio',
+      subTag: 'connect manager',
+    );
+
     audienceLocalConnectStateNotifier.value = ConnectState.idle;
     audiencesRequestingTakeSeatNotifier.value = [];
     _isInvitedTakeSeatDlgVisible = false;

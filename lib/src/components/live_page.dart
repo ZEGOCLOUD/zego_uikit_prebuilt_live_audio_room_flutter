@@ -292,5 +292,4 @@ class ZegoLivePageState extends State<ZegoLivePage>
       ZegoUIKit().turnMicrophoneOn(true);
     }
   }
-
 }
