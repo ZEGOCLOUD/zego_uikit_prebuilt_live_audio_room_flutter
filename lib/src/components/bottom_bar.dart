@@ -94,34 +94,31 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
   }
 
   Widget rightToolbar(BuildContext context) {
-    return Container(
-      // margin: EdgeInsets.only(left: 120.0.r),
-      child: CustomScrollView(
-        scrollDirection: Axis.horizontal,
-        slivers: [
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: ValueListenableBuilder<bool>(
-                valueListenable: widget.seatManager.isSeatLockedNotifier,
-                builder: (context, isSeatLocked, _) {
-                  return ValueListenableBuilder<ZegoLiveAudioRoomRole>(
-                      valueListenable: widget.seatManager.localRole,
-                      builder: (context, localRole, _) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            ...getDisplayButtons(
-                                context, isSeatLocked, localRole),
-                            zegoLiveButtonPadding,
-                            zegoLiveButtonPadding,
-                          ],
-                        );
-                      });
-                }),
-          ),
-        ],
-      ),
+    return CustomScrollView(
+      scrollDirection: Axis.horizontal,
+      slivers: [
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: ValueListenableBuilder<bool>(
+              valueListenable: widget.seatManager.isSeatLockedNotifier,
+              builder: (context, isSeatLocked, _) {
+                return ValueListenableBuilder<ZegoLiveAudioRoomRole>(
+                    valueListenable: widget.seatManager.localRole,
+                    builder: (context, localRole, _) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ...getDisplayButtons(
+                              context, isSeatLocked, localRole),
+                          zegoLiveButtonPadding,
+                          zegoLiveButtonPadding,
+                        ],
+                      );
+                    });
+              }),
+        ),
+      ],
     );
   }
 

@@ -1,3 +1,6 @@
+## 2.2.3
+- fixed appDesignSize for ScreenUtil that didn't work
+
 ## 2.2.2
 - fixed avatarURL occasionally not working
 - seat config adds foreground color/openIcon/closeIcon configuration options

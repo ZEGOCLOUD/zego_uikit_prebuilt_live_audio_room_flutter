@@ -1,5 +1,8 @@
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
@@ -213,8 +216,6 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
 class ZegoLiveAudioRoomSeatConfig {
   bool showSoundWaveInAudioMode = true;
 
-  Color? foregroundColor;
-
   /// custom seat un-locked(no one on the seat) icon
   Image? openIcon;
 
@@ -260,7 +261,6 @@ class ZegoLiveAudioRoomSeatConfig {
     this.closeIcon,
     this.showSoundWaveInAudioMode = true,
     this.avatarBuilder,
-    this.foregroundColor,
     this.foregroundBuilder,
     this.backgroundBuilder,
   });

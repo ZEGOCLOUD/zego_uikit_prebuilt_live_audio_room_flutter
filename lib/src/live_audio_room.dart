@@ -69,6 +69,8 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
+  late NavigatorState navigatorState;
+
   @override
   void initState() {
     super.initState();
@@ -79,7 +81,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 2.2.2; $version',
+        'version: zego_uikit_prebuilt_live_audio_room: 2.2.3; $version',
         tag: 'audio room',
         subTag: 'prebuilt',
       );
@@ -172,15 +174,17 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     }
 
     if (widget.appDesignSize != null) {
-      ScreenUtil.init(context, designSize: widget.appDesignSize!);
+      ScreenUtil.init(
+        navigatorState.context,
+        designSize: widget.appDesignSize!,
+      );
     }
   }
 
   @override
-  void didUpdateWidget(ZegoUIKitPrebuiltLiveAudioRoom oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    plugins.onUserInfoUpdate(widget.userID, widget.userName);
+  void didChangeDependencies() {
+    navigatorState = Navigator.of(context);
+    super.didChangeDependencies();
   }
 
   @override
