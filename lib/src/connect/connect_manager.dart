@@ -45,13 +45,16 @@ class ZegoLiveConnectManager {
 
   final List<StreamSubscription<dynamic>?> _subscriptions = [];
 
-  void init() {
+  bool _isFromMinimizing = false;
+
+  void init({required bool isFromMinimizing}) {
     ZegoLoggerService.logInfo(
       'init',
       tag: 'live audio',
       subTag: 'connect manager',
     );
 
+    _isFromMinimizing = isFromMinimizing;
     _subscriptions
         .add(ZegoUIKit().getUserLeaveStream().listen(onUserListLeaveUpdated));
   }
@@ -63,6 +66,7 @@ class ZegoLiveConnectManager {
       subTag: 'connect manager',
     );
 
+    _isFromMinimizing = false;
     audienceLocalConnectStateNotifier.value = ConnectState.idle;
     audiencesRequestingTakeSeatNotifier.value = [];
     _isInvitedTakeSeatDlgVisible = false;

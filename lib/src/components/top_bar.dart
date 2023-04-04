@@ -3,25 +3,31 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/leave_button.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/connect/connect_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_button.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/seat_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
 
 class ZegoTopBar extends StatefulWidget {
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
   final ZegoLiveSeatManager seatManager;
+  final ZegoLiveConnectManager connectManager;
   final ZegoInnerText translationText;
+
+  final ZegoUIKitPrebuiltLiveAudioRoomData prebuiltAudioRoomData;
 
   const ZegoTopBar({
     Key? key,
     required this.config,
     required this.seatManager,
+    required this.connectManager,
     required this.translationText,
+    required this.prebuiltAudioRoomData,
   }) : super(key: key);
 
   @override
@@ -47,12 +53,29 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          minimizingButton(),
           const Expanded(child: SizedBox()),
           closeButton(),
           SizedBox(width: 34.r),
         ],
       ),
     );
+  }
+
+  Widget minimizingButton() {
+    return widget.config.topMenuBarConfig.buttons
+            .contains(ZegoTopMenuBarButtonName.minimizingButton)
+        ? ZegoUIKitPrebuiltLiveAudioRoomMinimizingButton(
+            prebuiltAudioRoomData: widget.prebuiltAudioRoomData,
+            onWillPressed: () {
+              ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine()
+                      .audiencesRequestingTakeSeatNotifier
+                      .value =
+                  List<ZegoUIKitUser>.from(widget.connectManager
+                      .audiencesRequestingTakeSeatNotifier.value);
+            },
+          )
+        : Container();
   }
 
   Widget closeButton() {

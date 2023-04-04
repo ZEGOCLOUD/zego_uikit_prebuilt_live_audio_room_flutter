@@ -1,3 +1,6 @@
+## 2.3.0
+- supports in-app minimization.
+
 ## 2.2.3
 - fixed appDesignSize for ScreenUtil that didn't work
 

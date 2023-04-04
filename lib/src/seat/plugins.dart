@@ -9,6 +9,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_overlay_machine.dart';
 
 enum PluginNetworkState {
   unknown,
@@ -50,6 +51,7 @@ class ZegoPrebuiltPlugins {
           ZegoSignalingPluginRoomState.disconnected);
   bool tryReLogging = false;
   bool initialized = false;
+  bool _isFromMinimizing = false;
   bool roomHasInitLogin = false;
 
   bool get isEnabled => plugins.isNotEmpty;
@@ -67,18 +69,16 @@ class ZegoPrebuiltPlugins {
     }
   }
 
-  Future<void> init() async {
+  Future<void> init({required bool isFromMinimizing}) async {
     ZegoLoggerService.logInfo(
       'plugins init',
       tag: 'audio room',
       subTag: 'plugin',
     );
     initialized = true;
+    _isFromMinimizing = isFromMinimizing;
 
-    await ZegoUIKit()
-        .getSignalingPlugin()
-        .init(appID, appSign: appSign)
-        .then((value) {
+    if (_isFromMinimizing) {
       subscriptions
         ..add(ZegoUIKit()
             .getSignalingPlugin()
@@ -89,43 +89,74 @@ class ZegoPrebuiltPlugins {
             .getRoomStateStream()
             .listen(onRoomState))
         ..add(ZegoUIKit().getNetworkModeStream().listen(onNetworkModeChanged));
+    } else {
+      await ZegoUIKit()
+          .getSignalingPlugin()
+          .init(appID, appSign: appSign)
+          .then((value) {
+        subscriptions
+          ..add(ZegoUIKit()
+              .getSignalingPlugin()
+              .getConnectionStateStream()
+              .listen(onUserConnectionState))
+          ..add(ZegoUIKit()
+              .getSignalingPlugin()
+              .getRoomStateStream()
+              .listen(onRoomState))
+          ..add(
+              ZegoUIKit().getNetworkModeStream().listen(onNetworkModeChanged));
+
+        ZegoLoggerService.logInfo(
+          'plugins init done',
+          tag: 'audio room',
+          subTag: 'plugin',
+        );
+      });
+
+      ZegoLoggerService.logInfo(
+        'from mini, plugins init ignore',
+        tag: 'audio room',
+        subTag: 'plugin',
+      );
+    }
+
+    if (isFromMinimizing) {
+      ZegoLoggerService.logInfo(
+        'from minimizing, login ignore, plugins init done',
+        tag: 'audio room',
+        subTag: 'plugin',
+      );
+    } else {
+      ZegoLoggerService.logInfo(
+        'plugins init, login...',
+        tag: 'audio room',
+        subTag: 'plugin',
+      );
+      await ZegoUIKit()
+          .getSignalingPlugin()
+          .login(id: userID, name: userName)
+          .then((result) async {
+        ZegoLoggerService.logInfo(
+          'plugins login done, login result:$result, try to join room...',
+          tag: 'audio room',
+          subTag: 'plugin',
+        );
+        return joinRoom().then((result) {
+          ZegoLoggerService.logInfo(
+            'plugins room joined, join result:$result',
+            tag: 'audio room',
+            subTag: 'plugin',
+          );
+          roomHasInitLogin = true;
+        });
+      });
 
       ZegoLoggerService.logInfo(
         'plugins init done',
         tag: 'audio room',
         subTag: 'plugin',
       );
-    });
-
-    ZegoLoggerService.logInfo(
-      'plugins init, login...',
-      tag: 'audio room',
-      subTag: 'plugin',
-    );
-    await ZegoUIKit()
-        .getSignalingPlugin()
-        .login(id: userID, name: userName)
-        .then((result) async {
-      ZegoLoggerService.logInfo(
-        'plugins login done, login result:$result, try to join room...',
-        tag: 'audio room',
-        subTag: 'plugin',
-      );
-      return joinRoom().then((result) {
-        ZegoLoggerService.logInfo(
-          'plugins room joined, join result:$result',
-          tag: 'audio room',
-          subTag: 'plugin',
-        );
-        roomHasInitLogin = true;
-      });
-    });
-
-    ZegoLoggerService.logInfo(
-      'plugins init done',
-      tag: 'audio room',
-      subTag: 'plugin',
-    );
+    }
   }
 
   Future<bool> joinRoom() async {
@@ -156,13 +187,23 @@ class ZegoPrebuiltPlugins {
       subTag: 'plugin',
     );
     initialized = false;
+    _isFromMinimizing = false;
 
     roomHasInitLogin = false;
     tryReLogging = false;
 
-    await ZegoUIKit().getSignalingPlugin().leaveRoom();
-    await ZegoUIKit().getSignalingPlugin().logout();
-    await ZegoUIKit().getSignalingPlugin().uninit();
+    if (LiveAudioRoomMiniOverlayPageState.minimizing ==
+        ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine().state()) {
+      ZegoLoggerService.logInfo(
+        'to minimizing, not need to leave room, logout and uninit',
+        tag: 'audio room',
+        subTag: 'plugin',
+      );
+    } else {
+      await ZegoUIKit().getSignalingPlugin().leaveRoom();
+      await ZegoUIKit().getSignalingPlugin().logout();
+      await ZegoUIKit().getSignalingPlugin().uninit();
+    }
 
     for (final streamSubscription in subscriptions) {
       streamSubscription?.cancel();
@@ -175,7 +216,7 @@ class ZegoPrebuiltPlugins {
     ZegoLoggerService.logInfo(
       'on user info update, '
       'target user($userID, $userName), '
-      'local user:(${localUser.toString()})'
+      'local user:(${localUser.toString()}) '
       'initialized:$initialized, '
       'user state:${pluginUserStateNotifier.value}'
       'room state:${roomStateNotifier.value}',

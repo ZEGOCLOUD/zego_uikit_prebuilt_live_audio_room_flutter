@@ -1,8 +1,6 @@
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
@@ -23,6 +21,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         seatConfig = ZegoLiveAudioRoomSeatConfig(),
         layoutConfig = ZegoLiveAudioRoomLayoutConfig(),
         hostSeatIndexes = const [0],
+        topMenuBarConfig = ZegoTopMenuBarConfig(),
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(),
         inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
         audioEffectConfig = ZegoAudioEffectConfig(),
@@ -43,6 +42,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         seatConfig = ZegoLiveAudioRoomSeatConfig(),
         layoutConfig = ZegoLiveAudioRoomLayoutConfig(),
         hostSeatIndexes = const [0],
+        topMenuBarConfig = ZegoTopMenuBarConfig(),
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(),
         inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
         audioEffectConfig = ZegoAudioEffectConfig(),
@@ -53,6 +53,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
     this.useSpeakerWhenJoining = true,
     this.closeSeatsWhenJoining = true,
     ZegoLiveAudioRoomSeatConfig? seatConfig,
+    ZegoTopMenuBarConfig? topMenuBarConfig,
     ZegoBottomMenuBarConfig? bottomMenuBarConfig,
     ZegoLiveAudioRoomLayoutConfig? layoutConfig,
     ZegoInRoomMessageViewConfig? messageConfig,
@@ -79,6 +80,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
     this.onMemberListMoreButtonPressed,
     ZegoInnerText? translationText,
   })  : seatConfig = seatConfig ?? ZegoLiveAudioRoomSeatConfig(),
+        topMenuBarConfig = topMenuBarConfig ?? ZegoTopMenuBarConfig(),
         bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig(),
         layoutConfig = layoutConfig ?? ZegoLiveAudioRoomLayoutConfig(),
         inRoomMessageViewConfig =
@@ -127,6 +129,9 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   ///       )));
   /// ```
   Widget? background;
+
+  /// configs about top bar
+  ZegoTopMenuBarConfig topMenuBarConfig;
 
   /// configs about bottom menu bar
   ZegoBottomMenuBarConfig bottomMenuBarConfig;
@@ -263,6 +268,15 @@ class ZegoLiveAudioRoomSeatConfig {
     this.avatarBuilder,
     this.foregroundBuilder,
     this.backgroundBuilder,
+  });
+}
+
+class ZegoTopMenuBarConfig {
+  /// these buttons will displayed on the menu bar, order by the list
+  List<ZegoTopMenuBarButtonName> buttons;
+
+  ZegoTopMenuBarConfig({
+    this.buttons = const [],
   });
 }
 

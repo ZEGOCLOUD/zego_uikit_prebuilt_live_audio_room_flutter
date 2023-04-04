@@ -17,6 +17,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.d
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_controller.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/plugins.dart';
 
 class ZegoLiveSeatManager {
@@ -72,6 +73,7 @@ class ZegoLiveSeatManager {
   bool _hostSeatAttributeInitialed = false;
 
   bool isLeavingRoom = false;
+  bool _isFromMinimizing = false;
 
   final Map<String, Map<String, String>> _pendingUserRoomAttributes = {};
   final List<StreamSubscription<dynamic>?> _subscriptions = [];
@@ -88,13 +90,14 @@ class ZegoLiveSeatManager {
   ValueNotifier<Map<String, String>> seatsUserMapNotifier =
       ValueNotifier<Map<String, String>>({}); //  <seat id, user id>
 
-  Future<void> init() async {
+  Future<void> init({required bool isFromMinimizing}) async {
     ZegoLoggerService.logInfo(
       'init',
       tag: 'audio room',
       subTag: 'seat manager',
     );
 
+    _isFromMinimizing = isFromMinimizing;
     localRole.addListener(onRoleChanged);
     seatsUserMapNotifier.addListener(onSeatUsersChanged);
     isSeatLockedNotifier.addListener(onSeatLockedChanged);
@@ -113,9 +116,8 @@ class ZegoLiveSeatManager {
       subTag: 'seat manager',
     );
 
-    ZegoUIKit().turnMicrophoneOn(false);
-
     isLeavingRoom = false;
+    _isFromMinimizing = false;
 
     seatsUserMapNotifier.value.clear();
     _hostSeatAttributeInitialed = false;
@@ -128,6 +130,11 @@ class ZegoLiveSeatManager {
     localRole.removeListener(onRoleChanged);
     for (final subscription in _subscriptions) {
       subscription?.cancel();
+    }
+
+    if (LiveAudioRoomMiniOverlayPageState.minimizing !=
+        ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine().state()) {
+      ZegoUIKit().turnMicrophoneOn(false);
     }
   }
 
@@ -371,7 +378,15 @@ class ZegoLiveSeatManager {
         tag: 'audio room',
         subTag: 'seat manager',
       );
-      ZegoUIKit().turnMicrophoneOn(false);
+      if (_isFromMinimizing) {
+        ZegoLoggerService.logInfo(
+          'from minimizing, not need turn off microphone',
+          tag: 'audio room',
+          subTag: 'seat manager',
+        );
+      } else {
+        ZegoUIKit().turnMicrophoneOn(false);
+      }
     }
 
     /// seat change callback

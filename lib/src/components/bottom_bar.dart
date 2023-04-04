@@ -13,6 +13,8 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/connect/connect_button.d
 import 'package:zego_uikit_prebuilt_live_audio_room/src/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/connect/host_lock_seat_button.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_button.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
 
@@ -27,6 +29,8 @@ class ZegoBottomBar extends StatefulWidget {
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
   final ZegoAvatarBuilder? avatarBuilder;
 
+  final ZegoUIKitPrebuiltLiveAudioRoomData prebuiltAudioRoomData;
+
   const ZegoBottomBar({
     Key? key,
     this.avatarBuilder,
@@ -37,6 +41,7 @@ class ZegoBottomBar extends StatefulWidget {
     required this.prebuiltController,
     required this.height,
     required this.buttonSize,
+    required this.prebuiltAudioRoomData,
   }) : super(key: key);
 
   @override
@@ -132,6 +137,15 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         context,
         isSeatLocked: isSeatLocked,
         localRole: localRole,
+        microphoneDefaultValueFunc: widget
+                .prebuiltAudioRoomData.isPrebuiltFromMinimizing
+            ? () {
+                /// if is minimizing, take the local device state
+                return ZegoUIKit()
+                    .getMicrophoneStateNotifier(ZegoUIKit().getLocalUser().id)
+                    .value;
+              }
+            : null,
       ),
       ...extendButtons
     ];
@@ -336,6 +350,17 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           buttonSize: buttonSize,
           iconSize: iconSize,
           seatManager: widget.seatManager,
+        );
+      case ZegoMenuBarButtonName.minimizingButton:
+        return ZegoUIKitPrebuiltLiveAudioRoomMinimizingButton(
+          prebuiltAudioRoomData: widget.prebuiltAudioRoomData,
+          onWillPressed: () {
+            ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine()
+                    .audiencesRequestingTakeSeatNotifier
+                    .value =
+                List<ZegoUIKitUser>.from(widget
+                    .connectManager.audiencesRequestingTakeSeatNotifier.value);
+          },
         );
     }
   }

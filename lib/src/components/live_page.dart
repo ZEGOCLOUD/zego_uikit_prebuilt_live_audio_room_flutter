@@ -17,6 +17,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart'
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/in_room_live_commenting_view.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/top_bar.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/connect/connect_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
@@ -34,6 +35,7 @@ class ZegoLivePage extends StatefulWidget {
     required this.config,
     required this.seatManager,
     required this.connectManager,
+    required this.prebuiltAudioRoomData,
     this.plugins,
   }) : super(key: key);
 
@@ -50,6 +52,8 @@ class ZegoLivePage extends StatefulWidget {
   final ZegoLiveConnectManager connectManager;
   final ZegoLiveAudioRoomController? prebuiltController;
   final ZegoPrebuiltPlugins? plugins;
+
+  final ZegoUIKitPrebuiltLiveAudioRoomData prebuiltAudioRoomData;
 
   @override
   State<ZegoLivePage> createState() => ZegoLivePageState();
@@ -232,7 +236,9 @@ class ZegoLivePageState extends State<ZegoLivePage>
           return ZegoTopBar(
             config: widget.config,
             seatManager: widget.seatManager,
+            connectManager: widget.connectManager,
             translationText: widget.config.innerText,
+            prebuiltAudioRoomData: widget.prebuiltAudioRoomData,
           );
         },
       ),
@@ -251,6 +257,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
         prebuiltController: widget.prebuiltController,
         isPluginEnabled: widget.plugins?.isEnabled ?? false,
         avatarBuilder: widget.config.seatConfig.avatarBuilder,
+        prebuiltAudioRoomData: widget.prebuiltAudioRoomData,
       ),
     );
   }

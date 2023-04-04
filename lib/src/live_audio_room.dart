@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 // Project imports:
@@ -16,11 +15,10 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/live_page.dar
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/connect/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_controller.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/seat_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
 
 class ZegoUIKitPrebuiltLiveAudioRoom extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveAudioRoom({
@@ -69,6 +67,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
+  late ZegoUIKitPrebuiltLiveAudioRoomData prebuiltAudioRoomData;
   late NavigatorState navigatorState;
 
   @override
@@ -77,11 +76,24 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     correctConfigValue();
 
+    prebuiltAudioRoomData = ZegoUIKitPrebuiltLiveAudioRoomData(
+      appDesignSize: widget.appDesignSize,
+      appID: widget.appID,
+      appSign: widget.appSign,
+      roomID: widget.roomID,
+      userID: widget.userID,
+      userName: widget.userName,
+      config: widget.config,
+      controller: widget.controller,
+      isPrebuiltFromMinimizing: LiveAudioRoomMiniOverlayPageState.idle !=
+          ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine().state(),
+    );
+
     WidgetsBinding.instance?.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 2.2.3; $version',
+        'version: zego_uikit_prebuilt_live_audio_room: 2.3.0; $version',
         tag: 'audio room',
         subTag: 'prebuilt',
       );
@@ -133,14 +145,30 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     initToast();
 
-    plugins.init().then((value) {
+    final isFromMinimizing = LiveAudioRoomMiniOverlayPageState.idle !=
+        ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine().state();
+
+    /// sync audience request data in minimizing state
+    if (isFromMinimizing) {
+      final x = ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine()
+          .audiencesRequestingTakeSeatNotifier
+          .value;
+      connectManager.audiencesRequestingTakeSeatNotifier.value =
+          List<ZegoUIKitUser>.from(
+              ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine()
+                  .audiencesRequestingTakeSeatNotifier
+                  .value);
+    }
+
+    /// not wake from mini page
+    plugins.init(isFromMinimizing: isFromMinimizing).then((value) {
       checkPermissions().then((value) {
         ZegoLoggerService.logInfo(
           'plugins init done',
           tag: 'audio room',
           subTag: 'prebuilt',
         );
-        seatManager.init().then((value) {
+        seatManager.init(isFromMinimizing: isFromMinimizing).then((value) {
           ZegoLoggerService.logInfo(
             'seat manager init done',
             tag: 'audio room',
@@ -148,11 +176,29 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
           );
           seatManager.initRoleAndSeat();
 
-          connectManager.init();
+          connectManager.init(isFromMinimizing: isFromMinimizing);
         });
       });
     });
-    initContext();
+
+    ZegoLoggerService.logInfo(
+      'mini machine state is ${ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine().state()}',
+      tag: 'audio room',
+      subTag: 'prebuilt',
+    );
+    if (isFromMinimizing) {
+      ZegoLoggerService.logInfo(
+        'mini machine state is not idle, context will not be init',
+        tag: 'audio room',
+        subTag: 'prebuilt',
+      );
+    } else {
+      initContext();
+    }
+
+    ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine().changeState(
+      LiveAudioRoomMiniOverlayPageState.idle,
+    );
   }
 
   @override
@@ -167,7 +213,16 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     seatManager.uninit();
     plugins.uninit();
 
-    uninitContext();
+    if (LiveAudioRoomMiniOverlayPageState.minimizing !=
+        ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine().state()) {
+      uninitContext();
+    } else {
+      ZegoLoggerService.logInfo(
+        'mini machine state is minimizing, room will not be leave',
+        tag: 'audio room',
+        subTag: 'prebuilt',
+      );
+    }
 
     for (final subscription in subscriptions) {
       subscription?.cancel();
@@ -223,6 +278,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       seatManager: seatManager,
       connectManager: connectManager,
       prebuiltController: widget.controller,
+      prebuiltAudioRoomData: prebuiltAudioRoomData,
     );
   }
 

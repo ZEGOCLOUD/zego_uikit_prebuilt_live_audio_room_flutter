@@ -4,12 +4,17 @@ import 'package:flutter/cupertino.dart';
 export 'seat/defines.dart';
 
 /// prefab button on menu bar
+enum ZegoTopMenuBarButtonName {
+  minimizingButton,
+}
+
 enum ZegoMenuBarButtonName {
   leaveButton,
   toggleMicrophoneButton,
   showMemberListButton,
   soundEffectButton,
   applyToTakeSeatButton,
+  minimizingButton,
 
   ///  lock/unlock seat
   closeSeatButton,
