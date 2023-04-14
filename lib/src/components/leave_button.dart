@@ -6,7 +6,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/seat_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 
 class ZegoLeaveAudioRoomButton extends StatelessWidget {
   final ButtonIcon? icon;

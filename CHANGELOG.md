@@ -1,3 +1,6 @@
+## 2.3.1
+- Fixed the issue of frequent restoration and minimizing the UI, which triggered the interface rate limit.
+
 ## 2.3.0
 - supports in-app minimization.
 

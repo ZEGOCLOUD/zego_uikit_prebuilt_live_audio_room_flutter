@@ -10,9 +10,9 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/avatar_defaul
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_sheet_menu.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/connect/connect_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/seat_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 
 typedef ZegoMemberListSheetMoreButtonPressed = void Function(
   ZegoUIKitUser user,

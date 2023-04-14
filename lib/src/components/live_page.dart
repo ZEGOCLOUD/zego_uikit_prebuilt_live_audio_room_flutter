@@ -16,10 +16,10 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/bottom_bar.da
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/in_room_live_commenting_view.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/top_bar.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/connect/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/prebuilt_data.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/plugins.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/seat_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/core/minimizing/prebuilt_data.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/plugins.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
 
 /// user and sdk should be login and init before page enter

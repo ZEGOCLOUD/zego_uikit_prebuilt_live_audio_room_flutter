@@ -7,10 +7,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/leave_button.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/connect/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_button.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/prebuilt_data.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/seat/seat_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/core/minimizing/mini_button.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/core/minimizing/prebuilt_data.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
 
 class ZegoTopBar extends StatefulWidget {
@@ -67,13 +67,6 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
             .contains(ZegoTopMenuBarButtonName.minimizingButton)
         ? ZegoUIKitPrebuiltLiveAudioRoomMinimizingButton(
             prebuiltAudioRoomData: widget.prebuiltAudioRoomData,
-            onWillPressed: () {
-              ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine()
-                      .audiencesRequestingTakeSeatNotifier
-                      .value =
-                  List<ZegoUIKitUser>.from(widget.connectManager
-                      .audiencesRequestingTakeSeatNotifier.value);
-            },
           )
         : Container();
   }
