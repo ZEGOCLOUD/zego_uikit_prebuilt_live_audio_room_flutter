@@ -1,5 +1,5 @@
 // Package imports:
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 
 final seatItemWidth = 160.w;
 final seatItemHeight = 160.r;

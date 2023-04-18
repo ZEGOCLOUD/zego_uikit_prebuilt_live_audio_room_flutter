@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
 
 class ZegoInRoomMessageInputBoard extends ModalRoute<String> {
-  ZegoInRoomMessageInputBoard() : super();
+  ZegoInRoomMessageInputBoard({
+    required this.innerText,
+  }) : super();
+
+  final ZegoInnerText innerText;
 
   @override
   Duration get transitionDuration => const Duration(milliseconds: 200);
@@ -43,6 +48,7 @@ class ZegoInRoomMessageInputBoard extends ModalRoute<String> {
             ),
           ),
           ZegoInRoomMessageInput(
+            placeHolder: innerText.messageEmptyToast,
             backgroundColor: Colors.white,
             inputBackgroundColor: const Color(0xffF7F7F8),
             textColor: const Color(0xff1B1B1B),

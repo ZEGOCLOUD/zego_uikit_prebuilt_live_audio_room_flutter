@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
@@ -168,7 +168,6 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
                     roomID: prebuiltAudioRoomData.roomID,
                     config: prebuiltAudioRoomData.config,
                     controller: prebuiltAudioRoomData.controller,
-                    appDesignSize: prebuiltAudioRoomData.appDesignSize,
                   ),
                 );
               }),

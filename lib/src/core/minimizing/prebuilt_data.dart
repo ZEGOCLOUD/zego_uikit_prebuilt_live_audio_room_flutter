@@ -21,7 +21,6 @@ class ZegoUIKitPrebuiltLiveAudioRoomData {
     required this.config,
     required this.isPrebuiltFromMinimizing,
     this.controller,
-    this.appDesignSize,
   });
 
   /// you need to fill in the appID you obtained from console.zegocloud.com
@@ -41,8 +40,6 @@ class ZegoUIKitPrebuiltLiveAudioRoomData {
 
   final ZegoLiveAudioRoomController? controller;
 
-  final Size? appDesignSize;
-
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
 
   final bool isPrebuiltFromMinimizing;
@@ -51,7 +48,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomData {
   String toString() {
     return 'app id:$appID, app sign:$appSign, room id:$roomID, '
         'isPrebuiltFromMinimizing: $isPrebuiltFromMinimizing, '
-        'user id:$userID, user name:$userName, app design size:$appDesignSize, '
+        'user id:$userID, user name:$userName, '
         'config:${config.toString()}';
   }
 }

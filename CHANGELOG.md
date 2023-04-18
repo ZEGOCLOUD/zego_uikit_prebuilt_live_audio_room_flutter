@@ -1,3 +1,14 @@
+
+## 2.4.2
+- mark 'appDesignSize' as Deprecated
+
+## 2.4.1
+- Update dependencies
+
+## 2.4.0
+- To differentiate the 'appDesignSize' between the App and ZegoUIKitPrebuiltLiveAudioRoom, we introduced the 'flutter_screenutil_zego' library and removed the 'appDesignSize' parameter from the
+  ZegoUIKitPrebuiltLiveAudioRoom that was previously present.
+
 ## 2.3.1
 - Fixed the issue of frequent restoration and minimizing the UI, which triggered the interface rate limit.
 

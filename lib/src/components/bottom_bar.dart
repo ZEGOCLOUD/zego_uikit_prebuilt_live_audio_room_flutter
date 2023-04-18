@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/components.dart';
@@ -87,7 +87,9 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   zegoLiveButtonPadding,
-                  const ZegoInRoomMessageButton(),
+                  ZegoInRoomMessageButton(
+                    innerText: widget.config.innerText,
+                  ),
                 ],
               ),
             )

@@ -14,7 +14,12 @@ class ZegoInnerText {
   String cancelMenuDialogButton;
 
   String memberListTitle;
+  String memberListRoleYou;
+  String memberListRoleHost;
+  String memberListRoleSpeaker;
   String removeSpeakerFailedToast;
+
+  String messageEmptyToast;
 
   ZegoDialogInfo cameraPermissionSettingDialogInfo;
   ZegoDialogInfo microphonePermissionSettingDialogInfo;
@@ -70,7 +75,11 @@ class ZegoInnerText {
     String? muteSpeakerMenuDialogButton,
     String? cancelMenuDialogButton,
     String? memberListTitle,
+    String? memberListRoleYou,
+    String? memberListRoleHost,
+    String? memberListRoleSpeaker,
     String? removeSpeakerFailedToast,
+    String? messageEmptyToast,
     String? applyToTakeSeatButton,
     String? cancelTheTakeSeatApplicationButton,
     String? memberListAgreeButton,
@@ -117,8 +126,12 @@ class ZegoInnerText {
         muteSpeakerMenuDialogButton = muteSpeakerMenuDialogButton ?? 'Mute %0',
         cancelMenuDialogButton = cancelMenuDialogButton ?? 'Cancel',
         memberListTitle = memberListTitle ?? 'Audience',
+        memberListRoleYou = memberListRoleYou ?? 'You',
+        memberListRoleHost = memberListRoleHost ?? 'Host',
+        memberListRoleSpeaker = memberListRoleSpeaker ?? 'Speaker',
         removeSpeakerFailedToast =
             removeSpeakerFailedToast ?? 'Failed to remove %0 from seat',
+        messageEmptyToast = messageEmptyToast ?? 'Say something...',
         applyToTakeSeatButton = applyToTakeSeatButton ?? 'Apply to take seat',
         cancelTheTakeSeatApplicationButton =
             cancelTheTakeSeatApplicationButton ?? 'Cancel',

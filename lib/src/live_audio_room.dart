@@ -6,7 +6,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/dialogs.dart';
@@ -26,8 +26,8 @@ class ZegoUIKitPrebuiltLiveAudioRoom extends StatefulWidget {
     required this.userName,
     required this.roomID,
     required this.config,
-    this.appDesignSize,
     this.controller,
+    @Deprecated('Since 2.4.1') this.appDesignSize,
   }) : super(key: key);
 
   /// you need to fill in the appID you obtained from console.zegocloud.com
@@ -47,9 +47,9 @@ class ZegoUIKitPrebuiltLiveAudioRoom extends StatefulWidget {
 
   final ZegoLiveAudioRoomController? controller;
 
-  final Size? appDesignSize;
-
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
+
+  final Size? appDesignSize;
 
   @override
   State<ZegoUIKitPrebuiltLiveAudioRoom> createState() =>
@@ -62,7 +62,6 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
   bool isFromMinimizing = false;
   late ZegoUIKitPrebuiltLiveAudioRoomData prebuiltAudioRoomData;
-  late NavigatorState navigatorState;
 
   @override
   void initState() {
@@ -71,7 +70,6 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     correctConfigValue();
 
     prebuiltAudioRoomData = ZegoUIKitPrebuiltLiveAudioRoomData(
-      appDesignSize: widget.appDesignSize,
       appID: widget.appID,
       appSign: widget.appSign,
       roomID: widget.roomID,
@@ -87,7 +85,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 2.3.1; $version',
+        'version: zego_uikit_prebuilt_live_audio_room: 2.4.0; $version',
         tag: 'audio room',
         subTag: 'prebuilt',
       );
@@ -177,19 +175,6 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     for (final subscription in subscriptions) {
       subscription?.cancel();
     }
-
-    if (widget.appDesignSize != null) {
-      ScreenUtil.init(
-        navigatorState.context,
-        designSize: widget.appDesignSize!,
-      );
-    }
-  }
-
-  @override
-  void didChangeDependencies() {
-    navigatorState = Navigator.of(context);
-    super.didChangeDependencies();
   }
 
   @override
