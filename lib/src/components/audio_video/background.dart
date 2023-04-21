@@ -38,18 +38,13 @@ class _ZegoSeatForegroundState extends State<ZegoSeatBackground> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        ValueListenableBuilder<Map<String, String>>(
-            valueListenable: ZegoUIKit()
-                .getInRoomUserAttributesNotifier(widget.user?.id ?? ''),
-            builder: (context, inRoomAttributes, _) {
-              return widget.config.seatConfig.backgroundBuilder?.call(
-                    context,
-                    widget.size,
-                    ZegoUIKit().getUser(widget.user?.id ?? ''),
-                    widget.extraInfo,
-                  ) ??
-                  Container(color: Colors.transparent);
-            }),
+        widget.config.seatConfig.backgroundBuilder?.call(
+              context,
+              widget.size,
+              ZegoUIKit().getUser(widget.user?.id ?? ''),
+              widget.extraInfo,
+            ) ??
+            Container(color: Colors.transparent),
         ...null == widget.user
             ? [
                 emptySeat(),

@@ -44,30 +44,24 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onClicked,
-      child: ValueListenableBuilder<Map<String, String>>(
-        valueListenable:
-            ZegoUIKit().getInRoomUserAttributesNotifier(widget.user?.id ?? ''),
-        builder: (context, inRoomAttributes, _) {
-          return Container(
-            color: Colors.transparent,
-            child: Stack(
-              children: [
-                widget.config.seatConfig.foregroundBuilder?.call(
-                      context,
-                      widget.size,
-                      ZegoUIKit().getUser(widget.user?.id ?? ''),
-                      widget.extraInfo,
-                    ) ??
-                    foreground(
-                      context,
-                      widget.size,
-                      ZegoUIKit().getUser(widget.user?.id ?? ''),
-                      widget.extraInfo,
-                    ),
-              ],
-            ),
-          );
-        },
+      child: Container(
+        color: Colors.transparent,
+        child: Stack(
+          children: [
+            widget.config.seatConfig.foregroundBuilder?.call(
+                  context,
+                  widget.size,
+                  ZegoUIKit().getUser(widget.user?.id ?? ''),
+                  widget.extraInfo,
+                ) ??
+                foreground(
+                  context,
+                  widget.size,
+                  ZegoUIKit().getUser(widget.user?.id ?? ''),
+                  widget.extraInfo,
+                ),
+          ],
+        ),
       ),
     );
   }
@@ -234,30 +228,23 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
   }
 
   Widget microphoneOffFlag() {
-    return ValueListenableBuilder<bool>(
-      valueListenable:
-          ZegoUIKit().getMicrophoneStateNotifier(widget.user?.id ?? ''),
-      builder: (context, isMicrophoneEnabled, _) {
-        if (isMicrophoneEnabled) {
-          return Container();
-        }
-
-        return Positioned(
-          top: avatarPosTop,
-          left: avatarPosLeft,
-          child: Container(
-            width: seatIconWidth,
-            height: seatIconWidth,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.black.withOpacity(0.5),
+    return widget.user?.microphone.value ?? false
+        ? Container()
+        : Positioned(
+            top: avatarPosTop,
+            left: 0,
+            right: 0,
+            child: Container(
+              width: seatIconWidth,
+              height: seatIconWidth,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.black.withOpacity(0.5),
+              ),
+              child: PrebuiltLiveAudioRoomImage.asset(
+                PrebuiltLiveAudioRoomIconUrls.seatMicrophoneOff,
+              ),
             ),
-            child: PrebuiltLiveAudioRoomImage.asset(
-              PrebuiltLiveAudioRoomIconUrls.seatMicrophoneOff,
-            ),
-          ),
-        );
-      },
-    );
+          );
   }
 }
