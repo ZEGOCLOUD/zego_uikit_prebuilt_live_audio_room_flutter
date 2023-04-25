@@ -6,9 +6,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
-
-// Project imports:
-import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
+import 'package:zego_uikit/zego_uikit.dart';
 
 class ZegoAvatarDefaultItem extends StatefulWidget {
   const ZegoAvatarDefaultItem({

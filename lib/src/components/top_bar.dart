@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
+import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
@@ -64,7 +65,7 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
 
   Widget minimizingButton() {
     return widget.config.topMenuBarConfig.buttons
-            .contains(ZegoTopMenuBarButtonName.minimizingButton)
+            .contains(ZegoMenuBarButtonName.minimizingButton)
         ? ZegoUIKitPrebuiltLiveAudioRoomMinimizingButton(
             prebuiltAudioRoomData: widget.prebuiltAudioRoomData,
           )

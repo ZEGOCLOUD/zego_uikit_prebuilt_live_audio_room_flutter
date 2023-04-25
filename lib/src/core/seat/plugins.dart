@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
+import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -69,7 +70,7 @@ class ZegoPrebuiltPlugins {
   }
 
   Future<void> init() async {
-    if(initialized) {
+    if (initialized) {
       ZegoLoggerService.logInfo(
         'plugins had init',
         tag: 'audio room',
@@ -85,17 +86,6 @@ class ZegoPrebuiltPlugins {
       subTag: 'plugin',
     );
     initialized = true;
-
-    subscriptions
-      ..add(ZegoUIKit()
-          .getSignalingPlugin()
-          .getConnectionStateStream()
-          .listen(onUserConnectionState))
-      ..add(ZegoUIKit()
-          .getSignalingPlugin()
-          .getRoomStateStream()
-          .listen(onRoomState))
-      ..add(ZegoUIKit().getNetworkModeStream().listen(onNetworkModeChanged));
 
     await ZegoUIKit()
         .getSignalingPlugin()
@@ -172,7 +162,7 @@ class ZegoPrebuiltPlugins {
   }
 
   Future<void> uninit() async {
-    if(! initialized) {
+    if (!initialized) {
       ZegoLoggerService.logInfo(
         'is not init before',
         tag: 'audio room',

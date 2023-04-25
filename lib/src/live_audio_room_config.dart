@@ -273,7 +273,8 @@ class ZegoLiveAudioRoomSeatConfig {
 
 class ZegoTopMenuBarConfig {
   /// these buttons will displayed on the menu bar, order by the list
-  List<ZegoTopMenuBarButtonName> buttons;
+  /// only support [minimizingButton] right now!!
+  List<ZegoMenuBarButtonName> buttons;
 
   ZegoTopMenuBarConfig({
     this.buttons = const [],

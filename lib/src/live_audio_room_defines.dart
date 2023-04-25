@@ -1,13 +1,6 @@
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 
-export 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/defines.dart';
-
-/// prefab button on menu bar
-enum ZegoTopMenuBarButtonName {
-  minimizingButton,
-}
-
 enum ZegoMenuBarButtonName {
   leaveButton,
   toggleMicrophoneButton,

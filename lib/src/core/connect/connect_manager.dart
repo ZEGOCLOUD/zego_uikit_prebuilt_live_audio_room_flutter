@@ -4,6 +4,10 @@ import 'dart:async';
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 
+// Package imports:
+import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
+import 'package:zego_uikit/zego_uikit.dart';
+
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/permissions.dart';
@@ -31,11 +35,11 @@ class ZegoLiveConnectManager {
 
   /// current audience connection state
   final audienceLocalConnectStateNotifier =
-  ValueNotifier<ConnectState>(ConnectState.idle);
+      ValueNotifier<ConnectState>(ConnectState.idle);
 
   /// audiences which requesting to take seat
   final audiencesRequestingTakeSeatNotifier =
-  ValueNotifier<List<ZegoUIKitUser>>([]);
+      ValueNotifier<List<ZegoUIKitUser>>([]);
 
   /// audiences which host invite to take seat
   final List<String> _audienceIDsInvitedTakeSeatByHost = [];
@@ -70,7 +74,7 @@ class ZegoLiveConnectManager {
   }
 
   void uninit() {
-    if(! _initialized) {
+    if (!_initialized) {
       ZegoLoggerService.logInfo(
         'not init before',
         tag: 'live audio',
@@ -98,25 +102,31 @@ class ZegoLiveConnectManager {
 
   void listenStream() {
     if (seatManager.plugins.plugins.isNotEmpty) {
-      _subscriptions..add(ZegoUIKit()
-          .getSignalingPlugin()
-          .getInvitationReceivedStream()
-          .listen(onInvitationReceived))..add(ZegoUIKit()
-          .getSignalingPlugin()
-          .getInvitationAcceptedStream()
-          .listen(onInvitationAccepted))..add(ZegoUIKit()
-          .getSignalingPlugin()
-          .getInvitationCanceledStream()
-          .listen(onInvitationCanceled))..add(ZegoUIKit()
-          .getSignalingPlugin()
-          .getInvitationRefusedStream()
-          .listen(onInvitationRefused))..add(ZegoUIKit()
-          .getSignalingPlugin()
-          .getInvitationTimeoutStream()
-          .listen(onInvitationTimeout))..add(ZegoUIKit()
-          .getSignalingPlugin()
-          .getInvitationResponseTimeoutStream()
-          .listen(onInvitationResponseTimeout));
+      _subscriptions
+        ..add(ZegoUIKit()
+            .getSignalingPlugin()
+            .getInvitationReceivedStream()
+            .listen(onInvitationReceived))
+        ..add(ZegoUIKit()
+            .getSignalingPlugin()
+            .getInvitationAcceptedStream()
+            .listen(onInvitationAccepted))
+        ..add(ZegoUIKit()
+            .getSignalingPlugin()
+            .getInvitationCanceledStream()
+            .listen(onInvitationCanceled))
+        ..add(ZegoUIKit()
+            .getSignalingPlugin()
+            .getInvitationRefusedStream()
+            .listen(onInvitationRefused))
+        ..add(ZegoUIKit()
+            .getSignalingPlugin()
+            .getInvitationTimeoutStream()
+            .listen(onInvitationTimeout))
+        ..add(ZegoUIKit()
+            .getSignalingPlugin()
+            .getInvitationResponseTimeoutStream()
+            .listen(onInvitationResponseTimeout));
     }
   }
 
@@ -149,14 +159,12 @@ class ZegoLiveConnectManager {
     return ZegoUIKit()
         .getSignalingPlugin()
         .sendInvitation(
-      inviterName: ZegoUIKit()
-          .getLocalUser()
-          .name,
-      invitees: [invitee.id],
-      timeout: 60,
-      type: ZegoInvitationType.inviteToTakeSeat.value,
-      data: '',
-    )
+          inviterName: ZegoUIKit().getLocalUser().name,
+          invitees: [invitee.id],
+          timeout: 60,
+          type: ZegoInvitationType.inviteToTakeSeat.value,
+          data: '',
+        )
         .then((result) {
       if (result.error != null) {
         _audienceIDsInvitedTakeSeatByHost.remove(invitee.id);
@@ -188,7 +196,7 @@ class ZegoLiveConnectManager {
 
     ZegoLoggerService.logInfo(
       'on invitation received, data:${inviter.toString()},'
-          ' $type($invitationType) $data',
+      ' $type($invitationType) $data',
       tag: 'live audio',
       subTag: 'connect manager',
     );
@@ -196,8 +204,8 @@ class ZegoLiveConnectManager {
     if (seatManager.localIsAHost) {
       if (ZegoInvitationType.requestTakeSeat == invitationType) {
         audiencesRequestingTakeSeatNotifier.value =
-        List<ZegoUIKitUser>.from(audiencesRequestingTakeSeatNotifier.value)
-          ..add(inviter);
+            List<ZegoUIKitUser>.from(audiencesRequestingTakeSeatNotifier.value)
+              ..add(inviter);
 
         config.onSeatTakingRequested?.call(inviter);
       }
@@ -218,9 +226,7 @@ class ZegoLiveConnectManager {
       return;
     }
 
-    if (-1 != seatManager.getIndexByUserID(ZegoUIKit()
-        .getLocalUser()
-        .id)) {
+    if (-1 != seatManager.getIndexByUserID(ZegoUIKit().getLocalUser().id)) {
       ZegoLoggerService.logInfo(
         'audience is take on seat now',
         tag: 'live audio',
@@ -393,8 +399,8 @@ class ZegoLiveConnectManager {
 
     if (seatManager.localIsAHost) {
       audiencesRequestingTakeSeatNotifier.value =
-      List<ZegoUIKitUser>.from(audiencesRequestingTakeSeatNotifier.value)
-        ..removeWhere((user) => user.id == inviter.id);
+          List<ZegoUIKitUser>.from(audiencesRequestingTakeSeatNotifier.value)
+            ..removeWhere((user) => user.id == inviter.id);
 
       config.onSeatTakingRequestCanceled?.call(inviter);
     }
@@ -423,9 +429,7 @@ class ZegoLiveConnectManager {
       config.onSeatTakingInviteRejected?.call();
 
       showDebugToast(
-          'Your request to take seat has been refused by ${ZegoUIKit()
-              .getUser(invitee.id)
-              ?.name ?? ''}');
+          'Your request to take seat has been refused by ${ZegoUIKit().getUser(invitee.id)?.name ?? ''}');
     } else {
       /// audience's request is rejected by host
       config.onSeatTakingRequestRejected?.call();
@@ -447,8 +451,8 @@ class ZegoLiveConnectManager {
 
     if (seatManager.localIsAHost) {
       audiencesRequestingTakeSeatNotifier.value =
-      List<ZegoUIKitUser>.from(audiencesRequestingTakeSeatNotifier.value)
-        ..removeWhere((user) => user.id == inviter.id);
+          List<ZegoUIKitUser>.from(audiencesRequestingTakeSeatNotifier.value)
+            ..removeWhere((user) => user.id == inviter.id);
     } else {
       /// hide invite take seat dialog
       if (_isInvitedTakeSeatDlgVisible) {
@@ -464,7 +468,7 @@ class ZegoLiveConnectManager {
 
     ZegoLoggerService.logInfo(
       'on invitation response timeout, data: $data, '
-          'invitees:${invitees.map((e) => e.toString())}',
+      'invitees:${invitees.map((e) => e.toString())}',
       tag: 'live audio',
       subTag: 'connect manager',
     );
@@ -482,8 +486,8 @@ class ZegoLiveConnectManager {
 
   void removeRequestCoHostUsers(ZegoUIKitUser targetUser) {
     audiencesRequestingTakeSeatNotifier.value =
-    List<ZegoUIKitUser>.from(audiencesRequestingTakeSeatNotifier.value)
-      ..removeWhere((user) => user.id == targetUser.id);
+        List<ZegoUIKitUser>.from(audiencesRequestingTakeSeatNotifier.value)
+          ..removeWhere((user) => user.id == targetUser.id);
   }
 
   void updateAudienceConnectState(ConnectState state) {
@@ -563,8 +567,7 @@ class ZegoLiveConnectManager {
 
   Future<bool> audienceCancelTakeSeatRequest() async {
     ZegoLoggerService.logInfo(
-      'audience cancel take seat request, connect state: ${audienceLocalConnectStateNotifier
-          .value}',
+      'audience cancel take seat request, connect state: ${audienceLocalConnectStateNotifier.value}',
       tag: 'live audio',
       subTag: 'connect manager',
     );
@@ -573,17 +576,17 @@ class ZegoLiveConnectManager {
       return ZegoUIKit()
           .getSignalingPlugin()
           .cancelInvitation(
-        invitees: seatManager.hostsNotifier.value,
-        data: '',
-      )
+            invitees: seatManager.hostsNotifier.value,
+            data: '',
+          )
           .then((ZegoSignalingPluginCancelInvitationResult result) {
         updateAudienceConnectState(ConnectState.idle);
 
         ZegoLoggerService.logInfo(
           'audience cancel take seat request finished, '
-              'code:${result.error?.code}, '
-              'message:${result.error?.message}, '
-              'errorInvitees:${result.errorInvitees}',
+          'code:${result.error?.code}, '
+          'message:${result.error?.message}, '
+          'errorInvitees:${result.errorInvitees}',
           tag: 'audio room',
           subTag: 'controller',
         );
