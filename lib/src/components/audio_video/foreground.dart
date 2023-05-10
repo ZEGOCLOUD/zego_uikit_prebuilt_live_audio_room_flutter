@@ -91,6 +91,16 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
               )
             else
               Container(),
+            if (widget.seatManager.isCoHost(user))
+              Positioned(
+                top: seatItemHeight -
+                    seatUserNameFontSize -
+                    seatHostFlagHeight -
+                    3.r, //  spacing
+                child: coHostFlag(context, constraints.maxWidth),
+              )
+            else
+              Container(),
             ...null == widget.user ? [] : [microphoneOffFlag()],
           ],
         );
@@ -148,8 +158,9 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
       }
     } else {
       /// have a user on seat
-      if (ZegoLiveAudioRoomRole.host == widget.seatManager.localRole.value &&
+      if (widget.seatManager.hasHostPermissions &&
           widget.user?.id != ZegoUIKit().getLocalUser().id) {
+        /// local is host, click others
         popupItems
 
           /// host can kick others off seat
@@ -171,9 +182,38 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
             ),
             data: index,
           ));
+
+        if (widget.seatManager.localIsAHost) {
+          /// only support by host
+          if (widget.seatManager.isCoHost(widget.user)) {
+            /// host revoke a co-host
+            popupItems.add(PopupItem(
+              PopupItemValue.revokeCoHost,
+              widget.config.innerText.revokeCoHostPrivilegesMenuDialogButton
+                  .replaceFirst(
+                widget.config.innerText.param_1,
+                widget.user?.name ?? '',
+              ),
+              data: widget.user?.id ?? '',
+            ));
+          } else if (widget.seatManager.isSpeaker(widget.user)) {
+            /// host can specify one speaker be a co-host if no co-host now
+            popupItems.add(PopupItem(
+              PopupItemValue.assignCoHost,
+              widget.config.innerText.assignAsCoHostMenuDialogButton
+                  .replaceFirst(
+                widget.config.innerText.param_1,
+                widget.user?.name ?? '',
+              ),
+              data: widget.user?.id ?? '',
+            ));
+          }
+        }
       } else if (ZegoUIKit().getLocalUser().id ==
               widget.seatManager.getUserByIndex(index)?.id &&
           ZegoLiveAudioRoomRole.host != widget.seatManager.localRole.value) {
+        /// local is not a host, kick self
+
         /// speaker can local leave seat
         popupItems.add(PopupItem(
           PopupItemValue.leaveSeat,
@@ -207,6 +247,17 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
       child: Center(
         child: PrebuiltLiveAudioRoomImage.asset(
           PrebuiltLiveAudioRoomIconUrls.seatHost,
+        ),
+      ),
+    );
+  }
+
+  Widget coHostFlag(BuildContext context, double maxWidth) {
+    return ConstrainedBox(
+      constraints: BoxConstraints.loose(Size(maxWidth, seatHostFlagHeight)),
+      child: Center(
+        child: PrebuiltLiveAudioRoomImage.asset(
+          PrebuiltLiveAudioRoomIconUrls.seatCoHost,
         ),
       ),
     );

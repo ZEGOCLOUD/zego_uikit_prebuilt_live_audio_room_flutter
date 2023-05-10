@@ -32,9 +32,3 @@ class ZegoDialogInfo {
     this.confirmButtonName = 'OK',
   });
 }
-
-typedef ZegoLiveAudioRoomBackgroundBuilder = Widget Function(
-  BuildContext context,
-  Size size,
-  Map<String, dynamic> extraInfo,
-);

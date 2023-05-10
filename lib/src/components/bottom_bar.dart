@@ -72,14 +72,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
       height: widget.height,
       child: Stack(
         children: [
-          ValueListenableBuilder<ZegoLiveAudioRoomRole>(
-            valueListenable: widget.seatManager.localRole,
-            builder: (context, role, _) {
-              updateButtonsByRole();
-
-              return rightToolbar(context);
-            },
-          ),
+          rightToolbar(context),
           if (widget.config.bottomMenuBarConfig.showInRoomMessageButton)
             SizedBox(
               height: 124.r,
@@ -110,19 +103,25 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           child: ValueListenableBuilder<bool>(
               valueListenable: widget.seatManager.isSeatLockedNotifier,
               builder: (context, isSeatLocked, _) {
-                return ValueListenableBuilder<ZegoLiveAudioRoomRole>(
-                    valueListenable: widget.seatManager.localRole,
-                    builder: (context, localRole, _) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ...getDisplayButtons(
-                              context, isSeatLocked, localRole),
-                          zegoLiveButtonPadding,
-                          zegoLiveButtonPadding,
-                        ],
-                      );
+                return ValueListenableBuilder<List<String>>(
+                    valueListenable: widget.seatManager.hostsNotifier,
+                    builder: (context, _, __) {
+                      return ValueListenableBuilder<ZegoLiveAudioRoomRole>(
+                          valueListenable: widget.seatManager.localRole,
+                          builder: (context, localRole, _) {
+                            updateButtonsByRole();
+
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                ...getDisplayButtons(
+                                    context, isSeatLocked, localRole),
+                                zegoLiveButtonPadding,
+                                zegoLiveButtonPadding,
+                              ],
+                            );
+                          });
                     });
               }),
         ),
@@ -289,6 +288,8 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           connectManager: widget.connectManager,
           innerText: widget.config.innerText,
           onMoreButtonPressed: widget.config.onMemberListMoreButtonPressed,
+          hiddenUserIDsNotifier:
+              widget.prebuiltController?.hiddenUsersOfMemberListNotifier,
         );
       case ZegoMenuBarButtonName.toggleMicrophoneButton:
         var microphoneDefaultOn = widget.config.turnOnMicrophoneWhenJoining;
@@ -368,8 +369,15 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         extendButtons = widget.config.bottomMenuBarConfig.hostExtendButtons;
         break;
       case ZegoLiveAudioRoomRole.speaker:
-        buttons = widget.config.bottomMenuBarConfig.speakerButtons;
-        extendButtons = widget.config.bottomMenuBarConfig.speakerExtendButtons;
+        if (widget.seatManager.hasHostPermissions) {
+          /// co-hosts have the same permissions as hosts if host is not exist
+          buttons = widget.config.bottomMenuBarConfig.hostButtons;
+          extendButtons = widget.config.bottomMenuBarConfig.hostExtendButtons;
+        } else {
+          buttons = widget.config.bottomMenuBarConfig.speakerButtons;
+          extendButtons =
+              widget.config.bottomMenuBarConfig.speakerExtendButtons;
+        }
         break;
       case ZegoLiveAudioRoomRole.audience:
         buttons = widget.config.bottomMenuBarConfig.audienceButtons;

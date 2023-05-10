@@ -105,8 +105,20 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
             break;
           case PopupItemValue.inviteLink:
             await widget.connectManager.inviteAudienceConnect(
-                ZegoUIKit().getUser(popupItem.data as String? ?? '') ??
-                    ZegoUIKitUser.empty());
+              ZegoUIKit().getUser(popupItem.data as String? ?? ''),
+            );
+            break;
+          case PopupItemValue.assignCoHost:
+            await widget.seatManager.assignCoHost(
+              roomID: widget.seatManager.roomID,
+              targetUser: ZegoUIKit().getUser(popupItem.data as String? ?? ''),
+            );
+            break;
+          case PopupItemValue.revokeCoHost:
+            await widget.seatManager.revokeCoHost(
+              roomID: widget.seatManager.roomID,
+              targetUser: ZegoUIKit().getUser(popupItem.data as String? ?? ''),
+            );
             break;
           case PopupItemValue.cancel:
             break;

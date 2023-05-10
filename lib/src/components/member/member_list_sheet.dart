@@ -22,6 +22,7 @@ class ZegoMemberListSheet extends StatefulWidget {
   const ZegoMemberListSheet({
     Key? key,
     this.avatarBuilder,
+    this.hiddenUserIDsNotifier,
     required this.isPluginEnabled,
     required this.seatManager,
     required this.connectManager,
@@ -35,6 +36,7 @@ class ZegoMemberListSheet extends StatefulWidget {
   final ZegoLiveConnectManager connectManager;
   final ZegoInnerText innerText;
   final ZegoMemberListSheetMoreButtonPressed? onMoreButtonPressed;
+  final ValueNotifier<List<String>>? hiddenUserIDsNotifier;
 
   @override
   State<ZegoMemberListSheet> createState() => _ZegoMemberListSheetState();
@@ -81,92 +83,99 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
   }
 
   Widget memberListView() {
-    return ZegoMemberList(
-      showCameraState: false,
-      showMicrophoneState: false,
-      sortUserList: (ZegoUIKitUser localUser, List<ZegoUIKitUser> remoteUsers) {
-        /// host(isHost attribute)
-        final hostUsers = <ZegoUIKitUser>[];
-        remoteUsers.removeWhere((user) {
-          if (!widget.seatManager.isAttributeHost(user)) {
-            return false;
-          }
+    return ValueListenableBuilder<List<String>>(
+        valueListenable:
+            widget.hiddenUserIDsNotifier ?? ValueNotifier<List<String>>([]),
+        builder: (context, hiddenUserIDs, _) {
+          return ZegoMemberList(
+            showCameraState: false,
+            showMicrophoneState: false,
+            hiddenUserIDs: hiddenUserIDs,
+            sortUserList:
+                (ZegoUIKitUser localUser, List<ZegoUIKitUser> remoteUsers) {
+              /// host(isHost attribute)
+              final hostUsers = <ZegoUIKitUser>[];
+              remoteUsers.removeWhere((user) {
+                if (!widget.seatManager.isAttributeHost(user)) {
+                  return false;
+                }
 
-          hostUsers.add(user);
-          return true;
-        });
+                hostUsers.add(user);
+                return true;
+              });
 
-        /// speaker(seat attribute)
-        final speakers = <ZegoUIKitUser>[];
-        remoteUsers.removeWhere((user) {
-          if (!widget.seatManager.isSpeaker(user)) {
-            return false;
-          }
+              /// speaker(seat attribute)
+              final speakers = <ZegoUIKitUser>[];
+              remoteUsers.removeWhere((user) {
+                if (!widget.seatManager.isSpeaker(user)) {
+                  return false;
+                }
 
-          speakers.add(user);
-          return true;
-        });
+                speakers.add(user);
+                return true;
+              });
 
-        /// requesting speaker
-        final usersInRequestSpeaker = <ZegoUIKitUser>[];
-        remoteUsers.removeWhere((remoteUser) {
-          if (isUserInRequestSpeaker(remoteUser.id)) {
-            usersInRequestSpeaker.add(remoteUser);
-            return true;
-          }
-          return false;
-        });
+              /// requesting speaker
+              final usersInRequestSpeaker = <ZegoUIKitUser>[];
+              remoteUsers.removeWhere((remoteUser) {
+                if (isUserInRequestSpeaker(remoteUser.id)) {
+                  usersInRequestSpeaker.add(remoteUser);
+                  return true;
+                }
+                return false;
+              });
 
-        var sortUsers = <ZegoUIKitUser>[];
+              var sortUsers = <ZegoUIKitUser>[];
 
-        final localIsHost = widget.seatManager.isAttributeHost(localUser);
-        if (localIsHost) {
-          sortUsers.add(localUser);
-        }
-        sortUsers += hostUsers;
+              final localIsHost = widget.seatManager.isAttributeHost(localUser);
+              if (localIsHost) {
+                sortUsers.add(localUser);
+              }
+              sortUsers += hostUsers;
 
-        if (!localIsHost) {
-          sortUsers.add(localUser);
-        }
+              if (!localIsHost) {
+                sortUsers.add(localUser);
+              }
 
-        sortUsers += speakers;
-        sortUsers += usersInRequestSpeaker;
-        sortUsers += remoteUsers;
+              sortUsers += speakers;
+              sortUsers += usersInRequestSpeaker;
+              sortUsers += remoteUsers;
 
-        return sortUsers;
-      },
-      itemBuilder: (
-        BuildContext context,
-        Size size,
-        ZegoUIKitUser user,
-        Map<String, dynamic> extraInfo,
-      ) {
-        return ValueListenableBuilder<Map<String, String>>(
-            valueListenable:
-                ZegoUIKit().getInRoomUserAttributesNotifier(user.id),
-            builder: (context, _, __) {
-              return Container(
-                margin: EdgeInsets.only(bottom: 36.r),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 92.r,
-                      height: 92.r,
-                      child: ZegoAvatarDefaultItem(
-                        user: user,
-                        avatarBuilder: widget.avatarBuilder,
+              return sortUsers;
+            },
+            itemBuilder: (
+              BuildContext context,
+              Size size,
+              ZegoUIKitUser user,
+              Map<String, dynamic> extraInfo,
+            ) {
+              return ValueListenableBuilder<Map<String, String>>(
+                  valueListenable:
+                      ZegoUIKit().getInRoomUserAttributesNotifier(user.id),
+                  builder: (context, _, __) {
+                    return Container(
+                      margin: EdgeInsets.only(bottom: 36.r),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 92.r,
+                            height: 92.r,
+                            child: ZegoAvatarDefaultItem(
+                              user: user,
+                              avatarBuilder: widget.avatarBuilder,
+                            ),
+                          ),
+                          SizedBox(width: 24.r),
+                          userNameItem(user),
+                          const Expanded(child: SizedBox()),
+                          controlsItem(user),
+                        ],
                       ),
-                    ),
-                    SizedBox(width: 24.r),
-                    userNameItem(user),
-                    const Expanded(child: SizedBox()),
-                    controlsItem(user),
-                  ],
-                ),
-              );
-            });
-      },
-    );
+                    );
+                  });
+            },
+          );
+        });
   }
 
   Widget header(double height) {
@@ -253,8 +262,8 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
                 /// on show agree/disagree when seat is locked
                 return requestTakeSeatUserControlItem(user);
               }
-            } else if (widget.seatManager.localIsAHost) {
-              return hostControlItem(user);
+            } else if (widget.seatManager.hasHostPermissions) {
+              return hostPermissionControlItems(user);
             }
 
             return Container();
@@ -268,7 +277,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
     return Row(
       children: [
         controlButton(
-            text: widget.innerText.disagreeButton,
+            text: widget.innerText.memberListDisagreeButton,
             backgroundColor: const Color(0xffA7A6B7),
             onPressed: () {
               ZegoUIKit()
@@ -289,7 +298,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
             }),
         SizedBox(width: 12.r),
         controlButton(
-            text: widget.innerText.agreeButton,
+            text: widget.innerText.memberListAgreeButton,
             gradient: const LinearGradient(
               colors: [Color(0xffA754FF), Color(0xff510DF1)],
               begin: Alignment.topLeft,
@@ -316,7 +325,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
     );
   }
 
-  Widget hostControlItem(ZegoUIKitUser user) {
+  Widget hostPermissionControlItems(ZegoUIKitUser user) {
     if (ZegoUIKit().getLocalUser().id == user.id) {
       return Container();
     }
@@ -426,6 +435,7 @@ void showMemberListSheet({
   required ZegoLiveConnectManager connectManager,
   required ZegoInnerText innerText,
   required ZegoMemberListSheetMoreButtonPressed? onMoreButtonPressed,
+  ValueNotifier<List<String>>? hiddenUserIDsNotifier,
 }) {
   showModalBottomSheet(
     barrierColor: ZegoUIKitDefaultTheme.viewBarrierColor,
@@ -454,6 +464,7 @@ void showMemberListSheet({
               connectManager: connectManager,
               innerText: innerText,
               onMoreButtonPressed: onMoreButtonPressed,
+              hiddenUserIDsNotifier: hiddenUserIDsNotifier,
             ),
           ),
         ),

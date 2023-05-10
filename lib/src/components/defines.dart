@@ -12,21 +12,14 @@ Size get zegoLiveButtonIconSize => Size(40.r, 40.r);
 SizedBox get zegoLiveButtonPadding =>
     SizedBox.fromSize(size: Size.fromRadius(8.r));
 
-Size getTextSize(String text, TextStyle textStyle) {
-  final textPainter = TextPainter(
-      text: TextSpan(text: text, style: textStyle),
-      maxLines: 1,
-      textDirection: TextDirection.ltr)
-    ..layout(minWidth: 0, maxWidth: double.infinity);
-  return textPainter.size;
-}
-
 enum PopupItemValue {
   takeOnSeat,
   takeOffSeat,
   leaveSeat,
   muteSeat,
   inviteLink,
+  assignCoHost,
+  revokeCoHost,
   cancel,
 }
 
@@ -71,6 +64,7 @@ class PrebuiltLiveAudioRoomIconUrls {
   static const String seatAdd = 'assets/icons/seat_add.png';
   static const String seatEmpty = 'assets/icons/seat_empty.png';
   static const String seatHost = 'assets/icons/seat_host.png';
+  static const String seatCoHost = 'assets/icons/seat_cohost.png';
   static const String seatLock = 'assets/icons/seat_lock.png';
   static const String seatMicrophoneOff = 'assets/icons/seat_mic_off.png';
 }

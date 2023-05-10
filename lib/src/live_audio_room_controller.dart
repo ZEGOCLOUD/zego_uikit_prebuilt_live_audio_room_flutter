@@ -12,10 +12,9 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/defines.dar
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
 
-class ZegoLiveAudioRoomController {
-  ZegoLiveConnectManager? _connectManager;
-  ZegoLiveSeatManager? _seatManager;
+part 'package:zego_uikit_prebuilt_live_audio_room/src/internal/controller_p.dart';
 
+class ZegoLiveAudioRoomController with ZegoLiveAudioRoomControllerPrivate {
   /// turn on/off microphone
   /// @param userID, if null or empty, turn on/off local microphone
   void turnMicrophoneOn(bool isOn, {String? userID}) {
@@ -105,9 +104,8 @@ class ZegoLiveAudioRoomController {
         subTag: 'controller',
       );
       if (result.error == null) {
-        _connectManager?.removeRequestCoHostUsers(
-          ZegoUIKit().getUser(audienceUserID) ?? ZegoUIKitUser.empty(),
-        );
+        _connectManager
+            ?.removeRequestCoHostUsers(ZegoUIKit().getUser(audienceUserID));
       } else {
         ZegoLoggerService.logInfo(
           'accept seat taking request error:${result.error}',
@@ -133,9 +131,8 @@ class ZegoLiveAudioRoomController {
       );
 
       if (result.error == null) {
-        _connectManager?.removeRequestCoHostUsers(
-          ZegoUIKit().getUser(audienceUserID) ?? ZegoUIKitUser.empty(),
-        );
+        _connectManager
+            ?.removeRequestCoHostUsers(ZegoUIKit().getUser(audienceUserID));
       } else {
         ZegoLoggerService.logInfo(
           'reject seat taking request error:${result.error}',
@@ -153,9 +150,8 @@ class ZegoLiveAudioRoomController {
   ///--------start of host invite audience to take seat's api--------------
   /// host invite audience to take seat
   Future<bool> inviteAudienceToTakeSeat(String userID) async {
-    return await _connectManager?.inviteAudienceConnect(
-          ZegoUIKit().getUser(userID) ?? ZegoUIKitUser.empty(),
-        ) ??
+    return await _connectManager
+            ?.inviteAudienceConnect(ZegoUIKit().getUser(userID)) ??
         false;
   }
 
@@ -210,22 +206,8 @@ class ZegoLiveAudioRoomController {
 
   ///--------end of host invite audience to take seat's api--------------
 
-  /// DO NOT CALL
-  /// Call Inside By Prebuilt
-  /// prebuilt assign value to internal variables
-  void initByPrebuilt({
-    ZegoLiveConnectManager? connectManager,
-    ZegoLiveSeatManager? seatManager,
-  }) {
-    _connectManager = connectManager;
-    _seatManager = seatManager;
-  }
-
-  /// DO NOT CALL
-  /// Call Inside By Prebuilt
-  /// prebuilt assign value to internal variables
-  void uninitByPrebuilt() {
-    _connectManager = null;
-    _seatManager = null;
+  ///
+  void hideInMemberList(List<String> userIDs) {
+    _hiddenUsersOfMemberListNotifier.value = List<String>.from(userIDs);
   }
 }

@@ -21,6 +21,7 @@ class ZegoMemberButton extends StatefulWidget {
     required this.connectManager,
     required this.innerText,
     required this.onMoreButtonPressed,
+    this.hiddenUserIDsNotifier,
     this.iconSize,
     this.buttonSize,
     this.icon,
@@ -30,6 +31,7 @@ class ZegoMemberButton extends StatefulWidget {
   final ZegoAvatarBuilder? avatarBuilder;
   final ZegoLiveSeatManager seatManager;
   final ZegoLiveConnectManager connectManager;
+  final ValueNotifier<List<String>>? hiddenUserIDsNotifier;
   final ZegoInnerText innerText;
 
   final Size? iconSize;
@@ -68,6 +70,7 @@ class _ZegoMemberButtonState extends State<ZegoMemberButton> {
           connectManager: widget.connectManager,
           innerText: widget.innerText,
           onMoreButtonPressed: widget.onMoreButtonPressed,
+          hiddenUserIDsNotifier: widget.hiddenUserIDsNotifier,
         );
       },
       child: Stack(

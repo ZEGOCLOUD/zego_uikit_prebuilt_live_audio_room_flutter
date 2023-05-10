@@ -5,8 +5,6 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.
 class ZegoInnerText {
   final String param_1 = '%0';
 
-  String disagreeButton;
-  String agreeButton;
   String takeSeatMenuButton;
 
   String removeSpeakerMenuDialogButton;
@@ -32,6 +30,9 @@ class ZegoInnerText {
   String memberListDisagreeButton;
   String inviteToTakeSeatMenuDialogButton;
   ZegoDialogInfo hostInviteTakeSeatDialog;
+
+  String assignAsCoHostMenuDialogButton;
+  String revokeCoHostPrivilegesMenuDialogButton;
 
   /// effect
   String audioEffectTitle;
@@ -69,8 +70,6 @@ class ZegoInnerText {
 
   ZegoInnerText({
     String? takeSeatMenuButton,
-    String? disagreeButton,
-    String? agreeButton,
     String? removeSpeakerMenuDialogButton,
     String? muteSpeakerMenuDialogButton,
     String? cancelMenuDialogButton,
@@ -85,6 +84,8 @@ class ZegoInnerText {
     String? memberListAgreeButton,
     String? memberListDisagreeButton,
     String? inviteToTakeSeatMenuDialogButton,
+    String? assignAsCoHostMenuDialogButton,
+    String? revokeCoHostPrivilegesMenuDialogButton,
     ZegoDialogInfo? cameraPermissionSettingDialogInfo,
     ZegoDialogInfo? microphonePermissionSettingDialogInfo,
     ZegoDialogInfo? removeFromSeatDialogInfo,
@@ -119,8 +120,6 @@ class ZegoInnerText {
     String? reverbTypePopularTitle,
     String? reverbTypeGramophoneTitle,
   })  : takeSeatMenuButton = takeSeatMenuButton ?? 'Take the seat',
-        disagreeButton = disagreeButton ?? 'Disagree',
-        agreeButton = agreeButton ?? 'Agree',
         removeSpeakerMenuDialogButton =
             removeSpeakerMenuDialogButton ?? 'Remove %0 from seat',
         muteSpeakerMenuDialogButton = muteSpeakerMenuDialogButton ?? 'Mute %0',
@@ -139,6 +138,11 @@ class ZegoInnerText {
         memberListDisagreeButton = memberListDisagreeButton ?? 'Disagree',
         inviteToTakeSeatMenuDialogButton =
             inviteToTakeSeatMenuDialogButton ?? 'Invite %0 to take seat',
+        assignAsCoHostMenuDialogButton =
+            assignAsCoHostMenuDialogButton ?? 'Assign %0 as Co-Host',
+        revokeCoHostPrivilegesMenuDialogButton =
+            revokeCoHostPrivilegesMenuDialogButton ??
+                "Revoke %0's Co-Host Privileges",
         cameraPermissionSettingDialogInfo = cameraPermissionSettingDialogInfo ??
             ZegoDialogInfo(
               title: 'Can not use Camera!',

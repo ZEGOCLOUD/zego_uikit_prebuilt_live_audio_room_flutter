@@ -58,48 +58,52 @@ class _ZegoAudienceConnectButtonState extends State<ZegoAudienceConnectButton> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
-      valueListenable: widget.seatManager.isSeatLockedNotifier,
-      builder: (context, isSeatLocked, _) {
-        if (!isSeatLocked) {
-          return Container();
-        }
+        valueListenable: widget.seatManager.isSeatLockedNotifier,
+        builder: (context, isSeatLocked, _) {
+          if (!isSeatLocked) {
+            return Container();
+          }
 
-        return ValueListenableBuilder<ZegoLiveAudioRoomRole>(
-          valueListenable: widget.seatManager.localRole,
-          builder: (context, localRole, _) {
-            if (localRole != ZegoLiveAudioRoomRole.audience) {
-              return Container();
-            }
+          return ValueListenableBuilder<ZegoLiveAudioRoomRole>(
+              valueListenable: widget.seatManager.localRole,
+              builder: (context, localRole, _) {
+                if (localRole != ZegoLiveAudioRoomRole.audience) {
+                  return Container();
+                }
 
-            return ValueListenableBuilder<List<String>>(
-              valueListenable: widget.seatManager.hostsNotifier,
-              builder: (context, hosts, _) {
-                return ValueListenableBuilder<ConnectState>(
-                  valueListenable:
-                      widget.connectManager.audienceLocalConnectStateNotifier,
-                  builder: (context, connectState, _) {
-                    switch (connectState) {
-                      case ConnectState.idle:
-                        return requestCoHostButton();
-                      case ConnectState.connecting:
-                        return cancelRequestCoHostButton();
-                      case ConnectState.connected:
-                        return Container();
-                    }
-                  },
-                );
-              },
-            );
-          },
-        );
-      },
-    );
+                return ValueListenableBuilder<List<String>>(
+                    valueListenable: widget.seatManager.hostsNotifier,
+                    builder: (context, hosts, _) {
+                      return ValueListenableBuilder<List<String>>(
+                          valueListenable: widget.seatManager.coHostsNotifier,
+                          builder: (context, coHosts, _) {
+                            return ValueListenableBuilder<ConnectState>(
+                                valueListenable: widget.connectManager
+                                    .audienceLocalConnectStateNotifier,
+                                builder: (context, connectState, _) {
+                                  switch (connectState) {
+                                    case ConnectState.idle:
+                                      return requestConnectButton();
+                                    case ConnectState.connecting:
+                                      return cancelRequestConnectButton();
+                                    case ConnectState.connected:
+                                      return Container();
+                                  }
+                                });
+                          });
+                    });
+              });
+        });
   }
 
-  Widget requestCoHostButton() {
+  Widget requestConnectButton() {
+    final invitees = widget.seatManager.hostsNotifier.value.isNotEmpty
+        ? widget.seatManager.hostsNotifier.value
+        : widget.seatManager.coHostsNotifier.value;
+
     return ZegoStartInvitationButton(
       invitationType: ZegoInvitationType.requestTakeSeat.value,
-      invitees: widget.seatManager.hostsNotifier.value,
+      invitees: invitees,
       data: '',
       icon: buttonIcon,
       buttonSize: Size(330.r, 72.r),
@@ -108,7 +112,7 @@ class _ZegoAudienceConnectButtonState extends State<ZegoAudienceConnectButton> {
       text: widget.innerText.applyToTakeSeatButton,
       textStyle: buttonTextStyle,
       verticalLayout: false,
-      onWillPressed: checkHostExist,
+      onWillPressed: checkHostAndCoHostExist,
       onPressed: (
         String code,
         String message,
@@ -133,9 +137,13 @@ class _ZegoAudienceConnectButtonState extends State<ZegoAudienceConnectButton> {
     );
   }
 
-  Widget cancelRequestCoHostButton() {
+  Widget cancelRequestConnectButton() {
+    final invitees = widget.seatManager.hostsNotifier.value.isNotEmpty
+        ? widget.seatManager.hostsNotifier.value
+        : widget.seatManager.coHostsNotifier.value;
+
     return ZegoCancelInvitationButton(
-      invitees: widget.seatManager.hostsNotifier.value,
+      invitees: invitees,
       icon: buttonIcon,
       buttonSize: Size(330.r, 72.r),
       iconSize: Size(48.r, 48.r),
@@ -154,6 +162,18 @@ class _ZegoAudienceConnectButtonState extends State<ZegoAudienceConnectButton> {
 
   bool checkHostExist({bool withToast = true}) {
     if (widget.seatManager.hostsNotifier.value.isEmpty) {
+      if (withToast) {
+        showDebugToast('Failed to apply for take seat, host is not exist');
+      }
+      return false;
+    }
+
+    return true;
+  }
+
+  bool checkHostAndCoHostExist({bool withToast = true}) {
+    if (widget.seatManager.hostsNotifier.value.isEmpty &&
+        widget.seatManager.coHostsNotifier.value.isEmpty) {
       if (withToast) {
         showDebugToast('Failed to apply for take seat, host is not exist');
       }
