@@ -1,16 +1,13 @@
 // Dart imports:
 import 'dart:core';
 
-// Flutter imports:
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_controller.dart';
 
 // Project imports:
 
+/// @nodoc
 class ZegoUIKitPrebuiltLiveAudioRoomData {
   const ZegoUIKitPrebuiltLiveAudioRoomData({
     required this.appID,

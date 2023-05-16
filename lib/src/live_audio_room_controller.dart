@@ -2,7 +2,6 @@
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
-import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -10,22 +9,27 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/permissions.d
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
 
 part 'package:zego_uikit_prebuilt_live_audio_room/src/internal/controller_p.dart';
 
+/// Used to control the audio chat room functionality.
+///
+/// If the default audio chat room UI and interactions do not meet your requirements, you can use this [ZegoLiveAudioRoomController] to actively control the business logic.
+/// This class is used by setting the [controller] parameter in the constructor of [ZegoUIKitPrebuiltLiveAudioRoom].
 class ZegoLiveAudioRoomController with ZegoLiveAudioRoomControllerPrivate {
-  /// turn on/off microphone
-  /// @param userID, if null or empty, turn on/off local microphone
+  ///  enable or disable the microphone of a specified user. If userID is empty or null, it controls the local microphone. The isOn parameter specifies whether the microphone should be turned on or off, where true means it is turned on and false means it is turned off.
   void turnMicrophoneOn(bool isOn, {String? userID}) {
     ZegoUIKit().turnMicrophoneOn(isOn, userID: userID);
   }
 
+  /// The speaker can use this method to leave the seat. If the showDialog parameter is set to true, a confirmation dialog will be displayed before leaving the seat.
   Future<bool> leaveSeat({bool showDialog = true}) async {
     return await _seatManager?.leaveSeat(showDialog: showDialog) ?? false;
   }
 
-  Future<bool> takeSeat(int index) async {
+  /// Assigns the audience to the seat with the specified [index], where the index represents the seat number starting from 0.
+  Future<bool> takeSeat(int index, int test) async {
     return await _seatManager?.takeOnSeat(
           index,
           isForce: true,
@@ -35,21 +39,25 @@ class ZegoLiveAudioRoomController with ZegoLiveAudioRoomControllerPrivate {
         false;
   }
 
+  /// Removes the speaker with the user ID [userID] from the seat.
   Future<void> removeSpeakerFromSeat(String userID) async {
     final index = _seatManager?.getIndexByUserID(userID) ?? -1;
     return _seatManager?.kickSeat(index);
   }
 
+  /// Closes (locks) the seat. After closing the seat, audience members need to request permission from the host or be invited by the host to occupy the seat.
   Future<bool> closeSeats() async {
     return await _seatManager?.lockSeat(true) ?? false;
   }
 
+  /// Opens (unlocks) the seat. After opening the seat, all audience members can freely choose an empty seat to join and start chatting with others.
   Future<bool> openSeats() async {
     return await _seatManager?.lockSeat(false) ?? false;
   }
 
-  ///--------start of audience request take seat's api--------------
-  /// audience request take seat from the host
+  //--------start of audience request take seat's api--------------
+
+  /// The audience actively requests to occupy a seat.
   Future<bool> applyToTakeSeat() async {
     if (_seatManager?.hostsNotifier.value.isEmpty ?? false) {
       ZegoLoggerService.logInfo(
@@ -87,12 +95,12 @@ class ZegoLiveAudioRoomController with ZegoLiveAudioRoomControllerPrivate {
     });
   }
 
-  /// audience cancelled their request for a seat from the host
+  /// The audience cancels the request to occupy a seat.
   Future<bool> cancelSeatTakingRequest() async {
     return await _connectManager?.audienceCancelTakeSeatRequest() ?? false;
   }
 
-  /// host accept the audience's request to be seated
+  /// The host accepts the seat request from the audience with the ID [audienceUserID].
   Future<bool> acceptSeatTakingRequest(String audienceUserID) async {
     return ZegoUIKit()
         .getSignalingPlugin()
@@ -118,7 +126,7 @@ class ZegoLiveAudioRoomController with ZegoLiveAudioRoomControllerPrivate {
     });
   }
 
-  /// host reject the audience's request to be seated
+  /// The host rejects the seat request from the audience with the ID [audienceUserID].
   Future<bool> rejectSeatTakingRequest(String audienceUserID) async {
     return ZegoUIKit()
         .getSignalingPlugin()
@@ -145,16 +153,18 @@ class ZegoLiveAudioRoomController with ZegoLiveAudioRoomControllerPrivate {
     });
   }
 
-  ///--------end of audience request take seat's api--------------
+  //--------end of audience request take seat's api--------------
 
-  ///--------start of host invite audience to take seat's api--------------
-  /// host invite audience to take seat
+  //--------start of host invite audience to take seat's api--------------
+
+  /// Host invite the audience with id [userID] to take seat
   Future<bool> inviteAudienceToTakeSeat(String userID) async {
     return await _connectManager
             ?.inviteAudienceConnect(ZegoUIKit().getUser(userID)) ??
         false;
   }
 
+  /// Accept the seat invitation from the host. The [context] parameter represents the Flutter context object.
   Future<bool> acceptHostTakeSeatInvitation({
     required BuildContext context,
   }) async {

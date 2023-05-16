@@ -7,6 +7,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
 
+/// @nodoc
 class ZegoInRoomMessageInputBoard extends ModalRoute<String> {
   ZegoInRoomMessageInputBoard({
     required this.innerText,

@@ -1,7 +1,6 @@
 library zego_uikit_prebuilt_live_audio_room;
 
 export 'package:zego_uikit/zego_uikit.dart';
-export 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 export 'src/components/audio_video/defines.dart';
 export 'src/core/minimizing/mini_overlay_machine.dart';

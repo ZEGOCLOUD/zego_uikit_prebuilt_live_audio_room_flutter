@@ -1,5 +1,6 @@
 part of 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 
+/// @nodoc
 mixin ZegoLiveSeatCoHost {
   ValueNotifier<List<String>> coHostsNotifier = ValueNotifier<List<String>>([]);
 

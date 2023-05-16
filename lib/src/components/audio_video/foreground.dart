@@ -4,17 +4,20 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/audio_room_layout.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_sheet_menu.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_controller.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
 
+/// @nodoc
 class ZegoSeatForeground extends StatefulWidget {
   final Size size;
   final ZegoUIKitUser? user;
@@ -40,6 +43,7 @@ class ZegoSeatForeground extends StatefulWidget {
   State<ZegoSeatForeground> createState() => _ZegoSeatForegroundState();
 }
 
+/// @nodoc
 class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
   @override
   Widget build(BuildContext context) {

@@ -4,7 +4,6 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -16,6 +15,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.d
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
 
+/// @nodoc
 class ZegoAudienceConnectButton extends StatefulWidget {
   const ZegoAudienceConnectButton({
     Key? key,
@@ -32,6 +32,7 @@ class ZegoAudienceConnectButton extends StatefulWidget {
       _ZegoAudienceConnectButtonState();
 }
 
+/// @nodoc
 class _ZegoAudienceConnectButtonState extends State<ZegoAudienceConnectButton> {
   ButtonIcon get buttonIcon => ButtonIcon(
         icon: PrebuiltLiveAudioRoomImage.asset(

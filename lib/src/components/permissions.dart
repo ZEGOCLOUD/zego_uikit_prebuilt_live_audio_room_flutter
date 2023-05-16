@@ -9,6 +9,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/dialogs.dart'
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
 
+/// @nodoc
 Future<void> checkPermissions({
   required BuildContext context,
   required ZegoInnerText translationText,

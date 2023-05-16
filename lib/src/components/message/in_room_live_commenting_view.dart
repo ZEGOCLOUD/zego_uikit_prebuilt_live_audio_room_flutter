@@ -7,6 +7,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/in_room_live_commenting_view_item.dart';
 
+/// @nodoc
 class ZegoInRoomLiveCommentingView extends StatefulWidget {
   final ZegoInRoomMessageItemBuilder? itemBuilder;
 
@@ -20,6 +21,7 @@ class ZegoInRoomLiveCommentingView extends StatefulWidget {
       _ZegoInRoomLiveCommentingViewState();
 }
 
+/// @nodoc
 class _ZegoInRoomLiveCommentingViewState
     extends State<ZegoInRoomLiveCommentingView> {
   @override

@@ -1,27 +1,60 @@
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
+import 'package:zego_uikit/zego_uikit.dart';
 
+/// @nodoc
 final seatItemWidth = 160.w;
+
+/// @nodoc
 final seatItemHeight = 160.r;
+
+/// @nodoc
 final seatItemRowSpacing = 7.5.w;
+
+/// @nodoc
 final seatItemColumnSpacing = 32.r;
+
+/// @nodoc
 final seatIconWidth = 108.r;
+
+/// @nodoc
 final seatIconHeight = 108.r;
+
+/// @nodoc
 final seatUserNameFontSize = 22.0.r;
+
+/// @nodoc
 final seatHostFlagHeight = 24.0.r;
 
+/// @nodoc
 final double avatarPosTop = 15.r;
+
+/// @nodoc
 final double avatarPosLeft = 22.r;
 
+/// The alignment of the seat layout.
+/// This enum type is used for the [alignment] property in [ZegoLiveAudioRoomLayoutRowConfig].
 enum ZegoLiveAudioRoomLayoutAlignment {
+  ///  Place the seats as close to the start of the main axis as possible.
   start,
+
+  /// Place the seats as close to the end of the main axis as possible.
   end,
+
+  /// Place the seats as close to the middle of the main axis as possible.
   center,
+
+  /// Place the free space evenly between the seats.
   spaceBetween,
+
+  /// Place the free space evenly between the seats as well as half of that space before and after the first and last seat.
   spaceAround,
+
+  /// Place the free space evenly between the seats as well as before and after the first and last seat.
   spaceEvenly,
 }
 
+/// Configuration for each row in the seat layout.
+/// This type is used for the [ZegoUIKitPrebuiltLiveAudioRoomConfig].[layoutConfig].[rowConfigs] property.
 class ZegoLiveAudioRoomLayoutRowConfig {
   ZegoLiveAudioRoomLayoutRowConfig({
     this.count = 4,
@@ -29,21 +62,24 @@ class ZegoLiveAudioRoomLayoutRowConfig {
     this.alignment = ZegoLiveAudioRoomLayoutAlignment.spaceAround,
   });
 
-  /// seat count of a row, range is [1~4]
+  /// Number of seats in each row. Range is [1~4], default value is 4.
   int count;
 
-  ///  spacing between seats, should be positive
+  /// The horizontal spacing between each seat. It should be set to a value equal to or greater than 0.
   int seatSpacing = 0;
 
-  /// seat alignment
+  /// The alignment of the seat layout.
   ZegoLiveAudioRoomLayoutAlignment alignment;
 
+  /// @nodoc
   @override
   String toString() {
     return 'row config:{count:$count, spacing:$seatSpacing, alignment:$alignment}';
   }
 }
 
+/// Seat layout configuration options.
+/// This type is used for the [ZegoUIKitPrebuiltLiveAudioRoomConfig].[layoutConfig] property.
 class ZegoLiveAudioRoomLayoutConfig {
   ZegoLiveAudioRoomLayoutConfig({
     this.rowSpacing = 0,
@@ -54,12 +90,13 @@ class ZegoLiveAudioRoomLayoutConfig {
               ZegoLiveAudioRoomLayoutRowConfig(),
             ];
 
-  ///  spacing between rows, should be positive
+  ///  Spacing between rows, should be positive
   int rowSpacing;
 
-  /// rows
+  /// Configuration list for each row.
   List<ZegoLiveAudioRoomLayoutRowConfig> rowConfigs;
 
+  /// @nodoc
   @override
   String toString() {
     return 'spacing:$rowSpacing, row configs:${rowConfigs.map((e) => e.toString()).toList()}';

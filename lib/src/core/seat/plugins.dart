@@ -12,12 +12,14 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/minimizing/mini_overlay_machine.dart';
 
+/// @nodoc
 enum PluginNetworkState {
   unknown,
   offline,
   online,
 }
 
+/// @nodoc
 class ZegoPrebuiltPlugins {
   ZegoPrebuiltPlugins(
       {required this.appID,
@@ -204,7 +206,7 @@ class ZegoPrebuiltPlugins {
     ZegoLoggerService.logInfo(
       'on user info update, '
       'target user($userID, $userName), '
-      'local user:(${localUser.toString()}) '
+      'local user:($localUser) '
       'initialized:$initialized, '
       'user state:${pluginUserStateNotifier.value}'
       'room state:${roomStateNotifier.value}',

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
+import 'package:zego_uikit/zego_uikit.dart';
 
 // size
 Size get zegoLiveButtonSize => Size(72.r, 72.r);
@@ -12,6 +12,7 @@ Size get zegoLiveButtonIconSize => Size(40.r, 40.r);
 SizedBox get zegoLiveButtonPadding =>
     SizedBox.fromSize(size: Size.fromRadius(8.r));
 
+/// @nodoc
 enum PopupItemValue {
   takeOnSeat,
   takeOffSeat,
@@ -31,6 +32,7 @@ class PopupItem {
   const PopupItem(this.value, this.text, {this.data});
 }
 
+/// @nodoc
 class PrebuiltLiveAudioRoomImage {
   static Image asset(String name) {
     return Image.asset(name, package: 'zego_uikit_prebuilt_live_audio_room');
@@ -41,6 +43,7 @@ class PrebuiltLiveAudioRoomImage {
   }
 }
 
+/// @nodoc
 class PrebuiltLiveAudioRoomIconUrls {
   static const String im = 'assets/icons/toolbar_im.png';
   static const String back = 'assets/icons/back.png';

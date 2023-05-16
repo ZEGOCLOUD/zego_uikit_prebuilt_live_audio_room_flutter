@@ -13,7 +13,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.d
 class ZegoLiveAudioRoomManagers {
   factory ZegoLiveAudioRoomManagers() => _instance;
 
-  ZegoLiveAudioRoomManagers._internal() {}
+  ZegoLiveAudioRoomManagers._internal();
 
   static final ZegoLiveAudioRoomManagers _instance =
       ZegoLiveAudioRoomManagers._internal();

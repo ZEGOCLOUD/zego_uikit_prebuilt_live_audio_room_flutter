@@ -6,11 +6,11 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/background.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/foreground.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/seat_container.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/bottom_bar.dart';
@@ -21,8 +21,10 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_man
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_controller.dart';
 
+/// @nodoc
 /// user and sdk should be login and init before page enter
 class ZegoLivePage extends StatefulWidget {
   const ZegoLivePage({
@@ -60,6 +62,7 @@ class ZegoLivePage extends StatefulWidget {
   State<ZegoLivePage> createState() => ZegoLivePageState();
 }
 
+/// @nodoc
 class ZegoLivePageState extends State<ZegoLivePage>
     with SingleTickerProviderStateMixin {
   /// had sort the host be first

@@ -2,14 +2,14 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/in_room_message_input_board.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
 
+/// @nodoc
 class ZegoInRoomMessageButton extends StatefulWidget {
   final Size? iconSize;
   final Size? buttonSize;
@@ -27,6 +27,7 @@ class ZegoInRoomMessageButton extends StatefulWidget {
       _ZegoInRoomMessageButtonState();
 }
 
+/// @nodoc
 class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
   @override
   Widget build(BuildContext context) {

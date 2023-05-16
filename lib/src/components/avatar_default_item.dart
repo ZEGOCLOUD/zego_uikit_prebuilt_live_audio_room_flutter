@@ -1,13 +1,11 @@
 // Flutter imports:
-
-// Flutter imports:
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
+/// @nodoc
 class ZegoAvatarDefaultItem extends StatefulWidget {
   const ZegoAvatarDefaultItem({
     Key? key,
@@ -22,6 +20,7 @@ class ZegoAvatarDefaultItem extends StatefulWidget {
   State<ZegoAvatarDefaultItem> createState() => _ZegoAvatarDefaultItemState();
 }
 
+/// @nodoc
 class _ZegoAvatarDefaultItemState extends State<ZegoAvatarDefaultItem> {
   @override
   Widget build(BuildContext context) {
@@ -65,7 +64,7 @@ class _ZegoAvatarDefaultItemState extends State<ZegoAvatarDefaultItem> {
                 CircularProgressIndicator(value: downloadProgress.progress),
             errorWidget: (context, url, error) {
               ZegoLoggerService.logInfo(
-                '${user?.toString()} avatar url is invalid',
+                '$user avatar url is invalid',
                 tag: 'live audio',
                 subTag: 'live page',
               );

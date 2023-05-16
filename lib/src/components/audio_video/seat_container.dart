@@ -12,6 +12,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/a
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 
+/// @nodoc
 /// container of seat
 class ZegoSeatContainer extends StatefulWidget {
   const ZegoSeatContainer({
@@ -42,6 +43,7 @@ class ZegoSeatContainer extends StatefulWidget {
   State<ZegoSeatContainer> createState() => _ZegoAudioVideoContainerState();
 }
 
+/// @nodoc
 class _ZegoAudioVideoContainerState extends State<ZegoSeatContainer> {
   bool pendingUsers = false;
   List<ZegoUIKitUser> userList = [];
@@ -121,7 +123,7 @@ class _ZegoAudioVideoContainerState extends State<ZegoSeatContainer> {
 
     seatsUser.forEach((seatIndex, seatUserID) {
       final seatUser = ZegoUIKit().getUser(seatUserID);
-      if (null != seatUser) {
+      if (!seatUser.isEmpty()) {
         userList.add(seatUser);
       } else {
         pendingUsers = true;

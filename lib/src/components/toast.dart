@@ -10,6 +10,7 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart' as styled_toast;
 
 typedef ContextQuery = BuildContext Function();
 
+/// @nodoc
 class ZegoToast {
   factory ZegoToast() => instance;
 

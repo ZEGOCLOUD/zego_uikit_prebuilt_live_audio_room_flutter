@@ -24,6 +24,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_te
 
 part 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/co_host_mixin.dart';
 
+/// @nodoc
 class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
   ZegoLiveSeatManager({
     this.contextQuery,
@@ -444,7 +445,7 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
     final takenSeats = <int, ZegoUIKitUser>{};
     seatsUserMapNotifier.value.forEach((seatIndex, seatUserID) {
       takenSeats[int.tryParse(seatIndex) ?? -1] =
-          ZegoUIKit().getUser(seatUserID) ?? ZegoUIKitUser.empty();
+          ZegoUIKit().getUser(seatUserID);
     });
     config.onSeatsChanged?.call(
       takenSeats,
@@ -869,7 +870,7 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
     }
 
     ZegoLoggerService.logInfo(
-      'take off ${targetUser.toString()} from seat $index',
+      'take off $targetUser from seat $index',
       tag: 'audio room',
       subTag: 'seat manager',
     );
@@ -892,7 +893,7 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
         );
       } else {
         ZegoLoggerService.logInfo(
-          'take off ${targetUser.toString()} from seat '
+          'take off $targetUser from seat '
           '$index success',
           tag: 'audio room',
           subTag: 'seat manager',
@@ -983,7 +984,7 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
     final takenSeats = <int, ZegoUIKitUser>{};
     seatsUserMapNotifier.value.forEach((seatIndex, seatUserID) {
       takenSeats[int.tryParse(seatIndex) ?? -1] =
-          ZegoUIKit().getUser(seatUserID) ?? ZegoUIKitUser.empty();
+          ZegoUIKit().getUser(seatUserID);
     });
 
     final emptyList = List<int>.generate(
@@ -1039,8 +1040,8 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
       /// update local role
       if (localUserID == updateUserID) {
         if (updateUserAttributes[attributeKeyRole]?.isNotEmpty ?? false) {
-          localRole.value = ZegoLiveAudioRoomRole.values[
-              int.parse(updateUserAttributes[attributeKeyRole]!.toString())];
+          localRole.value = ZegoLiveAudioRoomRole
+              .values[int.parse(updateUserAttributes[attributeKeyRole]!)];
 
           ZegoLoggerService.logInfo(
             'update local role:${localRole.value}',
@@ -1417,7 +1418,7 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
         currentCoHosts.contains(ZegoUIKit().getLocalUser().id);
     if (selfIsCoHostBefore && !selfIsCoHostNow) {
       ZegoLoggerService.logInfo(
-        'self\'s co-host had removed',
+        "self's co-host had removed",
         tag: 'audio room',
         subTag: 'seat manager',
       );

@@ -15,9 +15,16 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/live_page.dar
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/core_managers.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/core/minimizing/mini_overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/minimizing/prebuilt_data.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_controller.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
 
+/// Live Audio Room Widget.
+/// You can embed this widget into any page of your project to integrate the functionality of a audio chat room.
+/// You can refer to our [documentation](https://docs.zegocloud.com/article/15079),
+/// or our [sample code](https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_live_audio_room_example_flutter/tree/master/live_audio_room).
 class ZegoUIKitPrebuiltLiveAudioRoom extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveAudioRoom({
     Key? key,
@@ -31,32 +38,44 @@ class ZegoUIKitPrebuiltLiveAudioRoom extends StatefulWidget {
     @Deprecated('Since 2.4.1') this.appDesignSize,
   }) : super(key: key);
 
-  /// you need to fill in the appID you obtained from console.zegocloud.com
+  /// You can create a project and obtain an appID from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com).
   final int appID;
 
-  /// for Android/iOS
-  /// you need to fill in the appID you obtained from console.zegocloud.com
+  /// You can create a project and obtain an appSign from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com).
   final String appSign;
 
-  /// local user info
+  /// The ID of the currently logged-in user.
+  /// It can be any valid string.
+  /// Typically, you would use the ID from your own user system, such as Firebase.
   final String userID;
+
+  /// The name of the currently logged-in user.
+  /// It can be any valid string.
+  /// Typically, you would use the name from your own user system, such as Firebase.
   final String userName;
 
-  /// You can customize the liveName arbitrarily,
-  /// just need to know: users who use the same liveName can talk with each other.
+  /// The ID of the audio chat room.
+  /// This ID serves as a unique identifier for the room, so you need to ensure its uniqueness.
+  /// It can be any valid string.
+  /// Users who enter the same [roomID] will be logged into the same room to chat or listen to others.
   final String roomID;
 
+  /// You can invoke the methods provided by [ZegoUIKitPrebuiltLiveAudioRoom] through the [controller].
   final ZegoLiveAudioRoomController? controller;
 
+  /// Initialize the configuration for the voice chat room.
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
 
+  @Deprecated('Since 2.4.1')
   final Size? appDesignSize;
 
+  /// @nodoc
   @override
   State<ZegoUIKitPrebuiltLiveAudioRoom> createState() =>
       _ZegoUIKitPrebuiltLiveAudioRoomState();
 }
 
+/// @nodoc
 class _ZegoUIKitPrebuiltLiveAudioRoomState
     extends State<ZegoUIKitPrebuiltLiveAudioRoom> with WidgetsBindingObserver {
   List<StreamSubscription<dynamic>?> subscriptions = [];
@@ -86,7 +105,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 2.4.8; $version',
+        'version: zego_uikit_prebuilt_live_audio_room: 2.4.12; $version',
         tag: 'audio room',
         subTag: 'prebuilt',
       );
@@ -293,7 +312,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     }
 
     ZegoLoggerService.logInfo(
-      'layout config:${widget.config.layoutConfig.toString()}',
+      'layout config:${widget.config.layoutConfig}',
       tag: 'audio room',
       subTag: 'prebuilt',
     );

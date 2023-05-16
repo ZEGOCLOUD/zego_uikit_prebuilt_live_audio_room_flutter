@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_screenutil_zego/flutter_screenutil_zego.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -13,6 +12,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart'
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
 
+/// @nodoc
 class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage({
     Key? key,
@@ -30,15 +30,26 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage extends StatefulWidget {
   }) : super(key: key);
 
   final Size? size;
+
   final double padding;
+
   final double borderRadius;
+
   final Color borderColor;
+
   final Color backgroundColor;
+
   final Color soundWaveColor;
+
   final Offset topLeft;
+
   final bool showDevices;
+
   final bool showUserName;
+
   final Widget Function(ZegoUIKitUser? activeUser)? builder;
+
+  /// You need to return the `context` of NavigatorState in this callback
   final BuildContext Function() contextQuery;
 
   @override
@@ -46,6 +57,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage extends StatefulWidget {
       ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState();
 }
 
+/// @nodoc
 class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
     extends State<ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage> {
   LiveAudioRoomMiniOverlayPageState currentState =

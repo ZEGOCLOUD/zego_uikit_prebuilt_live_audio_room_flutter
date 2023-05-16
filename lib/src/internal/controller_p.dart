@@ -1,5 +1,6 @@
 part of 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_controller.dart';
 
+/// @nodoc
 mixin ZegoLiveAudioRoomControllerPrivate {
   ZegoLiveConnectManager? _connectManager;
   ZegoLiveSeatManager? _seatManager;

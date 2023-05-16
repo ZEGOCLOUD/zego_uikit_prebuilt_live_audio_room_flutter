@@ -1,3 +1,15 @@
+## 2.4.12
+- Update dependencies
+
+## 2.4.11
+- Update Readme
+
+## 2.4.10
+- Update comments
+
+## 2.4.9
+- deprecate flutter_screenutil_zego package
+
 ## 2.4.8
 - Fix some issues of co-hosts
 

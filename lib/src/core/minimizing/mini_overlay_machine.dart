@@ -1,28 +1,23 @@
-// Dart imports:
-import 'dart:async';
-
-// Flutter imports:
-import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:statemachine/statemachine.dart' as sm;
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/minimizing/prebuilt_data.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/plugins.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 
+/// @nodoc
 enum LiveAudioRoomMiniOverlayPageState {
   idle,
   inAudioRoom,
   minimizing,
 }
 
+/// @nodoc
 typedef LiveAudioRoomMiniOverlayMachineStateChanged = void Function(
     LiveAudioRoomMiniOverlayPageState);
 
+/// @nodoc
+/// The state machine for the minimized state of the live audio room.
 class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine {
   factory ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine() => _instance;
 
@@ -31,6 +26,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine {
 
   sm.Machine<LiveAudioRoomMiniOverlayPageState> get machine => _machine;
 
+  /// Whether the current live audio room widget is in a minimized state.
   bool get isMinimizing =>
       LiveAudioRoomMiniOverlayPageState.minimizing == state();
 
