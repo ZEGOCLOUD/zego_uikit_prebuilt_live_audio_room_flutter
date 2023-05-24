@@ -12,8 +12,8 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/core/minimizing/mini_ove
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/minimizing/prebuilt_data.dart';
 
 /// @nodoc
-class ZegoUIKitPrebuiltLiveAudioRoomMinimizingButton extends StatefulWidget {
-  const ZegoUIKitPrebuiltLiveAudioRoomMinimizingButton({
+class ZegoMinimizingButton extends StatefulWidget {
+  const ZegoMinimizingButton({
     Key? key,
     required this.prebuiltAudioRoomData,
     this.onWillPressed,
@@ -36,13 +36,13 @@ class ZegoUIKitPrebuiltLiveAudioRoomMinimizingButton extends StatefulWidget {
   final ZegoUIKitPrebuiltLiveAudioRoomData prebuiltAudioRoomData;
 
   @override
-  State<ZegoUIKitPrebuiltLiveAudioRoomMinimizingButton> createState() =>
-      _ZegoUIKitPrebuiltLiveAudioRoomMinimizingButtonState();
+  State<ZegoMinimizingButton> createState() =>
+      _ZegoMinimizingButtonState();
 }
 
 /// @nodoc
-class _ZegoUIKitPrebuiltLiveAudioRoomMinimizingButtonState
-    extends State<ZegoUIKitPrebuiltLiveAudioRoomMinimizingButton> {
+class _ZegoMinimizingButtonState
+    extends State<ZegoMinimizingButton> {
   @override
   void initState() {
     super.initState();

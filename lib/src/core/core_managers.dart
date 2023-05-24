@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
+import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 // Project imports:
@@ -19,6 +20,12 @@ class ZegoLiveAudioRoomManagers {
       ZegoLiveAudioRoomManagers._internal();
 
   void updateContextQuery(BuildContext Function() contextQuery) {
+    ZegoLoggerService.logInfo(
+      'update context query',
+      tag: 'audio room',
+      subTag: 'core manager',
+    );
+
     connectManager?.contextQuery = contextQuery;
     seatManager?.contextQuery = contextQuery;
   }
@@ -26,8 +33,20 @@ class ZegoLiveAudioRoomManagers {
   void initPluginAndManagers(
       ZegoUIKitPrebuiltLiveAudioRoomData prebuiltAudioRoomData) {
     if (_initialized) {
+      ZegoLoggerService.logInfo(
+        'had init',
+        tag: 'audio room',
+        subTag: 'core manager',
+      );
+
       return;
     }
+
+    ZegoLoggerService.logInfo(
+      'init plugin and managers',
+      tag: 'audio room',
+      subTag: 'core manager',
+    );
 
     _initialized = true;
 
@@ -62,7 +81,19 @@ class ZegoLiveAudioRoomManagers {
   }
 
   void unintPluginAndManagers() {
+    ZegoLoggerService.logInfo(
+      'uninit plugin and managers',
+      tag: 'audio room',
+      subTag: 'core manager',
+    );
+
     if (!_initialized) {
+      ZegoLoggerService.logInfo(
+        'had not init',
+        tag: 'audio room',
+        subTag: 'core manager',
+      );
+
       return;
     }
 

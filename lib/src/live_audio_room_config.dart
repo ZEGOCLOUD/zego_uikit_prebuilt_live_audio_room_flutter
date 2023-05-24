@@ -343,6 +343,7 @@ class ZegoLiveAudioRoomSeatConfig {
 /// Configuration options for the top menu bar (toolbar).
 class ZegoTopMenuBarConfig {
   /// These buttons will displayed on the menu bar, order by the list
+  /// only support [minimizingButton] right now
   List<ZegoMenuBarButtonName> buttons;
 
   ZegoTopMenuBarConfig({

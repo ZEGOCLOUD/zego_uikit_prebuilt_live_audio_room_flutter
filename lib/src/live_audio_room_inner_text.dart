@@ -2,22 +2,20 @@
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
 
 /// Control the text on the UI.
-///
 /// Modify the values of the corresponding properties to modify the text on the UI.
 /// You can also change it to other languages.
-///
 /// This class is used for the ZegoUIKitPrebuiltLiveAudioRoomConfig.innerText property.
-///
 /// **Note that the placeholder %0 in the text will be replaced with the corresponding username.**
 class ZegoInnerText {
   /// %0: is a string placeholder, represents the first parameter of prompt
   /// @nodoc
   final String param_1 = '%0';
 
+  /// The button displayed in the popup menu when the audience clicks to request take a seat .
+  /// The **default value** is *"Take the seat"*.
   String takeSeatMenuButton;
 
   /// The button displayed in the popup menu when the host clicks on the "speaker" on a seat to move the speaker down.
-  ///
   /// The **default value** is *"Remove %0 from seat"*, where %0 will be replaced with the corresponding username.
   String removeSpeakerMenuDialogButton;
 
@@ -25,19 +23,24 @@ class ZegoInnerText {
   /// The **default value** is *"Mute %0"*, where %0 will be replaced with the corresponding username.
   String muteSpeakerMenuDialogButton;
 
-  /// The cancel button in the popup menu. The **default value** is *"Cancel"*.
+  /// The cancel button in the popup menu.
+  /// The **default value** is *"Cancel"*.
   String cancelMenuDialogButton;
 
-  /// The title of the member list, The **default value** is *"Audience"*.
+  /// The title of the member list,
+  /// The **default value** is *"Audience"*.
   String memberListTitle;
 
-  /// The label for displaying yourself in the member list. The **default value** is *"You"*.
+  /// The label for displaying yourself in the member list.
+  /// The **default value** is *"You"*.
   String memberListRoleYou;
 
-  /// The label for displaying the host in the member list. The **default value** is *"Host"*.
+  /// The label for displaying the host in the member list.
+  /// The **default value** is *"Host"*.
   String memberListRoleHost;
 
-  /// The label for displaying speakers in the member list. The **default value** is *"Speaker"*.
+  /// The label for displaying speakers in the member list.
+  /// The **default value** is *"Speaker"*.
   String memberListRoleSpeaker;
 
   /// The toast message displayed when the host fails to move a speaker down from a seat.
@@ -116,13 +119,16 @@ class ZegoInnerText {
   /// The **default value** is *"Revoke %0's Co-Host Privileges"*, where %0 will be replaced with the corresponding username.
   String revokeCoHostPrivilegesMenuDialogButton;
 
-  /// The title of the audio effects dialog. The **default value** is *"Audio effect"*.
+  /// The title of the audio effects dialog.
+  /// The **default value** is *"Audio effect"*.
   String audioEffectTitle;
 
-  /// The title of the reverb category. The **default value** is *"Reverb"*.
+  /// The title of the reverb category.
+  /// The **default value** is *"Reverb"*.
   String audioEffectReverbTitle;
 
-  /// The title of the voice changing category. The **default value** is *"Voice changing"*.
+  /// The title of the voice changing category.
+  /// The **default value** is *"Voice changing"*.
   String audioEffectVoiceChangingTitle;
 
   /// Voice changing effect: None

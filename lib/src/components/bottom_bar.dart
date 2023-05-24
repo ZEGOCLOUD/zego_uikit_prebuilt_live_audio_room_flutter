@@ -359,7 +359,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           seatManager: widget.seatManager,
         );
       case ZegoMenuBarButtonName.minimizingButton:
-        return ZegoUIKitPrebuiltLiveAudioRoomMinimizingButton(
+        return ZegoMinimizingButton(
           prebuiltAudioRoomData: widget.prebuiltAudioRoomData,
         );
     }

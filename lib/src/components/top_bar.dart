@@ -69,7 +69,7 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
   Widget minimizingButton() {
     return widget.config.topMenuBarConfig.buttons
             .contains(ZegoMenuBarButtonName.minimizingButton)
-        ? ZegoUIKitPrebuiltLiveAudioRoomMinimizingButton(
+        ? ZegoMinimizingButton(
             prebuiltAudioRoomData: widget.prebuiltAudioRoomData,
           )
         : Container();
