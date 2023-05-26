@@ -3,13 +3,13 @@ import 'package:flutter/cupertino.dart';
 
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/core/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/prebuilt_data.dart';
+import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 class ZegoLiveAudioRoomManagers {
   factory ZegoLiveAudioRoomManagers() => _instance;

@@ -3,7 +3,7 @@ import 'package:statemachine/statemachine.dart' as sm;
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_audio_room/src/core/minimizing/prebuilt_data.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/prebuilt_data.dart';
 
 /// @nodoc
 enum LiveAudioRoomMiniOverlayPageState {

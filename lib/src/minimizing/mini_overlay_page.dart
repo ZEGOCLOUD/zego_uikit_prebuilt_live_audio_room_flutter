@@ -10,6 +10,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/core_managers.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
 
 /// @nodoc

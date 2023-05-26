@@ -1,3 +1,6 @@
+## 2.4.13
+- fix some user login status issues when used `zego_uikit_prebuilt_live_audio_room` with `zego_zimkit`
+
 ## 2.4.12
 - Update dependencies
 

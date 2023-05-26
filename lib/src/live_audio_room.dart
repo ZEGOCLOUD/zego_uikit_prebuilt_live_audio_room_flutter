@@ -15,8 +15,8 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/live_page.dar
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/core_managers.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/core/minimizing/mini_overlay_machine.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/core/minimizing/prebuilt_data.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_overlay_machine.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_controller.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
@@ -105,7 +105,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 2.4.12; $version',
+        'version: zego_uikit_prebuilt_live_audio_room: 2.4.13; $version',
         tag: 'audio room',
         subTag: 'prebuilt',
       );

@@ -10,7 +10,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/core/minimizing/mini_overlay_machine.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_overlay_machine.dart';
 
 /// @nodoc
 enum PluginNetworkState {
@@ -82,12 +82,17 @@ class ZegoPrebuiltPlugins {
       return;
     }
 
+    initialized = true;
+
+    pluginUserStateNotifier.value =
+        ZegoUIKit().getSignalingPlugin().getConnectionState();
+    roomStateNotifier.value = ZegoUIKit().getSignalingPlugin().getRoomState();
+
     ZegoLoggerService.logInfo(
-      'plugins init',
+      'plugins init, user state:${pluginUserStateNotifier.value}, room state:${roomStateNotifier.value}',
       tag: 'audio room',
       subTag: 'plugin',
     );
-    initialized = true;
 
     await ZegoUIKit()
         .getSignalingPlugin()
