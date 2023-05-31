@@ -78,7 +78,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           rightToolbar(context),
           if (widget.config.bottomMenuBarConfig.showInRoomMessageButton)
             SizedBox(
-              height: 124.r,
+              height: 124.zR,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -211,13 +211,13 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
       case ZegoMenuBarButtonName.applyToTakeSeatButton:
         switch (widget.connectManager.audienceLocalConnectStateNotifier.value) {
           case ConnectState.idle:
-            buttonSize = Size(330.r, 72.r);
+            buttonSize = Size(330.zR, 72.zR);
             break;
           case ConnectState.connecting:
-            buttonSize = Size(330.r, 72.r);
+            buttonSize = Size(330.zR, 72.zR);
             break;
           case ConnectState.connected:
-            buttonSize = Size(168.r, 72.r);
+            buttonSize = Size(168.zR, 72.zR);
             break;
         }
         break;

@@ -53,14 +53,14 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(color: Colors.transparent),
-      height: 80.r,
+      height: 80.zR,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           minimizingButton(),
           const Expanded(child: SizedBox()),
           closeButton(),
-          SizedBox(width: 34.r),
+          SizedBox(width: 34.zR),
         ],
       ),
     );
@@ -77,8 +77,8 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
 
   Widget closeButton() {
     return ZegoLeaveAudioRoomButton(
-      buttonSize: Size(52.r, 52.r),
-      iconSize: Size(24.r, 24.r),
+      buttonSize: Size(52.zR, 52.zR),
+      iconSize: Size(24.zR, 24.zR),
       icon: ButtonIcon(
         icon: PrebuiltLiveAudioRoomImage.asset(
             PrebuiltLiveAudioRoomIconUrls.topQuit),

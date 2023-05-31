@@ -42,7 +42,7 @@ class _ZegoAudienceConnectButtonState extends State<ZegoAudienceConnectButton> {
 
   TextStyle get buttonTextStyle => TextStyle(
         color: Colors.white,
-        fontSize: 26.r,
+        fontSize: 26.zR,
         fontWeight: FontWeight.w500,
       );
 
@@ -107,9 +107,9 @@ class _ZegoAudienceConnectButtonState extends State<ZegoAudienceConnectButton> {
       invitees: invitees,
       data: '',
       icon: buttonIcon,
-      buttonSize: Size(330.r, 72.r),
-      iconSize: Size(48.r, 48.r),
-      iconTextSpacing: 12.r,
+      buttonSize: Size(330.zR, 72.zR),
+      iconSize: Size(48.zR, 48.zR),
+      iconTextSpacing: 12.zR,
       text: widget.innerText.applyToTakeSeatButton,
       textStyle: buttonTextStyle,
       verticalLayout: false,
@@ -146,9 +146,9 @@ class _ZegoAudienceConnectButtonState extends State<ZegoAudienceConnectButton> {
     return ZegoCancelInvitationButton(
       invitees: invitees,
       icon: buttonIcon,
-      buttonSize: Size(330.r, 72.r),
-      iconSize: Size(48.r, 48.r),
-      iconTextSpacing: 12.r,
+      buttonSize: Size(330.zR, 72.zR),
+      iconSize: Size(48.zR, 48.zR),
+      iconTextSpacing: 12.zR,
       text: widget.innerText.cancelTheTakeSeatApplicationButton,
       textStyle: buttonTextStyle,
       verticalLayout: false,

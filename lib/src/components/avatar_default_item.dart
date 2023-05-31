@@ -85,7 +85,7 @@ class _ZegoAvatarDefaultItemState extends State<ZegoAvatarDefaultItem> {
           ? widget.user!.name.characters.first
           : '',
       style: TextStyle(
-        fontSize: 32.0.r,
+        fontSize: 32.0.zR,
         color: const Color(0xff222222),
         decoration: TextDecoration.none,
       ),

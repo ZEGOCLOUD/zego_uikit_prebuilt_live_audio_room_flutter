@@ -58,8 +58,8 @@ class _ZegoMemberButtonState extends State<ZegoMemberButton> {
 
   @override
   Widget build(BuildContext context) {
-    final containerSize = widget.buttonSize ?? Size(96.r, 96.r);
-    final sizeBoxSize = widget.iconSize ?? Size(56.r, 56.r);
+    final containerSize = widget.buttonSize ?? Size(96.zR, 96.zR);
+    final sizeBoxSize = widget.iconSize ?? Size(56.zR, 56.zR);
 
     return GestureDetector(
       onTap: () {
@@ -120,8 +120,8 @@ class _ZegoMemberButtonState extends State<ZegoMemberButton> {
                     shape: BoxShape.circle,
                     color: Colors.red,
                   ),
-                  width: 20.r,
-                  height: 20.r,
+                  width: 20.zR,
+                  height: 20.zR,
                 ),
               );
             }

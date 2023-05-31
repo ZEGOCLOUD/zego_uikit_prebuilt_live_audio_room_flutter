@@ -349,8 +349,8 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
               shape: BoxShape.circle,
               color: Colors.red,
             ),
-            width: 20.r,
-            height: 20.r,
+            width: 20.zR,
+            height: 20.zR,
           );
         }
       },

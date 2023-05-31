@@ -1,3 +1,6 @@
+## 2.4.14
+- fix the issue of conflict with extension key of the `flutter_screenutil` package.
+
 ## 2.4.13
 - fix some user login status issues when used `zego_uikit_prebuilt_live_audio_room` with `zego_zimkit`
 

@@ -90,7 +90,7 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
                 top: seatItemHeight -
                     seatUserNameFontSize -
                     seatHostFlagHeight -
-                    3.r, //  spacing
+                    3.zR, //  spacing
                 child: hostFlag(context, constraints.maxWidth),
               )
             else
@@ -100,7 +100,7 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
                 top: seatItemHeight -
                     seatUserNameFontSize -
                     seatHostFlagHeight -
-                    3.r, //  spacing
+                    3.zR, //  spacing
                 child: coHostFlag(context, constraints.maxWidth),
               )
             else

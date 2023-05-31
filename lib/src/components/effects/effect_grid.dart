@@ -62,21 +62,21 @@ class ZegoEffectGrid extends StatefulWidget {
 /// @nodoc
 class _ZegoEffectGridState extends State<ZegoEffectGrid> {
   TextStyle get gridItemTextStyle => TextStyle(
-        fontSize: 24.r,
+        fontSize: 24.zR,
         fontWeight: FontWeight.w500,
       );
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 200.r,
+      height: 200.zR,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           header(),
           line(),
           SizedBox(
-            height: 133.r,
+            height: 133.zR,
             child: grid(),
           )
         ],
@@ -92,14 +92,14 @@ class _ZegoEffectGridState extends State<ZegoEffectGrid> {
             textAlign: TextAlign.left,
             style: TextStyle(
               fontWeight: FontWeight.w600,
-              fontSize: 26.r,
+              fontSize: 26.zR,
               color: Colors.white,
             ),
           );
   }
 
   Widget line() {
-    return widget.model.title.isEmpty ? Container() : SizedBox(height: 30.r);
+    return widget.model.title.isEmpty ? Container() : SizedBox(height: 30.zR);
   }
 
   Widget grid() {
@@ -107,7 +107,7 @@ class _ZegoEffectGridState extends State<ZegoEffectGrid> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: widget.model.items.map((item) {
-          return gridItem(item, widget.buttonSize ?? Size(88.r, 133.r));
+          return gridItem(item, widget.buttonSize ?? Size(88.zR, 133.zR));
         }).toList(),
       );
     }
@@ -121,11 +121,11 @@ class _ZegoEffectGridState extends State<ZegoEffectGrid> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: widget.model.items
                 .map((item) {
-                  var buttonSize = widget.buttonSize ?? Size(88.r, 133.r);
+                  var buttonSize = widget.buttonSize ?? Size(88.zR, 133.zR);
                   final bestButtonWidth =
                       getTextSize(item.iconText, gridItemTextStyle).width;
                   buttonSize = Size(
-                    bestButtonWidth + 20.r,
+                    bestButtonWidth + 20.zR,
                     buttonSize.height,
                   );
                   return gridItem(item, buttonSize);
@@ -133,7 +133,7 @@ class _ZegoEffectGridState extends State<ZegoEffectGrid> {
                 .map((item) => Row(
                       children: [
                         item,
-                        Container(width: widget.itemSpacing ?? 40.r)
+                        Container(width: widget.itemSpacing ?? 40.zR)
                       ],
                     ))
                 .toList(),
@@ -152,8 +152,8 @@ class _ZegoEffectGridState extends State<ZegoEffectGrid> {
         setState(() {}); //  todo
       },
       buttonSize: buttonSize,
-      iconSize: widget.iconSize ?? Size(72.r, 72.r),
-      iconTextSpacing: 12.r,
+      iconSize: widget.iconSize ?? Size(72.zR, 72.zR),
+      iconTextSpacing: 12.zR,
       icon: item.id == widget.model.selectedID.value
           ? (item.selectIcon ?? item.icon)
           : item.icon,
@@ -167,7 +167,7 @@ class _ZegoEffectGridState extends State<ZegoEffectGrid> {
         color: item.id == widget.model.selectedID.value
             ? const Color(0xffA653FF)
             : const Color(0xffCCCCCC),
-        fontSize: 24.r,
+        fontSize: 24.zR,
         fontWeight: FontWeight.w500,
       ),
       softWrap: false,

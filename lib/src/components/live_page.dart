@@ -96,7 +96,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
         onWillPop: () async {
           return widget.config.onLeaveConfirmation!(context);
         },
-        child: ScreenUtilInit(
+        child: ZegoScreenUtilInit(
           designSize: const Size(750, 1334),
           minTextAdapt: true,
           splitScreenMode: true,
@@ -144,7 +144,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
       top: 0,
       left: 0,
       child: Container(
-        width: 750.w,
+        width: 750.zW,
         height: height,
         decoration: const BoxDecoration(
           color: Color(0xffF4F4F6),
@@ -155,8 +155,8 @@ class ZegoLivePageState extends State<ZegoLivePage>
   }
 
   Widget audioVideoContainer(double maxWidth, double _maxHeight) {
-    var maxHeight = _maxHeight - 169.r; // top position
-    maxHeight -= 124.r; // bottom bar
+    var maxHeight = _maxHeight - 169.zR; // top position
+    maxHeight -= 124.zR; // bottom bar
 
     var scrollable = false;
     final fixedRow = widget.config.layoutConfig.rowConfigs.length;
@@ -205,10 +205,10 @@ class ZegoLivePageState extends State<ZegoLivePage>
     );
 
     return Positioned(
-      top: 169.r,
-      left: 35.w,
+      top: 169.zR,
+      left: 35.zW,
       child: SizedBox(
-        width: maxWidth - 35.w * 2,
+        width: maxWidth - 35.zW * 2,
         height: containerHeight,
         child: scrollable
             ? CustomScrollView(
@@ -233,7 +233,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
     return Positioned(
       left: 0,
       right: 0,
-      top: 64.r,
+      top: 64.zR,
       child: ValueListenableBuilder<ZegoUIKitRoomState>(
         valueListenable: ZegoUIKit().getRoomStateStream(),
         builder: (context, roomState, _) {
@@ -253,7 +253,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
     return Align(
       alignment: Alignment.bottomCenter,
       child: ZegoBottomBar(
-        height: 124.r,
+        height: 124.zR,
         buttonSize: zegoLiveButtonSize,
         config: widget.config,
         seatManager: widget.seatManager,
@@ -273,9 +273,9 @@ class ZegoLivePageState extends State<ZegoLivePage>
 
     return Positioned(
       // left: 32.r,
-      bottom: 124.r,
+      bottom: 124.zR,
       child: ConstrainedBox(
-        constraints: BoxConstraints.loose(Size(540.r, 400.r)),
+        constraints: BoxConstraints.loose(Size(540.zR, 400.zR)),
         child: ZegoInRoomLiveCommentingView(
           itemBuilder: widget.config.inRoomMessageViewConfig.itemBuilder,
         ),

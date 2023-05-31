@@ -2,34 +2,34 @@
 import 'package:zego_uikit/zego_uikit.dart';
 
 /// @nodoc
-final seatItemWidth = 160.w;
+final seatItemWidth = 160.zW;
 
 /// @nodoc
-final seatItemHeight = 160.r;
+final seatItemHeight = 160.zR;
 
 /// @nodoc
-final seatItemRowSpacing = 7.5.w;
+final seatItemRowSpacing = 7.5.zW;
 
 /// @nodoc
-final seatItemColumnSpacing = 32.r;
+final seatItemColumnSpacing = 32.zR;
 
 /// @nodoc
-final seatIconWidth = 108.r;
+final seatIconWidth = 108.zR;
 
 /// @nodoc
-final seatIconHeight = 108.r;
+final seatIconHeight = 108.zR;
 
 /// @nodoc
-final seatUserNameFontSize = 22.0.r;
+final seatUserNameFontSize = 22.0.zR;
 
 /// @nodoc
-final seatHostFlagHeight = 24.0.r;
+final seatHostFlagHeight = 24.0.zR;
 
 /// @nodoc
-final double avatarPosTop = 15.r;
+final double avatarPosTop = 15.zR;
 
 /// @nodoc
-final double avatarPosLeft = 22.r;
+final double avatarPosLeft = 22.zR;
 
 /// The alignment of the seat layout.
 /// This enum type is used for the [alignment] property in [ZegoLiveAudioRoomLayoutRowConfig].
