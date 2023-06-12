@@ -8,6 +8,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
@@ -74,7 +75,10 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
           subTag: 'pop-up sheet',
         );
 
-        Navigator.of(context).pop();
+        Navigator.of(
+          context,
+          rootNavigator: widget.seatManager.config.rootNavigator,
+        ).pop();
 
         switch (popupItem.value) {
           case PopupItemValue.takeOnSeat:
@@ -121,6 +125,16 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
               targetUser: ZegoUIKit().getUser(popupItem.data as String? ?? ''),
             );
             break;
+            // case PopupItemValue.kickOut:
+            //   ZegoUIKit().removeUserFromRoom(
+            //       [popupItem.data as String? ?? '']).then((result) {
+            //     ZegoLoggerService.logInfo(
+            //       'kick out result:$result',
+            //       tag: 'live audio room',
+            //       subTag: 'pop-up sheet',
+            //     );
+            //   });
+            break;
           case PopupItemValue.cancel:
             break;
         }
@@ -162,7 +176,11 @@ void showPopUpSheet({
   required ZegoInnerText innerText,
   required ZegoLiveSeatManager seatManager,
   required ZegoLiveConnectManager connectManager,
+  required ZegoPopUpManager popUpManager,
 }) {
+  final key = DateTime.now().millisecondsSinceEpoch;
+  popUpManager.addAPopUpSheet(key);
+
   seatManager.setPopUpSheetVisible(true);
 
   final takeOffSeatItemIndex = popupItems
@@ -227,6 +245,7 @@ void showPopUpSheet({
       }
     }
 
+    popUpManager.removeAPopUpSheet(key);
     seatManager.setPopUpSheetVisible(false);
   });
 }

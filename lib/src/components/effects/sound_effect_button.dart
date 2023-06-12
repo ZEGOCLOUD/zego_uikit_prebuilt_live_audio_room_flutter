@@ -7,6 +7,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/effects/sound_effect_sheet.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
 
 /// @nodoc
@@ -20,11 +21,16 @@ class ZegoSoundEffectButton extends StatefulWidget {
   final Size? buttonSize;
   final ButtonIcon? icon;
 
+  final bool rootNavigator;
+  final ZegoPopUpManager popUpManager;
+
   const ZegoSoundEffectButton({
     Key? key,
     required this.innerText,
     required this.voiceChangeEffect,
     required this.reverbEffect,
+    required this.popUpManager,
+    this.rootNavigator = false,
     this.iconSize,
     this.buttonSize,
     this.icon,
@@ -52,6 +58,8 @@ class _ZegoSoundEffectButtonState extends State<ZegoSoundEffectButton> {
           voiceChangerSelectedIDNotifier: voiceChangerSelectedIDNotifier,
           reverbEffect: widget.reverbEffect,
           reverbSelectedIDNotifier: reverbSelectedIDNotifier,
+          rootNavigator: widget.rootNavigator,
+          popUpManager: widget.popUpManager,
         );
       },
       child: Container(

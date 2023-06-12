@@ -7,6 +7,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/effects/effect_grid.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
 
 /// @nodoc
@@ -19,6 +20,8 @@ class ZegoSoundEffectSheet extends StatefulWidget {
   final List<ReverbType> reverbEffect;
   final ValueNotifier<String> reverbSelectedIDNotifier;
 
+  final bool rootNavigator;
+
   const ZegoSoundEffectSheet({
     Key? key,
     required this.innerText,
@@ -26,6 +29,7 @@ class ZegoSoundEffectSheet extends StatefulWidget {
     required this.voiceChangerSelectedIDNotifier,
     required this.reverbEffect,
     required this.reverbSelectedIDNotifier,
+    this.rootNavigator = false,
   }) : super(key: key);
 
   @override
@@ -80,7 +84,10 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.of(context).pop();
+              Navigator.of(
+                context,
+                rootNavigator: widget.rootNavigator,
+              ).pop();
             },
             child: SizedBox(
               width: 70.zR,
@@ -237,12 +244,17 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
 
 void showSoundEffectSheet(
   BuildContext context, {
+  required bool rootNavigator,
   required ZegoInnerText innerText,
   required List<VoiceChangerType> voiceChangeEffect,
   required List<ReverbType> reverbEffect,
   required ValueNotifier<String> voiceChangerSelectedIDNotifier,
   required ValueNotifier<String> reverbSelectedIDNotifier,
+  required ZegoPopUpManager popUpManager,
 }) {
+  final key = DateTime.now().millisecondsSinceEpoch;
+  popUpManager.addAPopUpSheet(key);
+
   showModalBottomSheet(
     barrierColor: ZegoUIKitDefaultTheme.viewBarrierColor,
     backgroundColor: ZegoUIKitDefaultTheme.viewBackgroundColor,
@@ -269,10 +281,13 @@ void showSoundEffectSheet(
               voiceChangerSelectedIDNotifier: voiceChangerSelectedIDNotifier,
               reverbEffect: reverbEffect,
               reverbSelectedIDNotifier: reverbSelectedIDNotifier,
+              rootNavigator: rootNavigator,
             ),
           ),
         ),
       );
     },
-  );
+  ).whenComplete(() {
+    popUpManager.removeAPopUpSheet(key);
+  });
 }

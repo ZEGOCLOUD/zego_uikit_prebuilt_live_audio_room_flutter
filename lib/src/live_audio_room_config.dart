@@ -36,7 +36,9 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(),
         inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
         audioEffectConfig = ZegoAudioEffectConfig(),
+        durationConfig = ZegoLiveDurationConfig(),
         innerText = ZegoInnerText(),
+        rootNavigator = false,
         confirmDialogInfo = ZegoDialogInfo(
           title: 'Leave the room',
           message: 'Are you sure to leave the room?',
@@ -59,6 +61,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         closeSeatsWhenJoining = false,
         useSpeakerWhenJoining = true,
         userInRoomAttributes = const {},
+        rootNavigator = false,
         seatConfig = ZegoLiveAudioRoomSeatConfig(),
         layoutConfig = ZegoLiveAudioRoomLayoutConfig(),
         hostSeatIndexes = const [0],
@@ -66,6 +69,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(),
         inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
         audioEffectConfig = ZegoAudioEffectConfig(),
+        durationConfig = ZegoLiveDurationConfig(),
         innerText = ZegoInnerText();
 
   ZegoUIKitPrebuiltLiveAudioRoomConfig({
@@ -78,10 +82,13 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
     ZegoLiveAudioRoomLayoutConfig? layoutConfig,
     ZegoInRoomMessageViewConfig? messageConfig,
     ZegoAudioEffectConfig? effectConfig,
+    ZegoLiveDurationConfig? durationConfig,
     this.hostSeatIndexes = const [0],
     this.confirmDialogInfo,
+    this.rootNavigator = false,
     this.onLeaveConfirmation,
     this.onLeaveLiveAudioRoom,
+    this.onMeRemovedFromRoom,
     this.background,
     this.userAvatarUrl,
     this.userInRoomAttributes = const {},
@@ -106,6 +113,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         inRoomMessageViewConfig =
             messageConfig ?? ZegoInRoomMessageViewConfig(),
         audioEffectConfig = effectConfig ?? ZegoAudioEffectConfig(),
+        durationConfig = durationConfig ?? ZegoLiveDurationConfig(),
         innerText = translationText ?? ZegoInnerText();
 
   /// Specifies the initial role when joining the live audio room.
@@ -186,6 +194,9 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// You can use this to modify your voice and control reverb.
   ZegoAudioEffectConfig audioEffectConfig;
 
+  /// Live Streaming timing configuration.
+  ZegoLiveDurationConfig durationConfig;
+
   /// Set the avatar URL for the current user.
   ///
   /// Note that the default maximum length for avatars is 64 bytes, exceeding this limit may result in the avatar not being displayed.
@@ -206,6 +217,12 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// If set, a confirmation dialog will be displayed when clicking the exit button, and you will need to confirm the exit before actually exiting.
   ZegoDialogInfo? confirmDialogInfo;
 
+  /// same as Flutter's Navigator's param
+  /// If `rootNavigator` is set to true, the state from the furthest instance of
+  /// this class is given instead. Useful for pushing contents above all
+  /// subsequent instances of [Navigator].
+  bool rootNavigator;
+
   /// Confirmation callback method before leaving the audio chat room.
   ///
   /// If you want to perform more complex business logic before exiting the audio chat room, such as updating some records to the backend, you can use the [onLeaveConfirmation] parameter to set it.
@@ -215,7 +232,12 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
 
   /// This callback is triggered after leaving the audio chat room.
   /// You can perform business-related prompts or other actions in this callback.
+  /// The default behavior is return to the previous page. If you override this callback, you must perform the page navigation yourself, otherwise the user will remain on the live audio page.
   VoidCallback? onLeaveLiveAudioRoom;
+
+  /// This callback is triggered when local user removed from audio room.
+  /// The default behavior is return to the previous page. If you override this callback, you must perform the page navigation yourself, otherwise the user will remain on the live audio page.
+  Future<void> Function(String)? onMeRemovedFromRoom;
 
   /// This callback method is called when someone requests to open your microphone, typically when the host wants to open the speaker's microphone.
   /// This method requires returning an asynchronous result.
@@ -486,4 +508,26 @@ class ZegoAudioEffectConfig {
 
   /// @nodoc
   bool get isSupportReverb => reverbEffect.isNotEmpty;
+}
+
+/// Live Audio Room timing configuration.
+class ZegoLiveDurationConfig {
+  /// Whether to display Live Audio Room timing.
+  bool isVisible;
+
+  /// Call timing callback function, called every second.
+  ///
+  /// Example: Do something after 5 minutes.
+  /// ..durationConfig.isVisible = true
+  /// ..durationConfig.onDurationUpdate = (Duration duration) {
+  ///   if (duration.inSeconds >= 5 * 60) {
+  ///     ///  Do something...
+  ///   }
+  /// }
+  void Function(Duration)? onDurationUpdate;
+
+  ZegoLiveDurationConfig({
+    this.isVisible = true,
+    this.onDurationUpdate,
+  });
 }

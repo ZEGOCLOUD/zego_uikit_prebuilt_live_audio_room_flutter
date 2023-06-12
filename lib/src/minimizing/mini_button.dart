@@ -36,13 +36,11 @@ class ZegoMinimizingButton extends StatefulWidget {
   final ZegoUIKitPrebuiltLiveAudioRoomData prebuiltAudioRoomData;
 
   @override
-  State<ZegoMinimizingButton> createState() =>
-      _ZegoMinimizingButtonState();
+  State<ZegoMinimizingButton> createState() => _ZegoMinimizingButtonState();
 }
 
 /// @nodoc
-class _ZegoMinimizingButtonState
-    extends State<ZegoMinimizingButton> {
+class _ZegoMinimizingButtonState extends State<ZegoMinimizingButton> {
   @override
   void initState() {
     super.initState();
@@ -75,7 +73,10 @@ class _ZegoMinimizingButtonState
           prebuiltAudioRoomData: widget.prebuiltAudioRoomData,
         );
 
-        Navigator.of(context).pop();
+        Navigator.of(
+          context,
+          rootNavigator: widget.prebuiltAudioRoomData.config.rootNavigator,
+        ).pop();
       },
       child: Container(
         width: containerSize.width,

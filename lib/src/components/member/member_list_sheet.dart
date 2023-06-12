@@ -7,6 +7,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/avatar_default_item.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_sheet_menu.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
@@ -29,12 +30,14 @@ class ZegoMemberListSheet extends StatefulWidget {
     required this.connectManager,
     required this.innerText,
     required this.onMoreButtonPressed,
+    required this.popUpManager,
   }) : super(key: key);
 
   final bool isPluginEnabled;
   final ZegoAvatarBuilder? avatarBuilder;
   final ZegoLiveSeatManager seatManager;
   final ZegoLiveConnectManager connectManager;
+  final ZegoPopUpManager popUpManager;
   final ZegoInnerText innerText;
   final ZegoMemberListSheetMoreButtonPressed? onMoreButtonPressed;
   final ValueNotifier<List<String>>? hiddenUserIDsNotifier;
@@ -187,7 +190,10 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.of(context).pop();
+              Navigator.of(
+                context,
+                rootNavigator: widget.seatManager.config.rootNavigator,
+              ).pop();
             },
             child: SizedBox(
               width: 70.zR,
@@ -365,11 +371,15 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
       iconSize: Size(60.zR, 60.zR),
       icon: ButtonIcon(
         icon: PrebuiltLiveAudioRoomImage.asset(
-            PrebuiltLiveAudioRoomIconUrls.memberMore),
+          PrebuiltLiveAudioRoomIconUrls.memberMore,
+        ),
       ),
       onPressed: () {
         /// product manager say close sheet together
-        Navigator.of(context).pop();
+        Navigator.of(
+          context,
+          rootNavigator: widget.seatManager.config.rootNavigator,
+        ).pop();
 
         if (widget.onMoreButtonPressed != null) {
           /// No more popup menus, let the customer handle
@@ -385,6 +395,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
             seatManager: widget.seatManager,
             connectManager: widget.connectManager,
             innerText: widget.innerText,
+            popUpManager: widget.popUpManager,
           );
         }
       },
@@ -437,8 +448,12 @@ void showMemberListSheet({
   required ZegoLiveConnectManager connectManager,
   required ZegoInnerText innerText,
   required ZegoMemberListSheetMoreButtonPressed? onMoreButtonPressed,
+  required ZegoPopUpManager popUpManager,
   ValueNotifier<List<String>>? hiddenUserIDsNotifier,
 }) {
+  final key = DateTime.now().millisecondsSinceEpoch;
+  popUpManager.addAPopUpSheet(key);
+
   showModalBottomSheet(
     barrierColor: ZegoUIKitDefaultTheme.viewBarrierColor,
     backgroundColor: ZegoUIKitDefaultTheme.viewBackgroundColor,
@@ -464,6 +479,7 @@ void showMemberListSheet({
               isPluginEnabled: isPluginEnabled,
               seatManager: seatManager,
               connectManager: connectManager,
+              popUpManager: popUpManager,
               innerText: innerText,
               onMoreButtonPressed: onMoreButtonPressed,
               hiddenUserIDsNotifier: hiddenUserIDsNotifier,
@@ -472,5 +488,7 @@ void showMemberListSheet({
         ),
       );
     },
-  );
+  ).whenComplete(() {
+    popUpManager.removeAPopUpSheet(key);
+  });
 }

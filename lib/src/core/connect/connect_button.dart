@@ -172,7 +172,7 @@ class _ZegoAudienceConnectButtonState extends State<ZegoAudienceConnectButton> {
     return true;
   }
 
-  bool checkHostAndCoHostExist({bool withToast = true}) {
+  Future<bool> checkHostAndCoHostExist({bool withToast = true}) async {
     if (widget.seatManager.hostsNotifier.value.isEmpty &&
         widget.seatManager.coHostsNotifier.value.isEmpty) {
       if (withToast) {

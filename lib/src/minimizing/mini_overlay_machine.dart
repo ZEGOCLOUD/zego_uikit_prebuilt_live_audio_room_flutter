@@ -1,8 +1,11 @@
 // Package imports:
+import 'dart:async';
+
 import 'package:statemachine/statemachine.dart' as sm;
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_audio_room/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/prebuilt_data.dart';
 
 /// @nodoc
@@ -74,11 +77,13 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine {
     switch (state) {
       case LiveAudioRoomMiniOverlayPageState.idle:
         _prebuiltAudioRoomData = null;
+        kickOutSubscription?.cancel();
 
         _stateIdle.enter();
         break;
       case LiveAudioRoomMiniOverlayPageState.inAudioRoom:
         _prebuiltAudioRoomData = null;
+        kickOutSubscription?.cancel();
 
         _stateCalling.enter();
         break;
@@ -91,6 +96,10 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine {
         assert(null != prebuiltAudioRoomData);
         _prebuiltAudioRoomData = prebuiltAudioRoomData;
 
+        kickOutSubscription = ZegoUIKit()
+            .getMeRemovedFromRoomStream()
+            .listen(onMeRemovedFromRoom);
+
         _stateMinimizing.enter();
         break;
     }
@@ -99,6 +108,25 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine {
   LiveAudioRoomMiniOverlayPageState state() {
     return _machine.current?.identifier ??
         LiveAudioRoomMiniOverlayPageState.idle;
+  }
+
+  Future<void> onMeRemovedFromRoom(String fromUserID) async {
+    ZegoLoggerService.logInfo(
+      'local user removed by $fromUserID',
+      tag: 'live audio room',
+      subTag: 'mini overlay page',
+    );
+
+    changeState(LiveAudioRoomMiniOverlayPageState.idle);
+
+    ZegoLiveAudioRoomManagers().unintPluginAndManagers();
+
+    await ZegoUIKit().resetSoundEffect();
+    await ZegoUIKit().resetBeautyEffect();
+    // await ZegoUIKit().leaveRoom(); //  kick-out will leave in zego_uikit
+
+    _prebuiltAudioRoomData?.controller?.uninitByPrebuilt();
+    _prebuiltAudioRoomData?.config.onMeRemovedFromRoom?.call(fromUserID);
   }
 
   /// private variables
@@ -113,6 +141,8 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine {
   final _machine = sm.Machine<LiveAudioRoomMiniOverlayPageState>();
   final List<LiveAudioRoomMiniOverlayMachineStateChanged>
       _onStateChangedListeners = [];
+
+  StreamSubscription<dynamic>? kickOutSubscription;
 
   late sm.State<LiveAudioRoomMiniOverlayPageState> _stateIdle;
   late sm.State<LiveAudioRoomMiniOverlayPageState> _stateCalling;

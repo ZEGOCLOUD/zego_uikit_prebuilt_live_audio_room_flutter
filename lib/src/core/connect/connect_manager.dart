@@ -17,11 +17,14 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.d
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_controller.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
 
+import '../../components/pop_up_manager.dart';
+
 /// @nodoc
 class ZegoLiveConnectManager {
   ZegoLiveConnectManager({
     required this.config,
     required this.seatManager,
+    required this.popUpManager,
     required this.prebuiltController,
     required this.innerText,
     this.contextQuery,
@@ -31,6 +34,7 @@ class ZegoLiveConnectManager {
 
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
   final ZegoLiveSeatManager seatManager;
+  final ZegoPopUpManager popUpManager;
   final ZegoLiveAudioRoomController? prebuiltController;
   final ZegoInnerText innerText;
   BuildContext Function()? contextQuery;
@@ -263,6 +267,9 @@ class ZegoLiveConnectManager {
   void showAudienceReceivedTakeSeatInvitationDialog(ZegoUIKitUser host) {
     final translation = innerText.hostInviteTakeSeatDialog;
 
+    final key = DateTime.now().millisecondsSinceEpoch;
+    popUpManager.addAPopUpSheet(key);
+
     _isInvitedTakeSeatDlgVisible = true;
     showLiveDialog(
       context: contextQuery!.call(),
@@ -283,7 +290,10 @@ class ZegoLiveConnectManager {
           );
         });
 
-        Navigator.of(contextQuery!.call()).pop();
+        Navigator.of(
+          contextQuery!.call(),
+          rootNavigator: config.rootNavigator,
+        ).pop();
       },
       rightButtonText: translation.confirmButtonName,
       rightButtonCallback: () {
@@ -314,6 +324,7 @@ class ZegoLiveConnectManager {
             context: contextQuery!.call(),
             isShowDialog: true,
             innerText: innerText,
+            rootNavigator: config.rootNavigator,
           ).then((_) {
             /// agree host's host, take seat, find the nearest seat index
             final targetSeatIndex = seatManager.getNearestEmptyIndex();
@@ -336,9 +347,14 @@ class ZegoLiveConnectManager {
           });
         });
 
-        Navigator.of(contextQuery!.call()).pop();
+        Navigator.of(
+          contextQuery!.call(),
+          rootNavigator: config.rootNavigator,
+        ).pop();
       },
-    );
+    ).whenComplete(() {
+      popUpManager.removeAPopUpSheet(key);
+    });
   }
 
   void onInvitationAccepted(Map<String, dynamic> params) {
@@ -358,6 +374,7 @@ class ZegoLiveConnectManager {
         context: contextQuery!.call(),
         isShowDialog: true,
         innerText: innerText,
+        rootNavigator: config.rootNavigator,
       ).then((value) {
         /// host agree take seat, find the nearest seat index
         final targetSeatIndex = seatManager.getNearestEmptyIndex();
@@ -420,7 +437,10 @@ class ZegoLiveConnectManager {
     /// hide invite take seat dialog
     if (_isInvitedTakeSeatDlgVisible) {
       _isInvitedTakeSeatDlgVisible = false;
-      Navigator.of(contextQuery!.call()).pop();
+      Navigator.of(
+        contextQuery!.call(),
+        rootNavigator: config.rootNavigator,
+      ).pop();
     }
   }
 
@@ -469,7 +489,10 @@ class ZegoLiveConnectManager {
       /// hide invite take seat dialog
       if (_isInvitedTakeSeatDlgVisible) {
         _isInvitedTakeSeatDlgVisible = false;
-        Navigator.of(contextQuery!.call()).pop();
+        Navigator.of(
+          contextQuery!.call(),
+          rootNavigator: config.rootNavigator,
+        ).pop();
       }
     }
   }
@@ -527,7 +550,10 @@ class ZegoLiveConnectManager {
         /// hide invite join take seat dialog
         if (_isInvitedTakeSeatDlgVisible) {
           _isInvitedTakeSeatDlgVisible = false;
-          Navigator.of(contextQuery!.call()).pop();
+          Navigator.of(
+            contextQuery!.call(),
+            rootNavigator: config.rootNavigator,
+          ).pop();
         }
 
         break;
@@ -555,7 +581,10 @@ class ZegoLiveConnectManager {
       /// hide invite take seat dialog
       if (_isInvitedTakeSeatDlgVisible) {
         _isInvitedTakeSeatDlgVisible = false;
-        Navigator.of(contextQuery!.call()).pop();
+        Navigator.of(
+          contextQuery!.call(),
+          rootNavigator: config.rootNavigator,
+        ).pop();
       }
     }
   }

@@ -14,12 +14,19 @@ class ZegoInRoomMessageButton extends StatefulWidget {
   final Size? iconSize;
   final Size? buttonSize;
   final ZegoInnerText innerText;
+  final bool rootNavigator;
+
+  final Function(int)? onSheetPopUp;
+  final Function(int)? onSheetPop;
 
   const ZegoInRoomMessageButton({
     Key? key,
     required this.innerText,
+    this.rootNavigator = false,
     this.iconSize,
     this.buttonSize,
+    this.onSheetPopUp,
+    this.onSheetPop,
   }) : super(key: key);
 
   @override
@@ -33,9 +40,22 @@ class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
   Widget build(BuildContext context) {
     return ZegoTextIconButton(
       onPressed: () {
-        Navigator.of(context).push(ZegoInRoomMessageInputBoard(
-          innerText: widget.innerText,
-        ));
+        final key = DateTime.now().millisecondsSinceEpoch;
+        widget.onSheetPopUp?.call(key);
+
+        Navigator.of(
+          context,
+          rootNavigator: widget.rootNavigator,
+        )
+            .push(
+          ZegoInRoomMessageInputBoard(
+            innerText: widget.innerText,
+            rootNavigator: widget.rootNavigator,
+          ),
+        )
+            .then((value) {
+          widget.onSheetPop?.call(key);
+        });
       },
       icon: ButtonIcon(
         icon:

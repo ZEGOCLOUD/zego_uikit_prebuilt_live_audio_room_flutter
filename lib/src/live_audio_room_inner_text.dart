@@ -27,6 +27,10 @@ class ZegoInnerText {
   /// The **default value** is *"Cancel"*.
   String cancelMenuDialogButton;
 
+  /// The text of button which host kick out audience or speakers from the live audio room.
+  /// The **default value** is *"Remove %0 from the room"*, where %0 will be replaced with the corresponding username.
+  String removeUserMenuDialogButton;
+
   /// The title of the member list,
   /// The **default value** is *"Audience"*.
   String memberListTitle;
@@ -211,6 +215,7 @@ class ZegoInnerText {
     String? removeSpeakerMenuDialogButton,
     String? muteSpeakerMenuDialogButton,
     String? cancelMenuDialogButton,
+    String? removeUserMenuDialogButton,
     String? memberListTitle,
     String? memberListRoleYou,
     String? memberListRoleHost,
@@ -262,6 +267,8 @@ class ZegoInnerText {
             removeSpeakerMenuDialogButton ?? 'Remove %0 from seat',
         muteSpeakerMenuDialogButton = muteSpeakerMenuDialogButton ?? 'Mute %0',
         cancelMenuDialogButton = cancelMenuDialogButton ?? 'Cancel',
+        removeUserMenuDialogButton =
+            removeUserMenuDialogButton ?? 'Remove %0 from the room',
         memberListTitle = memberListTitle ?? 'Audience',
         memberListRoleYou = memberListRoleYou ?? 'You',
         memberListRoleHost = memberListRoleHost ?? 'Host',

@@ -48,35 +48,37 @@ class _ZegoAvatarDefaultItemState extends State<ZegoAvatarDefaultItem> {
     Map<String, dynamic> extraInfo,
   ) {
     final avatarURL = user?.inRoomAttributes.value[attributeKeyAvatar] ?? '';
-    return avatarURL.isNotEmpty
-        ? CachedNetworkImage(
-            imageUrl: avatarURL,
-            imageBuilder: (context, imageProvider) => Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.cover,
+
+    return widget.avatarBuilder?.call(
+          context,
+          size,
+          user,
+          extraInfo,
+        ) ??
+        (avatarURL.isNotEmpty
+            ? CachedNetworkImage(
+                imageUrl: avatarURL,
+                imageBuilder: (context, imageProvider) => Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            progressIndicatorBuilder: (context, url, downloadProgress) =>
-                CircularProgressIndicator(value: downloadProgress.progress),
-            errorWidget: (context, url, error) {
-              ZegoLoggerService.logInfo(
-                '$user avatar url is invalid',
-                tag: 'live audio',
-                subTag: 'live page',
-              );
-              return textAvatar();
-            },
-          )
-        : widget.avatarBuilder?.call(
-            context,
-            size,
-            user,
-            extraInfo,
-          );
+                progressIndicatorBuilder: (context, url, downloadProgress) =>
+                    CircularProgressIndicator(value: downloadProgress.progress),
+                errorWidget: (context, url, error) {
+                  ZegoLoggerService.logInfo(
+                    '$user avatar url is invalid',
+                    tag: 'live audio',
+                    subTag: 'live page',
+                  );
+                  return textAvatar();
+                },
+              )
+            : textAvatar());
   }
 
   Widget textAvatar() {

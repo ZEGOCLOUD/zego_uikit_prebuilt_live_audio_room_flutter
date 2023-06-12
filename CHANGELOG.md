@@ -1,3 +1,9 @@
+## 2.5.0
+- Support host remove audience or speaker from audio room.
+
+## 2.4.15
+- Update dependencies
+
 ## 2.4.14
 - fix the issue of conflict with extension key of the `flutter_screenutil` package.
 

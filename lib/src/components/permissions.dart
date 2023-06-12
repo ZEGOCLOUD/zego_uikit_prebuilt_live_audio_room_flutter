@@ -13,6 +13,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_te
 Future<void> checkPermissions({
   required BuildContext context,
   required ZegoInnerText translationText,
+  required bool rootNavigator,
   bool isShowDialog = false,
   List<Permission> checkStatuses = const [Permission.microphone],
 }) async {
@@ -23,6 +24,7 @@ Future<void> checkPermissions({
           await showAppSettingsDialog(
             context,
             translationText.cameraPermissionSettingDialogInfo,
+            rootNavigator: rootNavigator,
           );
         }
       }
@@ -36,6 +38,7 @@ Future<void> checkPermissions({
           await showAppSettingsDialog(
             context,
             translationText.microphonePermissionSettingDialogInfo,
+            rootNavigator: rootNavigator,
           );
         }
       }
@@ -46,6 +49,7 @@ Future<void> checkPermissions({
 Future<void> requestPermissions({
   required BuildContext context,
   required ZegoInnerText innerText,
+  required bool rootNavigator,
   bool isShowDialog = false,
   List<Permission> checkStatuses = const [Permission.microphone],
 }) async {
@@ -58,6 +62,7 @@ Future<void> requestPermissions({
         await showAppSettingsDialog(
           context,
           innerText.cameraPermissionSettingDialogInfo,
+          rootNavigator: rootNavigator,
         );
       }
     }
@@ -68,6 +73,7 @@ Future<void> requestPermissions({
         await showAppSettingsDialog(
           context,
           innerText.microphonePermissionSettingDialogInfo,
+          rootNavigator: rootNavigator,
         );
       }
     }
@@ -76,20 +82,27 @@ Future<void> requestPermissions({
 
 Future<bool> showAppSettingsDialog(
   BuildContext context,
-  ZegoDialogInfo dialogInfo,
-) async {
+  ZegoDialogInfo dialogInfo, {
+  required bool rootNavigator,
+}) async {
   return showLiveDialog(
     context: context,
     title: dialogInfo.title,
     content: dialogInfo.message,
     leftButtonText: dialogInfo.cancelButtonName,
     leftButtonCallback: () {
-      Navigator.of(context).pop(false);
+      Navigator.of(
+        context,
+        rootNavigator: rootNavigator,
+      ).pop(false);
     },
     rightButtonText: dialogInfo.confirmButtonName,
     rightButtonCallback: () async {
       await openAppSettings();
-      Navigator.of(context).pop(false);
+      Navigator.of(
+        context,
+        rootNavigator: rootNavigator,
+      ).pop(false);
     },
   );
 }

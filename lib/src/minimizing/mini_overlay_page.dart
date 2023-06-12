@@ -4,13 +4,10 @@ import 'dart:async';
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-// Package imports:
-import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/duration_time_board.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/core_managers.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
 
 /// @nodoc
@@ -233,8 +230,26 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
               right: seatItemRowSpacing,
               child: redPoint(),
             ),
+            durationTimeBoard(),
           ],
         );
+  }
+
+  Widget durationTimeBoard() {
+    return Positioned(
+      left: 0,
+      right: 0,
+      top: 2,
+      child: LiveDurationTimeBoard(
+        config: ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine()
+                .prebuiltAudioRoomData
+                ?.config
+                .durationConfig ??
+            ZegoLiveDurationConfig(),
+        manager: ZegoLiveAudioRoomManagers().liveDurationManager!,
+        fontSize: 15.zR,
+      ),
+    );
   }
 
   Widget devices(ZegoUIKitUser? activeUser) {

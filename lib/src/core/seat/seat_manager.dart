@@ -22,6 +22,8 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_controll
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
 
+import '../../components/pop_up_manager.dart';
+
 part 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/co_host_mixin.dart';
 
 /// @nodoc
@@ -34,6 +36,7 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
     required this.config,
     required this.innerText,
     required this.prebuiltController,
+    required this.popUpManager,
   }) {
     localRole.value = config.role;
 
@@ -62,6 +65,7 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
   final ZegoLiveAudioRoomController? prebuiltController;
   final ZegoInnerText innerText;
   BuildContext Function()? contextQuery;
+  final ZegoPopUpManager popUpManager;
 
   KickSeatDialogInfo kickSeatDialogInfo = KickSeatDialogInfo.empty();
 
@@ -74,7 +78,7 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
 
   ZegoLiveConnectManager? _connectManager;
 
-  bool _isLeaveSeatDialogVisible = false;
+  bool isLeaveSeatDialogVisible = false;
   bool _isPopUpSheetVisible = false;
   bool _isRoomAttributesBatching = false;
   bool _hostSeatAttributeInitialed = false;
@@ -366,6 +370,7 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
         context: contextQuery!.call(),
         innerText: innerText,
         isShowDialog: true,
+        rootNavigator: config.rootNavigator,
       ).then((value) {
         ZegoLoggerService.logInfo(
           'local is speaker now, turn on microphone',
@@ -383,14 +388,17 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
       ZegoUIKit().turnMicrophoneOn(false);
       _connectManager?.updateAudienceConnectState(ConnectState.idle);
 
-      if (_isLeaveSeatDialogVisible) {
+      if (isLeaveSeatDialogVisible) {
         ZegoLoggerService.logInfo(
           'close leave seat dialog',
           tag: 'audio room',
           subTag: 'seat manager',
         );
-        _isLeaveSeatDialogVisible = false;
-        Navigator.of(contextQuery!.call()).pop(false);
+        isLeaveSeatDialogVisible = false;
+        Navigator.of(
+          contextQuery!.call(),
+          rootNavigator: config.rootNavigator,
+        ).pop(false);
       }
       if (_isPopUpSheetVisible) {
         ZegoLoggerService.logInfo(
@@ -399,7 +407,10 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
           subTag: 'seat manager',
         );
         _isPopUpSheetVisible = false;
-        Navigator.of(contextQuery!.call()).pop(false);
+        Navigator.of(
+          contextQuery!.call(),
+          rootNavigator: config.rootNavigator,
+        ).pop(false);
       }
     }
   }
@@ -437,7 +448,10 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
         subTag: 'seat manager',
       );
       kickSeatDialogInfo.clear();
-      Navigator.of(contextQuery!.call()).pop(false);
+      Navigator.of(
+        contextQuery!.call(),
+        rootNavigator: config.rootNavigator,
+      ).pop(false);
     }
   }
 
@@ -785,12 +799,18 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
       leftButtonText: dialogInfo.cancelButtonName,
       leftButtonCallback: () {
         kickSeatDialogInfo.clear();
-        Navigator.of(contextQuery!.call()).pop(false);
+        Navigator.of(
+          contextQuery!.call(),
+          rootNavigator: config.rootNavigator,
+        ).pop(false);
       },
       rightButtonText: dialogInfo.confirmButtonName,
       rightButtonCallback: () async {
         kickSeatDialogInfo.clear();
-        Navigator.of(contextQuery!.call()).pop(true);
+        Navigator.of(
+          contextQuery!.call(),
+          rootNavigator: config.rootNavigator,
+        ).pop(true);
 
         await takeOffSeat(index, isForce: true);
       },
@@ -809,7 +829,7 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
       return false;
     }
 
-    if (showDialog && _isLeaveSeatDialogVisible) {
+    if (showDialog && isLeaveSeatDialogVisible) {
       ZegoLoggerService.logInfo(
         'leave seat, dialog is visible',
         tag: 'audio room',
@@ -825,7 +845,10 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
     );
 
     if (showDialog) {
-      _isLeaveSeatDialogVisible = true;
+      final key = DateTime.now().millisecondsSinceEpoch;
+      popUpManager.addAPopUpSheet(key);
+
+      isLeaveSeatDialogVisible = true;
       final dialogInfo = innerText.leaveSeatDialogInfo;
       await showLiveDialog(
         context: contextQuery!.call(),
@@ -833,16 +856,26 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
         content: dialogInfo.message,
         leftButtonText: dialogInfo.cancelButtonName,
         leftButtonCallback: () {
-          _isLeaveSeatDialogVisible = false;
-          Navigator.of(contextQuery!.call()).pop(false);
+          isLeaveSeatDialogVisible = false;
+
+          Navigator.of(
+            contextQuery!.call(),
+            rootNavigator: config.rootNavigator,
+          ).pop(false);
         },
         rightButtonText: dialogInfo.confirmButtonName,
         rightButtonCallback: () async {
-          _isLeaveSeatDialogVisible = false;
-          Navigator.of(contextQuery!.call()).pop(true);
+          isLeaveSeatDialogVisible = false;
           await takeOffSeat(localSeatIndex);
+
+          Navigator.of(
+            contextQuery!.call(),
+            rootNavigator: config.rootNavigator,
+          ).pop(true);
         },
-      );
+      ).whenComplete(() {
+        popUpManager.removeAPopUpSheet(key);
+      });
     } else {
       await takeOffSeat(localSeatIndex);
     }
@@ -1211,7 +1244,10 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
             subTag: 'seat manager',
           );
           kickSeatDialogInfo.clear();
-          Navigator.of(contextQuery!.call()).pop(false);
+          Navigator.of(
+            contextQuery!.call(),
+            rootNavigator: config.rootNavigator,
+          ).pop(false);
         }
         seatsUsersMap.remove(seatIndex.toString());
       }

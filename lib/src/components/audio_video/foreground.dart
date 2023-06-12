@@ -10,6 +10,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/audio_room_layout.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_sheet_menu.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
@@ -25,6 +26,7 @@ class ZegoSeatForeground extends StatefulWidget {
 
   final ZegoLiveSeatManager seatManager;
   final ZegoLiveConnectManager connectManager;
+  final ZegoPopUpManager popUpManager;
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
   final ZegoLiveAudioRoomController? prebuiltController;
 
@@ -36,6 +38,7 @@ class ZegoSeatForeground extends StatefulWidget {
     required this.size,
     required this.seatManager,
     required this.connectManager,
+    required this.popUpManager,
     required this.config,
   }) : super(key: key);
 
@@ -188,6 +191,16 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
           ));
 
         if (widget.seatManager.localIsAHost) {
+          ///
+          // popupItems.add(PopupItem(
+          //   PopupItemValue.kickOut,
+          //   widget.config.innerText.removeUserMenuDialogButton.replaceFirst(
+          //     widget.config.innerText.param_1,
+          //     widget.user?.name ?? '',
+          //   ),
+          //   data: widget.user?.id ?? '',
+          // ));
+
           /// only support by host
           if (widget.seatManager.isCoHost(widget.user)) {
             /// host revoke a co-host
@@ -241,6 +254,7 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
       popupItems: popupItems,
       seatManager: widget.seatManager,
       connectManager: widget.connectManager,
+      popUpManager: widget.popUpManager,
       innerText: widget.config.innerText,
     );
   }

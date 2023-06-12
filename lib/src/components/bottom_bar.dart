@@ -9,16 +9,17 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/components.da
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/effects/sound_effect_button.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/leave_button.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/in_room_message_button.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_button.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/host_lock_seat_button.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_button.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/prebuilt_data.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_controller.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_button.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/prebuilt_data.dart';
 
 /// @nodoc
 class ZegoBottomBar extends StatefulWidget {
@@ -28,11 +29,13 @@ class ZegoBottomBar extends StatefulWidget {
   final bool isPluginEnabled;
   final ZegoLiveSeatManager seatManager;
   final ZegoLiveConnectManager connectManager;
+  final ZegoPopUpManager popUpManager;
   final ZegoLiveAudioRoomController? prebuiltController;
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
+
   final ZegoAvatarBuilder? avatarBuilder;
 
-  final ZegoUIKitPrebuiltLiveAudioRoomData prebuiltAudioRoomData;
+  final ZegoUIKitPrebuiltLiveAudioRoomData prebuiltData;
 
   const ZegoBottomBar({
     Key? key,
@@ -41,10 +44,11 @@ class ZegoBottomBar extends StatefulWidget {
     required this.isPluginEnabled,
     required this.seatManager,
     required this.connectManager,
+    required this.popUpManager,
     required this.prebuiltController,
     required this.height,
     required this.buttonSize,
-    required this.prebuiltAudioRoomData,
+    required this.prebuiltData,
   }) : super(key: key);
 
   @override
@@ -86,6 +90,13 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                   zegoLiveButtonPadding,
                   ZegoInRoomMessageButton(
                     innerText: widget.config.innerText,
+                    rootNavigator: widget.config.rootNavigator,
+                    onSheetPopUp: (int key) {
+                      widget.popUpManager.addAPopUpSheet(key);
+                    },
+                    onSheetPop: (int key) {
+                      widget.popUpManager.removeAPopUpSheet(key);
+                    },
                   ),
                 ],
               ),
@@ -142,8 +153,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         context,
         isSeatLocked: isSeatLocked,
         localRole: localRole,
-        microphoneDefaultValueFunc: widget
-                .prebuiltAudioRoomData.isPrebuiltFromMinimizing
+        microphoneDefaultValueFunc: widget.prebuiltData.isPrebuiltFromMinimizing
             ? () {
                 /// if is minimizing, take the local device state
                 return ZegoUIKit()
@@ -188,6 +198,12 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                     PrebuiltLiveAudioRoomIconUrls.toolbarMore),
                 backgroundColor: Colors.transparent,
               ),
+              onSheetPopUp: (int key) {
+                widget.popUpManager.addAPopUpSheet(key);
+              },
+              onSheetPop: (int key) {
+                widget.popUpManager.removeAPopUpSheet(key);
+              },
             ),
           ),
         );
@@ -289,6 +305,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           isPluginEnabled: widget.isPluginEnabled,
           seatManager: widget.seatManager,
           connectManager: widget.connectManager,
+          popUpManager: widget.popUpManager,
           innerText: widget.config.innerText,
           onMoreButtonPressed: widget.config.onMemberListMoreButtonPressed,
           hiddenUserIDsNotifier:
@@ -345,6 +362,8 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                 PrebuiltLiveAudioRoomIconUrls.toolbarSoundEffect),
             backgroundColor: Colors.white,
           ),
+          rootNavigator: widget.config.rootNavigator,
+          popUpManager: widget.popUpManager,
         );
       case ZegoMenuBarButtonName.applyToTakeSeatButton:
         return ZegoAudienceConnectButton(
@@ -360,7 +379,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         );
       case ZegoMenuBarButtonName.minimizingButton:
         return ZegoMinimizingButton(
-          prebuiltAudioRoomData: widget.prebuiltAudioRoomData,
+          prebuiltAudioRoomData: widget.prebuiltData,
         );
     }
   }

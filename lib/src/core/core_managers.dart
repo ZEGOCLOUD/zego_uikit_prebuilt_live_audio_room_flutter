@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/core/live_duration_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/prebuilt_data.dart';
@@ -30,8 +32,10 @@ class ZegoLiveAudioRoomManagers {
     seatManager?.contextQuery = contextQuery;
   }
 
-  void initPluginAndManagers(
-      ZegoUIKitPrebuiltLiveAudioRoomData prebuiltAudioRoomData) {
+  void initPluginAndManagers({
+    required ZegoUIKitPrebuiltLiveAudioRoomData prebuiltData,
+    required ZegoPopUpManager popUpManager,
+  }) {
     if (_initialized) {
       ZegoLoggerService.logInfo(
         'had init',
@@ -51,11 +55,11 @@ class ZegoLiveAudioRoomManagers {
     _initialized = true;
 
     plugins = ZegoPrebuiltPlugins(
-      appID: prebuiltAudioRoomData.appID,
-      appSign: prebuiltAudioRoomData.appSign,
-      userID: prebuiltAudioRoomData.userID,
-      userName: prebuiltAudioRoomData.userName,
-      roomID: prebuiltAudioRoomData.roomID,
+      appID: prebuiltData.appID,
+      appSign: prebuiltData.appSign,
+      userID: prebuiltData.userID,
+      userName: prebuiltData.userName,
+      roomID: prebuiltData.roomID,
       plugins: [ZegoUIKitSignalingPlugin()],
       onPluginReLogin: () {
         seatManager?.queryRoomAllAttributes(withToast: false).then((value) {
@@ -64,20 +68,26 @@ class ZegoLiveAudioRoomManagers {
       },
     );
     seatManager = ZegoLiveSeatManager(
-      localUserID: prebuiltAudioRoomData.userID,
-      roomID: prebuiltAudioRoomData.roomID,
+      localUserID: prebuiltData.userID,
+      roomID: prebuiltData.roomID,
       plugins: plugins!,
-      config: prebuiltAudioRoomData.config,
-      prebuiltController: prebuiltAudioRoomData.controller,
-      innerText: prebuiltAudioRoomData.config.innerText,
+      config: prebuiltData.config,
+      prebuiltController: prebuiltData.controller,
+      innerText: prebuiltData.config.innerText,
+      popUpManager: popUpManager,
     );
     connectManager = ZegoLiveConnectManager(
-      config: prebuiltAudioRoomData.config,
+      config: prebuiltData.config,
       seatManager: seatManager!,
-      prebuiltController: prebuiltAudioRoomData.controller,
-      innerText: prebuiltAudioRoomData.config.innerText,
+      prebuiltController: prebuiltData.controller,
+      innerText: prebuiltData.config.innerText,
+      popUpManager: popUpManager,
     );
     seatManager?.setConnectManager(connectManager!);
+
+    liveDurationManager = ZegoLiveDurationManager(
+      seatManager: seatManager!,
+    );
   }
 
   void unintPluginAndManagers() {
@@ -101,10 +111,12 @@ class ZegoLiveAudioRoomManagers {
 
     connectManager?.uninit();
     seatManager?.uninit();
+    liveDurationManager?.uninit();
     plugins?.uninit();
 
     connectManager = null;
     seatManager = null;
+    liveDurationManager = null;
     plugins = null;
   }
 
@@ -112,4 +124,5 @@ class ZegoLiveAudioRoomManagers {
   ZegoPrebuiltPlugins? plugins;
   ZegoLiveSeatManager? seatManager;
   ZegoLiveConnectManager? connectManager;
+  ZegoLiveDurationManager? liveDurationManager;
 }

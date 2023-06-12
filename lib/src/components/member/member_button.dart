@@ -7,6 +7,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/member/member_list_sheet.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
@@ -19,6 +20,7 @@ class ZegoMemberButton extends StatefulWidget {
     required this.isPluginEnabled,
     required this.seatManager,
     required this.connectManager,
+    required this.popUpManager,
     required this.innerText,
     required this.onMoreButtonPressed,
     this.hiddenUserIDsNotifier,
@@ -31,6 +33,7 @@ class ZegoMemberButton extends StatefulWidget {
   final ZegoAvatarBuilder? avatarBuilder;
   final ZegoLiveSeatManager seatManager;
   final ZegoLiveConnectManager connectManager;
+  final ZegoPopUpManager popUpManager;
   final ValueNotifier<List<String>>? hiddenUserIDsNotifier;
   final ZegoInnerText innerText;
 
@@ -69,6 +72,7 @@ class _ZegoMemberButtonState extends State<ZegoMemberButton> {
           isPluginEnabled: widget.isPluginEnabled,
           seatManager: widget.seatManager,
           connectManager: widget.connectManager,
+          popUpManager: widget.popUpManager,
           innerText: widget.innerText,
           onMoreButtonPressed: widget.onMoreButtonPressed,
           hiddenUserIDsNotifier: widget.hiddenUserIDsNotifier,

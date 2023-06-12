@@ -55,9 +55,8 @@ class ZegoLeaveAudioRoomButton extends StatelessWidget {
         if (canLeave) {
           /// take off seat when leave room
           await seatManager.leaveSeat(showDialog: false);
+          seatManager.isLeavingRoom = true;
         }
-
-        seatManager.isLeavingRoom = true;
 
         return canLeave;
       },
@@ -65,7 +64,10 @@ class ZegoLeaveAudioRoomButton extends StatelessWidget {
         if (config.onLeaveLiveAudioRoom != null) {
           config.onLeaveLiveAudioRoom!.call();
         } else {
-          Navigator.of(context).pop();
+          Navigator.of(
+            context,
+            rootNavigator: config.rootNavigator,
+          ).pop();
         }
       },
     );

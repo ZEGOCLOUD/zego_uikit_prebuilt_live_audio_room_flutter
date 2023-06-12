@@ -167,6 +167,7 @@ class ZegoLiveAudioRoomController with ZegoLiveAudioRoomControllerPrivate {
   /// Accept the seat invitation from the host. The [context] parameter represents the Flutter context object.
   Future<bool> acceptHostTakeSeatInvitation({
     required BuildContext context,
+    bool rootNavigator = false,
   }) async {
     return ZegoUIKit()
         .getSignalingPlugin()
@@ -194,6 +195,7 @@ class ZegoLiveAudioRoomController with ZegoLiveAudioRoomControllerPrivate {
         context: context,
         isShowDialog: true,
         innerText: _seatManager?.innerText ?? ZegoInnerText(),
+        rootNavigator: rootNavigator,
       ).then((_) async {
         /// agree host's host, take seat, find the nearest seat index
         return await _seatManager

@@ -11,9 +11,11 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_te
 class ZegoInRoomMessageInputBoard extends ModalRoute<String> {
   ZegoInRoomMessageInputBoard({
     required this.innerText,
+    this.rootNavigator = false,
   }) : super();
 
   final ZegoInnerText innerText;
+  final bool rootNavigator;
 
   @override
   Duration get transitionDuration => const Duration(milliseconds: 200);
@@ -46,7 +48,10 @@ class ZegoInRoomMessageInputBoard extends ModalRoute<String> {
         children: <Widget>[
           Expanded(
             child: GestureDetector(
-              onTap: () => Navigator.pop(context),
+              onTap: () => Navigator.of(
+                context,
+                rootNavigator: rootNavigator,
+              ).pop(),
               child: Container(color: Colors.transparent),
             ),
           ),
@@ -58,7 +63,10 @@ class ZegoInRoomMessageInputBoard extends ModalRoute<String> {
             textHintColor: const Color(0xff1B1B1B).withOpacity(0.5),
             buttonColor: const Color(0xff0055FF),
             onSubmit: () {
-              Navigator.pop(context);
+              Navigator.of(
+                context,
+                rootNavigator: rootNavigator,
+              ).pop();
             },
           ),
         ],
