@@ -84,8 +84,6 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
   bool isFromMinimizing = false;
   late ZegoUIKitPrebuiltLiveAudioRoomData prebuiltData;
 
-  final popUpManager = ZegoPopUpManager();
-
   @override
   void initState() {
     super.initState();
@@ -108,7 +106,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 2.6.0; $version',
+        'version: zego_uikit_prebuilt_live_audio_room: 2.6.2; $version',
         tag: 'audio room',
         subTag: 'prebuilt',
       );
@@ -125,7 +123,6 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     if (!isFromMinimizing) {
       ZegoLiveAudioRoomManagers().initPluginAndManagers(
         prebuiltData: prebuiltData,
-        popUpManager: popUpManager,
       );
     }
     ZegoLiveAudioRoomManagers().updateContextQuery(() {
@@ -240,7 +237,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       plugins: ZegoLiveAudioRoomManagers().plugins,
       seatManager: ZegoLiveAudioRoomManagers().seatManager!,
       connectManager: ZegoLiveAudioRoomManagers().connectManager!,
-      popUpManager: popUpManager,
+      popUpManager: ZegoLiveAudioRoomManagers().popUpManager,
       liveDurationManager: ZegoLiveAudioRoomManagers().liveDurationManager!,
       prebuiltController: widget.controller,
       prebuiltAudioRoomData: prebuiltData,
@@ -339,6 +336,8 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
         context,
         widget.config.innerText.microphonePermissionSettingDialogInfo,
         rootNavigator: widget.config.rootNavigator,
+        kickOutNotifier: ZegoLiveAudioRoomManagers().kickOutNotifier,
+        popUpManager: ZegoLiveAudioRoomManagers().popUpManager,
       );
     }
   }
@@ -457,8 +456,12 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       subTag: 'prebuilt',
     );
 
+    ZegoLiveAudioRoomManagers().kickOutNotifier.value = true;
+
     ///more button, member list, dialogs..
-    popUpManager.autoPop(context, widget.config.rootNavigator);
+    ZegoLiveAudioRoomManagers()
+        .popUpManager
+        .autoPop(context, widget.config.rootNavigator);
 
     if (null != widget.config.onMeRemovedFromRoom) {
       widget.config.onMeRemovedFromRoom!.call(fromUserID);

@@ -27,6 +27,7 @@ class ZegoLiveConnectManager {
     required this.popUpManager,
     required this.prebuiltController,
     required this.innerText,
+    required this.kickOutNotifier,
     this.contextQuery,
   }) {
     listenStream();
@@ -37,6 +38,7 @@ class ZegoLiveConnectManager {
   final ZegoPopUpManager popUpManager;
   final ZegoLiveAudioRoomController? prebuiltController;
   final ZegoInnerText innerText;
+  final ValueNotifier<bool> kickOutNotifier;
   BuildContext Function()? contextQuery;
 
   /// current audience connection state
@@ -325,6 +327,8 @@ class ZegoLiveConnectManager {
             isShowDialog: true,
             innerText: innerText,
             rootNavigator: config.rootNavigator,
+            popUpManager: popUpManager,
+            kickOutNotifier: kickOutNotifier,
           ).then((_) {
             /// agree host's host, take seat, find the nearest seat index
             final targetSeatIndex = seatManager.getNearestEmptyIndex();
@@ -375,6 +379,8 @@ class ZegoLiveConnectManager {
         isShowDialog: true,
         innerText: innerText,
         rootNavigator: config.rootNavigator,
+        popUpManager: popUpManager,
+        kickOutNotifier: kickOutNotifier,
       ).then((value) {
         /// host agree take seat, find the nearest seat index
         final targetSeatIndex = seatManager.getNearestEmptyIndex();

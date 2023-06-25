@@ -37,6 +37,7 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
     required this.innerText,
     required this.prebuiltController,
     required this.popUpManager,
+    required this.kickOutNotifier,
   }) {
     localRole.value = config.role;
 
@@ -66,6 +67,7 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
   final ZegoInnerText innerText;
   BuildContext Function()? contextQuery;
   final ZegoPopUpManager popUpManager;
+  final ValueNotifier<bool> kickOutNotifier;
 
   KickSeatDialogInfo kickSeatDialogInfo = KickSeatDialogInfo.empty();
 
@@ -371,6 +373,8 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
         innerText: innerText,
         isShowDialog: true,
         rootNavigator: config.rootNavigator,
+        popUpManager: popUpManager,
+        kickOutNotifier: kickOutNotifier,
       ).then((value) {
         ZegoLoggerService.logInfo(
           'local is speaker now, turn on microphone',

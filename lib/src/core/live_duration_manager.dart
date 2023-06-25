@@ -46,7 +46,7 @@ class ZegoLiveDurationManager {
       subTag: 'live duration manager',
     );
 
-    setValueByHost();
+    setRoomPropertyByHost();
   }
 
   Future<void> uninit() async {
@@ -79,16 +79,23 @@ class ZegoLiveDurationManager {
     );
 
     if (roomProperties.containsKey(RoomPropertyKey.liveDuration.text)) {
-      final timestamp =
+      final propertyTimestamp =
           roomProperties[RoomPropertyKey.liveDuration.text]!.value;
 
-      final serverValue =
-          DateTime.fromMillisecondsSinceEpoch(int.tryParse(timestamp) ?? 0);
-      notifier.value = serverValue;
+      final serverDateTime = DateTime.fromMillisecondsSinceEpoch(
+          int.tryParse(propertyTimestamp) ?? 0);
+
+      ZegoLoggerService.logInfo(
+        'live duration value is exist:${notifier.value}',
+        tag: 'live audio room',
+        subTag: 'live duration manager',
+      );
+
+      notifier.value = serverDateTime;
     }
   }
 
-  void setValueByHost() {
+  void setRoomPropertyByHost() {
     if (!seatManager.localIsAHost) {
       ZegoLoggerService.logInfo(
         'try set value, but is not a host',
@@ -100,8 +107,39 @@ class ZegoLiveDurationManager {
 
     subscription?.cancel();
 
-    final networkTimestamp = ZegoUIKit().getNetworkTimeStamp();
-    notifier.value = DateTime.fromMillisecondsSinceEpoch(networkTimestamp);
+    final networkTimeNow = ZegoUIKit().getNetworkTime();
+    if (null == networkTimeNow.value) {
+      ZegoLoggerService.logInfo(
+        'network time is null, wait..',
+        tag: 'live audio room',
+        subTag: 'live duration manager',
+      );
+
+      ZegoUIKit()
+          .getNetworkTime()
+          .addListener(waitNetworkTimeUpdatedForSetProperty);
+    } else {
+      setPropertyByNetworkTime(networkTimeNow.value!);
+    }
+  }
+
+  void waitNetworkTimeUpdatedForSetProperty() {
+    ZegoUIKit()
+        .getNetworkTime()
+        .removeListener(waitNetworkTimeUpdatedForSetProperty);
+
+    final networkTimeNow = ZegoUIKit().getNetworkTime();
+    ZegoLoggerService.logInfo(
+      'network time update:$networkTimeNow',
+      tag: 'live audio room',
+      subTag: 'live duration manager',
+    );
+
+    setPropertyByNetworkTime(networkTimeNow.value!);
+  }
+
+  void setPropertyByNetworkTime(DateTime networkTimeNow) {
+    notifier.value = networkTimeNow;
 
     ZegoLoggerService.logInfo(
       'host set value:${notifier.value}',
@@ -111,7 +149,7 @@ class ZegoLiveDurationManager {
 
     ZegoUIKit().setRoomProperty(
       RoomPropertyKey.liveDuration.text,
-      networkTimestamp.toString(),
+      networkTimeNow.millisecondsSinceEpoch.toString(),
     );
   }
 }

@@ -1,3 +1,12 @@
+## 2.6.2
+- Optimizing timing function.
+
+## 2.6.1
+- Fixed the issue where users were kicked out when both camera and microphone permissions were not denied but the permission dialog could not be dismissed.
+
+## 2.6.0
+- Support server-based timing
+
 ## 2.5.0
 - Support host remove audience or speaker from audio room.
 

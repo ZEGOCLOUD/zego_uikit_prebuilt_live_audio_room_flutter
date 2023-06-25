@@ -34,7 +34,6 @@ class ZegoLiveAudioRoomManagers {
 
   void initPluginAndManagers({
     required ZegoUIKitPrebuiltLiveAudioRoomData prebuiltData,
-    required ZegoPopUpManager popUpManager,
   }) {
     if (_initialized) {
       ZegoLoggerService.logInfo(
@@ -75,6 +74,7 @@ class ZegoLiveAudioRoomManagers {
       prebuiltController: prebuiltData.controller,
       innerText: prebuiltData.config.innerText,
       popUpManager: popUpManager,
+      kickOutNotifier: kickOutNotifier,
     );
     connectManager = ZegoLiveConnectManager(
       config: prebuiltData.config,
@@ -82,6 +82,7 @@ class ZegoLiveAudioRoomManagers {
       prebuiltController: prebuiltData.controller,
       innerText: prebuiltData.config.innerText,
       popUpManager: popUpManager,
+      kickOutNotifier: kickOutNotifier,
     );
     seatManager?.setConnectManager(connectManager!);
 
@@ -125,4 +126,7 @@ class ZegoLiveAudioRoomManagers {
   ZegoLiveSeatManager? seatManager;
   ZegoLiveConnectManager? connectManager;
   ZegoLiveDurationManager? liveDurationManager;
+
+  final popUpManager = ZegoPopUpManager();
+  final kickOutNotifier = ValueNotifier<bool>(false);
 }
