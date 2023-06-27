@@ -106,7 +106,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 2.6.2; $version',
+        'version: zego_uikit_prebuilt_live_audio_room: 2.7.1; $version',
         tag: 'audio room',
         subTag: 'prebuilt',
       );
@@ -130,6 +130,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     });
 
     widget.controller?.initByPrebuilt(
+      config: widget.config,
       connectManager: ZegoLiveAudioRoomManagers().connectManager,
       seatManager: ZegoLiveAudioRoomManagers().seatManager,
     );
@@ -182,13 +183,13 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     WidgetsBinding.instance?.removeObserver(this);
 
-    widget.controller?.uninitByPrebuilt();
-
     if (LiveAudioRoomMiniOverlayPageState.minimizing !=
         ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine().state()) {
       ZegoLiveAudioRoomManagers().unintPluginAndManagers();
 
       uninitContext();
+
+      widget.controller?.uninitByPrebuilt();
     } else {
       ZegoLoggerService.logInfo(
         'mini machine state is minimizing, room will not be leave',

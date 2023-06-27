@@ -2,6 +2,7 @@ part of 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_control
 
 /// @nodoc
 mixin ZegoLiveAudioRoomControllerPrivate {
+  ZegoUIKitPrebuiltLiveAudioRoomConfig? _prebuiltConfig;
   ZegoLiveConnectManager? _connectManager;
   ZegoLiveSeatManager? _seatManager;
 
@@ -14,9 +15,11 @@ mixin ZegoLiveAudioRoomControllerPrivate {
   /// Call Inside By Prebuilt
   /// prebuilt assign value to internal variables
   void initByPrebuilt({
-    ZegoLiveConnectManager? connectManager,
-    ZegoLiveSeatManager? seatManager,
+    required ZegoUIKitPrebuiltLiveAudioRoomConfig config,
+    required ZegoLiveConnectManager? connectManager,
+    required ZegoLiveSeatManager? seatManager,
   }) {
+    _prebuiltConfig = config;
     _connectManager = connectManager;
     _seatManager = seatManager;
   }

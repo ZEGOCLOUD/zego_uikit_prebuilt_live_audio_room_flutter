@@ -91,7 +91,7 @@ class ZegoLiveAudioRoomManagers {
     );
   }
 
-  void unintPluginAndManagers() {
+  Future<void> unintPluginAndManagers() async {
     ZegoLoggerService.logInfo(
       'uninit plugin and managers',
       tag: 'audio room',
@@ -111,9 +111,9 @@ class ZegoLiveAudioRoomManagers {
     _initialized = false;
 
     connectManager?.uninit();
-    seatManager?.uninit();
-    liveDurationManager?.uninit();
-    plugins?.uninit();
+    await seatManager?.uninit();
+    await liveDurationManager?.uninit();
+    await plugins?.uninit();
 
     connectManager = null;
     seatManager = null;

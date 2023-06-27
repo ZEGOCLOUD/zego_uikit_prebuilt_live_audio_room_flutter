@@ -1,3 +1,9 @@
+## 2.7.1
+- Update dependencies
+
+## 2.7.0
+- Add a "leave" method to the controller that allows for actively leave the current live.
+
 ## 2.6.2
 - Optimizing timing function.
 

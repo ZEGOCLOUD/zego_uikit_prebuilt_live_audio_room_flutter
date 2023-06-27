@@ -121,6 +121,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
                     bottomBar(),
                     messageList(),
                     durationTimeBoard(),
+                    foreground(context, constraints.maxHeight),
                   ],
                 );
               }),
@@ -160,6 +161,10 @@ class ZegoLivePageState extends State<ZegoLivePage>
         child: widget.config.background,
       ),
     );
+  }
+
+  Widget foreground(BuildContext context, double height) {
+    return widget.config.foreground ?? Container();
   }
 
   Widget audioVideoContainer(double maxWidth, double _maxHeight) {
@@ -309,9 +314,10 @@ class ZegoLivePageState extends State<ZegoLivePage>
     );
   }
 
-  Future<void> onTurnOnYourMicrophoneRequest(String fromUserID) async {
+  Future<void> onTurnOnYourMicrophoneRequest(
+      ZegoUIKitReceiveTurnOnLocalMicrophoneEvent event) async {
     ZegoLoggerService.logInfo(
-      'onTurnOnYourMicrophoneRequest, fromUserID:$fromUserID',
+      'onTurnOnYourMicrophoneRequest, event:$event',
       tag: 'live audio',
       subTag: 'live page',
     );

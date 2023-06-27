@@ -187,8 +187,9 @@ class ZegoPrebuiltPlugins {
     roomHasInitLogin = false;
     tryReLogging = false;
 
-    if (LiveAudioRoomMiniOverlayPageState.minimizing ==
-        ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine().state()) {
+    final toMinimizing = LiveAudioRoomMiniOverlayPageState.minimizing ==
+        ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine().state();
+    if (toMinimizing) {
       ZegoLoggerService.logInfo(
         'to minimizing, not need to leave room, logout and uninit',
         tag: 'audio room',

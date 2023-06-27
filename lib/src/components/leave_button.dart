@@ -62,7 +62,7 @@ class ZegoLeaveAudioRoomButton extends StatelessWidget {
       },
       onPress: () async {
         if (config.onLeaveLiveAudioRoom != null) {
-          config.onLeaveLiveAudioRoom!.call();
+          config.onLeaveLiveAudioRoom!.call(false);
         } else {
           Navigator.of(
             context,

@@ -89,6 +89,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
     this.onLeaveConfirmation,
     this.onLeaveLiveAudioRoom,
     this.onMeRemovedFromRoom,
+    this.foreground,
     this.background,
     this.userAvatarUrl,
     this.userInRoomAttributes = const {},
@@ -156,6 +157,11 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// The default value is `true`.
   /// If this value is set to `false`, the system's default playback device, such as the earpiece or Bluetooth headset, will be used for audio playback.
   bool useSpeakerWhenJoining;
+
+  /// The foreground of the live streaming.
+  ///
+  /// If you need to nest some widgets in [ZegoUIKitPrebuiltLiveAudioRoom], please use [foreground] nesting, otherwise these widgets will be lost when you minimize and restore the [ZegoUIKitPrebuiltLiveAudioRoom]
+  Widget? foreground;
 
   /// The background of the audio chat room.
   ///
@@ -232,12 +238,16 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
 
   /// This callback is triggered after leaving the audio chat room.
   /// You can perform business-related prompts or other actions in this callback.
-  /// The default behavior is return to the previous page. If you override this callback, you must perform the page navigation yourself, otherwise the user will remain on the live audio page.
-  VoidCallback? onLeaveLiveAudioRoom;
+  /// The default behavior is return to the previous page while it was in a normal state. If you override this callback, you must perform the page navigation yourself while it was in a normal state, otherwise the user will remain on the live audio page.
+  ///
+  /// The [isFromMinimizing] it means that the user left the chat room while it was in a minimized state.
+  /// You **can not** return to the previous page while it was **in a minimized state**!!!
+  /// On the other hand, if the value of the parameter is false, it means that the user left the chat room while it was in a normal state (i.e., not minimized).
+  void Function(bool isFromMinimizing)? onLeaveLiveAudioRoom;
 
   /// This callback is triggered when local user removed from audio room.
   /// The default behavior is return to the previous page. If you override this callback, you must perform the page navigation yourself, otherwise the user will remain on the live audio page.
-  Future<void> Function(String)? onMeRemovedFromRoom;
+  Future<void> Function(String fromUserID)? onMeRemovedFromRoom;
 
   /// This callback method is called when someone requests to open your microphone, typically when the host wants to open the speaker's microphone.
   /// This method requires returning an asynchronous result.

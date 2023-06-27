@@ -24,6 +24,9 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage extends StatefulWidget {
     this.padding = 0.0,
     this.showDevices = true,
     this.showUserName = true,
+    this.foregroundBuilder,
+    this.backgroundBuilder,
+    this.foreground,
     this.builder,
   }) : super(key: key);
 
@@ -45,6 +48,9 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage extends StatefulWidget {
 
   final bool showUserName;
 
+  final ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;
+  final ZegoAudioVideoViewBackgroundBuilder? backgroundBuilder;
+  final Widget? foreground;
   final Widget Function(ZegoUIKitUser? activeUser)? builder;
 
   /// You need to return the `context` of NavigatorState in this callback
@@ -215,6 +221,8 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
                 size: Size(seatIconWidth, seatIconHeight),
                 verticalAlignment: ZegoAvatarAlignment.start,
               ),
+              foregroundBuilder: widget.foregroundBuilder,
+              backgroundBuilder: widget.backgroundBuilder,
             ),
             Positioned(
               bottom: seatItemRowSpacing,
@@ -231,11 +239,16 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
               child: redPoint(),
             ),
             durationTimeBoard(),
+            widget.foreground ?? Container(),
           ],
         );
   }
 
   Widget durationTimeBoard() {
+    if (null == ZegoLiveAudioRoomManagers().liveDurationManager) {
+      return Container();
+    }
+
     return Positioned(
       left: 0,
       right: 0,
@@ -346,10 +359,9 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
   }
 
   Widget redPoint() {
-    final prebuiltAudioRoomData =
-        ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine()
-            .prebuiltAudioRoomData;
-    assert(null != prebuiltAudioRoomData);
+    if (null == ZegoLiveAudioRoomManagers().connectManager) {
+      return Container();
+    }
 
     return ValueListenableBuilder<List<ZegoUIKitUser>>(
       valueListenable: ZegoLiveAudioRoomManagers()
