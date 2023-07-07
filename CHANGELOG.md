@@ -1,3 +1,12 @@
+## 2.8.2
+- Update dependencies
+
+## 2.8.1
+- support mute local media volume 
+
+## 2.8.0
+- support media sharing
+
 ## 2.7.1
 - Update dependencies
 

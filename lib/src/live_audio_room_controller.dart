@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
@@ -15,12 +16,14 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_te
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_overlay_machine.dart';
 
 part 'package:zego_uikit_prebuilt_live_audio_room/src/internal/controller_p.dart';
+part 'package:zego_uikit_prebuilt_live_audio_room/src/internal/controller.media.dart';
 
 /// Used to control the audio chat room functionality.
 ///
 /// If the default audio chat room UI and interactions do not meet your requirements, you can use this [ZegoLiveAudioRoomController] to actively control the business logic.
 /// This class is used by setting the [controller] parameter in the constructor of [ZegoUIKitPrebuiltLiveAudioRoom].
-class ZegoLiveAudioRoomController with ZegoLiveAudioRoomControllerPrivate {
+class ZegoLiveAudioRoomController
+    with ZegoLiveAudioRoomControllerPrivate, ZegoLiveAudioRoomControllerMedia {
   ///  enable or disable the microphone of a specified user. If userID is empty or null, it controls the local microphone. The isOn parameter specifies whether the microphone should be turned on or off, where true means it is turned on and false means it is turned off.
   void turnMicrophoneOn(bool isOn, {String? userID}) {
     ZegoUIKit().turnMicrophoneOn(isOn, userID: userID);

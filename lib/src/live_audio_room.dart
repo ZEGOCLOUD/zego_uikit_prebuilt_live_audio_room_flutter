@@ -106,7 +106,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 2.7.1; $version',
+        'version: zego_uikit_prebuilt_live_audio_room: 2.8.2; $version',
         tag: 'audio room',
         subTag: 'prebuilt',
       );
@@ -383,6 +383,36 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     }
 
     await ZegoLiveAudioRoomManagers().liveDurationManager!.init();
+
+    initBackgroundMedia();
+  }
+
+  void initBackgroundMedia() {
+    if (ZegoLiveAudioRoomManagers().seatManager?.localRole.value !=
+        ZegoLiveAudioRoomRole.host) {
+      return;
+    }
+
+    if (widget.config.backgroundMediaConfig.path?.isNotEmpty ?? false) {
+      ZegoLoggerService.logInfo(
+        'try play media:${widget.config.backgroundMediaConfig.path!}, '
+        'repeat:${widget.config.backgroundMediaConfig.enableRepeat}',
+        tag: 'audio room',
+        subTag: 'prebuilt',
+      );
+      ZegoUIKit()
+          .playMedia(
+        filePathOrURL: widget.config.backgroundMediaConfig.path!,
+        enableRepeat: widget.config.backgroundMediaConfig.enableRepeat,
+      )
+          .then((playResult) {
+        ZegoLoggerService.logInfo(
+          'media play result:${playResult.errorCode}',
+          tag: 'audio room',
+          subTag: 'prebuilt',
+        );
+      });
+    }
   }
 
   Future<void> uninitContext() async {

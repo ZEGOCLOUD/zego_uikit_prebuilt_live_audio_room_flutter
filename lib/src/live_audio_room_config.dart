@@ -37,6 +37,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
         audioEffectConfig = ZegoAudioEffectConfig(),
         durationConfig = ZegoLiveDurationConfig(),
+        backgroundMediaConfig = ZegoBackgroundMediaConfig(),
         innerText = ZegoInnerText(),
         rootNavigator = false,
         confirmDialogInfo = ZegoDialogInfo(
@@ -70,6 +71,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
         audioEffectConfig = ZegoAudioEffectConfig(),
         durationConfig = ZegoLiveDurationConfig(),
+        backgroundMediaConfig = ZegoBackgroundMediaConfig(),
         innerText = ZegoInnerText();
 
   ZegoUIKitPrebuiltLiveAudioRoomConfig({
@@ -83,6 +85,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
     ZegoInRoomMessageViewConfig? messageConfig,
     ZegoAudioEffectConfig? effectConfig,
     ZegoLiveDurationConfig? durationConfig,
+    ZegoBackgroundMediaConfig? backgroundMediaConfig,
     this.hostSeatIndexes = const [0],
     this.confirmDialogInfo,
     this.rootNavigator = false,
@@ -115,6 +118,8 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
             messageConfig ?? ZegoInRoomMessageViewConfig(),
         audioEffectConfig = effectConfig ?? ZegoAudioEffectConfig(),
         durationConfig = durationConfig ?? ZegoLiveDurationConfig(),
+        backgroundMediaConfig =
+            backgroundMediaConfig ?? ZegoBackgroundMediaConfig(),
         innerText = translationText ?? ZegoInnerText();
 
   /// Specifies the initial role when joining the live audio room.
@@ -228,6 +233,9 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// this class is given instead. Useful for pushing contents above all
   /// subsequent instances of [Navigator].
   bool rootNavigator;
+
+  /// the config of background music, the feature currently only works for the host
+  ZegoBackgroundMediaConfig backgroundMediaConfig;
 
   /// Confirmation callback method before leaving the audio chat room.
   ///
@@ -539,5 +547,20 @@ class ZegoLiveDurationConfig {
   ZegoLiveDurationConfig({
     this.isVisible = true,
     this.onDurationUpdate,
+  });
+}
+
+/// Live Audio Room background media configuration.
+class ZegoBackgroundMediaConfig {
+  /// the path of background music, which can be either a local path or a network address.
+  /// supported formats by default include MP3, MP4, FLV, WAV, AAC, M3U8, and FLAC.
+  String? path;
+
+  /// whether to repeat playback.
+  bool enableRepeat;
+
+  ZegoBackgroundMediaConfig({
+    this.path,
+    this.enableRepeat = true,
   });
 }
