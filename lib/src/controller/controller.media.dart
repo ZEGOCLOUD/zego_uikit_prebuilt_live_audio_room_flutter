@@ -8,6 +8,7 @@ mixin ZegoLiveAudioRoomControllerMedia {
   ZegoLiveAudioRoomMediaController get media => _mediaController;
 }
 
+/// @nodoc
 class ZegoLiveAudioRoomMediaController {
   /// Start playing.
   Future<MediaPlayResult> play({

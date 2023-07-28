@@ -468,9 +468,21 @@ class ZegoInRoomMessageViewConfig {
   /// For example, you can modify the background color, opacity, border radius, or add additional information like the sender's level or role.
   ZegoInRoomMessageItemBuilder? itemBuilder;
 
+  /// display user name in message list view or not
+  bool showName;
+
+  /// display user avatar in message list view or not
+  bool showAvatar;
+
+  /// The max lines of chat message list items, default value is not limit.
+  int? maxLines;
+
   ZegoInRoomMessageViewConfig({
     this.visible = true,
     this.itemBuilder,
+    this.showName = true,
+    this.showAvatar = true,
+    this.maxLines,
   });
 }
 

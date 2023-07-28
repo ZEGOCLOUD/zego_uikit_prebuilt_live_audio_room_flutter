@@ -6,11 +6,11 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/in_room_message_input_board.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/input_board.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
 
 /// @nodoc
-class ZegoInRoomMessageButton extends StatefulWidget {
+class ZegoInRoomMessageInputBoardButton extends StatefulWidget {
   final Size? iconSize;
   final Size? buttonSize;
   final ZegoInnerText innerText;
@@ -19,7 +19,7 @@ class ZegoInRoomMessageButton extends StatefulWidget {
   final Function(int)? onSheetPopUp;
   final Function(int)? onSheetPop;
 
-  const ZegoInRoomMessageButton({
+  const ZegoInRoomMessageInputBoardButton({
     Key? key,
     required this.innerText,
     this.rootNavigator = false,
@@ -30,12 +30,12 @@ class ZegoInRoomMessageButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoInRoomMessageButton> createState() =>
-      _ZegoInRoomMessageButtonState();
+  State<ZegoInRoomMessageInputBoardButton> createState() =>
+      _ZegoInRoomMessageInputBoardButtonState();
 }
 
 /// @nodoc
-class _ZegoInRoomMessageButtonState extends State<ZegoInRoomMessageButton> {
+class _ZegoInRoomMessageInputBoardButtonState extends State<ZegoInRoomMessageInputBoardButton> {
   @override
   Widget build(BuildContext context) {
     return ZegoTextIconButton(

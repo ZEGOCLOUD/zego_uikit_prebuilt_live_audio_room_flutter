@@ -467,7 +467,7 @@ class ZegoLiveConnectManager {
       config.onSeatTakingInviteRejected?.call();
 
       showDebugToast(
-          'Your request to take seat has been refused by ${ZegoUIKit().getUser(invitee.id)?.name ?? ''}');
+          'Your request to take seat has been refused by ${ZegoUIKit().getUser(invitee.id).name}');
     } else {
       /// audience's request is rejected by host
       config.onSeatTakingRequestRejected?.call();
@@ -653,7 +653,12 @@ class ZegoLiveConnectManager {
     );
 
     final userIDs = users.map((e) => e.id).toList();
+
     _audienceIDsInvitedTakeSeatByHost
         .removeWhere((userID) => userIDs.contains(userID));
+
+    audiencesRequestingTakeSeatNotifier.value =
+        List<ZegoUIKitUser>.from(audiencesRequestingTakeSeatNotifier.value)
+          ..removeWhere((user) => userIDs.contains(user.id));
   }
 }

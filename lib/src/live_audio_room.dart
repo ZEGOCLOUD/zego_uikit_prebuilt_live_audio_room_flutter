@@ -13,7 +13,6 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/live_page.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/permissions.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
@@ -106,7 +105,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 2.8.2; $version',
+        'version: zego_uikit_prebuilt_live_audio_room: 2.8.5; $version',
         tag: 'audio room',
         subTag: 'prebuilt',
       );
@@ -375,7 +374,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
   Future<void> onRoomLogin(ZegoRoomLoginResult result) async {
     assert(result.errorCode == 0);
     if (result.errorCode != 0) {
-      ZegoLoggerService.logInfo(
+      ZegoLoggerService.logError(
         'failed to login room:${result.errorCode},${result.extendedData}',
         tag: 'audio room',
         subTag: 'prebuilt',

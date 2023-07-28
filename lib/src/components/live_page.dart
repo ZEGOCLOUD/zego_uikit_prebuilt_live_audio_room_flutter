@@ -16,7 +16,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/s
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/bottom_bar.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/duration_time_board.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/in_room_live_commenting_view.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/view.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/top_bar.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
@@ -292,7 +292,8 @@ class ZegoLivePageState extends State<ZegoLivePage>
       child: ConstrainedBox(
         constraints: BoxConstraints.loose(Size(540.zR, 400.zR)),
         child: ZegoInRoomLiveCommentingView(
-          itemBuilder: widget.config.inRoomMessageViewConfig.itemBuilder,
+          config: widget.config.inRoomMessageViewConfig,
+          avatarBuilder: widget.config.seatConfig.avatarBuilder,
         ),
       ),
     );

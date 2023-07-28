@@ -1,3 +1,14 @@
+## 2.8.5
+- Adjusted the message display to default to showing the entire content. If not all content needs to be displayed, the maximum number of displayed lines can be modified through
+  **ZegoInRoomMessageConfig.maxLines**. When the maximum number of lines is exceeded, the message will automatically collapse.
+- Added avatar display to messages by default. If avatars are not desired, they can be hidden through **ZegoInRoomMessageConfig.showAvatar**.
+
+## 2.8.4
+- Fixed the issue of not receiving calls when prebuilt_call is used in conjunction with prebuilt_live_audio_room.
+
+## 2.8.3
+- Fix the black screen issue when sharing media on iOS.
+
 ## 2.8.2
 - Update dependencies
 

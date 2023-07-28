@@ -197,7 +197,9 @@ class ZegoPrebuiltPlugins {
       );
     } else {
       await ZegoUIKit().getSignalingPlugin().leaveRoom();
-      await ZegoUIKit().getSignalingPlugin().logout();
+
+      /// not need logout
+      // await ZegoUIKit().getSignalingPlugin().logout();
       await ZegoUIKit().getSignalingPlugin().uninit();
     }
 

@@ -8,7 +8,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/components.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/effects/sound_effect_button.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/leave_button.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/in_room_message_button.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/input_board_button.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_button.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
@@ -88,7 +88,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   zegoLiveButtonPadding,
-                  ZegoInRoomMessageButton(
+                  ZegoInRoomMessageInputBoardButton(
                     innerText: widget.config.innerText,
                     rootNavigator: widget.config.rootNavigator,
                     onSheetPopUp: (int key) {

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/in_room_live_commenting_view_item.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/view_item.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
 
 // Project imports:
@@ -169,10 +169,7 @@ class LivePage extends StatelessWidget {
       /// how to use itemBuilder to custom message view
       return Stack(
         children: [
-          ZegoInRoomLiveCommentingViewItem(
-            user: message.user,
-            message: message.message,
-          ),
+          ZegoInRoomLiveCommentingViewItem(message: message),
 
           /// add a red point
           Positioned(

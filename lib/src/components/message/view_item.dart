@@ -8,16 +8,20 @@ import 'package:zego_uikit/zego_uikit.dart';
 class ZegoInRoomLiveCommentingViewItem extends StatelessWidget {
   const ZegoInRoomLiveCommentingViewItem({
     Key? key,
-    required this.user,
     required this.message,
     this.prefix,
-    this.maxLines = 3,
+    this.maxLines,
     this.isHorizontal = true,
+    this.showName = true,
+    this.showAvatar = true,
+    this.avatarBuilder,
   }) : super(key: key);
 
   final String? prefix;
-  final ZegoUIKitUser user;
-  final String message;
+  final ZegoInRoomMessage message;
+  final bool showName;
+  final bool showAvatar;
+  final ZegoAvatarBuilder? avatarBuilder;
   final int? maxLines;
   final bool isHorizontal;
 
@@ -38,21 +42,43 @@ class ZegoInRoomLiveCommentingViewItem extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(20.zR, 10.zR, 20.zR, 10.zR),
             child: RichText(
               maxLines: maxLines,
-              overflow: TextOverflow.ellipsis,
+              overflow:
+                  null == maxLines ? TextOverflow.clip : TextOverflow.ellipsis,
               text: TextSpan(
                 children: [
-                  if (prefix != null) prefixWidget(),
+                  ...showAvatar
+                      ? [
+                          WidgetSpan(
+                            child: SizedBox(
+                              width: 45.zR,
+                              height: 45.zR,
+                              child: ZegoAvatar(
+                                user: message.user,
+                                avatarSize: Size(45.zR, 45.zR),
+                                avatarBuilder: avatarBuilder,
+                              ),
+                            ),
+                          ),
+                          WidgetSpan(child: SizedBox(width: 1.zR))
+                        ]
+                      : [],
+                  ...showName
+                      ? [
+                          if (prefix != null) prefixWidget(),
+                          TextSpan(
+                            text: message.user.name,
+                            style: TextStyle(
+                              fontSize: 26.zR,
+                              color: messageNameColor,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          WidgetSpan(child: SizedBox(width: 10.zR))
+                        ]
+                      : [],
                   TextSpan(
-                    text: user.name,
-                    style: TextStyle(
-                      fontSize: 26.zR,
-                      color: messageNameColor,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  WidgetSpan(child: SizedBox(width: 10.zR)),
-                  TextSpan(
-                    text: isHorizontal ? message : '\n$message',
+                    text:
+                        isHorizontal ? message.message : '\n${message.message}',
                     style: TextStyle(
                       fontSize: 26.zR,
                       fontWeight: FontWeight.w400,
