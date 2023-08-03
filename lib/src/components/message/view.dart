@@ -5,43 +5,64 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/view_item.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
 
 /// @nodoc
-class ZegoInRoomLiveCommentingView extends StatefulWidget {
+class ZegoInRoomLiveMessageView extends StatefulWidget {
   final ZegoInRoomMessageViewConfig? config;
   final ZegoAvatarBuilder? avatarBuilder;
 
-  const ZegoInRoomLiveCommentingView({
+  const ZegoInRoomLiveMessageView({
     Key? key,
     this.config,
     this.avatarBuilder,
   }) : super(key: key);
 
   @override
-  State<ZegoInRoomLiveCommentingView> createState() =>
-      _ZegoInRoomLiveCommentingViewState();
+  State<ZegoInRoomLiveMessageView> createState() =>
+      _ZegoInRoomLiveMessageViewState();
 }
 
 /// @nodoc
-class _ZegoInRoomLiveCommentingViewState
-    extends State<ZegoInRoomLiveCommentingView> {
+class _ZegoInRoomLiveMessageViewState extends State<ZegoInRoomLiveMessageView> {
   @override
   Widget build(BuildContext context) {
-    return ZegoInRoomMessageView(
-      historyMessages: ZegoUIKit().getInRoomMessages(),
-      stream: ZegoUIKit().getInRoomMessageListStream(),
-      itemBuilder: widget.config?.itemBuilder ??
-          (BuildContext context, ZegoInRoomMessage message, _) {
-            return ZegoInRoomLiveCommentingViewItem(
-              message: message,
-              avatarBuilder: widget.avatarBuilder,
-              showName: widget.config?.showName ?? true,
-              showAvatar: widget.config?.showAvatar ?? true,
-              maxLines: widget.config?.maxLines,
-            );
-          },
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: widget.config?.background ?? Container(),
+          ),
+          ZegoInRoomMessageView(
+            historyMessages: ZegoUIKit().getInRoomMessages(),
+            stream: ZegoUIKit().getInRoomMessageListStream(),
+            itemBuilder: widget.config?.itemBuilder ??
+                (BuildContext context, ZegoInRoomMessage message, _) {
+                  return ZegoInRoomMessageViewItem(
+                    message: message,
+                    avatarBuilder: widget.avatarBuilder,
+                    showName: widget.config?.showName ?? true,
+                    showAvatar: widget.config?.showAvatar ?? true,
+                    resendIcon: widget.config?.resendIcon,
+                    borderRadius: widget.config?.borderRadius,
+                    paddings: widget.config?.paddings,
+                    opacity: widget.config?.opacity,
+                    backgroundColor: widget.config?.backgroundColor,
+                    maxLines: widget.config?.maxLines,
+                    nameTextStyle: widget.config?.nameTextStyle,
+                    messageTextStyle: widget.config?.messageTextStyle,
+                    onItemClick: widget.config?.onMessageClick,
+                    onItemLongPress: widget.config?.onMessageLongPress,
+                  );
+                },
+          ),
+        ],
+      ),
     );
   }
 }

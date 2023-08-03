@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
@@ -34,7 +35,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         hostSeatIndexes = const [0],
         topMenuBarConfig = ZegoTopMenuBarConfig(),
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(),
-        inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
+        inRoomMessageConfig = ZegoInRoomMessageConfig(),
         audioEffectConfig = ZegoAudioEffectConfig(),
         durationConfig = ZegoLiveDurationConfig(),
         backgroundMediaConfig = ZegoBackgroundMediaConfig(),
@@ -68,7 +69,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         hostSeatIndexes = const [0],
         topMenuBarConfig = ZegoTopMenuBarConfig(),
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(),
-        inRoomMessageViewConfig = ZegoInRoomMessageViewConfig(),
+        inRoomMessageConfig = ZegoInRoomMessageConfig(),
         audioEffectConfig = ZegoAudioEffectConfig(),
         durationConfig = ZegoLiveDurationConfig(),
         backgroundMediaConfig = ZegoBackgroundMediaConfig(),
@@ -82,7 +83,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
     ZegoTopMenuBarConfig? topMenuBarConfig,
     ZegoBottomMenuBarConfig? bottomMenuBarConfig,
     ZegoLiveAudioRoomLayoutConfig? layoutConfig,
-    ZegoInRoomMessageViewConfig? messageConfig,
+    ZegoInRoomMessageConfig? messageConfig,
     ZegoAudioEffectConfig? effectConfig,
     ZegoLiveDurationConfig? durationConfig,
     ZegoBackgroundMediaConfig? backgroundMediaConfig,
@@ -114,8 +115,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         topMenuBarConfig = topMenuBarConfig ?? ZegoTopMenuBarConfig(),
         bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig(),
         layoutConfig = layoutConfig ?? ZegoLiveAudioRoomLayoutConfig(),
-        inRoomMessageViewConfig =
-            messageConfig ?? ZegoInRoomMessageViewConfig(),
+        inRoomMessageConfig = messageConfig ?? ZegoInRoomMessageConfig(),
         audioEffectConfig = effectConfig ?? ZegoAudioEffectConfig(),
         durationConfig = durationConfig ?? ZegoLiveDurationConfig(),
         backgroundMediaConfig =
@@ -196,7 +196,15 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   ZegoBottomMenuBarConfig bottomMenuBarConfig;
 
   /// Configuration options for the message list.
-  ZegoInRoomMessageViewConfig inRoomMessageViewConfig;
+  ZegoInRoomMessageConfig inRoomMessageConfig;
+
+  @Deprecated('Since 2.8.5, please use inRoomMessageConfig instead')
+  ZegoInRoomMessageViewConfig get inRoomMessageViewConfig =>
+      inRoomMessageConfig;
+
+  @Deprecated('Since 2.8.5, please use inRoomMessageConfig instead')
+  set inRoomMessageViewConfig(ZegoInRoomMessageViewConfig config) =>
+      inRoomMessageConfig = config;
 
   /// Configuration options for modifying all text content on the UI.
   /// All visible text content on the UI can be modified using this single property.
@@ -446,7 +454,7 @@ class ZegoBottomMenuBarConfig {
 }
 
 /// Control options for the bottom-left message list.
-/// This class is used for the [inRoomMessageViewConfig] property of [ZegoUIKitPrebuiltLiveAudioRoomConfig].
+/// This class is used for the [inRoomMessageConfig] property of [ZegoUIKitPrebuiltLiveAudioRoomConfig].
 ///
 /// If you want to customize chat messages, you can specify the [itemBuilder] in [ZegoInRoomMessageViewConfig].
 ///
@@ -460,13 +468,32 @@ class ZegoBottomMenuBarConfig {
 ///     );
 ///   },
 /// );
-class ZegoInRoomMessageViewConfig {
-  /// If set to `false`, the message list will be hidden. The default value is `true`.
-  bool visible;
+class ZegoInRoomMessageConfig {
+  /// Triggered when has click on the message item
+  ZegoInRoomMessageViewItemPressEvent? onMessageClick;
+
+  /// Triggered when a pointer has remained in contact with the message item at
+  /// the same location for a long period of time.
+  ZegoInRoomMessageViewItemPressEvent? onMessageLongPress;
 
   /// Use this to customize the style and content of each chat message list item.
   /// For example, you can modify the background color, opacity, border radius, or add additional information like the sender's level or role.
   ZegoInRoomMessageItemBuilder? itemBuilder;
+
+  /// background
+  Widget? background;
+
+  /// If set to `false`, the message list will be hidden. The default value is `true`.
+  bool visible;
+
+  /// The width of chat message list view
+  double? width;
+
+  /// The height of chat message list view
+  double? height;
+
+  /// The offset of chat message list view bottom-left position
+  Offset? bottomLeft;
 
   /// display user name in message list view or not
   bool showName;
@@ -474,17 +501,57 @@ class ZegoInRoomMessageViewConfig {
   /// display user avatar in message list view or not
   bool showAvatar;
 
+  /// The opacity of the background color for chat message list items, default value of 0.5.
+  /// If you set the [backgroundColor], the [opacity] setting will be overridden.
+  double opacity;
+
+  /// The background of chat message list items
+  /// If you set the [backgroundColor], the [opacity] setting will be overridden.
+  /// You can use `backgroundColor.withOpacity(0.5)` to set the opacity of the background color.
+  Color? backgroundColor;
+
   /// The max lines of chat message list items, default value is not limit.
   int? maxLines;
 
-  ZegoInRoomMessageViewConfig({
+  /// The name text style of chat message list items
+  TextStyle? nameTextStyle;
+
+  /// The message text style of chat message list items
+  TextStyle? messageTextStyle;
+
+  /// The border radius of chat message list items
+  BorderRadiusGeometry? borderRadius;
+
+  /// The paddings of chat message list items
+  EdgeInsetsGeometry? paddings;
+
+  /// resend button icon
+  Widget? resendIcon;
+
+  ZegoInRoomMessageConfig({
     this.visible = true,
+    this.width,
+    this.height,
+    this.bottomLeft,
+    this.opacity = 0.5,
+    this.maxLines,
+    this.nameTextStyle,
+    this.messageTextStyle,
+    this.backgroundColor,
+    this.borderRadius,
+    this.paddings,
+    this.resendIcon,
+    this.background,
     this.itemBuilder,
+    this.onMessageClick,
+    this.onMessageLongPress,
     this.showName = true,
     this.showAvatar = true,
-    this.maxLines,
   });
 }
+
+@Deprecated('Since 2.8.5, please use ZegoInRoomMessageConfig instead')
+typedef ZegoInRoomMessageViewConfig = ZegoInRoomMessageConfig;
 
 /// Configuration options for voice changer and reverberation effects.
 /// This class is used for the [audioEffectConfig] property in [ZegoUIKitPrebuiltLiveAudioRoomConfig].

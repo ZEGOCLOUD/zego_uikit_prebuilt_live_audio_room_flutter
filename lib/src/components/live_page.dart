@@ -286,12 +286,22 @@ class ZegoLivePageState extends State<ZegoLivePage>
       return Container();
     }
 
+    var listSize = Size(
+      widget.config.inRoomMessageConfig.width ?? 540.zR,
+      widget.config.inRoomMessageConfig.height ?? 400.zR,
+    );
+    if (listSize.width < 54.zR) {
+      listSize = Size(54.zR, listSize.height);
+    }
+    if (listSize.height < 40.zR) {
+      listSize = Size(listSize.width, 40.zR);
+    }
     return Positioned(
-      // left: 32.r,
-      bottom: 124.zR,
+      left: widget.config.inRoomMessageConfig.bottomLeft?.dx ?? 0,
+      bottom: 124.zR + (widget.config.inRoomMessageConfig.bottomLeft?.dy ?? 0),
       child: ConstrainedBox(
-        constraints: BoxConstraints.loose(Size(540.zR, 400.zR)),
-        child: ZegoInRoomLiveCommentingView(
+        constraints: BoxConstraints.loose(listSize),
+        child: ZegoInRoomLiveMessageView(
           config: widget.config.inRoomMessageViewConfig,
           avatarBuilder: widget.config.seatConfig.avatarBuilder,
         ),
