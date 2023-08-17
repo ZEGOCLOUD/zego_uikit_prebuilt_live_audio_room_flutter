@@ -1,3 +1,9 @@
+## 2.9.2
+- update dependency
+
+## 2.9.1
+- update dependency
+
 ## 2.9.0
 - Added notifications for click and long-press events in the chat message, which can be monitored through **ZegoInRoomMessageConfig.onMessageClick** and **ZegoInRoomMessageConfig.onMessageLongPress**.
 - Added handling for local message sending failures. When a local message fails to send, it can be retried by clicking the icon. The icon can be customized through **ZegoInRoomMessageConfig.resendIcon**.

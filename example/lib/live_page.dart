@@ -37,7 +37,7 @@ class LivePage extends StatelessWidget {
             ..layoutConfig = getLayoutConfig()
             ..seatConfig = getSeatConfig()
             ..background = background()
-            ..inRoomMessageViewConfig = getMessageViewConfig()
+            ..inRoomMessageConfig = getMessageViewConfig()
             // ..userAvatarUrl = 'your_avatar_url'
             ..onUserCountOrPropertyChanged = (List<ZegoUIKitUser> users) {
               debugPrint(
