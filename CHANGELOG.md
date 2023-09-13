@@ -1,3 +1,15 @@
+## 2.11.2
+- Update dependency.
+
+## 2.11.1
+- Update dependency.
+
+## 2.11.0
+- Add a member list configuration, you can customize the member list item view by using **ZegoMemberListConfig.itemBuilder**, and listen for click events through **ZegoMemberListConfig.onClicked**.
+
+## 2.10.0
+- Add **advanceConfigs** config, which to set advanced engine configuration
+
 ## 2.9.2
 - update dependency
 

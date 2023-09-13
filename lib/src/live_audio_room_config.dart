@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
 
@@ -29,18 +29,20 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         closeSeatsWhenJoining = true,
         turnOnMicrophoneWhenJoining = true,
         useSpeakerWhenJoining = true,
+        rootNavigator = false,
         userInRoomAttributes = const {},
+        advanceConfigs = const {},
         seatConfig = ZegoLiveAudioRoomSeatConfig(),
         layoutConfig = ZegoLiveAudioRoomLayoutConfig(),
         hostSeatIndexes = const [0],
         topMenuBarConfig = ZegoTopMenuBarConfig(),
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(),
         inRoomMessageConfig = ZegoInRoomMessageConfig(),
+        memberListConfig = ZegoMemberListConfig(),
         audioEffectConfig = ZegoAudioEffectConfig(),
         durationConfig = ZegoLiveDurationConfig(),
         backgroundMediaConfig = ZegoBackgroundMediaConfig(),
         innerText = ZegoInnerText(),
-        rootNavigator = false,
         confirmDialogInfo = ZegoDialogInfo(
           title: 'Leave the room',
           message: 'Are you sure to leave the room?',
@@ -62,14 +64,16 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         turnOnMicrophoneWhenJoining = false,
         closeSeatsWhenJoining = false,
         useSpeakerWhenJoining = true,
-        userInRoomAttributes = const {},
         rootNavigator = false,
+        userInRoomAttributes = const {},
+        advanceConfigs = const {},
         seatConfig = ZegoLiveAudioRoomSeatConfig(),
         layoutConfig = ZegoLiveAudioRoomLayoutConfig(),
         hostSeatIndexes = const [0],
         topMenuBarConfig = ZegoTopMenuBarConfig(),
         bottomMenuBarConfig = ZegoBottomMenuBarConfig(),
         inRoomMessageConfig = ZegoInRoomMessageConfig(),
+        memberListConfig = ZegoMemberListConfig(),
         audioEffectConfig = ZegoAudioEffectConfig(),
         durationConfig = ZegoLiveDurationConfig(),
         backgroundMediaConfig = ZegoBackgroundMediaConfig(),
@@ -84,6 +88,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
     ZegoBottomMenuBarConfig? bottomMenuBarConfig,
     ZegoLiveAudioRoomLayoutConfig? layoutConfig,
     ZegoInRoomMessageConfig? messageConfig,
+    ZegoMemberListConfig? memberListConfig,
     ZegoAudioEffectConfig? effectConfig,
     ZegoLiveDurationConfig? durationConfig,
     ZegoBackgroundMediaConfig? backgroundMediaConfig,
@@ -97,6 +102,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
     this.background,
     this.userAvatarUrl,
     this.userInRoomAttributes = const {},
+    this.advanceConfigs = const {},
     this.onUserCountOrPropertyChanged,
     this.onSeatClosed,
     this.onSeatsOpened,
@@ -116,6 +122,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig(),
         layoutConfig = layoutConfig ?? ZegoLiveAudioRoomLayoutConfig(),
         inRoomMessageConfig = messageConfig ?? ZegoInRoomMessageConfig(),
+        memberListConfig = memberListConfig ?? ZegoMemberListConfig(),
         audioEffectConfig = effectConfig ?? ZegoAudioEffectConfig(),
         durationConfig = durationConfig ?? ZegoLiveDurationConfig(),
         backgroundMediaConfig =
@@ -163,7 +170,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// If this value is set to `false`, the system's default playback device, such as the earpiece or Bluetooth headset, will be used for audio playback.
   bool useSpeakerWhenJoining;
 
-  /// The foreground of the live streaming.
+  /// The foreground of the live audio room.
   ///
   /// If you need to nest some widgets in [ZegoUIKitPrebuiltLiveAudioRoom], please use [foreground] nesting, otherwise these widgets will be lost when you minimize and restore the [ZegoUIKitPrebuiltLiveAudioRoom]
   Widget? foreground;
@@ -198,6 +205,9 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// Configuration options for the message list.
   ZegoInRoomMessageConfig inRoomMessageConfig;
 
+  /// Configuration related to the bottom member list, including displaying the member list, member list styles, and more.
+  ZegoMemberListConfig memberListConfig;
+
   @Deprecated('Since 2.8.5, please use inRoomMessageConfig instead')
   ZegoInRoomMessageViewConfig get inRoomMessageViewConfig =>
       inRoomMessageConfig;
@@ -213,7 +223,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// You can use this to modify your voice and control reverb.
   ZegoAudioEffectConfig audioEffectConfig;
 
-  /// Live Streaming timing configuration.
+  /// Live audio room timing configuration.
   ZegoLiveDurationConfig durationConfig;
 
   /// Set the avatar URL for the current user.
@@ -244,6 +254,10 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
 
   /// the config of background music, the feature currently only works for the host
   ZegoBackgroundMediaConfig backgroundMediaConfig;
+
+  /// Set advanced engine configuration, Used to enable advanced functions.
+  /// For details, please consult ZEGO technical support.
+  Map<String, String> advanceConfigs;
 
   /// Confirmation callback method before leaving the audio chat room.
   ///
@@ -552,6 +566,39 @@ class ZegoInRoomMessageConfig {
 
 @Deprecated('Since 2.8.5, please use ZegoInRoomMessageConfig instead')
 typedef ZegoInRoomMessageViewConfig = ZegoInRoomMessageConfig;
+
+/// Configuration for the member list.
+///
+/// You can use the [ZegoUIKitPrebuiltLiveAudioRoomConfig.memberListConfig] property to set the properties inside this class.
+///
+/// If you want to use a custom member list item view, you can set the [ZegoMemberListConfig.itemBuilder] property, and pass your custom view's builder function to it.
+///
+/// For example, suppose you have implemented a `CustomMemberListItem` component that can render a member list item view based on the user information. You can set it up like this:
+///
+///```dart
+/// ZegoMemberListConfig(
+///   itemBuilder: (BuildContext context, Size size, ZegoUIKitUser user, Map<String, dynamic> extraInfo) {
+///     return CustomMemberListItem(user: user);
+///   },
+/// );
+///```
+///
+/// In this example, we pass the builder function of the custom view, `CustomMemberListItem`, to the [itemBuilder] property so that the member list item will be rendered using the custom component.
+///
+/// In addition, you can listen for item click events through [onClicked].
+class ZegoMemberListConfig {
+  /// Custom member list item view.
+  ZegoMemberListItemBuilder? itemBuilder;
+
+  /// You can listen to the user click event on the member list,
+  /// for example, if you want to display specific information about a member after they are clicked.
+  void Function(ZegoUIKitUser user)? onClicked;
+
+  ZegoMemberListConfig({
+    this.itemBuilder,
+    this.onClicked,
+  });
+}
 
 /// Configuration options for voice changer and reverberation effects.
 /// This class is used for the [audioEffectConfig] property in [ZegoUIKitPrebuiltLiveAudioRoomConfig].

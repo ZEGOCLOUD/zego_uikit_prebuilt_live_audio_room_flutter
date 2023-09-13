@@ -35,7 +35,8 @@ class ZegoInRoomMessageInputBoardButton extends StatefulWidget {
 }
 
 /// @nodoc
-class _ZegoInRoomMessageInputBoardButtonState extends State<ZegoInRoomMessageInputBoardButton> {
+class _ZegoInRoomMessageInputBoardButtonState
+    extends State<ZegoInRoomMessageInputBoardButton> {
   @override
   Widget build(BuildContext context) {
     return ZegoTextIconButton(

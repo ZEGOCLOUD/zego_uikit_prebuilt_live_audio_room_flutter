@@ -302,6 +302,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
             backgroundColor: Colors.white,
           ),
           avatarBuilder: widget.avatarBuilder,
+          itemBuilder: widget.config.memberListConfig.itemBuilder,
           isPluginEnabled: widget.isPluginEnabled,
           seatManager: widget.seatManager,
           connectManager: widget.connectManager,

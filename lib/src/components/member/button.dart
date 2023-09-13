@@ -6,7 +6,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/components/member/member_list_sheet.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/member/list_sheet.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
@@ -17,6 +17,7 @@ class ZegoMemberButton extends StatefulWidget {
   const ZegoMemberButton({
     Key? key,
     this.avatarBuilder,
+    this.itemBuilder,
     required this.isPluginEnabled,
     required this.seatManager,
     required this.connectManager,
@@ -29,8 +30,10 @@ class ZegoMemberButton extends StatefulWidget {
     this.icon,
   }) : super(key: key);
 
-  final bool isPluginEnabled;
   final ZegoAvatarBuilder? avatarBuilder;
+  final ZegoMemberListItemBuilder? itemBuilder;
+
+  final bool isPluginEnabled;
   final ZegoLiveSeatManager seatManager;
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
@@ -69,6 +72,7 @@ class _ZegoMemberButtonState extends State<ZegoMemberButton> {
         showMemberListSheet(
           context: context,
           avatarBuilder: widget.avatarBuilder,
+          itemBuilder: widget.itemBuilder,
           isPluginEnabled: widget.isPluginEnabled,
           seatManager: widget.seatManager,
           connectManager: widget.connectManager,

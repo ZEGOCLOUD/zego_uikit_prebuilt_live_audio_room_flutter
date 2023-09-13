@@ -50,6 +50,7 @@ extension ZegoLiveAudioRoomControllerSeat on ZegoLiveAudioRoomController {
     return ZegoUIKit()
         .getSignalingPlugin()
         .sendInvitation(
+          inviterID: ZegoUIKit().getLocalUser().id,
           inviterName: ZegoUIKit().getLocalUser().name,
           invitees: _seatManager?.hostsNotifier.value ?? [],
           timeout: 60,

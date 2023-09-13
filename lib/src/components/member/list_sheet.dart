@@ -24,6 +24,7 @@ class ZegoMemberListSheet extends StatefulWidget {
   const ZegoMemberListSheet({
     Key? key,
     this.avatarBuilder,
+    this.itemBuilder,
     this.hiddenUserIDsNotifier,
     required this.isPluginEnabled,
     required this.seatManager,
@@ -34,13 +35,15 @@ class ZegoMemberListSheet extends StatefulWidget {
   }) : super(key: key);
 
   final bool isPluginEnabled;
-  final ZegoAvatarBuilder? avatarBuilder;
   final ZegoLiveSeatManager seatManager;
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
   final ZegoInnerText innerText;
   final ZegoMemberListSheetMoreButtonPressed? onMoreButtonPressed;
   final ValueNotifier<List<String>>? hiddenUserIDsNotifier;
+
+  final ZegoAvatarBuilder? avatarBuilder;
+  final ZegoMemberListItemBuilder? itemBuilder;
 
   @override
   State<ZegoMemberListSheet> createState() => _ZegoMemberListSheetState();
@@ -148,37 +151,44 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
 
               return sortUsers;
             },
-            itemBuilder: (
-              BuildContext context,
-              Size size,
-              ZegoUIKitUser user,
-              Map<String, dynamic> extraInfo,
-            ) {
-              return ValueListenableBuilder<Map<String, String>>(
-                  valueListenable:
-                      ZegoUIKit().getInRoomUserAttributesNotifier(user.id),
-                  builder: (context, _, __) {
-                    return Container(
-                      margin: EdgeInsets.only(bottom: 36.zR),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 92.zR,
-                            height: 92.zR,
-                            child: ZegoAvatarDefaultItem(
-                              user: user,
-                              avatarBuilder: widget.avatarBuilder,
+            itemBuilder: widget.itemBuilder ??
+                (
+                  BuildContext context,
+                  Size size,
+                  ZegoUIKitUser user,
+                  Map<String, dynamic> extraInfo,
+                ) {
+                  return ValueListenableBuilder<Map<String, String>>(
+                      valueListenable:
+                          ZegoUIKit().getInRoomUserAttributesNotifier(user.id),
+                      builder: (context, _, __) {
+                        return GestureDetector(
+                          onTap: () {
+                            widget.seatManager.config.memberListConfig.onClicked
+                                ?.call(user);
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: 36.zR),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 92.zR,
+                                  height: 92.zR,
+                                  child: ZegoAvatarDefaultItem(
+                                    user: user,
+                                    avatarBuilder: widget.avatarBuilder,
+                                  ),
+                                ),
+                                SizedBox(width: 24.zR),
+                                userNameItem(user),
+                                const Expanded(child: SizedBox()),
+                                controlsItem(user),
+                              ],
                             ),
                           ),
-                          SizedBox(width: 24.zR),
-                          userNameItem(user),
-                          const Expanded(child: SizedBox()),
-                          controlsItem(user),
-                        ],
-                      ),
-                    );
-                  });
-            },
+                        );
+                      });
+                },
           );
         });
   }
@@ -442,6 +452,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
 
 void showMemberListSheet({
   ZegoAvatarBuilder? avatarBuilder,
+  ZegoMemberListItemBuilder? itemBuilder,
   required bool isPluginEnabled,
   required BuildContext context,
   required ZegoLiveSeatManager seatManager,
@@ -476,6 +487,7 @@ void showMemberListSheet({
             padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             child: ZegoMemberListSheet(
               avatarBuilder: avatarBuilder,
+              itemBuilder: itemBuilder,
               isPluginEnabled: isPluginEnabled,
               seatManager: seatManager,
               connectManager: connectManager,

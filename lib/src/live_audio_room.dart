@@ -105,7 +105,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 2.9.2; $version',
+        'version: zego_uikit_prebuilt_live_audio_room: 2.11.2; $version',
         tag: 'audio room',
         subTag: 'prebuilt',
       );
@@ -342,7 +342,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     }
   }
 
-  void initContext() {
+  void initContext() async {
     assert(widget.userID.isNotEmpty);
     assert(widget.userName.isNotEmpty);
     assert(widget.appID > 0);
@@ -350,16 +350,22 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().login(widget.userID, widget.userName);
 
+    await ZegoUIKit().setAdvanceConfigs(widget.config.advanceConfigs);
+
     ZegoUIKit()
         .init(
-          appID: widget.appID,
-          appSign: widget.appSign,
-          scenario: ZegoScenario.Broadcast,
-        )
-        .then(onContextInit);
+      appID: widget.appID,
+      appSign: widget.appSign,
+      scenario: ZegoScenario.Broadcast,
+    )
+        .then((_) async {
+      await ZegoUIKit().setAdvanceConfigs(widget.config.advanceConfigs);
+
+      onContextInit();
+    });
   }
 
-  void onContextInit(_) {
+  void onContextInit() {
     ZegoUIKit()
       ..turnCameraOn(false)
       ..turnMicrophoneOn(widget.config.turnOnMicrophoneWhenJoining)
