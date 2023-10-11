@@ -1,3 +1,9 @@
+## 2.11.4
+- update dart dependency
+
+## 2.11.3
+- remove http library dependency.
+
 ## 2.11.2
 - Update dependency.
 
