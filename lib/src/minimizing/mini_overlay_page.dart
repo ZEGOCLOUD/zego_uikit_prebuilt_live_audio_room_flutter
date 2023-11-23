@@ -83,7 +83,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
 
     topLeft = widget.topLeft;
 
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine()
           .listenStateChanged(onMiniOverlayMachineStateChanged);
 

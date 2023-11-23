@@ -8,8 +8,8 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 
 /// @nodoc
 Future<void> checkPermissions({

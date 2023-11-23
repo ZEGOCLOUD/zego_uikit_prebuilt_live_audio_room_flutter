@@ -37,7 +37,7 @@ class _ZegoHostLockSeatButtonState extends State<ZegoHostLockSeatButton> {
     return GestureDetector(
       onTap: () async {
         widget.seatManager.lockSeat(
-          !widget.seatManager.isSeatLockedNotifier.value,
+          !widget.seatManager.isRoomSeatLockedNotifier.value,
         );
       },
       child: Container(
@@ -50,10 +50,10 @@ class _ZegoHostLockSeatButtonState extends State<ZegoHostLockSeatButton> {
         child: SizedBox.fromSize(
           size: sizeBoxSize,
           child: ValueListenableBuilder<bool>(
-              valueListenable: widget.seatManager.isSeatLockedNotifier,
-              builder: (context, isSeatLocked, _) {
+              valueListenable: widget.seatManager.isRoomSeatLockedNotifier,
+              builder: (context, isRoomSeatLocked, _) {
                 return PrebuiltLiveAudioRoomImage.asset(
-                  isSeatLocked
+                  isRoomSeatLocked
                       ? PrebuiltLiveAudioRoomIconUrls.toolbarHostUnLockSeat
                       : PrebuiltLiveAudioRoomIconUrls.toolbarHostLockSeat,
                 );

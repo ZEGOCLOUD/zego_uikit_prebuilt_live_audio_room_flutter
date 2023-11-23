@@ -11,7 +11,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart'
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 
 /// @nodoc
 class ZegoPopUpSheetMenu extends StatefulWidget {
@@ -82,19 +82,11 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
 
         switch (popupItem.value) {
           case PopupItemValue.takeOnSeat:
-            if (widget.seatManager.isSeatLockedNotifier.value) {
-              ZegoLoggerService.logInfo(
-                'take on seat, but seat is locked',
-                tag: 'audio room',
-                subTag: 'seat manager',
-              );
-            } else {
-              widget.seatManager.takeOnSeat(
-                popupItem.data as int,
-                isForce: false,
-                isDeleteAfterOwnerLeft: true,
-              );
-            }
+            widget.seatManager.takeOnSeat(
+              popupItem.data as int,
+              isForce: false,
+              isDeleteAfterOwnerLeft: true,
+            );
             break;
           case PopupItemValue.takeOffSeat:
             // clear popup sheet info
@@ -124,16 +116,6 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
               roomID: widget.seatManager.roomID,
               targetUser: ZegoUIKit().getUser(popupItem.data as String? ?? ''),
             );
-            break;
-            // case PopupItemValue.kickOut:
-            //   ZegoUIKit().removeUserFromRoom(
-            //       [popupItem.data as String? ?? '']).then((result) {
-            //     ZegoLoggerService.logInfo(
-            //       'kick out result:$result',
-            //       tag: 'live audio room',
-            //       subTag: 'pop-up sheet',
-            //     );
-            //   });
             break;
           case PopupItemValue.cancel:
             break;

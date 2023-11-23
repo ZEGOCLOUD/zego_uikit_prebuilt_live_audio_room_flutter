@@ -28,6 +28,9 @@ enum ZegoMenuBarButtonName {
 
   /// Button for minimizing the current [ZegoUIKitPrebuiltLiveAudioRoom] widget within the app.
   /// When clicked, the [ZegoUIKitPrebuiltLiveAudioRoom] widget will shrink into a small draggable widget within the app.
+  ///
+  /// If you need to nest some widgets in [ZegoUIKitPrebuiltLiveAudioRoom], please use [foreground] nesting,
+  /// otherwise these widgets will be lost when you minimize and restore the [ZegoUIKitPrebuiltLiveAudioRoom]
   minimizingButton,
 
   /// Button for toggling the seat availability.

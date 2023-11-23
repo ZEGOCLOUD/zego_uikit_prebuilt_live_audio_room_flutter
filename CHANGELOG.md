@@ -1,30 +1,72 @@
+## 2.13.6
+
+- Update dependency.
+
+## 2.13.5
+
+- Fixing the issue of **seatConfig.showSoundWaveInAudioMode** parameter malfunction.
+
+## 2.13.4
+
+- Compatible with AppLifecycleState.hidden in flutter 3.13.0
+
+## 2.13.3
+
+- update dart dependency
+
+## 2.13.2
+
+- Optimization warnings from analysis
+
+## 2.13.1
+
+- Optimization warnings from analysis
+
+## 2.13.0
+
+- Support listening for errors in the beauty and signaling plugins and uikit library.
+
+## 2.12.0
+
+- Support close/open specific seat by **targetIndex** closeSeats/openSeats of controller
+
 ## 2.11.4
+
 - update dart dependency
 
 ## 2.11.3
+
 - remove http library dependency.
 
 ## 2.11.2
+
 - Update dependency.
 
 ## 2.11.1
+
 - Update dependency.
 
 ## 2.11.0
+
 - Add a member list configuration, you can customize the member list item view by using **ZegoMemberListConfig.itemBuilder**, and listen for click events through **ZegoMemberListConfig.onClicked**.
 
 ## 2.10.0
+
 - Add **advanceConfigs** config, which to set advanced engine configuration
 
 ## 2.9.2
+
 - update dependency
 
 ## 2.9.1
+
 - update dependency
 
 ## 2.9.0
+
 - Added notifications for click and long-press events in the chat message, which can be monitored through **ZegoInRoomMessageConfig.onMessageClick** and **ZegoInRoomMessageConfig.onMessageLongPress**.
-- Added handling for local message sending failures. When a local message fails to send, it can be retried by clicking the icon. The icon can be customized through **ZegoInRoomMessageConfig.resendIcon**.
+- Added handling for local message sending failures. When a local message fails to send, it can be retried by clicking the icon. The icon can be customized through **
+  ZegoInRoomMessageConfig.resendIcon**.
 - Added avatar display to messages by default. If avatars are not desired, they can be hidden through **ZegoInRoomMessageConfig.showAvatar**.
 - Added message sending and receiving API to the controller.
 - Adjusted the message display to default to showing the entire content. If not all content needs to be displayed, the maximum number of displayed lines can be modified through
@@ -33,68 +75,89 @@
 - Support set chat background by **ZegoInRoomMessageConfig.background**.
 
 ## 2.8.5
+
 - Adjusted the message display to default to showing the entire content. If not all content needs to be displayed, the maximum number of displayed lines can be modified through
   **ZegoInRoomMessageConfig.maxLines**. When the maximum number of lines is exceeded, the message will automatically collapse.
 - Added avatar display to messages by default. If avatars are not desired, they can be hidden through **ZegoInRoomMessageConfig.showAvatar**.
 
 ## 2.8.4
+
 - Fixed the issue of not receiving calls when prebuilt_call is used in conjunction with prebuilt_live_audio_room.
 
 ## 2.8.3
+
 - Fix the black screen issue when sharing media on iOS.
 
 ## 2.8.2
+
 - Update dependencies
 
 ## 2.8.1
-- support mute local media volume 
+
+- support mute local media volume
 
 ## 2.8.0
+
 - support media sharing
 
 ## 2.7.1
+
 - Update dependencies
 
 ## 2.7.0
+
 - Add a "leave" method to the controller that allows for actively leave the current live.
 
 ## 2.6.2
+
 - Optimizing timing function.
 
 ## 2.6.1
+
 - Fixed the issue where users were kicked out when both camera and microphone permissions were not denied but the permission dialog could not be dismissed.
 
 ## 2.6.0
+
 - Support server-based timing
 
 ## 2.5.0
+
 - Support host remove audience or speaker from audio room.
 
 ## 2.4.15
+
 - Update dependencies
 
 ## 2.4.14
+
 - fix the issue of conflict with extension key of the `flutter_screenutil` package.
 
 ## 2.4.13
+
 - fix some user login status issues when used `zego_uikit_prebuilt_live_audio_room` with `zego_zimkit`
 
 ## 2.4.12
+
 - Update dependencies
 
 ## 2.4.11
+
 - Update Readme
 
 ## 2.4.10
+
 - Update comments
 
 ## 2.4.9
+
 - deprecate flutter_screenutil_zego package
 
 ## 2.4.8
+
 - Fix some issues of co-hosts
 
 ## 2.4.7
+
 - support the host in setting co-hosts.
 
 ## 2.4.6
@@ -106,6 +169,7 @@
 - Update dependencies
 
 ## 2.4.3
+
 - Fix some issues
 
 ## 2.4.2

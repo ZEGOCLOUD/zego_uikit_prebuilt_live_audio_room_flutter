@@ -1,4 +1,4 @@
-part of 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_controller.dart';
+part of 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 
 /// @nodoc
 mixin ZegoLiveAudioRoomControllerMedia {

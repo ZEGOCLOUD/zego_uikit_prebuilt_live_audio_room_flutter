@@ -65,6 +65,7 @@ class ZegoLiveAudioRoomManagers {
           seatManager?.initRoleAndSeat();
         });
       },
+      onError: prebuiltData.config.onError,
     );
     seatManager = ZegoLiveSeatManager(
       localUserID: prebuiltData.userID,

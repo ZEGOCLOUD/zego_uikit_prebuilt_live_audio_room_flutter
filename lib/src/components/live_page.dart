@@ -19,12 +19,12 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/duration_time
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/view.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/top_bar.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/live_duration_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_controller.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/prebuilt_data.dart';
 
 /// @nodoc
@@ -216,6 +216,8 @@ class ZegoLivePageState extends State<ZegoLivePage>
       },
       sortAudioVideo: audioVideoViewSorter,
       avatarBuilder: widget.config.seatConfig.avatarBuilder,
+      showSoundWavesInAudioMode:
+          widget.config.seatConfig.showSoundWaveInAudioMode,
     );
 
     return Positioned(
@@ -282,7 +284,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
   }
 
   Widget messageList() {
-    if (!widget.config.inRoomMessageViewConfig.visible) {
+    if (!widget.config.inRoomMessageConfig.visible) {
       return Container();
     }
 
@@ -302,7 +304,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
       child: ConstrainedBox(
         constraints: BoxConstraints.loose(listSize),
         child: ZegoInRoomLiveMessageView(
-          config: widget.config.inRoomMessageViewConfig,
+          config: widget.config.inRoomMessageConfig,
           avatarBuilder: widget.config.seatConfig.avatarBuilder,
         ),
       ),
@@ -332,6 +334,16 @@ class ZegoLivePageState extends State<ZegoLivePage>
       tag: 'live audio',
       subTag: 'live page',
     );
+
+    if (ZegoUIKit().getLocalUser().microphone.value) {
+      ZegoLoggerService.logInfo(
+        'microphone is open now, not need request',
+        tag: 'live audio',
+        subTag: 'live page',
+      );
+
+      return;
+    }
 
     final canMicrophoneTurnOnByOthers = await widget
             .config.onMicrophoneTurnOnByOthersConfirmation

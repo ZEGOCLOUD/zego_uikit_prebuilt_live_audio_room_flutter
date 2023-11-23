@@ -12,11 +12,11 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/dialogs.dart'
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_controller.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 
 /// @nodoc
 class ZegoLiveConnectManager {
@@ -340,7 +340,7 @@ class ZegoLiveConnectManager {
             seatManager
                 .takeOnSeat(
               targetSeatIndex,
-              isForce: false,
+              isForce: true,
               isDeleteAfterOwnerLeft: true,
             )
                 .then((result) {
@@ -404,7 +404,7 @@ class ZegoLiveConnectManager {
         seatManager
             .takeOnSeat(
           targetSeatIndex,
-          isForce: false,
+          isForce: true,
           isDeleteAfterOwnerLeft: true,
         )
             .then((result) {

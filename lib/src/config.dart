@@ -7,9 +7,8 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 
 /// Configuration for initializing the Live Audio Room.
 /// This class is used as the [config] parameter for the constructor of [ZegoUIKitPrebuiltLiveAudioRoom].
@@ -104,6 +103,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
     this.userInRoomAttributes = const {},
     this.advanceConfigs = const {},
     this.onUserCountOrPropertyChanged,
+    this.onError,
     this.onSeatClosed,
     this.onSeatsOpened,
     this.onSeatClicked,
@@ -276,7 +276,15 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   void Function(bool isFromMinimizing)? onLeaveLiveAudioRoom;
 
   /// This callback is triggered when local user removed from audio room.
-  /// The default behavior is return to the previous page. If you override this callback, you must perform the page navigation yourself, otherwise the user will remain on the live audio page.
+  ///
+  /// The default behavior is to return to the previous page.
+  ///
+  /// If you override this callback, you must perform the page navigation
+  /// yourself to return to the previous page!!!
+  /// otherwise the user will remain on the current live audio page !!!!!
+  ///
+  /// You can perform business-related prompts or other actions in this callback.
+  /// For example, you can perform custom logic during the hang-up operation, such as recording log information, stopping recording, etc.
   Future<void> Function(String fromUserID)? onMeRemovedFromRoom;
 
   /// This callback method is called when someone requests to open your microphone, typically when the host wants to open the speaker's microphone.
@@ -284,11 +292,58 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// You can display a dialog in this callback to confirm whether to open the microphone.
   /// Alternatively, you can return `true` without any processing, indicating that when someone requests to open your microphone, it can be directly opened.
   /// By default, this method does nothing and returns `false`, indicating that others cannot open your microphone.
+  ///
+  /// Example：
+  ///
+  /// ```dart
+  ///
+  ///  // eg:
+  /// ..onMicrophoneTurnOnByOthersConfirmation =
+  ///     (BuildContext context) async {
+  ///   const textStyle = TextStyle(
+  ///     fontSize: 10,
+  ///     color: Colors.white70,
+  ///   );
+  ///
+  ///   return await showDialog(
+  ///     context: context,
+  ///     barrierDismissible: false,
+  ///     builder: (BuildContext context) {
+  ///       return AlertDialog(
+  ///         backgroundColor: Colors.blue[900]!.withOpacity(0.9),
+  ///         title: const Text(
+  ///           'You have a request to turn on your microphone',
+  ///           style: textStyle,
+  ///         ),
+  ///         content: const Text(
+  ///           'Do you agree to turn on the microphone?',
+  ///           style: textStyle,
+  ///         ),
+  ///         actions: [
+  ///           ElevatedButton(
+  ///             child: const Text('Cancel', style: textStyle),
+  ///             onPressed: () => Navigator.of(context).pop(false),
+  ///           ),
+  ///           ElevatedButton(
+  ///             child: const Text('OK', style: textStyle),
+  ///             onPressed: () {
+  ///               Navigator.of(context).pop(true);
+  ///             },
+  ///           ),
+  ///         ],
+  ///       );
+  ///     },
+  ///   );
+  /// },
+  /// ```
   Future<bool> Function(BuildContext context)?
       onMicrophoneTurnOnByOthersConfirmation;
 
   /// This callback method is triggered when the user count or attributes related to these users change.
   void Function(List<ZegoUIKitUser> users)? onUserCountOrPropertyChanged;
+
+  /// error stream
+  Function(ZegoUIKitError)? onError;
 
   /// Notification that a seat has been closed (locked).
   /// After closing a seat, audience members need to request permission from the host to join the seat, or the host can invite audience members directly.
@@ -470,7 +525,7 @@ class ZegoBottomMenuBarConfig {
 /// Control options for the bottom-left message list.
 /// This class is used for the [inRoomMessageConfig] property of [ZegoUIKitPrebuiltLiveAudioRoomConfig].
 ///
-/// If you want to customize chat messages, you can specify the [itemBuilder] in [ZegoInRoomMessageViewConfig].
+/// If you want to customize chat messages, you can specify the [itemBuilder] in [ZegoInRoomMessageConfig].
 ///
 /// Example:
 ///

@@ -1,4 +1,4 @@
-part of 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_controller.dart';
+part of 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 
 /// @nodoc
 extension ZegoLiveAudioRoomControllerSeat on ZegoLiveAudioRoomController {
@@ -8,7 +8,7 @@ extension ZegoLiveAudioRoomControllerSeat on ZegoLiveAudioRoomController {
   }
 
   /// Assigns the audience to the seat with the specified [index], where the index represents the seat number starting from 0.
-  Future<bool> takeSeat(int index, int test) async {
+  Future<bool> takeSeat(int index) async {
     return await _seatManager?.takeOnSeat(
           index,
           isForce: true,
@@ -24,14 +24,32 @@ extension ZegoLiveAudioRoomControllerSeat on ZegoLiveAudioRoomController {
     return _seatManager?.kickSeat(index);
   }
 
-  /// Closes (locks) the seat. After closing the seat, audience members need to request permission from the host or be invited by the host to occupy the seat.
-  Future<bool> closeSeats() async {
-    return await _seatManager?.lockSeat(true) ?? false;
+  /// Closes (locks) the seat.
+  /// allows you to lock all seats in the room at once, or only lock specific seat by [targetIndex].
+  ///
+  /// After closing(locks) the seat, audience members need to request permission from the host or be invited by the host to occupy the seat.
+  Future<bool> closeSeats({
+    int targetIndex = -1,
+  }) async {
+    return await _seatManager?.lockSeat(
+          true,
+          targetIndex: targetIndex,
+        ) ??
+        false;
   }
 
-  /// Opens (unlocks) the seat. After opening the seat, all audience members can freely choose an empty seat to join and start chatting with others.
-  Future<bool> openSeats() async {
-    return await _seatManager?.lockSeat(false) ?? false;
+  /// Opens (unlocks) the seat.
+  /// allows you to unlock all seats in the room at once, or only unlock specific seat by [targetIndex].
+  ///
+  /// After opening(locks) the seat, all audience members can freely choose an empty seat to join and start chatting with others.
+  Future<bool> openSeats({
+    int targetIndex = -1,
+  }) async {
+    return await _seatManager?.lockSeat(
+          false,
+          targetIndex: targetIndex,
+        ) ??
+        false;
   }
 
   //--------start of audience request take seat's api--------------
@@ -183,7 +201,7 @@ extension ZegoLiveAudioRoomControllerSeat on ZegoLiveAudioRoomController {
         return await _seatManager
                 ?.takeOnSeat(
               _seatManager?.getNearestEmptyIndex() ?? -1,
-              isForce: false,
+              isForce: true,
               isDeleteAfterOwnerLeft: true,
             )
                 .then((result) async {

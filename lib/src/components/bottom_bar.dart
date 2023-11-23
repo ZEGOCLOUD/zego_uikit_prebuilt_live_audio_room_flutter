@@ -10,14 +10,14 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/effects/sound
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/leave_button.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/input_board_button.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_button.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/host_lock_seat_button.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_controller.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_button.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/prebuilt_data.dart';
 
@@ -115,8 +115,8 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         SliverFillRemaining(
           hasScrollBody: false,
           child: ValueListenableBuilder<bool>(
-              valueListenable: widget.seatManager.isSeatLockedNotifier,
-              builder: (context, isSeatLocked, _) {
+              valueListenable: widget.seatManager.isRoomSeatLockedNotifier,
+              builder: (context, isRoomSeatLocked, _) {
                 return ValueListenableBuilder<List<String>>(
                     valueListenable: widget.seatManager.hostsNotifier,
                     builder: (context, _, __) {
@@ -130,7 +130,10 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 ...getDisplayButtons(
-                                    context, isSeatLocked, localRole),
+                                  context,
+                                  isRoomSeatLocked,
+                                  localRole,
+                                ),
                                 zegoLiveButtonPadding,
                                 zegoLiveButtonPadding,
                               ],
@@ -145,13 +148,13 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
 
   List<Widget> getDisplayButtons(
     BuildContext context,
-    bool isSeatLocked,
+    bool isRoomSeatLocked,
     ZegoLiveAudioRoomRole localRole,
   ) {
     final buttonList = <Widget>[
       ...getDefaultButtons(
         context,
-        isSeatLocked: isSeatLocked,
+        isRoomSeatLocked: isRoomSeatLocked,
         localRole: localRole,
         microphoneDefaultValueFunc: widget.prebuiltData.isPrebuiltFromMinimizing
             ? () {
@@ -179,7 +182,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                 final buttonList = <Widget>[
                   ...getDefaultButtons(
                     context,
-                    isSeatLocked: isSeatLocked,
+                    isRoomSeatLocked: isRoomSeatLocked,
                     localRole: localRole,
                     microphoneDefaultValueFunc: () {
                       return ZegoUIKit()
@@ -250,7 +253,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
 
   List<Widget> getDefaultButtons(
     BuildContext context, {
-    required bool isSeatLocked,
+    required bool isRoomSeatLocked,
     required ZegoLiveAudioRoomRole localRole,
     bool Function()? microphoneDefaultValueFunc,
   }) {
@@ -260,7 +263,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
 
     return buttons
         .where((button) {
-          if (isSeatLocked) {
+          if (isRoomSeatLocked) {
             if (localRole != ZegoLiveAudioRoomRole.audience &&
                 ZegoMenuBarButtonName.applyToTakeSeatButton == button) {
               /// if audience is on seat, then hide the applyToTakeSeatButton

@@ -23,6 +23,7 @@ class ZegoSeatContainer extends StatefulWidget {
     this.foregroundBuilder,
     this.backgroundBuilder,
     this.sortAudioVideo,
+    this.showSoundWavesInAudioMode = true,
   }) : super(key: key);
 
   final ZegoLiveSeatManager seatManager;
@@ -37,7 +38,11 @@ class ZegoSeatContainer extends StatefulWidget {
 
   /// sorter
   final ZegoAudioVideoViewSorter? sortAudioVideo;
+
+  ///avatar
   final ZegoAvatarBuilder? avatarBuilder;
+
+  final bool showSoundWavesInAudioMode;
 
   @override
   State<ZegoSeatContainer> createState() => _ZegoAudioVideoContainerState();
@@ -82,6 +87,7 @@ class _ZegoAudioVideoContainerState extends State<ZegoSeatContainer> {
           foregroundBuilder: widget.foregroundBuilder,
           userList: userList,
           usersItemIndex: getUsersItemIndexIfSpecify(),
+          showSoundWavesInAudioMode: widget.showSoundWavesInAudioMode,
           avatarBuilder: widget.avatarBuilder,
         );
       },

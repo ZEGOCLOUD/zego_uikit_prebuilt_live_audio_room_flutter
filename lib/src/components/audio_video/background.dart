@@ -7,10 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/audio_room_layout.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
 
 /// @nodoc
 class ZegoSeatBackground extends StatefulWidget {
@@ -61,27 +62,30 @@ class _ZegoSeatForegroundState extends State<ZegoSeatBackground> {
       top: avatarPosTop,
       left: avatarPosLeft,
       child: Container(
-        width: seatIconWidth,
-        height: seatIconWidth,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: const Color(0xffE6E6E6).withOpacity(0.5),
-        ),
-        child: ValueListenableBuilder<bool>(
-          valueListenable: widget.seatManager.isSeatLockedNotifier,
-          builder: (context, isSeatLocked, _) {
-            return isSeatLocked
-                ? (widget.config.seatConfig.closeIcon ??
-                    PrebuiltLiveAudioRoomImage.asset(
-                      PrebuiltLiveAudioRoomIconUrls.seatLock,
-                    ))
-                : (widget.config.seatConfig.openIcon ??
-                    PrebuiltLiveAudioRoomImage.asset(
-                      PrebuiltLiveAudioRoomIconUrls.seatEmpty,
-                    ));
-          },
-        ),
-      ),
+          width: seatIconWidth,
+          height: seatIconWidth,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: const Color(0xffE6E6E6).withOpacity(0.5),
+          ),
+          child: ValueListenableBuilder<List<int>>(
+            valueListenable: widget.seatManager.lockedSeatNotifier,
+            builder: (context, lockedSeat, _) {
+              final userSeatIndex = int.tryParse(
+                      widget.extraInfo[layoutGridItemIndexKey].toString()) ??
+                  -1;
+
+              return lockedSeat.contains(userSeatIndex)
+                  ? (widget.config.seatConfig.closeIcon ??
+                      PrebuiltLiveAudioRoomImage.asset(
+                        PrebuiltLiveAudioRoomIconUrls.seatLock,
+                      ))
+                  : (widget.config.seatConfig.openIcon ??
+                      PrebuiltLiveAudioRoomImage.asset(
+                        PrebuiltLiveAudioRoomIconUrls.seatEmpty,
+                      ));
+            },
+          )),
     );
   }
 }

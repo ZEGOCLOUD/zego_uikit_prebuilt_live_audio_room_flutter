@@ -12,7 +12,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_sheet_
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 
 /// @nodoc
 typedef ZegoMemberListSheetMoreButtonPressed = void Function(
@@ -267,8 +267,8 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
 
   Widget controlsItem(ZegoUIKitUser user) {
     return ValueListenableBuilder<bool>(
-      valueListenable: widget.seatManager.isSeatLockedNotifier,
-      builder: (context, isSeatLocked, _) {
+      valueListenable: widget.seatManager.isRoomSeatLockedNotifier,
+      builder: (context, isRoomSeatLocked, _) {
         return ValueListenableBuilder<List<ZegoUIKitUser>>(
           valueListenable:
               widget.connectManager.audiencesRequestingTakeSeatNotifier,
@@ -276,7 +276,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
             final index = requestTakeSeatUsers.indexWhere(
                 (requestCoHostUser) => user.id == requestCoHostUser.id);
             if (-1 != index) {
-              if (isSeatLocked) {
+              if (isRoomSeatLocked) {
                 /// on show agree/disagree when seat is locked
                 return requestTakeSeatUserControlItem(user);
               }
@@ -352,7 +352,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
 
     if (widget.isPluginEnabled &&
         // locked
-        widget.seatManager.isSeatLockedNotifier.value &&
+        widget.seatManager.isRoomSeatLockedNotifier.value &&
         //  not host
         !widget.seatManager.hostsNotifier.value.contains(user.id) &&
         //  not on seat

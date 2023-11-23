@@ -2,8 +2,8 @@
 import 'dart:core';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_controller.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 
 // Project imports:
 
@@ -43,9 +43,8 @@ class ZegoUIKitPrebuiltLiveAudioRoomData {
 
   @override
   String toString() {
-    return 'app id:$appID, app sign:$appSign, room id:$roomID, '
+    return '{app id:$appID, app sign:$appSign, room id:$roomID, '
         'isPrebuiltFromMinimizing: $isPrebuiltFromMinimizing, '
-        'user id:$userID, user name:$userName, '
-        'config:${config.toString()}';
+        'user id:$userID, user name:$userName, config:$config}';
   }
 }

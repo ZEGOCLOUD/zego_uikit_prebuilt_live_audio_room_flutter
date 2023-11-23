@@ -12,11 +12,11 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/d
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_sheet_menu.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_controller.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
 
 /// @nodoc
 class ZegoSeatForeground extends StatefulWidget {
@@ -152,8 +152,8 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
           widget.seatManager.switchToSeat(index);
         } else {
           /// local user is not on seat
-          if (!widget.seatManager.isSeatLockedNotifier.value) {
-            /// only seat is not locked
+          if (!widget.seatManager.lockedSeatNotifier.value.contains(index)) {
+            /// only room seat is not locked and index is not in locked seats
             /// if locked, can't apply by click seat
             popupItems.add(PopupItem(
               PopupItemValue.takeOnSeat,

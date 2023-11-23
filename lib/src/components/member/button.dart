@@ -10,7 +10,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/member/list_s
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 
 /// @nodoc
 class ZegoMemberButton extends StatefulWidget {
@@ -106,10 +106,10 @@ class _ZegoMemberButtonState extends State<ZegoMemberButton> {
 
   Widget redPoint() {
     return ValueListenableBuilder<bool>(
-      valueListenable: widget.seatManager.isSeatLockedNotifier,
-      builder: (context, isSeatLocked, _) {
-        if (!isSeatLocked) {
-          /// if seat not locked, red point is hidden
+      valueListenable: widget.seatManager.isRoomSeatLockedNotifier,
+      builder: (context, isRoomSeatLocked, _) {
+        if (!isRoomSeatLocked) {
+          /// if room seat not locked, red point is hidden
           return Container();
         }
 

@@ -14,10 +14,10 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/dialogs.dart'
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/live_page.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/core_managers.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_controller.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/prebuilt_data.dart';
 
@@ -101,11 +101,11 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
           ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine().state(),
     );
 
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 2.11.4; $version',
+        'version: zego_uikit_prebuilt_live_audio_room: 2.13.6; $version',
         tag: 'audio room',
         subTag: 'prebuilt',
       );
@@ -115,7 +115,8 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       ..add(ZegoUIKit().getUserJoinStream().listen(onUserJoined))
       ..add(ZegoUIKit().getUserLeaveStream().listen(onUserLeave))
       ..add(
-          ZegoUIKit().getMeRemovedFromRoomStream().listen(onMeRemovedFromRoom));
+          ZegoUIKit().getMeRemovedFromRoomStream().listen(onMeRemovedFromRoom))
+      ..add(ZegoUIKit().getErrorStream().listen(onUIKitError));
 
     isFromMinimizing = LiveAudioRoomMiniOverlayPageState.idle !=
         ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine().state();
@@ -180,7 +181,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
   void dispose() {
     super.dispose();
 
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
 
     if (LiveAudioRoomMiniOverlayPageState.minimizing !=
         ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine().state()) {
@@ -219,6 +220,9 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
       case AppLifecycleState.detached:
+        break;
+      // case AppLifecycleState.hidden:
+      default:
         break;
     }
   }
@@ -309,7 +313,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
         widget.config.hostSeatIndexes
             .contains(widget.config.takeSeatIndexWhenJoining)) {
       ZegoLoggerService.logInfo(
-        "config ${widget.config.role.toString()}'s index is not valid, "
+        "config ${widget.config.role}'s index is not valid, "
         'change role to audience and seat index set to -1',
         tag: 'audio room',
         subTag: 'prebuilt',
@@ -342,7 +346,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     }
   }
 
-  void initContext() async {
+  Future<void> initContext() async {
     assert(widget.userID.isNotEmpty);
     assert(widget.userName.isNotEmpty);
     assert(widget.appID > 0);
@@ -370,7 +374,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       ..turnCameraOn(false)
       ..turnMicrophoneOn(widget.config.turnOnMicrophoneWhenJoining)
       ..setAudioOutputToSpeaker(widget.config.useSpeakerWhenJoining)
-      ..setAudioVideoResourceMode(ZegoAudioVideoResourceMode.RTCOnly);
+      ..setAudioVideoResourceMode(ZegoAudioVideoResourceMode.onlyRTC);
 
     ZegoUIKit().joinRoom(widget.roomID).then((result) async {
       await onRoomLogin(result);
@@ -508,6 +512,16 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
         rootNavigator: widget.config.rootNavigator,
       ).pop(true);
     }
+  }
+
+  void onUIKitError(ZegoUIKitError error) {
+    ZegoLoggerService.logError(
+      'on uikit error:$error',
+      tag: 'live audio room',
+      subTag: 'prebuilt',
+    );
+
+    widget.config.onError?.call(error);
   }
 
   void onInRoomUserAttributesUpdated() {

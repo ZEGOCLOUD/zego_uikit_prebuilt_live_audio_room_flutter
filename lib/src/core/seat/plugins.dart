@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
-import 'package:zego_plugin_adapter/zego_plugin_adapter.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -21,14 +20,16 @@ enum PluginNetworkState {
 
 /// @nodoc
 class ZegoPrebuiltPlugins {
-  ZegoPrebuiltPlugins(
-      {required this.appID,
-      required this.appSign,
-      required this.userID,
-      required this.userName,
-      required this.roomID,
-      required this.plugins,
-      this.onPluginReLogin}) {
+  ZegoPrebuiltPlugins({
+    required this.appID,
+    required this.appSign,
+    required this.userID,
+    required this.userName,
+    required this.roomID,
+    required this.plugins,
+    this.onPluginReLogin,
+    this.onError,
+  }) {
     _install();
   }
 
@@ -43,6 +44,7 @@ class ZegoPrebuiltPlugins {
   final List<IZegoUIKitPlugin> plugins;
 
   final VoidCallback? onPluginReLogin;
+  Function(ZegoUIKitError)? onError;
 
   PluginNetworkState networkState = PluginNetworkState.unknown;
   List<StreamSubscription<dynamic>?> subscriptions = [];
@@ -68,6 +70,18 @@ class ZegoPrebuiltPlugins {
           subTag: 'plugin',
         );
       });
+    }
+
+    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.signaling) != null) {
+      subscriptions.add(ZegoUIKit()
+          .getSignalingPlugin()
+          .getErrorStream()
+          .listen(onSignalingError));
+    }
+
+    if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.beauty) != null) {
+      subscriptions.add(
+          ZegoUIKit().getBeautyPlugin().getErrorStream().listen(onBeautyError));
     }
   }
 
@@ -306,6 +320,34 @@ class ZegoPrebuiltPlugins {
     );
 
     tryReEnterRoom();
+  }
+
+  void onSignalingError(ZegoSignalingError error) {
+    ZegoLoggerService.logError(
+      'on signaling error:$error',
+      tag: 'audio room',
+      subTag: 'plugin',
+    );
+
+    onError?.call(ZegoUIKitError(
+      code: error.code,
+      message: error.message,
+      method: error.method,
+    ));
+  }
+
+  void onBeautyError(ZegoBeautyError error) {
+    ZegoLoggerService.logError(
+      'on beauty error:$error',
+      tag: 'audio room',
+      subTag: 'prebuilt',
+    );
+
+    onError?.call(ZegoUIKitError(
+      code: error.code,
+      message: error.message,
+      method: error.method,
+    ));
   }
 
   void onNetworkModeChanged(ZegoNetworkMode networkMode) {

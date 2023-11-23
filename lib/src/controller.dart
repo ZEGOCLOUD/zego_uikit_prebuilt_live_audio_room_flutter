@@ -9,21 +9,21 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/permissions.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/core_managers.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_config.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_inner_text.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_overlay_machine.dart';
+
+part 'package:zego_uikit_prebuilt_live_audio_room/src/controller/controller_p.dart';
 
 part 'package:zego_uikit_prebuilt_live_audio_room/src/controller/media.dart';
 
 part 'package:zego_uikit_prebuilt_live_audio_room/src/controller/message.dart';
 
 part 'package:zego_uikit_prebuilt_live_audio_room/src/controller/seat.dart';
-
-part 'package:zego_uikit_prebuilt_live_audio_room/src/controller/controller_p.dart';
 
 /// Used to control the audio chat room functionality.
 ///

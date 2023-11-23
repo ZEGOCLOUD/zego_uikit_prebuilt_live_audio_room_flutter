@@ -1,5 +1,5 @@
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room_defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
 
 /// Control the text on the UI.
 /// Modify the values of the corresponding properties to modify the text on the UI.

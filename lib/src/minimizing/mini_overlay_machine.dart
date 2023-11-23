@@ -90,7 +90,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine {
         break;
       case LiveAudioRoomMiniOverlayPageState.minimizing:
         ZegoLoggerService.logInfo(
-          'data: ${_prebuiltAudioRoomData?.toString()}',
+          'data: $_prebuiltAudioRoomData',
           tag: 'audio room',
           subTag: 'overlay machine',
         );

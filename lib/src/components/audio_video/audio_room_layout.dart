@@ -20,6 +20,7 @@ class ZegoAudioRoomLayout extends StatefulWidget {
     this.avatarBuilder,
     this.backgroundColor,
     this.borderRadius,
+    this.showSoundWavesInAudioMode = true,
     this.usersItemIndex = const {},
     this.foregroundBuilder,
     this.backgroundBuilder,
@@ -31,6 +32,7 @@ class ZegoAudioRoomLayout extends StatefulWidget {
 
   final Color? backgroundColor;
   final double? borderRadius;
+  final bool showSoundWavesInAudioMode;
 
   final ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;
   final ZegoAudioVideoViewBackgroundBuilder? backgroundBuilder;
@@ -52,8 +54,10 @@ class _ZegoAudioRoomLayoutState extends State<ZegoAudioRoomLayout> {
     final users = List<ZegoUIKitUser?>.from(widget.userList);
 
     /// fill empty cell
-    final int totalCount = widget.layoutConfig.rowConfigs
-        .fold(0, (totalCount, rowConfig) => totalCount + rowConfig.count);
+    final totalCount = widget.layoutConfig.rowConfigs.fold<int>(
+      0,
+      (previousTotalCount, rowConfig) => previousTotalCount + rowConfig.count,
+    );
     for (var diff = totalCount - users.length; diff > 0; diff--) {
       users.add(null);
     }
@@ -128,7 +132,7 @@ class _ZegoAudioRoomLayoutState extends State<ZegoAudioRoomLayout> {
                   backgroundBuilder: widget.backgroundBuilder,
                   avatarConfig: ZegoAvatarConfig(
                     showInAudioMode: true,
-                    showSoundWavesInAudioMode: true,
+                    showSoundWavesInAudioMode: widget.showSoundWavesInAudioMode,
                     builder: widget.avatarBuilder,
                     soundWaveColor: const Color(0xff2254f6),
                     size: Size(seatIconWidth, seatIconHeight),
