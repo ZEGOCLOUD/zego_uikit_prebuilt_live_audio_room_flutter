@@ -120,7 +120,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine {
 
     changeState(LiveAudioRoomMiniOverlayPageState.idle);
 
-    ZegoLiveAudioRoomManagers().unintPluginAndManagers();
+    ZegoLiveAudioRoomManagers().uninitPluginAndManagers();
 
     await ZegoUIKit().resetSoundEffect();
     await ZegoUIKit().resetBeautyEffect();

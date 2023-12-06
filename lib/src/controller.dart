@@ -128,7 +128,7 @@ class ZegoLiveAudioRoomController
       /// not need destroy signaling sdk
       await ZegoUIKit().getSignalingPlugin().uninit(forceDestroy: false);
 
-      await ZegoLiveAudioRoomManagers().unintPluginAndManagers();
+      await ZegoLiveAudioRoomManagers().uninitPluginAndManagers();
 
       ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine().changeState(
         LiveAudioRoomMiniOverlayPageState.idle,

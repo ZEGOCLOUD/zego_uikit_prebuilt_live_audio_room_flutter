@@ -1486,10 +1486,10 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
   ) {
     final seatsUsersMap = Map<String, String>.from(seatsUserMapNotifier.value);
 
-    setProperties.forEach((_seatIndex, _seatUserId) {
-      final seatIndex = int.tryParse(_seatIndex);
+    setProperties.forEach((tempSeatIndex, tempSeatUserId) {
+      final seatIndex = int.tryParse(tempSeatIndex);
       if (seatIndex != null) {
-        final seatUserId = _seatUserId;
+        final seatUserId = tempSeatUserId;
         if (seatsUsersMap.values.contains(seatUserId)) {
           /// old seat user
           ZegoLoggerService.logInfo(

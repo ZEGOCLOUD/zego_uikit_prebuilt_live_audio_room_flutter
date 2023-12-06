@@ -105,7 +105,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 2.13.6; $version',
+        'version: zego_uikit_prebuilt_live_audio_room: 2.13.7; $version',
         tag: 'audio room',
         subTag: 'prebuilt',
       );
@@ -185,7 +185,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     if (LiveAudioRoomMiniOverlayPageState.minimizing !=
         ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine().state()) {
-      ZegoLiveAudioRoomManagers().unintPluginAndManagers();
+      ZegoLiveAudioRoomManagers().uninitPluginAndManagers();
 
       uninitContext();
 

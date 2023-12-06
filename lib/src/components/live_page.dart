@@ -167,16 +167,16 @@ class ZegoLivePageState extends State<ZegoLivePage>
     return widget.config.foreground ?? Container();
   }
 
-  Widget audioVideoContainer(double maxWidth, double _maxHeight) {
-    var maxHeight = _maxHeight - 169.zR; // top position
-    maxHeight -= 124.zR; // bottom bar
+  Widget audioVideoContainer(double maxWidth, double maxHeight) {
+    var tempMaxHeight = maxHeight - 169.zR; // top position
+    tempMaxHeight -= 124.zR; // bottom bar
 
     var scrollable = false;
     final fixedRow = widget.config.layoutConfig.rowConfigs.length;
     var containerHeight = seatItemHeight * fixedRow +
         widget.config.layoutConfig.rowSpacing * (fixedRow - 1);
-    if (containerHeight > maxHeight) {
-      containerHeight = maxHeight;
+    if (containerHeight > tempMaxHeight) {
+      containerHeight = tempMaxHeight;
       scrollable = true;
     }
 

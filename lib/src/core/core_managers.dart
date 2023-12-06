@@ -92,7 +92,7 @@ class ZegoLiveAudioRoomManagers {
     );
   }
 
-  Future<void> unintPluginAndManagers() async {
+  Future<void> uninitPluginAndManagers() async {
     ZegoLoggerService.logInfo(
       'uninit plugin and managers',
       tag: 'audio room',

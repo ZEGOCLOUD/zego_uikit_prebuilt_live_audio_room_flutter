@@ -1,3 +1,7 @@
+## 2.13.7
+
+- Update dependency.
+
 ## 2.13.6
 
 - Update dependency.
