@@ -4,10 +4,8 @@ import 'dart:core';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/background.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
@@ -121,6 +119,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
                     bottomBar(),
                     messageList(),
                     durationTimeBoard(),
+                    emptyArea(constraints.maxHeight),
                     foreground(context, constraints.maxHeight),
                   ],
                 );
@@ -280,6 +279,26 @@ class ZegoLivePageState extends State<ZegoLivePage>
         avatarBuilder: widget.config.seatConfig.avatarBuilder,
         prebuiltData: widget.prebuiltAudioRoomData,
       ),
+    );
+  }
+
+  Widget emptyArea(double maxHeight) {
+    if (widget.config.emptyAreaBuilder == null) return const SizedBox.shrink();
+    var tempMaxHeight = maxHeight - 169.zR; // top position
+    tempMaxHeight -= 124.zR; // bottom bar
+    final fixedRow = widget.config.layoutConfig.rowConfigs.length;
+    var containerHeight = seatItemHeight * fixedRow +
+        widget.config.layoutConfig.rowSpacing * (fixedRow - 1);
+    if (containerHeight > tempMaxHeight) {
+      containerHeight = tempMaxHeight;
+    }
+
+    return Positioned(
+      left: 0,
+      right: 0,
+      top: 169.zR + containerHeight,
+      bottom: 124.zR,
+      child: widget.config.emptyAreaBuilder!.call(context),
     );
   }
 

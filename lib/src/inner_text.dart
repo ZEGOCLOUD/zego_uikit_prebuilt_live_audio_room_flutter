@@ -124,7 +124,7 @@ class ZegoInnerText {
   String revokeCoHostPrivilegesMenuDialogButton;
 
   /// The title of the audio effects dialog.
-  /// The **default value** is *"Audio effect"*.
+  /// The **default value** is *"Audio effects"*.
   String audioEffectTitle;
 
   /// The title of the reverb category.
@@ -325,7 +325,7 @@ class ZegoInnerText {
               cancelButtonName: 'Disagree',
               confirmButtonName: 'Agree',
             ),
-        audioEffectTitle = audioEffectTitle ?? 'Audio effect',
+        audioEffectTitle = audioEffectTitle ?? 'Audio effects',
         audioEffectReverbTitle = audioEffectReverbTitle ?? 'Reverb',
         audioEffectVoiceChangingTitle =
             audioEffectVoiceChangingTitle ?? 'Voice changing',

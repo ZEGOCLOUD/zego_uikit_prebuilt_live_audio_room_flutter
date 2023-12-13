@@ -98,7 +98,7 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
           ),
           SizedBox(width: 10.zR),
           Text(
-            'Audio effect',
+            widget.innerText.audioEffectTitle,
             style: TextStyle(
               fontSize: 36.0.zR,
               color: const Color(0xffffffff),

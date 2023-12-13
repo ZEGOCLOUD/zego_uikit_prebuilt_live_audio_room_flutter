@@ -1,3 +1,10 @@
+## 2.14.1
+- fix some UI issues
+
+## 2.14.0
+
+- ZegoUIKitPrebuiltLiveAudioRoomConfig adds the emptyAreaBuilder, and ZegoLiveAudioRoomController adds the getSeatsUserMapNotifier method.
+
 ## 2.13.7
 
 - Update dependency.

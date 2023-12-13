@@ -280,7 +280,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
                 /// on show agree/disagree when seat is locked
                 return requestTakeSeatUserControlItem(user);
               }
-            } else if (widget.seatManager.hasHostPermissions) {
+            } else if (widget.seatManager.localHasHostPermissions) {
               return hostPermissionControlItems(user);
             }
 

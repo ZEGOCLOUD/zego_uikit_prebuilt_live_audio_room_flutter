@@ -105,7 +105,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 2.13.7; $version',
+        'version: zego_uikit_prebuilt_live_audio_room: 2.14.1; $version',
         tag: 'audio room',
         subTag: 'prebuilt',
       );

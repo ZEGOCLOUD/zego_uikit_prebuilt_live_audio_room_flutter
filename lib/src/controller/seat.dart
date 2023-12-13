@@ -2,6 +2,19 @@ part of 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 
 /// @nodoc
 extension ZegoLiveAudioRoomControllerSeat on ZegoLiveAudioRoomController {
+  /// local user is host or not
+  bool get localIsAHost => _seatManager?.localIsAHost ?? false;
+
+  /// local user is audience or not
+  bool get localIsAAudience => _seatManager?.localIsAAudience ?? false;
+
+  /// local user is co-host or not
+  bool get localIsCoHost => _seatManager?.localIsCoHost ?? false;
+
+  /// local user has host permission or not
+  bool get localHasHostPermissions =>
+      _seatManager?.localHasHostPermissions ?? false;
+
   /// The speaker can use this method to leave the seat. If the showDialog parameter is set to true, a confirmation dialog will be displayed before leaving the seat.
   Future<bool> leaveSeat({bool showDialog = true}) async {
     return await _seatManager?.leaveSeat(showDialog: showDialog) ?? false;
@@ -16,6 +29,11 @@ extension ZegoLiveAudioRoomControllerSeat on ZegoLiveAudioRoomController {
           isDeleteAfterOwnerLeft: true,
         ) ??
         false;
+  }
+
+  /// Returns the seat user map of the current live audio room.
+  ValueNotifier<Map<String, String>>? getSeatsUserMapNotifier() {
+    return _seatManager?.seatsUserMapNotifier;
   }
 
   /// Removes the speaker with the user ID [userID] from the seat.

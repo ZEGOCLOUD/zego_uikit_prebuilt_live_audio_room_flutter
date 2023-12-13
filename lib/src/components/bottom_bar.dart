@@ -395,7 +395,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         extendButtons = widget.config.bottomMenuBarConfig.hostExtendButtons;
         break;
       case ZegoLiveAudioRoomRole.speaker:
-        if (widget.seatManager.hasHostPermissions) {
+        if (widget.seatManager.localHasHostPermissions) {
           /// co-hosts have the same permissions as hosts if host is not exist
           buttons = widget.config.bottomMenuBarConfig.hostButtons;
           extendButtons = widget.config.bottomMenuBarConfig.hostExtendButtons;

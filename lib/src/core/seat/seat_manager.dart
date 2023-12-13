@@ -92,14 +92,16 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
 
   bool get localIsAHost => ZegoLiveAudioRoomRole.host == localRole.value;
 
-  bool get hasHostPermissions =>
+  bool get localIsAAudience =>
+      ZegoLiveAudioRoomRole.audience == localRole.value;
+
+  bool get localIsCoHost => isCoHost(ZegoUIKit().getLocalUser());
+
+  bool get localHasHostPermissions =>
       localIsAHost ||
 
       /// co-host have the same permissions as hosts if host is not exist
-      (isCoHost(ZegoUIKit().getLocalUser()) && hostsNotifier.value.isEmpty);
-
-  bool get localIsAAudience =>
-      ZegoLiveAudioRoomRole.audience == localRole.value;
+      (localIsCoHost && hostsNotifier.value.isEmpty);
 
   bool get isRoomAttributesBatching => _isRoomAttributesBatching;
 
@@ -218,7 +220,7 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
     bool isLocked, {
     List<int> targetIndexes = const [],
   }) async {
-    if (!hasHostPermissions) {
+    if (!localHasHostPermissions) {
       ZegoLoggerService.logInfo(
         'only host or co-host can ${isLocked ? 'lock' : 'unlock'} seat, '
         'local role:${localRole.value}, host:${hostsNotifier.value}, '

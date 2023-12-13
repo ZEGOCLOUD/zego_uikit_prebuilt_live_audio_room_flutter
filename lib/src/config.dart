@@ -401,6 +401,9 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// Note that when you set this callback, the **default behavior** of popping up a menu when clicking the "More" button on the member list will be **overridden**, and you need to handle it yourself.
   /// You can refer to the usage of `ZegoLiveAudioRoomController`.
   void Function(ZegoUIKitUser user)? onMemberListMoreButtonPressed;
+
+  /// The blank space between seat and bottomBar, which can be used to place custom widgets freely.
+  Widget Function(BuildContext context)? emptyAreaBuilder;
 }
 
 /// Configuration options for controlling seat behavior and style.

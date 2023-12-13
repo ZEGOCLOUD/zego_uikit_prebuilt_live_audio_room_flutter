@@ -219,7 +219,7 @@ class ZegoLiveConnectManager {
       subTag: 'connect manager',
     );
 
-    if (seatManager.hasHostPermissions) {
+    if (seatManager.localHasHostPermissions) {
       if (ZegoInvitationType.requestTakeSeat == invitationType) {
         audiencesRequestingTakeSeatNotifier.value =
             List<ZegoUIKitUser>.from(audiencesRequestingTakeSeatNotifier.value)
@@ -371,7 +371,7 @@ class ZegoLiveConnectManager {
       subTag: 'connect manager',
     );
 
-    if (seatManager.hasHostPermissions) {
+    if (seatManager.localHasHostPermissions) {
       _audienceIDsInvitedTakeSeatByHost.remove(invitee.id);
     } else {
       requestPermissions(
@@ -432,7 +432,7 @@ class ZegoLiveConnectManager {
       subTag: 'connect manager',
     );
 
-    if (seatManager.hasHostPermissions) {
+    if (seatManager.localHasHostPermissions) {
       audiencesRequestingTakeSeatNotifier.value =
           List<ZegoUIKitUser>.from(audiencesRequestingTakeSeatNotifier.value)
             ..removeWhere((user) => user.id == inviter.id);
@@ -460,7 +460,7 @@ class ZegoLiveConnectManager {
       subTag: 'connect manager',
     );
 
-    if (seatManager.hasHostPermissions) {
+    if (seatManager.localHasHostPermissions) {
       _audienceIDsInvitedTakeSeatByHost.remove(invitee.id);
 
       /// host's invite is rejected by audience
@@ -487,7 +487,7 @@ class ZegoLiveConnectManager {
       subTag: 'connect manager',
     );
 
-    if (seatManager.hasHostPermissions) {
+    if (seatManager.localHasHostPermissions) {
       audiencesRequestingTakeSeatNotifier.value =
           List<ZegoUIKitUser>.from(audiencesRequestingTakeSeatNotifier.value)
             ..removeWhere((user) => user.id == inviter.id);
@@ -514,7 +514,7 @@ class ZegoLiveConnectManager {
       subTag: 'connect manager',
     );
 
-    if (seatManager.hasHostPermissions) {
+    if (seatManager.localHasHostPermissions) {
       for (final invitee in invitees) {
         _audienceIDsInvitedTakeSeatByHost.remove(invitee.id);
       }

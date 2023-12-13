@@ -165,7 +165,7 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
       }
     } else {
       /// have a user on seat
-      if (widget.seatManager.hasHostPermissions &&
+      if (widget.seatManager.localHasHostPermissions &&
           widget.user?.id != ZegoUIKit().getLocalUser().id) {
         /// local is host, click others
         popupItems
