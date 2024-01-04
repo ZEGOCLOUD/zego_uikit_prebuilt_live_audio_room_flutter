@@ -24,34 +24,36 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage extends StatefulWidget {
     this.padding = 0.0,
     this.showDevices = true,
     this.showUserName = true,
-    this.foregroundBuilder,
-    this.backgroundBuilder,
+    this.showLeaveButton = true,
+    this.leaveButtonIcon,
+    this.supportClickZoom = true,
     this.foreground,
     this.builder,
+    this.foregroundBuilder,
+    this.backgroundBuilder,
   }) : super(key: key);
 
   final Size? size;
-
   final double padding;
-
   final double borderRadius;
-
   final Color borderColor;
-
   final Color backgroundColor;
-
   final Color soundWaveColor;
-
   final Offset topLeft;
 
   final bool showDevices;
-
   final bool showUserName;
+
+  final bool showLeaveButton;
+  final Widget? leaveButtonIcon;
+
+  final bool supportClickZoom;
+
+  final Widget? foreground;
+  final Widget Function(ZegoUIKitUser? activeUser)? builder;
 
   final ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;
   final ZegoAudioVideoViewBackgroundBuilder? backgroundBuilder;
-  final Widget? foreground;
-  final Widget Function(ZegoUIKitUser? activeUser)? builder;
 
   /// You need to return the `context` of NavigatorState in this callback
   final BuildContext Function() contextQuery;
@@ -63,13 +65,17 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage extends StatefulWidget {
 
 /// @nodoc
 class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
-    extends State<ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage> {
+    extends State<ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage>
+    with SingleTickerProviderStateMixin {
   LiveAudioRoomMiniOverlayPageState currentState =
       LiveAudioRoomMiniOverlayPageState.idle;
 
   bool visibility = false;
   late Offset topLeft;
-  late Size itemSize;
+  final preferItemSizeNotifier = ValueNotifier<Size>(Size.zero);
+  bool isZoom = false;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
 
   StreamSubscription<dynamic>? audioVideoListSubscription;
   List<StreamSubscription<dynamic>?> soundLevelSubscriptions = [];
@@ -80,6 +86,18 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
   @override
   void initState() {
     super.initState();
+
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _animation =
+        Tween<double>(begin: 1, end: 1.5).animate(_animationController);
+    _animation.addListener(() {
+      isZoom = _animation.value > 1.01;
+      final preferSize = calculateItemSize();
+      preferItemSizeNotifier.value = preferSize * _animation.value;
+    });
 
     topLeft = widget.topLeft;
 
@@ -98,6 +116,8 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
   void dispose() {
     super.dispose();
 
+    _animationController.dispose();
+
     activeUserTimer?.cancel();
     activeUserTimer = null;
 
@@ -109,7 +129,9 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
 
   @override
   Widget build(BuildContext context) {
-    itemSize = calculateItemSize();
+    final preferSize = calculateItemSize();
+    preferItemSizeNotifier.value =
+        isZoom ? preferSize * _animation.value : preferSize;
 
     return WillPopScope(
       onWillPop: () async {
@@ -120,25 +142,42 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
         child: Positioned(
           left: topLeft.dx,
           top: topLeft.dy,
-          child: GestureDetector(
-            onPanUpdate: (details) {
-              setState(() {
-                var x = topLeft.dx + details.delta.dx;
-                var y = topLeft.dy + details.delta.dy;
-                x = x.clamp(
-                    0.0, MediaQuery.of(context).size.width - itemSize.width);
-                y = y.clamp(
-                    0.0, MediaQuery.of(context).size.height - itemSize.height);
-                topLeft = Offset(x, y);
-              });
-            },
-            child: LayoutBuilder(builder: (context, constraints) {
-              return SizedBox(
-                width: itemSize.width,
-                height: itemSize.height,
-                child: overlayItem(),
+          child: ValueListenableBuilder<Size>(
+            valueListenable: preferItemSizeNotifier,
+            builder: (context, itemSize, _) {
+              return GestureDetector(
+                onPanUpdate: (details) {
+                  setState(() {
+                    var x = topLeft.dx + details.delta.dx;
+                    var y = topLeft.dy + details.delta.dy;
+                    x = x.clamp(0.0,
+                        MediaQuery.of(context).size.width - itemSize.width);
+                    y = y.clamp(0.0,
+                        MediaQuery.of(context).size.height - itemSize.height);
+                    topLeft = Offset(x, y);
+                  });
+                },
+                onDoubleTap: () {
+                  if (!widget.supportClickZoom) {
+                    return;
+                  }
+
+                  if (_animationController.status ==
+                      AnimationStatus.completed) {
+                    _animationController.reverse();
+                  } else {
+                    _animationController.forward();
+                  }
+                },
+                child: LayoutBuilder(builder: (context, constraints) {
+                  return SizedBox(
+                    width: itemSize.width,
+                    height: itemSize.height,
+                    child: overlayItem(),
+                  );
+                }),
               );
-            }),
+            },
           ),
         ),
       ),
@@ -218,8 +257,11 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
                     .seatConfig
                     .avatarBuilder,
                 soundWaveColor: widget.soundWaveColor,
-                size: Size(seatIconWidth, seatIconHeight),
-                verticalAlignment: ZegoAvatarAlignment.start,
+                size: Size(
+                  preferItemSizeNotifier.value.width * 0.6,
+                  preferItemSizeNotifier.value.height * 0.6,
+                ),
+                verticalAlignment: ZegoAvatarAlignment.center,
               ),
               foregroundBuilder: widget.foregroundBuilder,
               backgroundBuilder: widget.backgroundBuilder,
@@ -235,13 +277,37 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
             ),
             Positioned(
               top: seatItemRowSpacing,
-              right: seatItemRowSpacing,
+              left: seatItemRowSpacing,
               child: redPoint(),
             ),
             durationTimeBoard(),
             widget.foreground ?? Container(),
+            widget.showLeaveButton
+                ? Positioned(
+                    top: seatItemRowSpacing,
+                    right: seatItemRowSpacing,
+                    child: leaveButton(),
+                  )
+                : Container(),
           ],
         );
+  }
+
+  Widget leaveButton() {
+    return ZegoTextIconButton(
+      buttonSize: Size(iconButtonClickWidth, iconButtonClickHeight),
+      iconSize: Size(iconButtonWidth, iconButtonWidth),
+      icon: ButtonIcon(
+        icon: widget.leaveButtonIcon ??
+            PrebuiltLiveAudioRoomImage.asset(
+              PrebuiltLiveAudioRoomIconUrls.topQuit,
+            ),
+        backgroundColor: Colors.white,
+      ),
+      onPressed: () {
+        ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine().switchToIdle();
+      },
+    );
   }
 
   Widget durationTimeBoard() {
@@ -291,8 +357,8 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
                     }
                   : null,
               child: Container(
-                width: itemSize.width * 0.3,
-                height: itemSize.width * 0.3,
+                width: iconButtonWidth,
+                height: iconButtonWidth,
                 decoration: BoxDecoration(
                   color: isMicrophoneEnabled
                       ? controlBarButtonCheckedBackgroundColor
@@ -302,8 +368,8 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
                 child: Align(
                   alignment: Alignment.center,
                   child: SizedBox(
-                    width: itemSize.width * 0.3,
-                    height: itemSize.width * 0.3,
+                    width: iconButtonWidth,
+                    height: iconButtonWidth,
                     child: PrebuiltLiveAudioRoomImage.asset(
                       isMicrophoneEnabled
                           ? PrebuiltLiveAudioRoomIconUrls.toolbarMicNormal
@@ -322,7 +388,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
   Widget userName(BuildContext context, ZegoUIKitUser? activeUser) {
     return widget.showUserName
         ? SizedBox(
-            width: seatItemWidth,
+            width: preferItemSizeNotifier.value.width,
             child: Text(
               activeUser?.name ?? '',
               textAlign: TextAlign.center,

@@ -1,4 +1,9 @@
+## 2.15.0
+
+- Support leave in minimize state, if you don't want to display the leave button, you can hide it by setting **showLeaveButton** to false.
+
 ## 2.14.1
+
 - fix some UI issues
 
 ## 2.14.0

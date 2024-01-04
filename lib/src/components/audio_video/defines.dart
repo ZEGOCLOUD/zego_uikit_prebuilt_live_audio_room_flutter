@@ -26,6 +26,12 @@ final seatUserNameFontSize = 22.0.zR;
 final seatHostFlagHeight = 24.0.zR;
 
 /// @nodoc
+final iconButtonWidth = 45.0.zR;
+final iconButtonHeight = 45.0.zR;
+final iconButtonClickWidth = iconButtonWidth + 5;
+final iconButtonClickHeight = iconButtonHeight + 5;
+
+/// @nodoc
 final double avatarPosTop = 15.zR;
 
 /// @nodoc

@@ -65,6 +65,17 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine {
         _machine.newState(LiveAudioRoomMiniOverlayPageState.minimizing);
   }
 
+  Future<void> switchToIdle() async {
+    changeState(LiveAudioRoomMiniOverlayPageState.idle);
+
+    ZegoLiveAudioRoomManagers().uninitPluginAndManagers();
+
+    await ZegoUIKit().resetSoundEffect();
+    await ZegoUIKit().resetBeautyEffect();
+
+    await ZegoUIKit().leaveRoom();
+  }
+
   void changeState(
     LiveAudioRoomMiniOverlayPageState state, {
     ZegoUIKitPrebuiltLiveAudioRoomData? prebuiltAudioRoomData,
