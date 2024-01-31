@@ -14,7 +14,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 /// @nodoc
 Future<void> checkPermissions({
   required BuildContext context,
-  required ZegoInnerText translationText,
+  required ZegoUIKitPrebuiltLiveAudioRoomInnerText translationText,
   required bool rootNavigator,
   required ZegoPopUpManager popUpManager,
   required ValueNotifier<bool> kickOutNotifier,
@@ -56,7 +56,7 @@ Future<void> checkPermissions({
 
 Future<void> requestPermissions({
   required BuildContext context,
-  required ZegoInnerText innerText,
+  required ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText,
   required bool rootNavigator,
   required ZegoPopUpManager popUpManager,
   required ValueNotifier<bool> kickOutNotifier,
@@ -82,13 +82,21 @@ Future<void> requestPermissions({
     if (checkStatuses.contains(Permission.microphone) &&
         statuses[Permission.microphone] != PermissionStatus.granted) {
       if (isShowDialog) {
-        await showAppSettingsDialog(
-          context,
-          innerText.microphonePermissionSettingDialogInfo,
-          rootNavigator: rootNavigator,
-          kickOutNotifier: kickOutNotifier,
-          popUpManager: popUpManager,
-        );
+        if (context.mounted) {
+          await showAppSettingsDialog(
+            context,
+            innerText.microphonePermissionSettingDialogInfo,
+            rootNavigator: rootNavigator,
+            kickOutNotifier: kickOutNotifier,
+            popUpManager: popUpManager,
+          );
+        } else {
+          ZegoLoggerService.logInfo(
+            'requestPermissions, context not mounted',
+            tag: 'live audio room',
+            subTag: 'prebuilt',
+          );
+        }
       }
     }
   });
@@ -96,7 +104,7 @@ Future<void> requestPermissions({
 
 Future<bool> showAppSettingsDialog(
   BuildContext context,
-  ZegoDialogInfo dialogInfo, {
+  ZegoLiveAudioRoomDialogInfo dialogInfo, {
   required bool rootNavigator,
   required ZegoPopUpManager popUpManager,
   required ValueNotifier<bool> kickOutNotifier,
@@ -127,10 +135,19 @@ Future<bool> showAppSettingsDialog(
     rightButtonText: dialogInfo.confirmButtonName,
     rightButtonCallback: () async {
       await openAppSettings();
-      Navigator.of(
-        context,
-        rootNavigator: rootNavigator,
-      ).pop(false);
+
+      if (context.mounted) {
+        Navigator.of(
+          context,
+          rootNavigator: rootNavigator,
+        ).pop(false);
+      } else {
+        ZegoLoggerService.logInfo(
+          'showAppSettingsDialog, context not mounted',
+          tag: 'live audio room',
+          subTag: 'prebuilt',
+        );
+      }
     },
   ).then((result) {
     popUpManager.removeAPopUpSheet(key);

@@ -1,3 +1,54 @@
+## 3.1.0
+
+- Support scrolling on layout. When the number of seats exceeds the screen width or height, the seats area will be displayed by scrolling (horizontally or vertically).
+
+## 3.0.0
+
+The 3.0 version has standardized and optimized the API and Event, simplifying the usage of most APIs.
+
+Most of the changes involve modifications to the calling path, such as changing from ZegoUIKitPrebuiltLiveAudioRoomController().isMinimizing() to ZegoUIKitPrebuiltLiveAudioRoomController().minimize.isMinimizing.
+
+💥 [breaking changes](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Migration:%203.x-topic.html)
+
+- Support user/room/audioVideo series events
+
+## 2.18.1
+
+- Update dependency.
+
+## 2.18.0
+
+- Add SEI API in `controller.audioVideo`
+
+## 2.17.0
+
+- Add media player config
+
+## 2.16.3
+
+- Update dependency.
+
+## 2.16.2
+
+- Update dependency.
+
+## 2.16.1
+
+- Update dependency.
+
+## 2.16.0
+
+- add minimize APIs in ZegoLiveAudioRoomController
+- make ZegoLiveAudioRoomController be a singleton instance class
+
+## 2.15.2
+
+- fix the issue of the controller not being able to select MP3 files.
+
+## 2.15.1
+
+- Update dependency.
+
 ## 2.15.0
 
 - Support leave in minimize state, if you don't want to display the leave button, you can hide it by setting **showLeaveButton** to false.

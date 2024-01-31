@@ -9,7 +9,8 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_overlay_machine.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/overlay_machine.dart';
 
 /// @nodoc
 enum PluginNetworkState {
@@ -201,8 +202,8 @@ class ZegoPrebuiltPlugins {
     roomHasInitLogin = false;
     tryReLogging = false;
 
-    final toMinimizing = LiveAudioRoomMiniOverlayPageState.minimizing ==
-        ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine().state();
+    final toMinimizing = ZegoLiveAudioRoomMiniOverlayPageState.minimizing ==
+        ZegoLiveAudioRoomInternalMiniOverlayMachine().state();
     if (toMinimizing) {
       ZegoLoggerService.logInfo(
         'to minimizing, not need to leave room, logout and uninit',

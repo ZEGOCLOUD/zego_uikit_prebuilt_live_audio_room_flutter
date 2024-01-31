@@ -2,13 +2,13 @@ part of 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 
 /// @nodoc
 mixin ZegoLiveAudioRoomControllerMessage {
-  final _messageController = ZegoLiveAudioRoomMessageController();
+  final _messageImpl = AudioRoomMessageControllerImpl();
 
-  ZegoLiveAudioRoomMessageController get message => _messageController;
+  AudioRoomMessageControllerImpl get message => _messageImpl;
 }
 
 /// Here are the APIs related to message.
-class ZegoLiveAudioRoomMessageController {
+class AudioRoomMessageControllerImpl {
   /// sends the chat message
   ///
   /// @return Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
@@ -20,7 +20,8 @@ class ZegoLiveAudioRoomMessageController {
 
   /// Retrieves a list of chat messages that already exist in the room.
   ///
-  /// @return A `List` of `ZegoInRoomMessage` objects representing the chat messages that already exist in the room.
+  /// @return A `List` of [ZegoInRoomMessage] objects representing the chat messages that
+  /// already exist in the room.
   List<ZegoInRoomMessage> list() {
     return ZegoUIKit().getInRoomMessages();
   }
@@ -29,7 +30,8 @@ class ZegoLiveAudioRoomMessageController {
   /// the stream will dynamically update when new chat messages are received,
   /// and you can use a `StreamBuilder` to listen to it and update the UI in real time.
   ///
-  /// @return A `List` of `ZegoInRoomMessage` objects representing the chat messages that already exist in the room.
+  /// @return A `List` of [ZegoInRoomMessage] objects representing the chat messages that
+  /// already exist in the room.
   ///
   /// Example:
   ///

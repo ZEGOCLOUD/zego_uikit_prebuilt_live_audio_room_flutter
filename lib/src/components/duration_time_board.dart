@@ -10,6 +10,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/live_duration_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 
 /// @nodoc
 class ColoredText extends StatelessWidget {
@@ -68,7 +69,8 @@ class ColoredText extends StatelessWidget {
 
 /// @nodoc
 class LiveDurationTimeBoard extends StatefulWidget {
-  final ZegoLiveDurationConfig config;
+  final ZegoLiveAudioRoomLiveDurationConfig config;
+  final ZegoLiveAudioRoomDurationEvents? events;
   final ZegoLiveDurationManager manager;
 
   final double? fontSize;
@@ -76,6 +78,7 @@ class LiveDurationTimeBoard extends StatefulWidget {
   const LiveDurationTimeBoard({
     Key? key,
     required this.config,
+    required this.events,
     required this.manager,
     this.fontSize,
   }) : super(key: key);
@@ -211,7 +214,9 @@ class CallDurationTimeBoardState extends State<LiveDurationTimeBoard> {
     durationTimer?.cancel();
     durationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       durationNotifier.value = beginDuration! + Duration(seconds: timer.tick);
-      widget.config.onDurationUpdate?.call(durationNotifier.value);
+      widget.events?.onUpdated?.call(
+        durationNotifier.value,
+      );
     });
   }
 }

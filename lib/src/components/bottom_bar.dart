@@ -18,8 +18,10 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/defines.dar
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/host_lock_seat_button.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/events.defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/data.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_button.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/prebuilt_data.dart';
 
 /// @nodoc
 class ZegoBottomBar extends StatefulWidget {
@@ -30,17 +32,26 @@ class ZegoBottomBar extends StatefulWidget {
   final ZegoLiveSeatManager seatManager;
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
-  final ZegoLiveAudioRoomController? prebuiltController;
+  final ZegoUIKitPrebuiltLiveAudioRoomController? prebuiltController;
+
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
+  final ZegoUIKitPrebuiltLiveAudioRoomEvents events;
+  final void Function(ZegoLiveAudioRoomEndEvent event) defaultEndAction;
+  final Future<bool> Function(
+    ZegoLiveAudioRoomLeaveConfirmationEvent event,
+  ) defaultLeaveConfirmationAction;
 
   final ZegoAvatarBuilder? avatarBuilder;
 
-  final ZegoUIKitPrebuiltLiveAudioRoomData prebuiltData;
+  final ZegoUIKitPrebuiltLiveAudioRoomMinimizeData minimizeData;
 
   const ZegoBottomBar({
     Key? key,
     this.avatarBuilder,
     required this.config,
+    required this.events,
+    required this.defaultEndAction,
+    required this.defaultLeaveConfirmationAction,
     required this.isPluginEnabled,
     required this.seatManager,
     required this.connectManager,
@@ -48,7 +59,7 @@ class ZegoBottomBar extends StatefulWidget {
     required this.prebuiltController,
     required this.height,
     required this.buttonSize,
-    required this.prebuiltData,
+    required this.minimizeData,
   }) : super(key: key);
 
   @override
@@ -57,7 +68,7 @@ class ZegoBottomBar extends StatefulWidget {
 
 /// @nodoc
 class _ZegoBottomBarState extends State<ZegoBottomBar> {
-  List<ZegoMenuBarButtonName> buttons = [];
+  List<ZegoLiveAudioRoomMenuBarButtonName> buttons = [];
   List<Widget> extendButtons = [];
 
   @override
@@ -80,7 +91,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
       child: Stack(
         children: [
           rightToolbar(context),
-          if (widget.config.bottomMenuBarConfig.showInRoomMessageButton)
+          if (widget.config.bottomMenuBar.showInRoomMessageButton)
             SizedBox(
               height: 124.zR,
               child: Row(
@@ -156,7 +167,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         context,
         isRoomSeatLocked: isRoomSeatLocked,
         localRole: localRole,
-        microphoneDefaultValueFunc: widget.prebuiltData.isPrebuiltFromMinimizing
+        microphoneDefaultValueFunc: widget.minimizeData.isPrebuiltFromMinimizing
             ? () {
                 /// if is minimizing, take the local device state
                 return ZegoUIKit()
@@ -169,12 +180,12 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
     ];
 
     var displayButtonList = <Widget>[];
-    if (buttonList.length > widget.config.bottomMenuBarConfig.maxCount) {
+    if (buttonList.length > widget.config.bottomMenuBar.maxCount) {
       /// the list count exceeds the limit, so divided into two parts,
       /// one part display in the Menu bar, the other part display in the menu with more buttons
       displayButtonList = buttonList.sublist(
         0,
-        widget.config.bottomMenuBarConfig.maxCount - 1,
+        widget.config.bottomMenuBar.maxCount - 1,
       )..add(
           buttonWrapper(
             child: ZegoMoreButton(
@@ -192,8 +203,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                     },
                   ),
                   ...extendButtons
-                ]..removeRange(
-                    0, widget.config.bottomMenuBarConfig.maxCount - 1);
+                ]..removeRange(0, widget.config.bottomMenuBar.maxCount - 1);
                 return buttonList;
               },
               icon: ButtonIcon(
@@ -224,10 +234,11 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
     return displayButtonsWithSpacing;
   }
 
-  Widget buttonWrapper({required Widget child, ZegoMenuBarButtonName? type}) {
+  Widget buttonWrapper(
+      {required Widget child, ZegoLiveAudioRoomMenuBarButtonName? type}) {
     var buttonSize = widget.buttonSize;
     switch (type) {
-      case ZegoMenuBarButtonName.applyToTakeSeatButton:
+      case ZegoLiveAudioRoomMenuBarButtonName.applyToTakeSeatButton:
         switch (widget.connectManager.audienceLocalConnectStateNotifier.value) {
           case ConnectState.idle:
             buttonSize = Size(330.zR, 72.zR);
@@ -265,7 +276,8 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
         .where((button) {
           if (isRoomSeatLocked) {
             if (localRole != ZegoLiveAudioRoomRole.audience &&
-                ZegoMenuBarButtonName.applyToTakeSeatButton == button) {
+                ZegoLiveAudioRoomMenuBarButtonName.applyToTakeSeatButton ==
+                    button) {
               /// if audience is on seat, then hide the applyToTakeSeatButton
               return false;
             }
@@ -273,7 +285,8 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           }
 
           /// if seat is not locked, then hide the applyToTakeSeatButton
-          return ZegoMenuBarButtonName.applyToTakeSeatButton != button;
+          return ZegoLiveAudioRoomMenuBarButtonName.applyToTakeSeatButton !=
+              button;
         })
         .map((type) => buttonWrapper(
               child: generateDefaultButtonsByEnum(
@@ -288,14 +301,14 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
 
   Widget generateDefaultButtonsByEnum(
     BuildContext context,
-    ZegoMenuBarButtonName type, {
+    ZegoLiveAudioRoomMenuBarButtonName type, {
     bool Function()? microphoneDefaultValueFunc,
   }) {
     final buttonSize = zegoLiveButtonSize;
     final iconSize = zegoLiveButtonIconSize;
 
     switch (type) {
-      case ZegoMenuBarButtonName.showMemberListButton:
+      case ZegoLiveAudioRoomMenuBarButtonName.showMemberListButton:
         return ZegoMemberButton(
           buttonSize: buttonSize,
           iconSize: iconSize,
@@ -305,17 +318,17 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
             backgroundColor: Colors.white,
           ),
           avatarBuilder: widget.avatarBuilder,
-          itemBuilder: widget.config.memberListConfig.itemBuilder,
+          itemBuilder: widget.config.memberList.itemBuilder,
           isPluginEnabled: widget.isPluginEnabled,
           seatManager: widget.seatManager,
           connectManager: widget.connectManager,
           popUpManager: widget.popUpManager,
           innerText: widget.config.innerText,
-          onMoreButtonPressed: widget.config.onMemberListMoreButtonPressed,
-          hiddenUserIDsNotifier:
-              widget.prebuiltController?.hiddenUsersOfMemberListNotifier,
+          onMoreButtonPressed: widget.events.memberList.onMoreButtonPressed,
+          hiddenUserIDsNotifier: widget
+              .prebuiltController?.private.hiddenUsersOfMemberListNotifier,
         );
-      case ZegoMenuBarButtonName.toggleMicrophoneButton:
+      case ZegoLiveAudioRoomMenuBarButtonName.toggleMicrophoneButton:
         var microphoneDefaultOn = widget.config.turnOnMicrophoneWhenJoining;
         final localUserID = ZegoUIKit().getLocalUser().id;
         if (widget.seatManager.isAttributeHost(ZegoUIKit().getLocalUser()) ||
@@ -341,8 +354,9 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
             backgroundColor: Colors.white,
           ),
           defaultOn: microphoneDefaultOn,
+          muteMode: true,
         );
-      case ZegoMenuBarButtonName.leaveButton:
+      case ZegoLiveAudioRoomMenuBarButtonName.leaveButton:
         return ZegoLeaveAudioRoomButton(
           buttonSize: buttonSize,
           iconSize: iconSize,
@@ -352,13 +366,16 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
             backgroundColor: Colors.white,
           ),
           config: widget.config,
+          events: widget.events,
+          defaultEndAction: widget.defaultEndAction,
+          defaultLeaveConfirmationAction: widget.defaultLeaveConfirmationAction,
           seatManager: widget.seatManager,
         );
-      case ZegoMenuBarButtonName.soundEffectButton:
+      case ZegoLiveAudioRoomMenuBarButtonName.soundEffectButton:
         return ZegoSoundEffectButton(
           innerText: widget.config.innerText,
-          voiceChangeEffect: widget.config.audioEffectConfig.voiceChangeEffect,
-          reverbEffect: widget.config.audioEffectConfig.reverbEffect,
+          voiceChangeEffect: widget.config.audioEffect.voiceChangeEffect,
+          reverbEffect: widget.config.audioEffect.reverbEffect,
           buttonSize: buttonSize,
           iconSize: iconSize,
           icon: ButtonIcon(
@@ -369,21 +386,21 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           rootNavigator: widget.config.rootNavigator,
           popUpManager: widget.popUpManager,
         );
-      case ZegoMenuBarButtonName.applyToTakeSeatButton:
+      case ZegoLiveAudioRoomMenuBarButtonName.applyToTakeSeatButton:
         return ZegoAudienceConnectButton(
           seatManager: widget.seatManager,
           connectManager: widget.connectManager,
           innerText: widget.seatManager.innerText,
         );
-      case ZegoMenuBarButtonName.closeSeatButton:
+      case ZegoLiveAudioRoomMenuBarButtonName.closeSeatButton:
         return ZegoHostLockSeatButton(
           buttonSize: buttonSize,
           iconSize: iconSize,
           seatManager: widget.seatManager,
         );
-      case ZegoMenuBarButtonName.minimizingButton:
+      case ZegoLiveAudioRoomMenuBarButtonName.minimizingButton:
         return ZegoMinimizingButton(
-          prebuiltAudioRoomData: widget.prebuiltData,
+          rootNavigator: widget.config.rootNavigator,
         );
     }
   }
@@ -391,23 +408,22 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
   void updateButtonsByRole() {
     switch (widget.seatManager.localRole.value) {
       case ZegoLiveAudioRoomRole.host:
-        buttons = widget.config.bottomMenuBarConfig.hostButtons;
-        extendButtons = widget.config.bottomMenuBarConfig.hostExtendButtons;
+        buttons = widget.config.bottomMenuBar.hostButtons;
+        extendButtons = widget.config.bottomMenuBar.hostExtendButtons;
         break;
       case ZegoLiveAudioRoomRole.speaker:
         if (widget.seatManager.localHasHostPermissions) {
           /// co-hosts have the same permissions as hosts if host is not exist
-          buttons = widget.config.bottomMenuBarConfig.hostButtons;
-          extendButtons = widget.config.bottomMenuBarConfig.hostExtendButtons;
+          buttons = widget.config.bottomMenuBar.hostButtons;
+          extendButtons = widget.config.bottomMenuBar.hostExtendButtons;
         } else {
-          buttons = widget.config.bottomMenuBarConfig.speakerButtons;
-          extendButtons =
-              widget.config.bottomMenuBarConfig.speakerExtendButtons;
+          buttons = widget.config.bottomMenuBar.speakerButtons;
+          extendButtons = widget.config.bottomMenuBar.speakerExtendButtons;
         }
         break;
       case ZegoLiveAudioRoomRole.audience:
-        buttons = widget.config.bottomMenuBarConfig.audienceButtons;
-        extendButtons = widget.config.bottomMenuBarConfig.audienceExtendButtons;
+        buttons = widget.config.bottomMenuBar.audienceButtons;
+        extendButtons = widget.config.bottomMenuBar.audienceExtendButtons;
         break;
     }
   }

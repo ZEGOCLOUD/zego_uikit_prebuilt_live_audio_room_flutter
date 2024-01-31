@@ -14,7 +14,7 @@ class ZegoInRoomMessageInputBoard extends ModalRoute<String> {
     this.rootNavigator = false,
   }) : super();
 
-  final ZegoInnerText innerText;
+  final ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText;
   final bool rootNavigator;
 
   @override

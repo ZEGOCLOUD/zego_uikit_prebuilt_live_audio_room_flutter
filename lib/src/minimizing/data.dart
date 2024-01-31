@@ -4,18 +4,18 @@ import 'dart:core';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
-
-// Project imports:
+import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 
 /// @nodoc
-class ZegoUIKitPrebuiltLiveAudioRoomData {
-  const ZegoUIKitPrebuiltLiveAudioRoomData({
+class ZegoUIKitPrebuiltLiveAudioRoomMinimizeData {
+  const ZegoUIKitPrebuiltLiveAudioRoomMinimizeData({
     required this.appID,
     required this.appSign,
     required this.roomID,
     required this.userID,
     required this.userName,
     required this.config,
+    required this.events,
     required this.isPrebuiltFromMinimizing,
     this.controller,
   });
@@ -35,9 +35,11 @@ class ZegoUIKitPrebuiltLiveAudioRoomData {
   /// just need to know: users who use the same liveName can talk with each other.
   final String roomID;
 
-  final ZegoLiveAudioRoomController? controller;
+  final ZegoUIKitPrebuiltLiveAudioRoomController? controller;
 
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
+
+  final ZegoUIKitPrebuiltLiveAudioRoomEvents events;
 
   final bool isPrebuiltFromMinimizing;
 

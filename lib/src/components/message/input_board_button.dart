@@ -13,7 +13,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 class ZegoInRoomMessageInputBoardButton extends StatefulWidget {
   final Size? iconSize;
   final Size? buttonSize;
-  final ZegoInnerText innerText;
+  final ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText;
   final bool rootNavigator;
 
   final Function(int)? onSheetPopUp;

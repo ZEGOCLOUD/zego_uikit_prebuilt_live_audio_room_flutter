@@ -41,7 +41,7 @@ class _ZegoSeatForegroundState extends State<ZegoSeatBackground> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        widget.config.seatConfig.backgroundBuilder?.call(
+        widget.config.seat.backgroundBuilder?.call(
               context,
               widget.size,
               ZegoUIKit().getUser(widget.user?.id ?? ''),
@@ -76,11 +76,11 @@ class _ZegoSeatForegroundState extends State<ZegoSeatBackground> {
                   -1;
 
               return lockedSeat.contains(userSeatIndex)
-                  ? (widget.config.seatConfig.closeIcon ??
+                  ? (widget.config.seat.closeIcon ??
                       PrebuiltLiveAudioRoomImage.asset(
                         PrebuiltLiveAudioRoomIconUrls.seatLock,
                       ))
-                  : (widget.config.seatConfig.openIcon ??
+                  : (widget.config.seat.openIcon ??
                       PrebuiltLiveAudioRoomImage.asset(
                         PrebuiltLiveAudioRoomIconUrls.seatEmpty,
                       ));

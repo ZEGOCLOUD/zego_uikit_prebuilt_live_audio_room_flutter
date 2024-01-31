@@ -6,7 +6,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
 /// You can also change it to other languages.
 /// This class is used for the ZegoUIKitPrebuiltLiveAudioRoomConfig.innerText property.
 /// **Note that the placeholder %0 in the text will be replaced with the corresponding username.**
-class ZegoInnerText {
+class ZegoUIKitPrebuiltLiveAudioRoomInnerText {
   /// %0: is a string placeholder, represents the first parameter of prompt
   /// @nodoc
   final String param_1 = '%0';
@@ -61,7 +61,7 @@ class ZegoInnerText {
   /// - Message: "Please enable camera access in the system settings!"
   /// - Cancel button name: "Cancel"
   /// - Confirm button name: "Settings"
-  ZegoDialogInfo cameraPermissionSettingDialogInfo;
+  ZegoLiveAudioRoomDialogInfo cameraPermissionSettingDialogInfo;
 
   /// The dialog for microphone permission settings.
   /// The **default values** are:
@@ -69,7 +69,7 @@ class ZegoInnerText {
   /// - Message: "Please enable microphone access in the system settings!"
   /// - Cancel button name: "Cancel"
   /// - Confirm button name: "Settings"
-  ZegoDialogInfo microphonePermissionSettingDialogInfo;
+  ZegoLiveAudioRoomDialogInfo microphonePermissionSettingDialogInfo;
 
   /// The confirmation dialog displayed before the host moves a speaker down from a seat.
   /// The **default values** are:
@@ -77,7 +77,7 @@ class ZegoInnerText {
   /// - Message: "Are you sure to remove %0 from the seat?", where %0 will be replaced with the corresponding username.
   /// - Cancel button name: "Cancel"
   /// - Confirm button name: "OK"
-  ZegoDialogInfo removeFromSeatDialogInfo;
+  ZegoLiveAudioRoomDialogInfo removeFromSeatDialogInfo;
 
   /// The confirmation dialog displayed before a speaker voluntarily leaves a seat.
   /// The **default values** are:
@@ -85,7 +85,7 @@ class ZegoInnerText {
   /// - Message: "Are you sure to leave seat?"
   /// - Cancel button name: "Cancel"
   /// - Confirm button name: "OK"
-  ZegoDialogInfo leaveSeatDialogInfo;
+  ZegoLiveAudioRoomDialogInfo leaveSeatDialogInfo;
 
   /// The button for audience members to apply for taking a seat during the live session.
   /// The **default value** is *"Apply to take seat"*.
@@ -113,7 +113,7 @@ class ZegoInnerText {
   /// - Message: "The host is inviting you to take seat"
   /// - Cancel button name: "Disagree"
   /// - Confirm button name: "Agree"
-  ZegoDialogInfo hostInviteTakeSeatDialog;
+  ZegoLiveAudioRoomDialogInfo hostInviteTakeSeatDialog;
 
   /// The button displayed in the popup menu when the host clicks on the "speaker" on a seat to assign the speaker as a co-host.
   /// The **default value** is *"Assign %0 as Co-Host"*, where %0 will be replaced with the corresponding username.
@@ -210,7 +210,7 @@ class ZegoInnerText {
   /// Reverb effect：Gramophone
   String reverbTypeGramophoneTitle;
 
-  ZegoInnerText({
+  ZegoUIKitPrebuiltLiveAudioRoomInnerText({
     String? takeSeatMenuButton,
     String? removeSpeakerMenuDialogButton,
     String? muteSpeakerMenuDialogButton,
@@ -229,11 +229,11 @@ class ZegoInnerText {
     String? inviteToTakeSeatMenuDialogButton,
     String? assignAsCoHostMenuDialogButton,
     String? revokeCoHostPrivilegesMenuDialogButton,
-    ZegoDialogInfo? cameraPermissionSettingDialogInfo,
-    ZegoDialogInfo? microphonePermissionSettingDialogInfo,
-    ZegoDialogInfo? removeFromSeatDialogInfo,
-    ZegoDialogInfo? leaveSeatDialogInfo,
-    ZegoDialogInfo? hostInviteTakeSeatDialog,
+    ZegoLiveAudioRoomDialogInfo? cameraPermissionSettingDialogInfo,
+    ZegoLiveAudioRoomDialogInfo? microphonePermissionSettingDialogInfo,
+    ZegoLiveAudioRoomDialogInfo? removeFromSeatDialogInfo,
+    ZegoLiveAudioRoomDialogInfo? leaveSeatDialogInfo,
+    ZegoLiveAudioRoomDialogInfo? hostInviteTakeSeatDialog,
     String? audioEffectTitle,
     String? audioEffectReverbTitle,
     String? audioEffectVoiceChangingTitle,
@@ -289,7 +289,7 @@ class ZegoInnerText {
             revokeCoHostPrivilegesMenuDialogButton ??
                 "Revoke %0's Co-Host Privileges",
         cameraPermissionSettingDialogInfo = cameraPermissionSettingDialogInfo ??
-            ZegoDialogInfo(
+            ZegoLiveAudioRoomDialogInfo(
               title: 'Can not use Camera!',
               message: 'Please enable camera access in the system settings!',
               cancelButtonName: 'Cancel',
@@ -297,7 +297,7 @@ class ZegoInnerText {
             ),
         microphonePermissionSettingDialogInfo =
             microphonePermissionSettingDialogInfo ??
-                ZegoDialogInfo(
+                ZegoLiveAudioRoomDialogInfo(
                   title: 'Can not use Microphone!',
                   message:
                       'Please enable microphone access in the system settings!',
@@ -305,21 +305,21 @@ class ZegoInnerText {
                   confirmButtonName: 'Settings',
                 ),
         removeFromSeatDialogInfo = removeFromSeatDialogInfo ??
-            ZegoDialogInfo(
+            ZegoLiveAudioRoomDialogInfo(
               title: 'Remove the speaker',
               message: 'Are you sure to remove %0 from the seat?',
               cancelButtonName: 'Cancel',
               confirmButtonName: 'OK',
             ),
         leaveSeatDialogInfo = leaveSeatDialogInfo ??
-            ZegoDialogInfo(
+            ZegoLiveAudioRoomDialogInfo(
               title: 'Leave the seat',
               message: 'Are you sure to leave seat?',
               cancelButtonName: 'Cancel',
               confirmButtonName: 'OK',
             ),
         hostInviteTakeSeatDialog = hostInviteTakeSeatDialog ??
-            ZegoDialogInfo(
+            ZegoLiveAudioRoomDialogInfo(
               title: 'Invitation',
               message: 'The host is inviting you to take seat',
               cancelButtonName: 'Disagree',

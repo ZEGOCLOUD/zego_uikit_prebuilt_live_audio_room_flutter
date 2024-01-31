@@ -2,16 +2,49 @@ part of 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 
 /// @nodoc
 mixin ZegoLiveAudioRoomControllerMedia {
-  final ZegoLiveAudioRoomMediaController _mediaController =
-      ZegoLiveAudioRoomMediaController();
+  final ZegoLiveAudioRoomControllerMediaImpl _mediaController =
+      ZegoLiveAudioRoomControllerMediaImpl();
 
-  ZegoLiveAudioRoomMediaController get media => _mediaController;
+  ZegoLiveAudioRoomControllerMediaImpl get media => _mediaController;
 }
 
-/// @nodoc
-class ZegoLiveAudioRoomMediaController {
-  /// Start playing.
-  Future<MediaPlayResult> play({
+/// media series API
+class ZegoLiveAudioRoomControllerMediaImpl {
+  /// volume of current media
+  int get volume => ZegoUIKit().getMediaVolume();
+
+  /// the total progress(millisecond) of current media resources
+  int get totalDuration => ZegoUIKit().getMediaTotalDuration();
+
+  /// current playing progress of current media
+  int get currentProgress => ZegoUIKit().getMediaCurrentProgress();
+
+  /// media type  of current media
+  ZegoUIKitMediaType get type => ZegoUIKit().getMediaType();
+
+  /// volume notifier of current media
+  ValueNotifier<int> get volumeNotifier => ZegoUIKit().getMediaVolumeNotifier();
+
+  /// current progress notifier of current media
+  ValueNotifier<int> get currentProgressNotifier =>
+      ZegoUIKit().getMediaCurrentProgressNotifier();
+
+  /// play state notifier of current media
+  ValueNotifier<ZegoUIKitMediaPlayState> get playStateNotifier =>
+      ZegoUIKit().getMediaPlayStateNotifier();
+
+  /// type notifier of current media
+  ValueNotifier<ZegoUIKitMediaType> get typeNotifier =>
+      ZegoUIKit().getMediaTypeNotifier();
+
+  /// mute state notifier of current media
+  ValueNotifier<bool> get muteNotifier => ZegoUIKit().getMediaMuteNotifier();
+
+  /// info of current media
+  ZegoUIKitMediaInfo get info => ZegoUIKit().getMediaInfo();
+
+  /// start play current media
+  Future<ZegoUIKitMediaPlayResult> play({
     required String filePathOrURL,
     bool enableRepeat = false,
   }) async {
@@ -21,23 +54,24 @@ class ZegoLiveAudioRoomMediaController {
     );
   }
 
-  /// Stop playing.
+  /// stop play current media
   Future<void> stop() async {
     return ZegoUIKit().stopMedia();
   }
 
-  /// Pause playing.
+  /// pause current media
   Future<void> pause() async {
     return ZegoUIKit().pauseMedia();
   }
 
-  /// Resume playing.
+  /// resume current media
   Future<void> resume() async {
     return ZegoUIKit().resumeMedia();
   }
 
+  /// set the current media playback progress
   /// - [millisecond] Point in time of specified playback progress
-  Future<MediaSeekToResult> seekTo(int millisecond) async {
+  Future<ZegoUIKitMediaSeekToResult> seekTo(int millisecond) async {
     return ZegoUIKit().seekTo(millisecond);
   }
 
@@ -48,57 +82,46 @@ class ZegoLiveAudioRoomMediaController {
     return ZegoUIKit().setMediaVolume(volume);
   }
 
-  int getVolume() {
-    return ZegoUIKit().getMediaVolume();
-  }
-
-  Future<void> muteLocal(bool mute) {
+  /// mute current media
+  Future<void> muteLocal(bool mute) async {
     return ZegoUIKit().muteMediaLocal(mute);
   }
 
-  /// Get the total progress of your media resources, Returns Unit is millisecond.
-  int getTotalDuration() {
-    return ZegoUIKit().getMediaTotalDuration();
-  }
-
-  /// Get current playing progress.
-  int getCurrentProgress() {
-    return ZegoUIKit().getMediaCurrentProgress();
-  }
-
-  MediaType getType() {
-    return ZegoUIKit().getMediaType();
-  }
-
-  ValueNotifier<int> getVolumeNotifier() {
-    return ZegoUIKit().getMediaVolumeNotifier();
-  }
-
-  ValueNotifier<int> getCurrentProgressNotifier() {
-    return ZegoUIKit().getMediaCurrentProgressNotifier();
-  }
-
-  ValueNotifier<MediaPlayState> getPlayStateNotifier() {
-    return ZegoUIKit().getMediaPlayStateNotifier();
-  }
-
-  ValueNotifier<MediaType> getMediaTypeNotifier() {
-    return ZegoUIKit().getMediaTypeNotifier();
-  }
-
+  /// pick pure audio media file
   Future<List<PlatformFile>> pickPureAudioFile() async {
     return ZegoUIKit().pickPureAudioMediaFile();
   }
 
+  /// pick video media file
   Future<List<PlatformFile>> pickVideoFile() async {
     return ZegoUIKit().pickVideoMediaFile();
   }
 
-  Future<List<PlatformFile>> pickFile() async {
-    return ZegoUIKit().pickMediaFile();
-  }
+  /// If you want to specify the allowed formats, you can set them using [allowedExtensions].
+  /// Currently, for video, we support "avi", "flv", "mkv", "mov", "mp4", "mpeg", "webm", "wmv".
+  /// For audio, we support "aac", "midi", "mp3", "ogg", "wav".
+  Future<List<PlatformFile>> pickFile({
+    List<String>? allowedExtensions = const [
+      /// video
+      "avi",
+      "flv",
+      "mkv",
+      "mov",
+      "mp4",
+      "mpeg",
+      "webm",
+      "wmv",
 
-  MediaInfo getMediaInfo() {
-    return ZegoUIKit().getMediaInfo();
+      /// audio
+      "aac",
+      "midi",
+      "mp3",
+      "ogg",
+      "wav",
+    ],
+  }) async {
+    return ZegoUIKit().pickMediaFile(
+      allowedExtensions: allowedExtensions,
+    );
   }
 }

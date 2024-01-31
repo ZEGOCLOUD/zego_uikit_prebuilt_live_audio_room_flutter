@@ -7,11 +7,12 @@ import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/live_duration_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/prebuilt_data.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 
 class ZegoLiveAudioRoomManagers {
   factory ZegoLiveAudioRoomManagers() => _instance;
@@ -33,7 +34,13 @@ class ZegoLiveAudioRoomManagers {
   }
 
   void initPluginAndManagers({
-    required ZegoUIKitPrebuiltLiveAudioRoomData prebuiltData,
+    required int appID,
+    required String appSign,
+    required String userID,
+    required String userName,
+    required String roomID,
+    required ZegoUIKitPrebuiltLiveAudioRoomConfig config,
+    required ZegoUIKitPrebuiltLiveAudioRoomEvents events,
   }) {
     if (_initialized) {
       ZegoLoggerService.logInfo(
@@ -54,34 +61,34 @@ class ZegoLiveAudioRoomManagers {
     _initialized = true;
 
     plugins = ZegoPrebuiltPlugins(
-      appID: prebuiltData.appID,
-      appSign: prebuiltData.appSign,
-      userID: prebuiltData.userID,
-      userName: prebuiltData.userName,
-      roomID: prebuiltData.roomID,
+      appID: appID,
+      appSign: appSign,
+      userID: userID,
+      userName: userName,
+      roomID: roomID,
       plugins: [ZegoUIKitSignalingPlugin()],
       onPluginReLogin: () {
         seatManager?.queryRoomAllAttributes(withToast: false).then((value) {
           seatManager?.initRoleAndSeat();
         });
       },
-      onError: prebuiltData.config.onError,
+      onError: events.onError,
     );
     seatManager = ZegoLiveSeatManager(
-      localUserID: prebuiltData.userID,
-      roomID: prebuiltData.roomID,
+      localUserID: userID,
+      roomID: roomID,
       plugins: plugins!,
-      config: prebuiltData.config,
-      prebuiltController: prebuiltData.controller,
-      innerText: prebuiltData.config.innerText,
+      config: config,
+      events: events,
+      innerText: config.innerText,
       popUpManager: popUpManager,
       kickOutNotifier: kickOutNotifier,
     );
     connectManager = ZegoLiveConnectManager(
-      config: prebuiltData.config,
+      config: config,
+      events: events,
       seatManager: seatManager!,
-      prebuiltController: prebuiltData.controller,
-      innerText: prebuiltData.config.innerText,
+      innerText: config.innerText,
       popUpManager: popUpManager,
       kickOutNotifier: kickOutNotifier,
     );

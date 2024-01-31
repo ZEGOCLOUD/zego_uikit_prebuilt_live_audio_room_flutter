@@ -6,10 +6,14 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/events.defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/defines.dart';
 
 /// @nodoc
-class ZegoLeaveAudioRoomButton extends StatelessWidget {
+class ZegoLeaveAudioRoomButton extends StatefulWidget {
   final ButtonIcon? icon;
 
   /// the size of button's icon
@@ -20,28 +24,44 @@ class ZegoLeaveAudioRoomButton extends StatelessWidget {
 
   final ZegoLiveSeatManager seatManager;
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
+  final ZegoUIKitPrebuiltLiveAudioRoomEvents events;
+
+  final void Function(ZegoLiveAudioRoomEndEvent event) defaultEndAction;
+  final Future<bool> Function(
+    ZegoLiveAudioRoomLeaveConfirmationEvent event,
+  ) defaultLeaveConfirmationAction;
 
   const ZegoLeaveAudioRoomButton({
     Key? key,
     required this.seatManager,
     required this.config,
+    required this.events,
+    required this.defaultEndAction,
+    required this.defaultLeaveConfirmationAction,
     this.icon,
     this.iconSize,
     this.buttonSize,
   }) : super(key: key);
 
   @override
+  State<ZegoLeaveAudioRoomButton> createState() =>
+      ZegoLeaveAudioRoomButtonState();
+}
+
+/// @nodoc
+class ZegoLeaveAudioRoomButtonState extends State<ZegoLeaveAudioRoomButton> {
+  @override
   Widget build(BuildContext context) {
     return ZegoLeaveButton(
-      buttonSize: buttonSize,
-      iconSize: iconSize,
-      icon: icon ??
+      buttonSize: widget.buttonSize,
+      iconSize: widget.iconSize,
+      icon: widget.icon ??
           ButtonIcon(
             icon: const Icon(Icons.close, color: Colors.white),
             backgroundColor: ZegoUIKitDefaultTheme.buttonBackgroundColor,
           ),
       onLeaveConfirmation: (context) async {
-        if (seatManager.isRoomAttributesBatching) {
+        if (widget.seatManager.isRoomAttributesBatching) {
           ZegoLoggerService.logInfo(
             'room attribute is batching, ignore',
             tag: 'audio room',
@@ -50,24 +70,40 @@ class ZegoLeaveAudioRoomButton extends StatelessWidget {
           return false;
         }
 
-        final canLeave =
-            await config.onLeaveConfirmation?.call(context) ?? true;
+        final endConfirmationEvent = ZegoLiveAudioRoomLeaveConfirmationEvent(
+          context: context,
+        );
+        defaultAction() async {
+          return widget.defaultLeaveConfirmationAction(endConfirmationEvent);
+        }
+
+        final canLeave = await widget.events.onLeaveConfirmation?.call(
+              endConfirmationEvent,
+              defaultAction,
+            ) ??
+            true;
         if (canLeave) {
           /// take off seat when leave room
-          await seatManager.leaveSeat(showDialog: false);
-          seatManager.isLeavingRoom = true;
+          await widget.seatManager.leaveSeat(showDialog: false);
+          widget.seatManager.isLeavingRoom = true;
         }
 
         return canLeave;
       },
       onPress: () async {
-        if (config.onLeaveLiveAudioRoom != null) {
-          config.onLeaveLiveAudioRoom!.call(false);
+        final endEvent = ZegoLiveAudioRoomEndEvent(
+          reason: ZegoLiveAudioRoomEndReason.localLeave,
+          isFromMinimizing: ZegoLiveAudioRoomMiniOverlayPageState.minimizing ==
+              ZegoUIKitPrebuiltLiveAudioRoomController().minimize.state,
+        );
+        defaultAction() {
+          widget.defaultEndAction(endEvent);
+        }
+
+        if (widget.events.onEnded != null) {
+          widget.events.onEnded!.call(endEvent, defaultAction);
         } else {
-          Navigator.of(
-            context,
-            rootNavigator: config.rootNavigator,
-          ).pop();
+          defaultAction.call();
         }
       },
     );

@@ -38,7 +38,7 @@ class ZegoMemberListSheet extends StatefulWidget {
   final ZegoLiveSeatManager seatManager;
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
-  final ZegoInnerText innerText;
+  final ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText;
   final ZegoMemberListSheetMoreButtonPressed? onMoreButtonPressed;
   final ValueNotifier<List<String>>? hiddenUserIDsNotifier;
 
@@ -164,7 +164,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
                       builder: (context, _, __) {
                         return GestureDetector(
                           onTap: () {
-                            widget.seatManager.config.memberListConfig.onClicked
+                            widget.seatManager.events.memberList.onClicked
                                 ?.call(user);
                           },
                           child: Container(
@@ -457,7 +457,7 @@ void showMemberListSheet({
   required BuildContext context,
   required ZegoLiveSeatManager seatManager,
   required ZegoLiveConnectManager connectManager,
-  required ZegoInnerText innerText,
+  required ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText,
   required ZegoMemberListSheetMoreButtonPressed? onMoreButtonPressed,
   required ZegoPopUpManager popUpManager,
   ValueNotifier<List<String>>? hiddenUserIDsNotifier,

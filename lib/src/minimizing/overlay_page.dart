@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/duration_time_board.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/core_managers.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/data.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_audio_room.dart';
 
 /// @nodoc
@@ -15,6 +17,8 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage({
     Key? key,
     required this.contextQuery,
+    this.rootNavigator = true,
+    this.navigatorWithSafeArea = true,
     this.size,
     this.topLeft = const Offset(100, 100),
     this.borderRadius = 12.0,
@@ -31,6 +35,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage extends StatefulWidget {
     this.builder,
     this.foregroundBuilder,
     this.backgroundBuilder,
+    this.avatarBuilder,
   }) : super(key: key);
 
   final Size? size;
@@ -52,11 +57,14 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage extends StatefulWidget {
   final Widget? foreground;
   final Widget Function(ZegoUIKitUser? activeUser)? builder;
 
+  final ZegoAvatarBuilder? avatarBuilder;
   final ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;
   final ZegoAudioVideoViewBackgroundBuilder? backgroundBuilder;
 
   /// You need to return the `context` of NavigatorState in this callback
   final BuildContext Function() contextQuery;
+  final bool rootNavigator;
+  final bool navigatorWithSafeArea;
 
   @override
   ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState createState() =>
@@ -67,8 +75,8 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage extends StatefulWidget {
 class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
     extends State<ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage>
     with SingleTickerProviderStateMixin {
-  LiveAudioRoomMiniOverlayPageState currentState =
-      LiveAudioRoomMiniOverlayPageState.idle;
+  ZegoLiveAudioRoomMiniOverlayPageState currentState =
+      ZegoLiveAudioRoomMiniOverlayPageState.idle;
 
   bool visibility = false;
   late Offset topLeft;
@@ -82,6 +90,9 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
   Timer? activeUserTimer;
   final activeUserIDNotifier = ValueNotifier<String?>(null);
   final Map<String, List<double>> rangeSoundLevels = {};
+
+  ZegoUIKitPrebuiltLiveAudioRoomMinimizeData? get minimizeData =>
+      ZegoUIKitPrebuiltLiveAudioRoomController().minimize.private.minimizeData;
 
   @override
   void initState() {
@@ -102,11 +113,11 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
     topLeft = widget.topLeft;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine()
+      ZegoLiveAudioRoomInternalMiniOverlayMachine()
           .listenStateChanged(onMiniOverlayMachineStateChanged);
 
       if (null !=
-          ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine().machine.current) {
+          ZegoLiveAudioRoomInternalMiniOverlayMachine().machine.current) {
         syncState();
       }
     });
@@ -123,7 +134,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
 
     audioVideoListSubscription?.cancel();
 
-    ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine()
+    ZegoLiveAudioRoomInternalMiniOverlayMachine()
         .removeListenStateChanged(onMiniOverlayMachineStateChanged);
   }
 
@@ -198,36 +209,17 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
 
   Widget overlayItem() {
     switch (currentState) {
-      case LiveAudioRoomMiniOverlayPageState.idle:
-      case LiveAudioRoomMiniOverlayPageState.inAudioRoom:
+      case ZegoLiveAudioRoomMiniOverlayPageState.idle:
+      case ZegoLiveAudioRoomMiniOverlayPageState.inAudioRoom:
         return Container();
-      case LiveAudioRoomMiniOverlayPageState.minimizing:
+      case ZegoLiveAudioRoomMiniOverlayPageState.minimizing:
         return GestureDetector(
           onTap: () {
-            final prebuiltAudioRoomData =
-                ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine()
-                    .prebuiltAudioRoomData;
-            assert(null != prebuiltAudioRoomData);
-
-            /// re-enter prebuilt call
-            ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine()
-                .changeState(LiveAudioRoomMiniOverlayPageState.inAudioRoom);
-
-            Navigator.of(widget.contextQuery(), rootNavigator: true).push(
-              MaterialPageRoute(builder: (context) {
-                return SafeArea(
-                  child: ZegoUIKitPrebuiltLiveAudioRoom(
-                    appID: prebuiltAudioRoomData!.appID,
-                    appSign: prebuiltAudioRoomData.appSign,
-                    userID: prebuiltAudioRoomData.userID,
-                    userName: prebuiltAudioRoomData.userName,
-                    roomID: prebuiltAudioRoomData.roomID,
-                    config: prebuiltAudioRoomData.config,
-                    controller: prebuiltAudioRoomData.controller,
-                  ),
+            ZegoUIKitPrebuiltLiveAudioRoomController().minimize.restore(
+                  widget.contextQuery(),
+                  rootNavigator: widget.rootNavigator,
+                  withSafeArea: widget.navigatorWithSafeArea,
                 );
-              }),
-            );
           },
           child: ValueListenableBuilder<String?>(
             valueListenable: activeUserIDNotifier,
@@ -251,11 +243,8 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
               avatarConfig: ZegoAvatarConfig(
                 showInAudioMode: true,
                 showSoundWavesInAudioMode: true,
-                builder: ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine()
-                    .prebuiltAudioRoomData
-                    ?.config
-                    .seatConfig
-                    .avatarBuilder,
+                builder: widget.avatarBuilder ??
+                    minimizeData?.config.seat.avatarBuilder,
                 soundWaveColor: widget.soundWaveColor,
                 size: Size(
                   preferItemSizeNotifier.value.width * 0.6,
@@ -304,8 +293,11 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
             ),
         backgroundColor: Colors.white,
       ),
-      onPressed: () {
-        ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine().switchToIdle();
+      onPressed: () async {
+        await ZegoUIKitPrebuiltLiveAudioRoomController().leave(
+          context,
+          showConfirmation: false,
+        );
       },
     );
   }
@@ -320,11 +312,10 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
       right: 0,
       top: 2,
       child: LiveDurationTimeBoard(
-        config: ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine()
-                .prebuiltAudioRoomData
-                ?.config
-                .durationConfig ??
-            ZegoLiveDurationConfig(),
+        config: minimizeData?.config.duration ??
+            ZegoLiveAudioRoomLiveDurationConfig(),
+        events:
+            minimizeData?.events.duration ?? ZegoLiveAudioRoomDurationEvents(),
         manager: ZegoLiveAudioRoomManagers().liveDurationManager!,
         fontSize: 15.zR,
       ),
@@ -353,6 +344,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
                       ZegoUIKit().turnMicrophoneOn(
                         !isMicrophoneEnabled,
                         userID: activeUser.id,
+                        muteMode: true,
                       );
                     }
                   : null,
@@ -452,8 +444,9 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
 
   void syncState() {
     setState(() {
-      currentState = ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayMachine().state();
-      visibility = currentState == LiveAudioRoomMiniOverlayPageState.minimizing;
+      currentState = ZegoLiveAudioRoomInternalMiniOverlayMachine().state();
+      visibility =
+          currentState == ZegoLiveAudioRoomMiniOverlayPageState.minimizing;
 
       if (visibility) {
         listenAudioVideoList();
@@ -516,7 +509,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
   }
 
   void onMiniOverlayMachineStateChanged(
-      LiveAudioRoomMiniOverlayPageState state) {
+      ZegoLiveAudioRoomMiniOverlayPageState state) {
     /// Overlay and setState may be in different contexts, causing the framework to be unable to update.
     ///
     /// The purpose of Future.delayed(Duration.zero, callback) is to execute the callback function in the next frame,

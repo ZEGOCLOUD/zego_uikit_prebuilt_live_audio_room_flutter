@@ -25,7 +25,7 @@ class ZegoAudienceConnectButton extends StatefulWidget {
   }) : super(key: key);
   final ZegoLiveSeatManager seatManager;
   final ZegoLiveConnectManager connectManager;
-  final ZegoInnerText innerText;
+  final ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText;
 
   @override
   State<ZegoAudienceConnectButton> createState() =>
@@ -121,7 +121,8 @@ class _ZegoAudienceConnectButtonState extends State<ZegoAudienceConnectButton> {
         List<String> errorInvitees,
       ) {
         if (code.isNotEmpty) {
-          widget.connectManager.config.onSeatTakingRequestFailed?.call();
+          widget.connectManager.events.seat.audience?.onTakingRequestFailed
+              ?.call();
 
           showDebugToast('Failed to apply for take seat, $code $message');
         } else {

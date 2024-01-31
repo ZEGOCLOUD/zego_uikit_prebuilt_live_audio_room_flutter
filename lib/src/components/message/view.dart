@@ -6,15 +6,18 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 
 /// @nodoc
 class ZegoInRoomLiveMessageView extends StatefulWidget {
-  final ZegoInRoomMessageConfig? config;
+  final ZegoLiveAudioRoomInRoomMessageConfig? config;
+  final ZegoLiveAudioRoomInRoomMessageEvents? events;
   final ZegoAvatarBuilder? avatarBuilder;
 
   const ZegoInRoomLiveMessageView({
     Key? key,
     this.config,
+    this.events,
     this.avatarBuilder,
   }) : super(key: key);
 
@@ -56,8 +59,8 @@ class _ZegoInRoomLiveMessageViewState extends State<ZegoInRoomLiveMessageView> {
                     maxLines: widget.config?.maxLines,
                     nameTextStyle: widget.config?.nameTextStyle,
                     messageTextStyle: widget.config?.messageTextStyle,
-                    onItemClick: widget.config?.onMessageClick,
-                    onItemLongPress: widget.config?.onMessageLongPress,
+                    onItemClick: widget.events?.onClicked,
+                    onItemLongPress: widget.events?.onLongPress,
                   );
                 },
           ),

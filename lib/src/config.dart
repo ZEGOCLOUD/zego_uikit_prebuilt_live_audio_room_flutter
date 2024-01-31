@@ -13,146 +13,38 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 /// Configuration for initializing the Live Audio Room.
 /// This class is used as the [config] parameter for the constructor of [ZegoUIKitPrebuiltLiveAudioRoom].
 class ZegoUIKitPrebuiltLiveAudioRoomConfig {
-  /// Default initialization parameters for the host.
-  /// If a configuration item does not meet your expectations, you can directly override its value.
-  ///
-  /// Example:
-  ///
-  /// ```dart
-  /// ZegoUIKitPrebuiltLiveAudioRoomConfig.host()
-  /// ..hostSeatIndexes = [0]
-  /// ```
-  ZegoUIKitPrebuiltLiveAudioRoomConfig.host()
-      : role = ZegoLiveAudioRoomRole.host,
-        takeSeatIndexWhenJoining = 0,
-        closeSeatsWhenJoining = true,
-        turnOnMicrophoneWhenJoining = true,
-        useSpeakerWhenJoining = true,
-        rootNavigator = false,
-        userInRoomAttributes = const {},
-        advanceConfigs = const {},
-        seatConfig = ZegoLiveAudioRoomSeatConfig(),
-        layoutConfig = ZegoLiveAudioRoomLayoutConfig(),
-        hostSeatIndexes = const [0],
-        topMenuBarConfig = ZegoTopMenuBarConfig(),
-        bottomMenuBarConfig = ZegoBottomMenuBarConfig(),
-        inRoomMessageConfig = ZegoInRoomMessageConfig(),
-        memberListConfig = ZegoMemberListConfig(),
-        audioEffectConfig = ZegoAudioEffectConfig(),
-        durationConfig = ZegoLiveDurationConfig(),
-        backgroundMediaConfig = ZegoBackgroundMediaConfig(),
-        innerText = ZegoInnerText(),
-        confirmDialogInfo = ZegoDialogInfo(
-          title: 'Leave the room',
-          message: 'Are you sure to leave the room?',
-          cancelButtonName: 'Cancel',
-          confirmButtonName: 'OK',
-        );
+  /// Configuration for all seats.
+  ZegoLiveAudioRoomSeatConfig seat;
 
-  /// Default initialization parameters for the audience.
-  /// If a configuration item does not meet your expectations, you can directly override its value.
-  ///
-  /// Example:
-  ///
-  /// ```dart
-  /// ZegoUIKitPrebuiltLiveAudioRoomConfig.audience()
-  /// ..hostSeatIndexes = [0]
-  /// ```
-  ZegoUIKitPrebuiltLiveAudioRoomConfig.audience()
-      : role = ZegoLiveAudioRoomRole.audience,
-        turnOnMicrophoneWhenJoining = false,
-        closeSeatsWhenJoining = false,
-        useSpeakerWhenJoining = true,
-        rootNavigator = false,
-        userInRoomAttributes = const {},
-        advanceConfigs = const {},
-        seatConfig = ZegoLiveAudioRoomSeatConfig(),
-        layoutConfig = ZegoLiveAudioRoomLayoutConfig(),
-        hostSeatIndexes = const [0],
-        topMenuBarConfig = ZegoTopMenuBarConfig(),
-        bottomMenuBarConfig = ZegoBottomMenuBarConfig(),
-        inRoomMessageConfig = ZegoInRoomMessageConfig(),
-        memberListConfig = ZegoMemberListConfig(),
-        audioEffectConfig = ZegoAudioEffectConfig(),
-        durationConfig = ZegoLiveDurationConfig(),
-        backgroundMediaConfig = ZegoBackgroundMediaConfig(),
-        innerText = ZegoInnerText();
+  /// Configuration options for the top menu bar (toolbar).
+  /// You can use these options to customize the appearance and behavior of the top menu bar.
+  ZegoLiveAudioRoomTopMenuBarConfig topMenuBar;
 
-  ZegoUIKitPrebuiltLiveAudioRoomConfig({
-    this.turnOnMicrophoneWhenJoining = true,
-    this.useSpeakerWhenJoining = true,
-    this.closeSeatsWhenJoining = true,
-    ZegoLiveAudioRoomSeatConfig? seatConfig,
-    ZegoTopMenuBarConfig? topMenuBarConfig,
-    ZegoBottomMenuBarConfig? bottomMenuBarConfig,
-    ZegoLiveAudioRoomLayoutConfig? layoutConfig,
-    ZegoInRoomMessageConfig? messageConfig,
-    ZegoMemberListConfig? memberListConfig,
-    ZegoAudioEffectConfig? effectConfig,
-    ZegoLiveDurationConfig? durationConfig,
-    ZegoBackgroundMediaConfig? backgroundMediaConfig,
-    this.hostSeatIndexes = const [0],
-    this.confirmDialogInfo,
-    this.rootNavigator = false,
-    this.onLeaveConfirmation,
-    this.onLeaveLiveAudioRoom,
-    this.onMeRemovedFromRoom,
-    this.foreground,
-    this.background,
-    this.userAvatarUrl,
-    this.userInRoomAttributes = const {},
-    this.advanceConfigs = const {},
-    this.onUserCountOrPropertyChanged,
-    this.onError,
-    this.onSeatClosed,
-    this.onSeatsOpened,
-    this.onSeatClicked,
-    this.onSeatsChanged,
-    this.onSeatTakingRequested,
-    this.onSeatTakingRequestCanceled,
-    this.onInviteAudienceToTakeSeatFailed,
-    this.onSeatTakingInviteRejected,
-    this.onSeatTakingRequestFailed,
-    this.onSeatTakingRequestRejected,
-    this.onHostSeatTakingInviteSent,
-    this.onMemberListMoreButtonPressed,
-    ZegoInnerText? translationText,
-  })  : seatConfig = seatConfig ?? ZegoLiveAudioRoomSeatConfig(),
-        topMenuBarConfig = topMenuBarConfig ?? ZegoTopMenuBarConfig(),
-        bottomMenuBarConfig = bottomMenuBarConfig ?? ZegoBottomMenuBarConfig(),
-        layoutConfig = layoutConfig ?? ZegoLiveAudioRoomLayoutConfig(),
-        inRoomMessageConfig = messageConfig ?? ZegoInRoomMessageConfig(),
-        memberListConfig = memberListConfig ?? ZegoMemberListConfig(),
-        audioEffectConfig = effectConfig ?? ZegoAudioEffectConfig(),
-        durationConfig = durationConfig ?? ZegoLiveDurationConfig(),
-        backgroundMediaConfig =
-            backgroundMediaConfig ?? ZegoBackgroundMediaConfig(),
-        innerText = translationText ?? ZegoInnerText();
+  /// Configuration options for the bottom menu bar (toolbar).
+  /// You can use these options to customize the appearance and behavior of the bottom menu bar.
+  ZegoLiveAudioRoomBottomMenuBarConfig bottomMenuBar;
+
+  /// Configuration options for the message list.
+  ZegoLiveAudioRoomInRoomMessageConfig inRoomMessage;
+
+  /// You can use this to modify your voice and control reverb.
+  ZegoLiveAudioRoomAudioEffectConfig audioEffect;
+
+  /// Live audio room timing configuration.
+  ZegoLiveAudioRoomLiveDurationConfig duration;
+
+  /// the config of media player
+  ZegoLiveAudioRoomMediaPlayerConfig mediaPlayer;
+
+  /// the config of background music, the feature currently only works for the host
+  ZegoLiveAudioRoomBackgroundMediaConfig backgroundMedia;
+
+  /// Configuration related to the bottom member list, including displaying the member list, member list styles, and more.
+  ZegoLiveAudioRoomMemberListConfig memberList;
 
   /// Specifies the initial role when joining the live audio room.
   /// The role change after joining is not constrained by this property.
   ZegoLiveAudioRoomRole role = ZegoLiveAudioRoomRole.audience;
-
-  /// Specifies the seat to occupy when joining the live audio room.
-  /// This is only valid when the role is set to host or speaker.
-  int takeSeatIndexWhenJoining = -1;
-
-  /// Specifies whether to lock the seat automatically after entering the room.
-  /// It only takes effect when set by the host
-  /// The default value is `true`.
-  bool closeSeatsWhenJoining;
-
-  /// Specifies the list of seats occupied by the host.
-  /// Once specified, these seats can only be used by the host and cannot be occupied by speakers or audience members.
-  /// The default value is `[0]`.
-  List<int> hostSeatIndexes;
-
-  /// The default layout of the audio chat room supports free layout with multiple rows and columns of seats.
-  /// You can use this parameter to control the specific style of each row and column.
-  ZegoLiveAudioRoomLayoutConfig layoutConfig;
-
-  /// Configuration for all seats.
-  ZegoLiveAudioRoomSeatConfig seatConfig;
 
   /// Whether to open the microphone when joining the audio chat room.
   ///
@@ -194,37 +86,9 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// ```
   Widget? background;
 
-  /// Configuration options for the top menu bar (toolbar).
-  /// You can use these options to customize the appearance and behavior of the top menu bar.
-  ZegoTopMenuBarConfig topMenuBarConfig;
-
-  /// Configuration options for the bottom menu bar (toolbar).
-  /// You can use these options to customize the appearance and behavior of the bottom menu bar.
-  ZegoBottomMenuBarConfig bottomMenuBarConfig;
-
-  /// Configuration options for the message list.
-  ZegoInRoomMessageConfig inRoomMessageConfig;
-
-  /// Configuration related to the bottom member list, including displaying the member list, member list styles, and more.
-  ZegoMemberListConfig memberListConfig;
-
-  @Deprecated('Since 2.8.5, please use inRoomMessageConfig instead')
-  ZegoInRoomMessageViewConfig get inRoomMessageViewConfig =>
-      inRoomMessageConfig;
-
-  @Deprecated('Since 2.8.5, please use inRoomMessageConfig instead')
-  set inRoomMessageViewConfig(ZegoInRoomMessageViewConfig config) =>
-      inRoomMessageConfig = config;
-
   /// Configuration options for modifying all text content on the UI.
   /// All visible text content on the UI can be modified using this single property.
-  ZegoInnerText innerText;
-
-  /// You can use this to modify your voice and control reverb.
-  ZegoAudioEffectConfig audioEffectConfig;
-
-  /// Live audio room timing configuration.
-  ZegoLiveDurationConfig durationConfig;
+  ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText;
 
   /// Set the avatar URL for the current user.
   ///
@@ -244,7 +108,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// Confirmation dialog information when leaving the audio chat room.
   /// If not set, clicking the exit button will directly exit the audio chat room.
   /// If set, a confirmation dialog will be displayed when clicking the exit button, and you will need to confirm the exit before actually exiting.
-  ZegoDialogInfo? confirmDialogInfo;
+  ZegoLiveAudioRoomDialogInfo? confirmDialogInfo;
 
   /// same as Flutter's Navigator's param
   /// If `rootNavigator` is set to true, the state from the furthest instance of
@@ -252,165 +116,145 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   /// subsequent instances of [Navigator].
   bool rootNavigator;
 
-  /// the config of background music, the feature currently only works for the host
-  ZegoBackgroundMediaConfig backgroundMediaConfig;
-
   /// Set advanced engine configuration, Used to enable advanced functions.
   /// For details, please consult ZEGO technical support.
   Map<String, String> advanceConfigs;
 
-  /// Confirmation callback method before leaving the audio chat room.
-  ///
-  /// If you want to perform more complex business logic before exiting the audio chat room, such as updating some records to the backend, you can use the [onLeaveConfirmation] parameter to set it.
-  /// This parameter requires you to provide a callback method that returns an asynchronous result.
-  /// If you return true in the callback, the prebuilt page will quit and return to your previous page, otherwise it will be ignored.
-  Future<bool> Function(BuildContext context)? onLeaveConfirmation;
-
-  /// This callback is triggered after leaving the audio chat room.
-  /// You can perform business-related prompts or other actions in this callback.
-  /// The default behavior is return to the previous page while it was in a normal state. If you override this callback, you must perform the page navigation yourself while it was in a normal state, otherwise the user will remain on the live audio page.
-  ///
-  /// The [isFromMinimizing] it means that the user left the chat room while it was in a minimized state.
-  /// You **can not** return to the previous page while it was **in a minimized state**!!!
-  /// On the other hand, if the value of the parameter is false, it means that the user left the chat room while it was in a normal state (i.e., not minimized).
-  void Function(bool isFromMinimizing)? onLeaveLiveAudioRoom;
-
-  /// This callback is triggered when local user removed from audio room.
-  ///
-  /// The default behavior is to return to the previous page.
-  ///
-  /// If you override this callback, you must perform the page navigation
-  /// yourself to return to the previous page!!!
-  /// otherwise the user will remain on the current live audio page !!!!!
-  ///
-  /// You can perform business-related prompts or other actions in this callback.
-  /// For example, you can perform custom logic during the hang-up operation, such as recording log information, stopping recording, etc.
-  Future<void> Function(String fromUserID)? onMeRemovedFromRoom;
-
-  /// This callback method is called when someone requests to open your microphone, typically when the host wants to open the speaker's microphone.
-  /// This method requires returning an asynchronous result.
-  /// You can display a dialog in this callback to confirm whether to open the microphone.
-  /// Alternatively, you can return `true` without any processing, indicating that when someone requests to open your microphone, it can be directly opened.
-  /// By default, this method does nothing and returns `false`, indicating that others cannot open your microphone.
-  ///
-  /// Example：
-  ///
-  /// ```dart
-  ///
-  ///  // eg:
-  /// ..onMicrophoneTurnOnByOthersConfirmation =
-  ///     (BuildContext context) async {
-  ///   const textStyle = TextStyle(
-  ///     fontSize: 10,
-  ///     color: Colors.white70,
-  ///   );
-  ///
-  ///   return await showDialog(
-  ///     context: context,
-  ///     barrierDismissible: false,
-  ///     builder: (BuildContext context) {
-  ///       return AlertDialog(
-  ///         backgroundColor: Colors.blue[900]!.withOpacity(0.9),
-  ///         title: const Text(
-  ///           'You have a request to turn on your microphone',
-  ///           style: textStyle,
-  ///         ),
-  ///         content: const Text(
-  ///           'Do you agree to turn on the microphone?',
-  ///           style: textStyle,
-  ///         ),
-  ///         actions: [
-  ///           ElevatedButton(
-  ///             child: const Text('Cancel', style: textStyle),
-  ///             onPressed: () => Navigator.of(context).pop(false),
-  ///           ),
-  ///           ElevatedButton(
-  ///             child: const Text('OK', style: textStyle),
-  ///             onPressed: () {
-  ///               Navigator.of(context).pop(true);
-  ///             },
-  ///           ),
-  ///         ],
-  ///       );
-  ///     },
-  ///   );
-  /// },
-  /// ```
-  Future<bool> Function(BuildContext context)?
-      onMicrophoneTurnOnByOthersConfirmation;
-
-  /// This callback method is triggered when the user count or attributes related to these users change.
-  void Function(List<ZegoUIKitUser> users)? onUserCountOrPropertyChanged;
-
-  /// error stream
-  Function(ZegoUIKitError)? onError;
-
-  /// Notification that a seat has been closed (locked).
-  /// After closing a seat, audience members need to request permission from the host to join the seat, or the host can invite audience members directly.
-  VoidCallback? onSeatClosed;
-
-  /// Notification that a seat has been opened (unlocked).
-  /// After opening a seat, all audience members can freely choose an empty seat to join and start chatting with others.
-  VoidCallback? onSeatsOpened;
-
-  /// A callback function that is called when a seat is clicked.
-  ///
-  /// The [index] parameter is the index of the seat that was clicked.
-  /// The [user] parameter is the user who is currently sitting in the seat, or `null` if the seat is empty.
-  ///
-  /// Note that when you set this callback, the **default behavior** of clicking on a seat to display a menu **will be disabled**.
-  /// You need to handle it yourself.
-  /// You can refer to the usage of [ZegoLiveAudioRoomController] for reference.
-  void Function(int index, ZegoUIKitUser? user)? onSeatClicked;
-
-  /// A callback function that is called when someone gets on/off/switches seat
-  ///
-  /// The [takenSeats] parameter is a map that maps the index of each taken seat to the user who is currently sitting in that seat.
-  /// The [untakenSeats] parameter is a list of the indexes of all untaken seats.
-  void Function(
-    Map<int, ZegoUIKitUser> takenSeats,
-    List<int> untakenSeats,
-  )? onSeatsChanged;
-
-  /// The host has received a seat request from an `audience`.
-  void Function(ZegoUIKitUser audience)? onSeatTakingRequested;
-
-  /// The host has received a notification that the `audience` has canceled the seat request.
-  void Function(ZegoUIKitUser audience)? onSeatTakingRequestCanceled;
-
-  /// The host has received a notification that the invitation for the audience to take a seat has failed.
-  /// This is usually due to network issues or if the audience has already logged out of the app and can no longer receive the invitation.
-  VoidCallback? onInviteAudienceToTakeSeatFailed;
-
-  /// The host has received a notification that the invitation for the audience to take a seat has been rejected.
-  VoidCallback? onSeatTakingInviteRejected;
-
-  /// The audience has received a notification that the application to take a seat has failed.
-  /// This is usually due to network issues or the host has logged out of the app and can no longer receive seat applications.
-  VoidCallback? onSeatTakingRequestFailed;
-
-  /// The audience received a notification that their request to take seats was declined by the host.
-  VoidCallback? onSeatTakingRequestRejected;
-
-  /// The audience has received a notification that the host has invited them to take a seat.
-  VoidCallback? onHostSeatTakingInviteSent;
-
-  /// Callback method when the "More" button on the row corresponding to `user` in the member list is pressed.
-  /// If you want to perform additional operations when the "More" button on the member list is clicked, such as viewing the profile of `user`.
-  ///
-  /// Note that when you set this callback, the **default behavior** of popping up a menu when clicking the "More" button on the member list will be **overridden**, and you need to handle it yourself.
-  /// You can refer to the usage of `ZegoLiveAudioRoomController`.
-  void Function(ZegoUIKitUser user)? onMemberListMoreButtonPressed;
-
   /// The blank space between seat and bottomBar, which can be used to place custom widgets freely.
   Widget Function(BuildContext context)? emptyAreaBuilder;
+
+  /// Default initialization parameters for the host.
+  /// If a configuration item does not meet your expectations, you can directly override its value.
+  ///
+  /// Example:
+  ///
+  /// ```dart
+  /// ZegoUIKitPrebuiltLiveAudioRoomConfig.host()
+  /// ..hostSeatIndexes = [0]
+  /// ```
+  ZegoUIKitPrebuiltLiveAudioRoomConfig.host()
+      : role = ZegoLiveAudioRoomRole.host,
+        turnOnMicrophoneWhenJoining = true,
+        useSpeakerWhenJoining = true,
+        rootNavigator = false,
+        userInRoomAttributes = const {},
+        advanceConfigs = const {},
+        seat = ZegoLiveAudioRoomSeatConfig(
+          layout: ZegoLiveAudioRoomLayoutConfig(),
+          takeIndexWhenJoining: 0,
+          closeWhenJoining: true,
+          hostIndexes: const [0],
+        ),
+        topMenuBar = ZegoLiveAudioRoomTopMenuBarConfig(),
+        bottomMenuBar = ZegoLiveAudioRoomBottomMenuBarConfig(),
+        inRoomMessage = ZegoLiveAudioRoomInRoomMessageConfig(),
+        memberList = ZegoLiveAudioRoomMemberListConfig(),
+        audioEffect = ZegoLiveAudioRoomAudioEffectConfig(),
+        duration = ZegoLiveAudioRoomLiveDurationConfig(),
+        mediaPlayer = ZegoLiveAudioRoomMediaPlayerConfig(),
+        backgroundMedia = ZegoLiveAudioRoomBackgroundMediaConfig(),
+        innerText = ZegoUIKitPrebuiltLiveAudioRoomInnerText(),
+        confirmDialogInfo = ZegoLiveAudioRoomDialogInfo(
+          title: 'Leave the room',
+          message: 'Are you sure to leave the room?',
+          cancelButtonName: 'Cancel',
+          confirmButtonName: 'OK',
+        );
+
+  /// Default initialization parameters for the audience.
+  /// If a configuration item does not meet your expectations, you can directly override its value.
+  ///
+  /// Example:
+  ///
+  /// ```dart
+  /// ZegoUIKitPrebuiltLiveAudioRoomConfig.audience()
+  /// ..hostSeatIndexes = [0]
+  /// ```
+  ZegoUIKitPrebuiltLiveAudioRoomConfig.audience()
+      : role = ZegoLiveAudioRoomRole.audience,
+        turnOnMicrophoneWhenJoining = false,
+        useSpeakerWhenJoining = true,
+        rootNavigator = false,
+        userInRoomAttributes = const {},
+        advanceConfigs = const {},
+        seat = ZegoLiveAudioRoomSeatConfig(
+          layout: ZegoLiveAudioRoomLayoutConfig(),
+          closeWhenJoining: false,
+          hostIndexes: const [0],
+        ),
+        topMenuBar = ZegoLiveAudioRoomTopMenuBarConfig(),
+        bottomMenuBar = ZegoLiveAudioRoomBottomMenuBarConfig(),
+        inRoomMessage = ZegoLiveAudioRoomInRoomMessageConfig(),
+        memberList = ZegoLiveAudioRoomMemberListConfig(),
+        audioEffect = ZegoLiveAudioRoomAudioEffectConfig(),
+        duration = ZegoLiveAudioRoomLiveDurationConfig(),
+        mediaPlayer = ZegoLiveAudioRoomMediaPlayerConfig(),
+        backgroundMedia = ZegoLiveAudioRoomBackgroundMediaConfig(),
+        innerText = ZegoUIKitPrebuiltLiveAudioRoomInnerText();
+
+  ZegoUIKitPrebuiltLiveAudioRoomConfig({
+    this.turnOnMicrophoneWhenJoining = true,
+    this.useSpeakerWhenJoining = true,
+    this.confirmDialogInfo,
+    this.rootNavigator = false,
+    this.foreground,
+    this.background,
+    this.userAvatarUrl,
+    this.userInRoomAttributes = const {},
+    this.advanceConfigs = const {},
+    ZegoUIKitPrebuiltLiveAudioRoomInnerText? translationText,
+    ZegoLiveAudioRoomSeatConfig? seat,
+    ZegoLiveAudioRoomTopMenuBarConfig? topMenuBar,
+    ZegoLiveAudioRoomBottomMenuBarConfig? bottomMenuBar,
+    ZegoLiveAudioRoomLayoutConfig? layout,
+    ZegoLiveAudioRoomInRoomMessageConfig? messageConfig,
+    ZegoLiveAudioRoomMemberListConfig? memberList,
+    ZegoLiveAudioRoomAudioEffectConfig? effectConfig,
+    ZegoLiveAudioRoomLiveDurationConfig? duration,
+    ZegoLiveAudioRoomMediaPlayerConfig? mediaPlayerConfig,
+    ZegoLiveAudioRoomBackgroundMediaConfig? backgroundMediaConfig,
+  })  : seat = seat ??
+            ZegoLiveAudioRoomSeatConfig(
+              layout: ZegoLiveAudioRoomLayoutConfig(),
+              closeWhenJoining: true,
+              hostIndexes: const [0],
+            ),
+        topMenuBar = topMenuBar ?? ZegoLiveAudioRoomTopMenuBarConfig(),
+        bottomMenuBar = bottomMenuBar ?? ZegoLiveAudioRoomBottomMenuBarConfig(),
+        inRoomMessage = messageConfig ?? ZegoLiveAudioRoomInRoomMessageConfig(),
+        memberList = memberList ?? ZegoLiveAudioRoomMemberListConfig(),
+        audioEffect = effectConfig ?? ZegoLiveAudioRoomAudioEffectConfig(),
+        duration = duration ?? ZegoLiveAudioRoomLiveDurationConfig(),
+        mediaPlayer = mediaPlayerConfig ?? ZegoLiveAudioRoomMediaPlayerConfig(),
+        backgroundMedia =
+            backgroundMediaConfig ?? ZegoLiveAudioRoomBackgroundMediaConfig(),
+        innerText =
+            translationText ?? ZegoUIKitPrebuiltLiveAudioRoomInnerText();
 }
 
 /// Configuration options for controlling seat behavior and style.
-/// This type is used for the [seatConfig] property in [ZegoUIKitPrebuiltLiveAudioRoomConfig].
+/// This type is used for the [seat] property in [ZegoUIKitPrebuiltLiveAudioRoomConfig].
 class ZegoLiveAudioRoomSeatConfig {
+  /// The default layout of the audio chat room supports free layout with multiple rows and columns of seats.
+  /// You can use this parameter to control the specific style of each row and column.
+  ZegoLiveAudioRoomLayoutConfig layout;
+
+  /// Specifies the seat to occupy when joining the live audio room.
+  /// This is only valid when the role is set to host or speaker.
+  int takeIndexWhenJoining;
+
+  /// Specifies whether to lock the seat automatically after entering the room.
+  /// It only takes effect when set by the host
+  /// The default value is `true`.
+  bool closeWhenJoining;
+
+  /// Specifies the list of seats occupied by the host.
+  /// Once specified, these seats can only be used by the host and cannot be occupied by speakers or audience members.
+  /// The default value is `[0]`.
+  List<int> hostIndexes;
+
   /// Whether to display a wave indicator around the avatar.
-  bool showSoundWaveInAudioMode = true;
+  bool showSoundWaveInAudioMode;
 
   /// The icon displayed for empty seats when all seats are open (seats in the audio chat room are not locked).
   Image? openIcon;
@@ -451,41 +295,45 @@ class ZegoLiveAudioRoomSeatConfig {
   ZegoAvatarBuilder? avatarBuilder;
 
   ZegoLiveAudioRoomSeatConfig({
+    ZegoLiveAudioRoomLayoutConfig? layout,
+    this.takeIndexWhenJoining = -1,
+    this.closeWhenJoining = true,
+    this.hostIndexes = const [0],
     this.openIcon,
     this.closeIcon,
     this.showSoundWaveInAudioMode = true,
     this.avatarBuilder,
     this.foregroundBuilder,
     this.backgroundBuilder,
-  });
+  }) : layout = layout ?? ZegoLiveAudioRoomLayoutConfig();
 }
 
 /// Configuration options for the top menu bar (toolbar).
-class ZegoTopMenuBarConfig {
+class ZegoLiveAudioRoomTopMenuBarConfig {
   /// These buttons will displayed on the menu bar, order by the list
   /// only support [minimizingButton] right now
-  List<ZegoMenuBarButtonName> buttons;
+  List<ZegoLiveAudioRoomMenuBarButtonName> buttons;
 
-  ZegoTopMenuBarConfig({
+  ZegoLiveAudioRoomTopMenuBarConfig({
     this.buttons = const [],
   });
 }
 
 /// Configuration options for the bottom menu bar (toolbar).
-/// You can set the properties of this class through the [ZegoUIKitPrebuiltLiveAudioRoomConfig].[bottomMenuBarConfig] attribute.
-class ZegoBottomMenuBarConfig {
+/// You can set the properties of this class through the [ZegoUIKitPrebuiltLiveAudioRoomConfig].[bottomMenuBar] attribute.
+class ZegoLiveAudioRoomBottomMenuBarConfig {
   /// When set to `true`, the button for sending messages will be displayed.
   /// If you want to disable text messaging in the live audio room, set it to `false`.
   bool showInRoomMessageButton;
 
   /// The list of predefined buttons to be displayed when the user role is set to host.
-  List<ZegoMenuBarButtonName> hostButtons = [];
+  List<ZegoLiveAudioRoomMenuBarButtonName> hostButtons = [];
 
   /// The list of predefined buttons to be displayed when the user role is set to speaker.
-  List<ZegoMenuBarButtonName> speakerButtons = [];
+  List<ZegoLiveAudioRoomMenuBarButtonName> speakerButtons = [];
 
   /// The list of predefined buttons to be displayed when the user role is set to audience.
-  List<ZegoMenuBarButtonName> audienceButtons = [];
+  List<ZegoLiveAudioRoomMenuBarButtonName> audienceButtons = [];
 
   /// The list of custom buttons to be displayed when the user role is set to host.
   List<Widget> hostExtendButtons = [];
@@ -501,22 +349,22 @@ class ZegoBottomMenuBarConfig {
   /// Clicking on it will display a panel showing other buttons that cannot be displayed in the menu bar (toolbar).
   int maxCount;
 
-  ZegoBottomMenuBarConfig({
+  ZegoLiveAudioRoomBottomMenuBarConfig({
     this.showInRoomMessageButton = true,
     this.hostButtons = const [
-      ZegoMenuBarButtonName.soundEffectButton,
-      ZegoMenuBarButtonName.toggleMicrophoneButton,
-      ZegoMenuBarButtonName.showMemberListButton,
-      ZegoMenuBarButtonName.closeSeatButton,
+      ZegoLiveAudioRoomMenuBarButtonName.soundEffectButton,
+      ZegoLiveAudioRoomMenuBarButtonName.toggleMicrophoneButton,
+      ZegoLiveAudioRoomMenuBarButtonName.showMemberListButton,
+      ZegoLiveAudioRoomMenuBarButtonName.closeSeatButton,
     ],
     this.speakerButtons = const [
-      ZegoMenuBarButtonName.soundEffectButton,
-      ZegoMenuBarButtonName.toggleMicrophoneButton,
-      ZegoMenuBarButtonName.showMemberListButton,
+      ZegoLiveAudioRoomMenuBarButtonName.soundEffectButton,
+      ZegoLiveAudioRoomMenuBarButtonName.toggleMicrophoneButton,
+      ZegoLiveAudioRoomMenuBarButtonName.showMemberListButton,
     ],
     this.audienceButtons = const [
-      ZegoMenuBarButtonName.showMemberListButton,
-      ZegoMenuBarButtonName.applyToTakeSeatButton,
+      ZegoLiveAudioRoomMenuBarButtonName.showMemberListButton,
+      ZegoLiveAudioRoomMenuBarButtonName.applyToTakeSeatButton,
     ],
     this.hostExtendButtons = const [],
     this.speakerExtendButtons = const [],
@@ -526,9 +374,9 @@ class ZegoBottomMenuBarConfig {
 }
 
 /// Control options for the bottom-left message list.
-/// This class is used for the [inRoomMessageConfig] property of [ZegoUIKitPrebuiltLiveAudioRoomConfig].
+/// This class is used for the [inRoomMessage] property of [ZegoUIKitPrebuiltLiveAudioRoomConfig].
 ///
-/// If you want to customize chat messages, you can specify the [itemBuilder] in [ZegoInRoomMessageConfig].
+/// If you want to customize chat messages, you can specify the [itemBuilder] in [ZegoLiveAudioRoomInRoomMessageConfig].
 ///
 /// Example:
 ///
@@ -540,14 +388,7 @@ class ZegoBottomMenuBarConfig {
 ///     );
 ///   },
 /// );
-class ZegoInRoomMessageConfig {
-  /// Triggered when has click on the message item
-  ZegoInRoomMessageViewItemPressEvent? onMessageClick;
-
-  /// Triggered when a pointer has remained in contact with the message item at
-  /// the same location for a long period of time.
-  ZegoInRoomMessageViewItemPressEvent? onMessageLongPress;
-
+class ZegoLiveAudioRoomInRoomMessageConfig {
   /// Use this to customize the style and content of each chat message list item.
   /// For example, you can modify the background color, opacity, border radius, or add additional information like the sender's level or role.
   ZegoInRoomMessageItemBuilder? itemBuilder;
@@ -600,7 +441,7 @@ class ZegoInRoomMessageConfig {
   /// resend button icon
   Widget? resendIcon;
 
-  ZegoInRoomMessageConfig({
+  ZegoLiveAudioRoomInRoomMessageConfig({
     this.visible = true,
     this.width,
     this.height,
@@ -615,21 +456,16 @@ class ZegoInRoomMessageConfig {
     this.resendIcon,
     this.background,
     this.itemBuilder,
-    this.onMessageClick,
-    this.onMessageLongPress,
     this.showName = true,
     this.showAvatar = true,
   });
 }
 
-@Deprecated('Since 2.8.5, please use ZegoInRoomMessageConfig instead')
-typedef ZegoInRoomMessageViewConfig = ZegoInRoomMessageConfig;
-
 /// Configuration for the member list.
 ///
-/// You can use the [ZegoUIKitPrebuiltLiveAudioRoomConfig.memberListConfig] property to set the properties inside this class.
+/// You can use the [ZegoUIKitPrebuiltLiveAudioRoomConfig.memberList] property to set the properties inside this class.
 ///
-/// If you want to use a custom member list item view, you can set the [ZegoMemberListConfig.itemBuilder] property, and pass your custom view's builder function to it.
+/// If you want to use a custom member list item view, you can set the [ZegoLiveAudioRoomMemberListConfig.itemBuilder] property, and pass your custom view's builder function to it.
 ///
 /// For example, suppose you have implemented a `CustomMemberListItem` component that can render a member list item view based on the user information. You can set it up like this:
 ///
@@ -644,23 +480,18 @@ typedef ZegoInRoomMessageViewConfig = ZegoInRoomMessageConfig;
 /// In this example, we pass the builder function of the custom view, `CustomMemberListItem`, to the [itemBuilder] property so that the member list item will be rendered using the custom component.
 ///
 /// In addition, you can listen for item click events through [onClicked].
-class ZegoMemberListConfig {
+class ZegoLiveAudioRoomMemberListConfig {
   /// Custom member list item view.
   ZegoMemberListItemBuilder? itemBuilder;
 
-  /// You can listen to the user click event on the member list,
-  /// for example, if you want to display specific information about a member after they are clicked.
-  void Function(ZegoUIKitUser user)? onClicked;
-
-  ZegoMemberListConfig({
+  ZegoLiveAudioRoomMemberListConfig({
     this.itemBuilder,
-    this.onClicked,
   });
 }
 
 /// Configuration options for voice changer and reverberation effects.
-/// This class is used for the [audioEffectConfig] property in [ZegoUIKitPrebuiltLiveAudioRoomConfig].
-class ZegoAudioEffectConfig {
+/// This class is used for the [audioEffect] property in [ZegoUIKitPrebuiltLiveAudioRoomConfig].
+class ZegoLiveAudioRoomAudioEffectConfig {
   /// List of voice changer effects.
   /// If you don't want a certain effect, simply remove it from the list.
   List<VoiceChangerType> voiceChangeEffect;
@@ -669,7 +500,7 @@ class ZegoAudioEffectConfig {
   /// If you don't want a certain effect, simply remove it from the list.
   List<ReverbType> reverbEffect;
 
-  ZegoAudioEffectConfig({
+  ZegoLiveAudioRoomAudioEffectConfig({
     this.voiceChangeEffect = const [
       VoiceChangerType.littleGirl,
       VoiceChangerType.deep,
@@ -700,7 +531,7 @@ class ZegoAudioEffectConfig {
   });
 
   /// @nodoc
-  ZegoAudioEffectConfig.none({
+  ZegoLiveAudioRoomAudioEffectConfig.none({
     this.voiceChangeEffect = const [],
     this.reverbEffect = const [],
   });
@@ -713,29 +544,17 @@ class ZegoAudioEffectConfig {
 }
 
 /// Live Audio Room timing configuration.
-class ZegoLiveDurationConfig {
+class ZegoLiveAudioRoomLiveDurationConfig {
   /// Whether to display Live Audio Room timing.
   bool isVisible;
 
-  /// Call timing callback function, called every second.
-  ///
-  /// Example: Do something after 5 minutes.
-  /// ..durationConfig.isVisible = true
-  /// ..durationConfig.onDurationUpdate = (Duration duration) {
-  ///   if (duration.inSeconds >= 5 * 60) {
-  ///     ///  Do something...
-  ///   }
-  /// }
-  void Function(Duration)? onDurationUpdate;
-
-  ZegoLiveDurationConfig({
+  ZegoLiveAudioRoomLiveDurationConfig({
     this.isVisible = true,
-    this.onDurationUpdate,
   });
 }
 
 /// Live Audio Room background media configuration.
-class ZegoBackgroundMediaConfig {
+class ZegoLiveAudioRoomBackgroundMediaConfig {
   /// the path of background music, which can be either a local path or a network address.
   /// supported formats by default include MP3, MP4, FLV, WAV, AAC, M3U8, and FLAC.
   String? path;
@@ -743,8 +562,18 @@ class ZegoBackgroundMediaConfig {
   /// whether to repeat playback.
   bool enableRepeat;
 
-  ZegoBackgroundMediaConfig({
+  ZegoLiveAudioRoomBackgroundMediaConfig({
     this.path,
     this.enableRepeat = true,
+  });
+}
+
+/// media player config
+class ZegoLiveAudioRoomMediaPlayerConfig {
+  /// In iOS, to achieve transparency for a video using a platform view, you need to set [supportTransparent] to true.
+  bool supportTransparent;
+
+  ZegoLiveAudioRoomMediaPlayerConfig({
+    this.supportTransparent = false,
   });
 }

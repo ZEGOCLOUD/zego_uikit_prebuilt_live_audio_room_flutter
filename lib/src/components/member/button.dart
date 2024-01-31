@@ -38,7 +38,7 @@ class ZegoMemberButton extends StatefulWidget {
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
   final ValueNotifier<List<String>>? hiddenUserIDsNotifier;
-  final ZegoInnerText innerText;
+  final ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText;
 
   final Size? iconSize;
   final Size? buttonSize;

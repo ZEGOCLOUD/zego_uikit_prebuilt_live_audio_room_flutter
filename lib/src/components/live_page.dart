@@ -4,8 +4,10 @@ import 'dart:core';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
+
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/background.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
@@ -23,7 +25,9 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_man
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/live_duration_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/prebuilt_data.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/events.defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/data.dart';
 
 /// @nodoc
 /// user and sdk should be login and init before page enter
@@ -37,11 +41,14 @@ class ZegoLivePage extends StatefulWidget {
     required this.userName,
     required this.liveID,
     required this.config,
+    required this.events,
+    required this.defaultEndAction,
+    required this.defaultLeaveConfirmationAction,
     required this.seatManager,
     required this.connectManager,
     required this.popUpManager,
     required this.liveDurationManager,
-    required this.prebuiltAudioRoomData,
+    required this.minimizeData,
     this.plugins,
   }) : super(key: key);
 
@@ -54,14 +61,20 @@ class ZegoLivePage extends StatefulWidget {
   final String liveID;
 
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
+  final ZegoUIKitPrebuiltLiveAudioRoomEvents events;
+  final void Function(ZegoLiveAudioRoomEndEvent event) defaultEndAction;
+  final Future<bool> Function(
+    ZegoLiveAudioRoomLeaveConfirmationEvent event,
+  ) defaultLeaveConfirmationAction;
+
   final ZegoLiveSeatManager seatManager;
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
   final ZegoLiveDurationManager liveDurationManager;
-  final ZegoLiveAudioRoomController? prebuiltController;
+  final ZegoUIKitPrebuiltLiveAudioRoomController? prebuiltController;
   final ZegoPrebuiltPlugins? plugins;
 
-  final ZegoUIKitPrebuiltLiveAudioRoomData prebuiltAudioRoomData;
+  final ZegoUIKitPrebuiltLiveAudioRoomMinimizeData minimizeData;
 
   @override
   State<ZegoLivePage> createState() => ZegoLivePageState();
@@ -99,7 +112,17 @@ class ZegoLivePageState extends State<ZegoLivePage>
       resizeToAvoidBottomInset: false,
       body: WillPopScope(
         onWillPop: () async {
-          return widget.config.onLeaveConfirmation!(context);
+          final endConfirmationEvent = ZegoLiveAudioRoomLeaveConfirmationEvent(
+            context: context,
+          );
+          defaultAction() async {
+            return widget.defaultLeaveConfirmationAction(endConfirmationEvent);
+          }
+
+          return widget.events.onLeaveConfirmation!(
+            endConfirmationEvent,
+            defaultAction,
+          );
         },
         child: ZegoScreenUtilInit(
           designSize: const Size(750, 1334),
@@ -167,21 +190,39 @@ class ZegoLivePageState extends State<ZegoLivePage>
   }
 
   Widget audioVideoContainer(double maxWidth, double maxHeight) {
+    final containerHorizontalSpacing = 35.zW;
+
+    final tempMaxWidth = maxWidth - containerHorizontalSpacing * 2;
     var tempMaxHeight = maxHeight - 169.zR; // top position
     tempMaxHeight -= 124.zR; // bottom bar
 
-    var scrollable = false;
-    final fixedRow = widget.config.layoutConfig.rowConfigs.length;
+    final fixedRow = widget.config.seat.layout.rowConfigs.length;
     var containerHeight = seatItemHeight * fixedRow +
-        widget.config.layoutConfig.rowSpacing * (fixedRow - 1);
+        widget.config.seat.layout.rowSpacing * (fixedRow - 1);
+
+    var maxColumn = 1;
+    var maxColumnSpacing = 0;
+    for (var rowConfig in widget.config.seat.layout.rowConfigs) {
+      maxColumn = (rowConfig.count > maxColumn) ? rowConfig.count : maxColumn;
+      maxColumnSpacing = (rowConfig.seatSpacing > maxColumnSpacing)
+          ? rowConfig.seatSpacing
+          : maxColumnSpacing;
+    }
+    var containerWidth =
+        seatItemWidth * maxColumn + maxColumnSpacing * (maxColumn - 1);
+
+    Axis? scrollDirection;
     if (containerHeight > tempMaxHeight) {
       containerHeight = tempMaxHeight;
-      scrollable = true;
+      scrollDirection = Axis.vertical;
+    } else if (containerWidth > tempMaxWidth) {
+      containerWidth = tempMaxWidth;
+      scrollDirection = Axis.horizontal;
     }
 
     final seatContainer = ZegoSeatContainer(
       seatManager: widget.seatManager,
-      layoutConfig: widget.config.layoutConfig,
+      layoutConfig: widget.config.seat.layout,
       foregroundBuilder: (
         BuildContext context,
         Size size,
@@ -196,6 +237,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
           connectManager: widget.connectManager,
           popUpManager: widget.popUpManager,
           config: widget.config,
+          events: widget.events,
           prebuiltController: widget.prebuiltController,
         );
       },
@@ -214,26 +256,20 @@ class ZegoLivePageState extends State<ZegoLivePage>
         );
       },
       sortAudioVideo: audioVideoViewSorter,
-      avatarBuilder: widget.config.seatConfig.avatarBuilder,
-      showSoundWavesInAudioMode:
-          widget.config.seatConfig.showSoundWaveInAudioMode,
+      avatarBuilder: widget.config.seat.avatarBuilder,
+      showSoundWavesInAudioMode: widget.config.seat.showSoundWaveInAudioMode,
     );
 
     return Positioned(
       top: 169.zR,
       left: 35.zW,
       child: SizedBox(
-        width: maxWidth - 35.zW * 2,
+        width: null != scrollDirection ? containerWidth : tempMaxWidth,
         height: containerHeight,
-        child: scrollable
-            ? CustomScrollView(
-                scrollDirection: Axis.vertical,
-                slivers: [
-                  SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: seatContainer,
-                  ),
-                ],
+        child: null != scrollDirection
+            ? SingleChildScrollView(
+                scrollDirection: scrollDirection,
+                child: seatContainer,
               )
             : seatContainer,
       ),
@@ -254,10 +290,13 @@ class ZegoLivePageState extends State<ZegoLivePage>
         builder: (context, roomState, _) {
           return ZegoTopBar(
             config: widget.config,
+            events: widget.events,
+            defaultEndAction: widget.defaultEndAction,
+            defaultLeaveConfirmationAction:
+                widget.defaultLeaveConfirmationAction,
             seatManager: widget.seatManager,
             connectManager: widget.connectManager,
             translationText: widget.config.innerText,
-            prebuiltAudioRoomData: widget.prebuiltAudioRoomData,
           );
         },
       ),
@@ -271,13 +310,16 @@ class ZegoLivePageState extends State<ZegoLivePage>
         height: 124.zR,
         buttonSize: zegoLiveButtonSize,
         config: widget.config,
+        events: widget.events,
+        defaultEndAction: widget.defaultEndAction,
+        defaultLeaveConfirmationAction: widget.defaultLeaveConfirmationAction,
         seatManager: widget.seatManager,
         connectManager: widget.connectManager,
         popUpManager: widget.popUpManager,
         prebuiltController: widget.prebuiltController,
         isPluginEnabled: widget.plugins?.isEnabled ?? false,
-        avatarBuilder: widget.config.seatConfig.avatarBuilder,
-        prebuiltData: widget.prebuiltAudioRoomData,
+        avatarBuilder: widget.config.seat.avatarBuilder,
+        minimizeData: widget.minimizeData,
       ),
     );
   }
@@ -286,9 +328,9 @@ class ZegoLivePageState extends State<ZegoLivePage>
     if (widget.config.emptyAreaBuilder == null) return const SizedBox.shrink();
     var tempMaxHeight = maxHeight - 169.zR; // top position
     tempMaxHeight -= 124.zR; // bottom bar
-    final fixedRow = widget.config.layoutConfig.rowConfigs.length;
+    final fixedRow = widget.config.seat.layout.rowConfigs.length;
     var containerHeight = seatItemHeight * fixedRow +
-        widget.config.layoutConfig.rowSpacing * (fixedRow - 1);
+        widget.config.seat.layout.rowSpacing * (fixedRow - 1);
     if (containerHeight > tempMaxHeight) {
       containerHeight = tempMaxHeight;
     }
@@ -303,13 +345,13 @@ class ZegoLivePageState extends State<ZegoLivePage>
   }
 
   Widget messageList() {
-    if (!widget.config.inRoomMessageConfig.visible) {
+    if (!widget.config.inRoomMessage.visible) {
       return Container();
     }
 
     var listSize = Size(
-      widget.config.inRoomMessageConfig.width ?? 540.zR,
-      widget.config.inRoomMessageConfig.height ?? 400.zR,
+      widget.config.inRoomMessage.width ?? 540.zR,
+      widget.config.inRoomMessage.height ?? 400.zR,
     );
     if (listSize.width < 54.zR) {
       listSize = Size(54.zR, listSize.height);
@@ -318,20 +360,20 @@ class ZegoLivePageState extends State<ZegoLivePage>
       listSize = Size(listSize.width, 40.zR);
     }
     return Positioned(
-      left: widget.config.inRoomMessageConfig.bottomLeft?.dx ?? 0,
-      bottom: 124.zR + (widget.config.inRoomMessageConfig.bottomLeft?.dy ?? 0),
+      left: widget.config.inRoomMessage.bottomLeft?.dx ?? 0,
+      bottom: 124.zR + (widget.config.inRoomMessage.bottomLeft?.dy ?? 0),
       child: ConstrainedBox(
         constraints: BoxConstraints.loose(listSize),
         child: ZegoInRoomLiveMessageView(
-          config: widget.config.inRoomMessageConfig,
-          avatarBuilder: widget.config.seatConfig.avatarBuilder,
+          config: widget.config.inRoomMessage,
+          avatarBuilder: widget.config.seat.avatarBuilder,
         ),
       ),
     );
   }
 
   Widget durationTimeBoard() {
-    if (!widget.config.durationConfig.isVisible) {
+    if (!widget.config.duration.isVisible) {
       return Container();
     }
 
@@ -340,7 +382,8 @@ class ZegoLivePageState extends State<ZegoLivePage>
       right: 0,
       top: 10,
       child: LiveDurationTimeBoard(
-        config: widget.config.durationConfig,
+        config: widget.config.duration,
+        events: widget.events.duration,
         manager: widget.liveDurationManager,
       ),
     );
@@ -365,7 +408,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
     }
 
     final canMicrophoneTurnOnByOthers = await widget
-            .config.onMicrophoneTurnOnByOthersConfirmation
+            .events.audioVideo.onMicrophoneTurnOnByOthersConfirmation
             ?.call(context) ??
         false;
     ZegoLoggerService.logInfo(

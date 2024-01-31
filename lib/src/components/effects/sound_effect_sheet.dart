@@ -12,7 +12,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 
 /// @nodoc
 class ZegoSoundEffectSheet extends StatefulWidget {
-  final ZegoInnerText innerText;
+  final ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText;
 
   final List<VoiceChangerType> voiceChangerEffect;
   final ValueNotifier<String> voiceChangerSelectedIDNotifier;
@@ -245,7 +245,7 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
 void showSoundEffectSheet(
   BuildContext context, {
   required bool rootNavigator,
-  required ZegoInnerText innerText,
+  required ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText,
   required List<VoiceChangerType> voiceChangeEffect,
   required List<ReverbType> reverbEffect,
   required ValueNotifier<String> voiceChangerSelectedIDNotifier,

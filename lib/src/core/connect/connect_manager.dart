@@ -13,18 +13,18 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/permissions.d
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 
 /// @nodoc
 class ZegoLiveConnectManager {
   ZegoLiveConnectManager({
     required this.config,
+    required this.events,
     required this.seatManager,
     required this.popUpManager,
-    required this.prebuiltController,
     required this.innerText,
     required this.kickOutNotifier,
     this.contextQuery,
@@ -33,10 +33,10 @@ class ZegoLiveConnectManager {
   }
 
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
+  final ZegoUIKitPrebuiltLiveAudioRoomEvents events;
   final ZegoLiveSeatManager seatManager;
   final ZegoPopUpManager popUpManager;
-  final ZegoLiveAudioRoomController? prebuiltController;
-  final ZegoInnerText innerText;
+  final ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText;
   final ValueNotifier<bool> kickOutNotifier;
   BuildContext Function()? contextQuery;
 
@@ -177,7 +177,7 @@ class ZegoLiveConnectManager {
       if (result.error != null) {
         _audienceIDsInvitedTakeSeatByHost.remove(invitee.id);
 
-        config.onInviteAudienceToTakeSeatFailed?.call();
+        events.seat.host?.onTakingInvitationFailed?.call();
 
         showDebugToast('Failed to invite take seat, please try again.');
       }
@@ -225,7 +225,7 @@ class ZegoLiveConnectManager {
             List<ZegoUIKitUser>.from(audiencesRequestingTakeSeatNotifier.value)
               ..add(inviter);
 
-        config.onSeatTakingRequested?.call(inviter);
+        events.seat.host?.onTakingRequested?.call(inviter);
       }
     } else {
       if (ZegoInvitationType.inviteToTakeSeat == invitationType) {
@@ -253,7 +253,7 @@ class ZegoLiveConnectManager {
       return;
     }
 
-    config.onHostSeatTakingInviteSent?.call();
+    events.seat.audience?.onTakingInvitationReceived?.call();
 
     /// self-cancellation if requesting when host invite you
     ZegoLoggerService.logInfo(
@@ -437,7 +437,7 @@ class ZegoLiveConnectManager {
           List<ZegoUIKitUser>.from(audiencesRequestingTakeSeatNotifier.value)
             ..removeWhere((user) => user.id == inviter.id);
 
-      config.onSeatTakingRequestCanceled?.call(inviter);
+      events.seat.host?.onTakingRequestCanceled?.call(inviter);
     }
 
     /// hide invite take seat dialog
@@ -464,13 +464,13 @@ class ZegoLiveConnectManager {
       _audienceIDsInvitedTakeSeatByHost.remove(invitee.id);
 
       /// host's invite is rejected by audience
-      config.onSeatTakingInviteRejected?.call();
+      events.seat.host?.onTakingInvitationRejected?.call(invitee);
 
       showDebugToast(
           'Your request to take seat has been refused by ${ZegoUIKit().getUser(invitee.id).name}');
     } else {
       /// audience's request is rejected by host
-      config.onSeatTakingRequestRejected?.call();
+      events.seat.audience?.onTakingRequestRejected?.call();
 
       showDebugToast('Your request to take seat has been refused.');
       updateAudienceConnectState(ConnectState.idle);
@@ -519,7 +519,7 @@ class ZegoLiveConnectManager {
         _audienceIDsInvitedTakeSeatByHost.remove(invitee.id);
       }
     } else {
-      config.onSeatTakingRequestFailed?.call();
+      events.seat.audience?.onTakingRequestFailed?.call();
 
       updateAudienceConnectState(ConnectState.idle);
     }
@@ -635,7 +635,7 @@ class ZegoLiveConnectManager {
           'message:${result.error?.message}, '
           'errorInvitees:${result.errorInvitees}',
           tag: 'audio room',
-          subTag: 'controller',
+          subTag: 'connect manager',
         );
 
         return result.error?.code.isNotEmpty ?? true;

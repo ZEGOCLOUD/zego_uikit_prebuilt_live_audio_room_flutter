@@ -12,7 +12,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 
 /// @nodoc
 class ZegoSoundEffectButton extends StatefulWidget {
-  final ZegoInnerText innerText;
+  final ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText;
 
   final List<VoiceChangerType> voiceChangeEffect;
   final List<ReverbType> reverbEffect;

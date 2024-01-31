@@ -29,7 +29,7 @@ class ZegoPopUpSheetMenu extends StatefulWidget {
   final ZegoLiveConnectManager connectManager;
 
   final void Function(PopupItemValue)? onPressed;
-  final ZegoInnerText innerText;
+  final ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText;
 
   @override
   State<ZegoPopUpSheetMenu> createState() => _ZegoPopUpSheetMenuState();
@@ -155,7 +155,7 @@ void showPopUpSheet({
   required String userID,
   required BuildContext context,
   required List<PopupItem> popupItems,
-  required ZegoInnerText innerText,
+  required ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText,
   required ZegoLiveSeatManager seatManager,
   required ZegoLiveConnectManager connectManager,
   required ZegoPopUpManager popUpManager,

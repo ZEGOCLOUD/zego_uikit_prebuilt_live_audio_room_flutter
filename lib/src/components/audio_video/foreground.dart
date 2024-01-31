@@ -17,6 +17,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 
 /// @nodoc
 class ZegoSeatForeground extends StatefulWidget {
@@ -28,7 +29,8 @@ class ZegoSeatForeground extends StatefulWidget {
   final ZegoLiveConnectManager connectManager;
   final ZegoPopUpManager popUpManager;
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
-  final ZegoLiveAudioRoomController? prebuiltController;
+  final ZegoUIKitPrebuiltLiveAudioRoomEvents events;
+  final ZegoUIKitPrebuiltLiveAudioRoomController? prebuiltController;
 
   const ZegoSeatForeground({
     Key? key,
@@ -40,6 +42,7 @@ class ZegoSeatForeground extends StatefulWidget {
     required this.connectManager,
     required this.popUpManager,
     required this.config,
+    required this.events,
   }) : super(key: key);
 
   @override
@@ -56,7 +59,7 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
         color: Colors.transparent,
         child: Stack(
           children: [
-            widget.config.seatConfig.foregroundBuilder?.call(
+            widget.config.seat.foregroundBuilder?.call(
                   context,
                   widget.size,
                   ZegoUIKit().getUser(widget.user?.id ?? ''),
@@ -127,14 +130,14 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
       return;
     }
 
-    if (widget.config.onSeatClicked != null) {
+    if (widget.events.seat.onClicked != null) {
       ZegoLoggerService.logInfo(
         'ERROR!!! click seat event is deal outside',
         tag: 'audio room',
         subTag: 'foreground',
       );
 
-      widget.config.onSeatClicked!.call(index, widget.user);
+      widget.events.seat.onClicked!.call(index, widget.user);
       return;
     }
 

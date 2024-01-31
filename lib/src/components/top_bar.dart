@@ -11,26 +11,33 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_button.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/prebuilt_data.dart';
 
 /// @nodoc
 class ZegoTopBar extends StatefulWidget {
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
+  final ZegoUIKitPrebuiltLiveAudioRoomEvents events;
+  final void Function(ZegoLiveAudioRoomEndEvent event) defaultEndAction;
+  final Future<bool> Function(
+    ZegoLiveAudioRoomLeaveConfirmationEvent event,
+  ) defaultLeaveConfirmationAction;
+
   final ZegoLiveSeatManager seatManager;
   final ZegoLiveConnectManager connectManager;
-  final ZegoInnerText translationText;
-
-  final ZegoUIKitPrebuiltLiveAudioRoomData prebuiltAudioRoomData;
+  final ZegoUIKitPrebuiltLiveAudioRoomInnerText translationText;
 
   const ZegoTopBar({
     Key? key,
     required this.config,
+    required this.events,
+    required this.defaultEndAction,
+    required this.defaultLeaveConfirmationAction,
     required this.seatManager,
     required this.connectManager,
     required this.translationText,
-    required this.prebuiltAudioRoomData,
   }) : super(key: key);
 
   @override
@@ -67,10 +74,10 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
   }
 
   Widget minimizingButton() {
-    return widget.config.topMenuBarConfig.buttons
-            .contains(ZegoMenuBarButtonName.minimizingButton)
+    return widget.config.topMenuBar.buttons
+            .contains(ZegoLiveAudioRoomMenuBarButtonName.minimizingButton)
         ? ZegoMinimizingButton(
-            prebuiltAudioRoomData: widget.prebuiltAudioRoomData,
+            rootNavigator: widget.config.rootNavigator,
           )
         : Container();
   }
@@ -85,6 +92,9 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
         backgroundColor: Colors.white,
       ),
       config: widget.config,
+      events: widget.events,
+      defaultEndAction: widget.defaultEndAction,
+      defaultLeaveConfirmationAction: widget.defaultLeaveConfirmationAction,
       seatManager: widget.seatManager,
     );
   }
