@@ -8,8 +8,8 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 
 /// @nodoc
-class ZegoAvatarDefaultItem extends StatefulWidget {
-  const ZegoAvatarDefaultItem({
+class ZegoLiveAudioRoomAvatarDefaultItem extends StatefulWidget {
+  const ZegoLiveAudioRoomAvatarDefaultItem({
     Key? key,
     this.user,
     this.avatarBuilder,
@@ -19,11 +19,13 @@ class ZegoAvatarDefaultItem extends StatefulWidget {
   final ZegoAvatarBuilder? avatarBuilder;
 
   @override
-  State<ZegoAvatarDefaultItem> createState() => _ZegoAvatarDefaultItemState();
+  State<ZegoLiveAudioRoomAvatarDefaultItem> createState() =>
+      _ZegoLiveAudioRoomAvatarDefaultItemState();
 }
 
 /// @nodoc
-class _ZegoAvatarDefaultItemState extends State<ZegoAvatarDefaultItem> {
+class _ZegoLiveAudioRoomAvatarDefaultItemState
+    extends State<ZegoLiveAudioRoomAvatarDefaultItem> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {

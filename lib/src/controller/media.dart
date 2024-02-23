@@ -48,6 +48,14 @@ class ZegoLiveAudioRoomControllerMediaImpl {
     required String filePathOrURL,
     bool enableRepeat = false,
   }) async {
+    ZegoLoggerService.logInfo(
+      'play, '
+      'filePathOrURL:$filePathOrURL, '
+      'enableRepeat:$enableRepeat, ',
+      tag: 'audio room',
+      subTag: 'controller.media',
+    );
+
     return ZegoUIKit().playMedia(
       filePathOrURL: filePathOrURL,
       enableRepeat: enableRepeat,
@@ -56,22 +64,58 @@ class ZegoLiveAudioRoomControllerMediaImpl {
 
   /// stop play current media
   Future<void> stop() async {
+    ZegoLoggerService.logInfo(
+      'stop, ',
+      tag: 'audio room',
+      subTag: 'controller.media',
+    );
+
     return ZegoUIKit().stopMedia();
+  }
+
+  /// destroy current media
+  Future<void> destroy() async {
+    ZegoLoggerService.logInfo(
+      'destroy, ',
+      tag: 'audio room',
+      subTag: 'controller.media',
+    );
+
+    return ZegoUIKit().destroyMedia();
   }
 
   /// pause current media
   Future<void> pause() async {
+    ZegoLoggerService.logInfo(
+      'pause, ',
+      tag: 'audio room',
+      subTag: 'controller.media',
+    );
+
     return ZegoUIKit().pauseMedia();
   }
 
   /// resume current media
   Future<void> resume() async {
+    ZegoLoggerService.logInfo(
+      'resume, ',
+      tag: 'audio room',
+      subTag: 'controller.media',
+    );
+
     return ZegoUIKit().resumeMedia();
   }
 
   /// set the current media playback progress
   /// - [millisecond] Point in time of specified playback progress
   Future<ZegoUIKitMediaSeekToResult> seekTo(int millisecond) async {
+    ZegoLoggerService.logInfo(
+      'seekTo, '
+      'millisecond:$millisecond, ',
+      tag: 'audio room',
+      subTag: 'controller.media',
+    );
+
     return ZegoUIKit().seekTo(millisecond);
   }
 
@@ -79,21 +123,47 @@ class ZegoLiveAudioRoomControllerMediaImpl {
   ///
   /// - [volume] The range is 0 ~ 100. The default is 30.
   Future<void> setVolume(int volume) async {
+    ZegoLoggerService.logInfo(
+      'setVolume, '
+      'volume:$volume, ',
+      tag: 'audio room',
+      subTag: 'controller.media',
+    );
+
     return ZegoUIKit().setMediaVolume(volume);
   }
 
   /// mute current media
   Future<void> muteLocal(bool mute) async {
+    ZegoLoggerService.logInfo(
+      'muteLocal, '
+      'mute:$mute, ',
+      tag: 'audio room',
+      subTag: 'controller.media',
+    );
+
     return ZegoUIKit().muteMediaLocal(mute);
   }
 
   /// pick pure audio media file
   Future<List<PlatformFile>> pickPureAudioFile() async {
+    ZegoLoggerService.logInfo(
+      'pickPureAudioFile, ',
+      tag: 'audio room',
+      subTag: 'controller.media',
+    );
+
     return ZegoUIKit().pickPureAudioMediaFile();
   }
 
   /// pick video media file
   Future<List<PlatformFile>> pickVideoFile() async {
+    ZegoLoggerService.logInfo(
+      'pickVideoFile, ',
+      tag: 'audio room',
+      subTag: 'controller.media',
+    );
+
     return ZegoUIKit().pickVideoMediaFile();
   }
 
@@ -120,6 +190,13 @@ class ZegoLiveAudioRoomControllerMediaImpl {
       "wav",
     ],
   }) async {
+    ZegoLoggerService.logInfo(
+      'pickFile, '
+      'allowedExtensions:$allowedExtensions, ',
+      tag: 'audio room',
+      subTag: 'controller.media',
+    );
+
     return ZegoUIKit().pickMediaFile(
       allowedExtensions: allowedExtensions,
     );

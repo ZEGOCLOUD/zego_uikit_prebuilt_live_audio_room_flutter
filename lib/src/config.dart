@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/config.defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 
@@ -207,12 +207,12 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
     ZegoLiveAudioRoomTopMenuBarConfig? topMenuBar,
     ZegoLiveAudioRoomBottomMenuBarConfig? bottomMenuBar,
     ZegoLiveAudioRoomLayoutConfig? layout,
-    ZegoLiveAudioRoomInRoomMessageConfig? messageConfig,
+    ZegoLiveAudioRoomInRoomMessageConfig? message,
     ZegoLiveAudioRoomMemberListConfig? memberList,
-    ZegoLiveAudioRoomAudioEffectConfig? effectConfig,
+    ZegoLiveAudioRoomAudioEffectConfig? effect,
     ZegoLiveAudioRoomLiveDurationConfig? duration,
-    ZegoLiveAudioRoomMediaPlayerConfig? mediaPlayerConfig,
-    ZegoLiveAudioRoomBackgroundMediaConfig? backgroundMediaConfig,
+    ZegoLiveAudioRoomMediaPlayerConfig? mediaPlayer,
+    ZegoLiveAudioRoomBackgroundMediaConfig? backgroundMedia,
   })  : seat = seat ??
             ZegoLiveAudioRoomSeatConfig(
               layout: ZegoLiveAudioRoomLayoutConfig(),
@@ -221,13 +221,13 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
             ),
         topMenuBar = topMenuBar ?? ZegoLiveAudioRoomTopMenuBarConfig(),
         bottomMenuBar = bottomMenuBar ?? ZegoLiveAudioRoomBottomMenuBarConfig(),
-        inRoomMessage = messageConfig ?? ZegoLiveAudioRoomInRoomMessageConfig(),
+        inRoomMessage = message ?? ZegoLiveAudioRoomInRoomMessageConfig(),
         memberList = memberList ?? ZegoLiveAudioRoomMemberListConfig(),
-        audioEffect = effectConfig ?? ZegoLiveAudioRoomAudioEffectConfig(),
+        audioEffect = effect ?? ZegoLiveAudioRoomAudioEffectConfig(),
         duration = duration ?? ZegoLiveAudioRoomLiveDurationConfig(),
-        mediaPlayer = mediaPlayerConfig ?? ZegoLiveAudioRoomMediaPlayerConfig(),
+        mediaPlayer = mediaPlayer ?? ZegoLiveAudioRoomMediaPlayerConfig(),
         backgroundMedia =
-            backgroundMediaConfig ?? ZegoLiveAudioRoomBackgroundMediaConfig(),
+            backgroundMedia ?? ZegoLiveAudioRoomBackgroundMediaConfig(),
         innerText =
             translationText ?? ZegoUIKitPrebuiltLiveAudioRoomInnerText();
 }
@@ -320,7 +320,7 @@ class ZegoLiveAudioRoomTopMenuBarConfig {
 }
 
 /// Configuration options for the bottom menu bar (toolbar).
-/// You can set the properties of this class through the [ZegoUIKitPrebuiltLiveAudioRoomConfig].[bottomMenuBar] attribute.
+/// You can set the properties of this class through the [ZegoUIKitPrebuiltLiveAudioRoomConfig.bottomMenuBar] attribute.
 class ZegoLiveAudioRoomBottomMenuBarConfig {
   /// When set to `true`, the button for sending messages will be displayed.
   /// If you want to disable text messaging in the live audio room, set it to `false`.
@@ -374,9 +374,9 @@ class ZegoLiveAudioRoomBottomMenuBarConfig {
 }
 
 /// Control options for the bottom-left message list.
-/// This class is used for the [inRoomMessage] property of [ZegoUIKitPrebuiltLiveAudioRoomConfig].
+/// This class is used for the [ZegoUIKitPrebuiltLiveAudioRoomConfig.inRoomMessage].
 ///
-/// If you want to customize chat messages, you can specify the [itemBuilder] in [ZegoLiveAudioRoomInRoomMessageConfig].
+/// If you want to customize chat messages, you can specify the [ZegoLiveAudioRoomInRoomMessageConfig.itemBuilder].
 ///
 /// Example:
 ///
@@ -467,21 +467,21 @@ class ZegoLiveAudioRoomInRoomMessageConfig {
 ///
 /// If you want to use a custom member list item view, you can set the [ZegoLiveAudioRoomMemberListConfig.itemBuilder] property, and pass your custom view's builder function to it.
 ///
-/// For example, suppose you have implemented a `CustomMemberListItem` component that can render a member list item view based on the user information. You can set it up like this:
-///
-///```dart
-/// ZegoMemberListConfig(
-///   itemBuilder: (BuildContext context, Size size, ZegoUIKitUser user, Map<String, dynamic> extraInfo) {
-///     return CustomMemberListItem(user: user);
-///   },
-/// );
-///```
-///
-/// In this example, we pass the builder function of the custom view, `CustomMemberListItem`, to the [itemBuilder] property so that the member list item will be rendered using the custom component.
-///
 /// In addition, you can listen for item click events through [onClicked].
 class ZegoLiveAudioRoomMemberListConfig {
   /// Custom member list item view.
+  ///
+  /// For example, suppose you have implemented a `CustomMemberListItem` component that can render a member list item view based on the user information. You can set it up like this:
+  ///
+  ///```dart
+  /// ZegoLiveAudioRoomMemberListConfig(
+  ///   itemBuilder: (BuildContext context, Size size, ZegoUIKitUser user, Map<String, dynamic> extraInfo) {
+  ///     return CustomMemberListItem(user: user);
+  ///   },
+  /// );
+  ///```
+  ///
+  /// In this example, we pass the builder function of the custom view, `CustomMemberListItem`, to the [itemBuilder] property so that the member list item will be rendered using the custom component.
   ZegoMemberListItemBuilder? itemBuilder;
 
   ZegoLiveAudioRoomMemberListConfig({
@@ -530,16 +530,13 @@ class ZegoLiveAudioRoomAudioEffectConfig {
     ],
   });
 
-  /// @nodoc
   ZegoLiveAudioRoomAudioEffectConfig.none({
     this.voiceChangeEffect = const [],
     this.reverbEffect = const [],
   });
 
-  /// @nodoc
   bool get isSupportVoiceChange => voiceChangeEffect.isNotEmpty;
 
-  /// @nodoc
   bool get isSupportReverb => reverbEffect.isNotEmpty;
 }
 

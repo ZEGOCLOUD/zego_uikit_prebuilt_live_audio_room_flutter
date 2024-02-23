@@ -28,8 +28,8 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/overlay_machi
 part 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/co_host_mixin.dart';
 
 /// @nodoc
-class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
-  ZegoLiveSeatManager({
+class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
+  ZegoLiveAudioRoomSeatManager({
     this.contextQuery,
     required this.localUserID,
     required this.roomID,
@@ -62,12 +62,12 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
 
   final String localUserID;
   final String roomID;
-  final ZegoPrebuiltPlugins plugins;
+  final ZegoLiveAudioRoomPlugins plugins;
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
   final ZegoUIKitPrebuiltLiveAudioRoomEvents events;
   final ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText;
   BuildContext Function()? contextQuery;
-  final ZegoPopUpManager popUpManager;
+  final ZegoLiveAudioRoomPopUpManager popUpManager;
   final ValueNotifier<bool> kickOutNotifier;
 
   KickSeatDialogInfo kickSeatDialogInfo = KickSeatDialogInfo.empty();
@@ -80,7 +80,7 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
   ValueNotifier<ZegoLiveAudioRoomRole> localRole =
       ValueNotifier<ZegoLiveAudioRoomRole>(ZegoLiveAudioRoomRole.audience);
 
-  ZegoLiveConnectManager? _connectManager;
+  ZegoLiveAudioRoomConnectManager? _connectManager;
 
   bool isLeaveSeatDialogVisible = false;
   bool _isPopUpSheetVisible = false;
@@ -196,7 +196,7 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
     }
   }
 
-  void setConnectManager(ZegoLiveConnectManager value) {
+  void setConnectManager(ZegoLiveAudioRoomConnectManager value) {
     ZegoLoggerService.logInfo(
       'set connect manager',
       tag: 'audio room',
@@ -513,7 +513,8 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
         subTag: 'seat manager',
       );
       ZegoUIKit().turnMicrophoneOn(false);
-      _connectManager?.updateAudienceConnectState(ConnectState.idle);
+      _connectManager
+          ?.updateAudienceConnectState(ZegoLiveAudioRoomConnectState.idle);
 
       if (isLeaveSeatDialogVisible) {
         ZegoLoggerService.logInfo(
@@ -842,9 +843,11 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
         );
         showDebugToast('take on seat $index error, ${result.error}');
 
-        _connectManager?.updateAudienceConnectState(ConnectState.idle);
+        _connectManager
+            ?.updateAudienceConnectState(ZegoLiveAudioRoomConnectState.idle);
       } else {
-        _connectManager?.updateAudienceConnectState(ConnectState.connected);
+        _connectManager?.updateAudienceConnectState(
+            ZegoLiveAudioRoomConnectState.connected);
 
         ZegoLoggerService.logInfo(
           'room attribute batch success finished',
@@ -1198,7 +1201,8 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
         }
 
         if (targetUser.id == ZegoUIKit().getLocalUser().id) {
-          _connectManager?.updateAudienceConnectState(ConnectState.idle);
+          _connectManager
+              ?.updateAudienceConnectState(ZegoLiveAudioRoomConnectState.idle);
         }
 
         ZegoLoggerService.logInfo(
@@ -1212,7 +1216,10 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
     return true;
   }
 
-  Future<void> muteSeat(int index) async {
+  Future<bool> muteSeat(
+    int index, {
+    bool muted = true,
+  }) async {
     final targetUser = getUserByIndex(index);
     if (null == targetUser) {
       ZegoLoggerService.logInfo(
@@ -1220,20 +1227,22 @@ class ZegoLiveSeatManager with ZegoLiveSeatCoHost {
         tag: 'audio room',
         subTag: 'seat manager',
       );
-      return;
+      return false;
     }
 
     ZegoLoggerService.logInfo(
-      'mute seat, index:$index, user:$targetUser',
+      'mute seat, index:$index, user:$targetUser, muted:$muted',
       tag: 'audio room',
       subTag: 'seat manager',
     );
 
     ZegoUIKit().turnMicrophoneOn(
-      false,
+      !muted,
       userID: targetUser.id,
       muteMode: true,
     );
+
+    return true;
   }
 
   ZegoUIKitUser? getUserByIndex(int index) {

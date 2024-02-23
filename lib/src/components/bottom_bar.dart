@@ -24,14 +24,14 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/data.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_button.dart';
 
 /// @nodoc
-class ZegoBottomBar extends StatefulWidget {
+class ZegoLiveAudioRoomBottomBar extends StatefulWidget {
   final Size buttonSize;
   final double height;
 
   final bool isPluginEnabled;
-  final ZegoLiveSeatManager seatManager;
-  final ZegoLiveConnectManager connectManager;
-  final ZegoPopUpManager popUpManager;
+  final ZegoLiveAudioRoomSeatManager seatManager;
+  final ZegoLiveAudioRoomConnectManager connectManager;
+  final ZegoLiveAudioRoomPopUpManager popUpManager;
   final ZegoUIKitPrebuiltLiveAudioRoomController? prebuiltController;
 
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
@@ -45,7 +45,7 @@ class ZegoBottomBar extends StatefulWidget {
 
   final ZegoUIKitPrebuiltLiveAudioRoomMinimizeData minimizeData;
 
-  const ZegoBottomBar({
+  const ZegoLiveAudioRoomBottomBar({
     Key? key,
     this.avatarBuilder,
     required this.config,
@@ -63,11 +63,13 @@ class ZegoBottomBar extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoBottomBar> createState() => _ZegoBottomBarState();
+  State<ZegoLiveAudioRoomBottomBar> createState() =>
+      _ZegoLiveAudioRoomBottomBarState();
 }
 
 /// @nodoc
-class _ZegoBottomBarState extends State<ZegoBottomBar> {
+class _ZegoLiveAudioRoomBottomBarState
+    extends State<ZegoLiveAudioRoomBottomBar> {
   List<ZegoLiveAudioRoomMenuBarButtonName> buttons = [];
   List<Widget> extendButtons = [];
 
@@ -99,7 +101,7 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   zegoLiveButtonPadding,
-                  ZegoInRoomMessageInputBoardButton(
+                  ZegoLiveAudioRoomInRoomMessageInputBoardButton(
                     innerText: widget.config.innerText,
                     rootNavigator: widget.config.rootNavigator,
                     onSheetPopUp: (int key) {
@@ -207,8 +209,8 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
                 return buttonList;
               },
               icon: ButtonIcon(
-                icon: PrebuiltLiveAudioRoomImage.asset(
-                    PrebuiltLiveAudioRoomIconUrls.toolbarMore),
+                icon: ZegoLiveAudioRoomImage.asset(
+                    ZegoLiveAudioRoomIconUrls.toolbarMore),
                 backgroundColor: Colors.transparent,
               ),
               onSheetPopUp: (int key) {
@@ -240,13 +242,13 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
     switch (type) {
       case ZegoLiveAudioRoomMenuBarButtonName.applyToTakeSeatButton:
         switch (widget.connectManager.audienceLocalConnectStateNotifier.value) {
-          case ConnectState.idle:
+          case ZegoLiveAudioRoomConnectState.idle:
             buttonSize = Size(330.zR, 72.zR);
             break;
-          case ConnectState.connecting:
+          case ZegoLiveAudioRoomConnectState.connecting:
             buttonSize = Size(330.zR, 72.zR);
             break;
-          case ConnectState.connected:
+          case ZegoLiveAudioRoomConnectState.connected:
             buttonSize = Size(168.zR, 72.zR);
             break;
         }
@@ -309,12 +311,12 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
 
     switch (type) {
       case ZegoLiveAudioRoomMenuBarButtonName.showMemberListButton:
-        return ZegoMemberButton(
+        return ZegoLiveAudioRoomMemberButton(
           buttonSize: buttonSize,
           iconSize: iconSize,
           icon: ButtonIcon(
-            icon: PrebuiltLiveAudioRoomImage.asset(
-                PrebuiltLiveAudioRoomIconUrls.toolbarMember),
+            icon: ZegoLiveAudioRoomImage.asset(
+                ZegoLiveAudioRoomIconUrls.toolbarMember),
             backgroundColor: Colors.white,
           ),
           avatarBuilder: widget.avatarBuilder,
@@ -344,25 +346,25 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           buttonSize: buttonSize,
           iconSize: iconSize,
           normalIcon: ButtonIcon(
-            icon: PrebuiltLiveAudioRoomImage.asset(
-                PrebuiltLiveAudioRoomIconUrls.toolbarMicNormal),
+            icon: ZegoLiveAudioRoomImage.asset(
+                ZegoLiveAudioRoomIconUrls.toolbarMicNormal),
             backgroundColor: Colors.white,
           ),
           offIcon: ButtonIcon(
-            icon: PrebuiltLiveAudioRoomImage.asset(
-                PrebuiltLiveAudioRoomIconUrls.toolbarMicOff),
+            icon: ZegoLiveAudioRoomImage.asset(
+                ZegoLiveAudioRoomIconUrls.toolbarMicOff),
             backgroundColor: Colors.white,
           ),
           defaultOn: microphoneDefaultOn,
           muteMode: true,
         );
       case ZegoLiveAudioRoomMenuBarButtonName.leaveButton:
-        return ZegoLeaveAudioRoomButton(
+        return ZegoLiveAudioRoomLeaveButton(
           buttonSize: buttonSize,
           iconSize: iconSize,
           icon: ButtonIcon(
-            icon: PrebuiltLiveAudioRoomImage.asset(
-                PrebuiltLiveAudioRoomIconUrls.topQuit),
+            icon:
+                ZegoLiveAudioRoomImage.asset(ZegoLiveAudioRoomIconUrls.topQuit),
             backgroundColor: Colors.white,
           ),
           config: widget.config,
@@ -372,28 +374,28 @@ class _ZegoBottomBarState extends State<ZegoBottomBar> {
           seatManager: widget.seatManager,
         );
       case ZegoLiveAudioRoomMenuBarButtonName.soundEffectButton:
-        return ZegoSoundEffectButton(
+        return ZegoLiveAudioRoomSoundEffectButton(
           innerText: widget.config.innerText,
           voiceChangeEffect: widget.config.audioEffect.voiceChangeEffect,
           reverbEffect: widget.config.audioEffect.reverbEffect,
           buttonSize: buttonSize,
           iconSize: iconSize,
           icon: ButtonIcon(
-            icon: PrebuiltLiveAudioRoomImage.asset(
-                PrebuiltLiveAudioRoomIconUrls.toolbarSoundEffect),
+            icon: ZegoLiveAudioRoomImage.asset(
+                ZegoLiveAudioRoomIconUrls.toolbarSoundEffect),
             backgroundColor: Colors.white,
           ),
           rootNavigator: widget.config.rootNavigator,
           popUpManager: widget.popUpManager,
         );
       case ZegoLiveAudioRoomMenuBarButtonName.applyToTakeSeatButton:
-        return ZegoAudienceConnectButton(
+        return ZegoLiveAudioRoomAudienceConnectButton(
           seatManager: widget.seatManager,
           connectManager: widget.connectManager,
           innerText: widget.seatManager.innerText,
         );
       case ZegoLiveAudioRoomMenuBarButtonName.closeSeatButton:
-        return ZegoHostLockSeatButton(
+        return ZegoLiveAudioRoomHostLockSeatButton(
           buttonSize: buttonSize,
           iconSize: iconSize,
           seatManager: widget.seatManager,

@@ -6,14 +6,15 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/config.defines.dart';
 
 /// @nodoc
 const layoutGridItemIndexKey = 'index';
 
 /// @nodoc
 /// picture in picture layout
-class ZegoAudioRoomLayout extends StatefulWidget {
-  const ZegoAudioRoomLayout({
+class ZegoLiveAudioRoomLayout extends StatefulWidget {
+  const ZegoLiveAudioRoomLayout({
     Key? key,
     required this.userList,
     required this.layoutConfig,
@@ -39,11 +40,12 @@ class ZegoAudioRoomLayout extends StatefulWidget {
   final ZegoAvatarBuilder? avatarBuilder;
 
   @override
-  State<ZegoAudioRoomLayout> createState() => _ZegoAudioRoomLayoutState();
+  State<ZegoLiveAudioRoomLayout> createState() =>
+      _ZegoLiveAudioRoomLayoutState();
 }
 
 /// @nodoc
-class _ZegoAudioRoomLayoutState extends State<ZegoAudioRoomLayout> {
+class _ZegoLiveAudioRoomLayoutState extends State<ZegoLiveAudioRoomLayout> {
   @override
   void initState() {
     super.initState();

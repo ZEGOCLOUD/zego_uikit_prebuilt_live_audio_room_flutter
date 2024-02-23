@@ -1,5 +1,86 @@
 
-- [3.0](#30)
+>
+> This document aims to help users understand the APIs changes and feature improvements, and provide a migration guide for the upgrade process.
+>
+> <br />
+>
+> It is an `incompatible change` if marked with `breaking changes`.
+> All remaining changes is compatible and uses the deprecated prompt. Of course, it will also be completely abandoned in the version after a certain period of time.
+>
+> <br />
+>
+> You can run this command in `the root directory of your project` to output warnings and partial error prompts to assist you in finding deprecated parameters/functions or errors after upgrading.
+> ```shell
+> dart analyze | grep zego
+> ```
+
+
+<br />
+<br />
+
+# Versions
+
+- [3.1.1](#311)  **(💥 breaking changes)**
+- [3.0](#30)  **(💥 breaking changes)**
+
+
+<br />
+<br />
+
+# 3.1.1
+---
+
+# Introduction
+
+>
+> In this migration guide, we will explain how to upgrade from version 3.1.0 to the latest 3.1.1 version. 
+
+# Major Interface Changes
+
+
+## ZegoUIKitPrebuiltLiveAudioRoom
+
+- rename parameters in construtor  **(💥 breaking changes)**
+
+>
+> <details>
+> <summary>Compatibility Guide</summary>
+> <pre><code>
+>
+>
+>  Modify your code based on the following guidelines to make it compatible with version 3.1.1:
+>
+> 3.1.0 Version Code:
+>
+>```dart
+>
+>ZegoUIKitPrebuiltLiveAudioRoomConfig(
+>    ...
+>    messageConfig: ZegoLiveAudioRoomInRoomMessageConfig(...), 
+>    effectConfig: ZegoLiveAudioRoomAudioEffectConfig(...), 
+>    mediaPlayerConfig: ZegoLiveAudioRoomMediaPlayerConfig(...), 
+>    backgroundMediaConfig: ZegoLiveAudioRoomBackgroundMediaConfig(...), 
+>);
+>
+>```
+>
+>3.1.1 Version Code:
+>
+> ```dart
+> /// Example code in version 3.0
+>
+>ZegoUIKitPrebuiltLiveAudioRoomConfig(
+>    ...
+>    message: ZegoLiveAudioRoomInRoomMessageConfig(...), 
+>    effect: ZegoLiveAudioRoomAudioEffectConfig(...), 
+>    mediaPlayer: ZegoLiveAudioRoomMediaPlayerConfig(...), 
+>    backgroundMedia: ZegoLiveAudioRoomBackgroundMediaConfig(...), 
+>);
+>```
+>
+> </code></pre>
+>
+> </details>
 
 
 <br />
@@ -31,15 +112,70 @@
 
 > In this migration guide, we will explain how to upgrade from version 2.x to the latest 3.0 version.
 >
-> This document aims to help users understand the interface changes and feature improvements, and provide a migration guide for the upgrade process.
 
 # Major Interface Changes
 
 ## ZegoUIKitPrebuiltLiveAudioRoom
 
-- remove `controller`
-- add `events(ZegoUIKitPrebuiltLiveAudioRoomEvents)`
+- remove `controller`  **(💥 breaking changes)**
+- add `events(ZegoUIKitPrebuiltLiveAudioRoomEvents)`  **(💥 breaking changes)**
 
+>
+> 
+
+- rename parameters in construtor    **(💥 breaking changes)**
+
+>
+> <details>
+> <summary>Compatibility Guide</summary>
+> <pre><code>
+>
+>
+>  Modify your code based on the following guidelines to make it compatible with version 3.0:
+>
+> 2.x Version Code:
+>
+>```dart
+>
+>ZegoUIKitPrebuiltLiveAudioRoomConfig(
+>    seatConfig: ZegoLiveAudioRoomSeatConfig(...), 
+>    topMenuBarConfig: ZegoLiveAudioRoomTopMenuBarConfig(...), 
+>    bottomMenuBarConfig: ZegoLiveAudioRoomBottomMenuBarConfig(...), 
+>    layoutConfig: ZegoLiveAudioRoomLayoutConfig(...), 
+>    messageConfig: ZegoLiveAudioRoomInRoomMessageConfig(...), 
+>    memberListConfig: ZegoLiveAudioRoomMemberListConfig(...), 
+>    effectConfig: ZegoLiveAudioRoomAudioEffectConfig(...), 
+>    durationConfig: ZegoLiveAudioRoomLiveDurationConfig(...), 
+>    mediaPlayerConfig: ZegoLiveAudioRoomMediaPlayerConfig(...), 
+>    backgroundMediaConfig: ZegoLiveAudioRoomBackgroundMediaConfig(...), 
+>);
+>
+>```
+>
+>3.0 Version Code:
+>
+> ```dart
+> /// Example code in version 3.0
+>
+>ZegoUIKitPrebuiltLiveAudioRoomConfig(
+>    seat: ZegoLiveAudioRoomSeatConfig(...), 
+>    topMenuBar: ZegoLiveAudioRoomTopMenuBarConfig(...), 
+>    bottomMenuBar: ZegoLiveAudioRoomBottomMenuBarConfig(...), 
+>    layout: ZegoLiveAudioRoomLayoutConfig(...), 
+>    message: ZegoLiveAudioRoomInRoomMessageConfig(...), 
+>    memberList: ZegoLiveAudioRoomMemberListConfig(...), 
+>    effect: ZegoLiveAudioRoomAudioEffectConfig(...), 
+>    duration: ZegoLiveAudioRoomLiveDurationConfig(...), 
+>    mediaPlayer: ZegoLiveAudioRoomMediaPlayerConfig(...), 
+>    backgroundMedia: ZegoLiveAudioRoomBackgroundMediaConfig(...), 
+>);
+>```
+>
+> </code></pre>
+>
+> </details>
+
+    
 ## ZegoUIKitPrebuiltLiveAudioRoomController
 
 >
@@ -104,7 +240,7 @@
   - move **hostSeatIndexes** to `seat`
   - move **layoutConfig** to `seat.layout`
 
-### event (move event to ZegoUIKitPrebuiltLiveAudioRoomEvents)
+### event (move event to ZegoUIKitPrebuiltLiveAudioRoomEvents)  **(💥 breaking changes)**
 
 >
 > - move **onError** to `ZegoUIKitPrebuiltLiveAudioRoomEvents`
@@ -171,8 +307,8 @@
 > /// Example code in version 3.0
 > 
 > 
-> ZegoUIKitPrebuiltLiveStreaming(
->     events: ZegoUIKitPrebuiltLiveStreamingEvents(
+> ZegoUIKitPrebuiltLiveAudioRoom(
+>     events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
 >       onLeaveConfirmation: (
 >         ZegoLiveAudioRoomLeaveConfirmationEvent event,
 >         /// defaultAction to return to the previous page
@@ -227,7 +363,7 @@
 >
 > <br />
 >
-> - seat
+> - seat  **(💥 breaking changes)**
 >     - move **onSeatClosed** to `ZegoUIKitPrebuiltLiveAudioRoomEvents.seat` and rename `onClosed`
 >     - move **onSeatsOpened** to `ZegoUIKitPrebuiltLiveAudioRoomEvents.seat` and rename `onOpened`
 >     - move **onSeatClicked** to `ZegoUIKitPrebuiltLiveAudioRoomEvents.seat` and rename `onClicked`
@@ -302,8 +438,8 @@
 > /// Example code in version 3.0
 > 
 > 
-> ZegoUIKitPrebuiltLiveStreaming(
->     events: ZegoUIKitPrebuiltLiveStreamingEvents(
+> ZegoUIKitPrebuiltLiveAudioRoom(
+>     events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
 >       seat: ZegoLiveAudioRoomSeatEvents(
 >         onClosed: (){
 > 
@@ -354,7 +490,7 @@
 >
 > <br />
 >
-> - onLeaveLiveAudioRoom/onMeRemovedFromRoom
+> - onLeaveLiveAudioRoom/onMeRemovedFromRoom  **(💥 breaking changes)**
 >   - move **onLeaveLiveAudioRoom** from **ZegoUIKitPrebuiltLiveAudioRoomConfig** to  `ZegoUIKitPrebuiltLiveAudioRoomEvents.onEnded`(ZegoLiveAudioRoomEndEvent(reason:ZegoLiveAudioRoomEndReason.`localLeave`), defaultAction)
 >   - move **onMeRemovedFromRoom** from **ZegoUIKitPrebuiltLiveAudioRoomConfig** to  `ZegoUIKitPrebuiltLiveAudioRoomEvents.onEnded`(ZegoLiveAudioRoomEndEvent(reason:ZegoLiveAudioRoomEndReason.`kickOut`), defaultAction)
 >
@@ -395,8 +531,8 @@
 > /// Example code in version 3.0
 > 
 > 
-> ZegoUIKitPrebuiltLiveStreaming(
->     events: ZegoUIKitPrebuiltLiveStreamingEvents(
+> ZegoUIKitPrebuiltLiveAudioRoom(
+>     events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
 >       onEnded: (
 >         ZegoLiveAudioRoomEndEvent event,
 >         /// defaultAction to return to the previous page
@@ -432,7 +568,7 @@
 >
 >If you encounter any issues or have any questions during the migration process, please provide feedback through the following channels:
 >
->- GitHub Issues: [Link to the project's issue page](https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_live_streaming_flutter/issues)
+>- GitHub Issues: [Link to the project's issue page](https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_live_audio_room_example_flutter/issues)
 >- Forum: [Link to the forum page](https://www.zegocloud.com/)
 
 

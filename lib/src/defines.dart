@@ -1,12 +1,12 @@
 /// These are the predefined buttons that can be added to the top or bottom toolbar.
 ///
-/// This enum type is used in ZegoUIKitPrebuiltLiveAudioRoomConfig.bottomMenuBarConfig and ZegoUIKitPrebuiltLiveAudioRoomConfig.topMenuBarConfig.
+/// This enum type is used in ZegoUIKitPrebuiltLiveAudioRoomConfig.bottomMenuBar and ZegoUIKitPrebuiltLiveAudioRoomConfig.topMenuBar.
 /// Please note that these buttons are not role-specific and can be added to anyone's toolbar.
 /// The Live Audio Room SDK simply defaults to defining which buttons can be displayed on the corresponding role's toolbar.
 ///
-/// For example, if you don't want the speaker on the seat to be able to turn off their microphone, you can exclude the toggleMicrophoneButton from ZegoBottomMenuBarConfig.speakerButtons.
+/// For example, if you don't want the speaker on the seat to be able to turn off their microphone, you can exclude the toggleMicrophoneButton from ZegoLiveAudioRoomBottomMenuBarConfig.speakerButtons.
 /// For example, if your business scenario allows audiences to view the member list or you don't want audiences to view the member list, and so on.
-/// For example, if your business scenario only allows the host to invite audiences to the seat and doesn't allow audiences to apply as speakers, you can exclude the applyToTakeSeatButton from ZegoBottomMenuBarConfig.audienceButtons.
+/// For example, if your business scenario only allows the host to invite audiences to the seat and doesn't allow audiences to apply as speakers, you can exclude the applyToTakeSeatButton from ZegoLiveAudioRoomBottomMenuBarConfig.audienceButtons.
 enum ZegoLiveAudioRoomMenuBarButtonName {
   /// Button for leaving the audio chat room.
   /// You can proactively add a leave button to the bottom or top toolbar to optimize the interaction experience based on your business needs.
@@ -54,7 +54,7 @@ enum ZegoLiveAudioRoomRole {
 
 /// Dialog information.
 /// Used to control whether certain features display a dialog, such as whether to show a confirmation dialog before leaving the audio chat room.
-/// This class is used for setting some text in ZegoInnerText and ZegoUIKitPrebuiltLiveAudioRoomConfig.confirmDialogInfo.
+/// This class is used for setting some text in ZegoUIKitPrebuiltLiveAudioRoomInnerText and ZegoUIKitPrebuiltLiveAudioRoomConfig.confirmDialogInfo.
 class ZegoLiveAudioRoomDialogInfo {
   /// Dialog title
   final String title;

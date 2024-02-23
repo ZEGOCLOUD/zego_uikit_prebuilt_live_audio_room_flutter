@@ -31,8 +31,8 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/data.dart';
 
 /// @nodoc
 /// user and sdk should be login and init before page enter
-class ZegoLivePage extends StatefulWidget {
-  const ZegoLivePage({
+class ZegoLiveAudioRoomPage extends StatefulWidget {
+  const ZegoLiveAudioRoomPage({
     Key? key,
     this.prebuiltController,
     required this.appID,
@@ -67,21 +67,20 @@ class ZegoLivePage extends StatefulWidget {
     ZegoLiveAudioRoomLeaveConfirmationEvent event,
   ) defaultLeaveConfirmationAction;
 
-  final ZegoLiveSeatManager seatManager;
-  final ZegoLiveConnectManager connectManager;
-  final ZegoPopUpManager popUpManager;
-  final ZegoLiveDurationManager liveDurationManager;
+  final ZegoLiveAudioRoomSeatManager seatManager;
+  final ZegoLiveAudioRoomConnectManager connectManager;
+  final ZegoLiveAudioRoomPopUpManager popUpManager;
+  final ZegoLiveAudioRoomDurationManager liveDurationManager;
   final ZegoUIKitPrebuiltLiveAudioRoomController? prebuiltController;
-  final ZegoPrebuiltPlugins? plugins;
+  final ZegoLiveAudioRoomPlugins? plugins;
 
   final ZegoUIKitPrebuiltLiveAudioRoomMinimizeData minimizeData;
 
   @override
-  State<ZegoLivePage> createState() => ZegoLivePageState();
+  State<ZegoLiveAudioRoomPage> createState() => _ZegoLiveAudioRoomPageState();
 }
 
-/// @nodoc
-class ZegoLivePageState extends State<ZegoLivePage>
+class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
     with SingleTickerProviderStateMixin {
   /// had sort the host be first
   bool audioVideoContainerHostHadSorted = false;
@@ -138,10 +137,10 @@ class ZegoLivePageState extends State<ZegoLivePage>
                       constraints.maxWidth,
                       constraints.maxHeight,
                     ),
+                    durationTimeBoard(),
                     topBar(),
                     bottomBar(),
                     messageList(),
-                    durationTimeBoard(),
                     emptyArea(constraints.maxHeight),
                     foreground(context, constraints.maxHeight),
                   ],
@@ -220,7 +219,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
       scrollDirection = Axis.horizontal;
     }
 
-    final seatContainer = ZegoSeatContainer(
+    final seatContainer = ZegoLiveAudioRoomSeatContainer(
       seatManager: widget.seatManager,
       layoutConfig: widget.config.seat.layout,
       foregroundBuilder: (
@@ -229,7 +228,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
         ZegoUIKitUser? user,
         Map<String, dynamic> extraInfo,
       ) {
-        return ZegoSeatForeground(
+        return ZegoLiveAudioRoomSeatForeground(
           user: user,
           extraInfo: extraInfo,
           size: size,
@@ -247,7 +246,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
         ZegoUIKitUser? user,
         Map<String, dynamic> extraInfo,
       ) {
-        return ZegoSeatBackground(
+        return ZegoLiveAudioRoomSeatBackground(
           user: user,
           extraInfo: extraInfo,
           size: size,
@@ -288,7 +287,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
       child: ValueListenableBuilder<ZegoUIKitRoomState>(
         valueListenable: ZegoUIKit().getRoomStateStream(),
         builder: (context, roomState, _) {
-          return ZegoTopBar(
+          return ZegoLiveAudioRoomTopBar(
             config: widget.config,
             events: widget.events,
             defaultEndAction: widget.defaultEndAction,
@@ -306,7 +305,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
   Widget bottomBar() {
     return Align(
       alignment: Alignment.bottomCenter,
-      child: ZegoBottomBar(
+      child: ZegoLiveAudioRoomBottomBar(
         height: 124.zR,
         buttonSize: zegoLiveButtonSize,
         config: widget.config,
@@ -364,7 +363,7 @@ class ZegoLivePageState extends State<ZegoLivePage>
       bottom: 124.zR + (widget.config.inRoomMessage.bottomLeft?.dy ?? 0),
       child: ConstrainedBox(
         constraints: BoxConstraints.loose(listSize),
-        child: ZegoInRoomLiveMessageView(
+        child: ZegoLiveAudioRoomInRoomLiveMessageView(
           config: widget.config.inRoomMessage,
           avatarBuilder: widget.config.seat.avatarBuilder,
         ),

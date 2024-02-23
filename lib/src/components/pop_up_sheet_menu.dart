@@ -14,8 +14,8 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.d
 import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 
 /// @nodoc
-class ZegoPopUpSheetMenu extends StatefulWidget {
-  const ZegoPopUpSheetMenu({
+class ZegoLiveAudioRoomPopUpSheetMenu extends StatefulWidget {
+  const ZegoLiveAudioRoomPopUpSheetMenu({
     Key? key,
     required this.popupItems,
     required this.innerText,
@@ -24,19 +24,21 @@ class ZegoPopUpSheetMenu extends StatefulWidget {
     this.onPressed,
   }) : super(key: key);
 
-  final List<PopupItem> popupItems;
-  final ZegoLiveSeatManager seatManager;
-  final ZegoLiveConnectManager connectManager;
+  final List<ZegoLiveAudioRoomPopupItem> popupItems;
+  final ZegoLiveAudioRoomSeatManager seatManager;
+  final ZegoLiveAudioRoomConnectManager connectManager;
 
-  final void Function(PopupItemValue)? onPressed;
+  final void Function(ZegoLiveAudioRoomPopupItemValue)? onPressed;
   final ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText;
 
   @override
-  State<ZegoPopUpSheetMenu> createState() => _ZegoPopUpSheetMenuState();
+  State<ZegoLiveAudioRoomPopUpSheetMenu> createState() =>
+      _ZegoLiveAudioRoomPopUpSheetMenuState();
 }
 
 /// @nodoc
-class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
+class _ZegoLiveAudioRoomPopUpSheetMenuState
+    extends State<ZegoLiveAudioRoomPopUpSheetMenu> {
   @override
   void initState() {
     super.initState();
@@ -66,7 +68,7 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
     });
   }
 
-  Widget popUpItemWidget(int index, PopupItem popupItem) {
+  Widget popUpItemWidget(int index, ZegoLiveAudioRoomPopupItem popupItem) {
     return GestureDetector(
       onTap: () async {
         ZegoLoggerService.logInfo(
@@ -81,43 +83,46 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
         ).pop();
 
         switch (popupItem.value) {
-          case PopupItemValue.takeOnSeat:
+          case ZegoLiveAudioRoomPopupItemValue.takeOnSeat:
             widget.seatManager.takeOnSeat(
               popupItem.data as int,
               isForce: false,
               isDeleteAfterOwnerLeft: true,
             );
             break;
-          case PopupItemValue.takeOffSeat:
+          case ZegoLiveAudioRoomPopupItemValue.takeOffSeat:
             // clear popup sheet info
             widget.seatManager
                 .setKickSeatDialogInfo(KickSeatDialogInfo.empty());
             await widget.seatManager.kickSeat(popupItem.data as int);
             break;
-          case PopupItemValue.leaveSeat:
+          case ZegoLiveAudioRoomPopupItemValue.leaveSeat:
             await widget.seatManager.leaveSeat(showDialog: true);
             break;
-          case PopupItemValue.muteSeat:
-            await widget.seatManager.muteSeat(popupItem.data as int);
+          case ZegoLiveAudioRoomPopupItemValue.muteSeat:
+            await widget.seatManager.muteSeat(
+              popupItem.data as int,
+              muted: true,
+            );
             break;
-          case PopupItemValue.inviteLink:
+          case ZegoLiveAudioRoomPopupItemValue.inviteLink:
             await widget.connectManager.inviteAudienceConnect(
               ZegoUIKit().getUser(popupItem.data as String? ?? ''),
             );
             break;
-          case PopupItemValue.assignCoHost:
+          case ZegoLiveAudioRoomPopupItemValue.assignCoHost:
             await widget.seatManager.assignCoHost(
               roomID: widget.seatManager.roomID,
               targetUser: ZegoUIKit().getUser(popupItem.data as String? ?? ''),
             );
             break;
-          case PopupItemValue.revokeCoHost:
+          case ZegoLiveAudioRoomPopupItemValue.revokeCoHost:
             await widget.seatManager.revokeCoHost(
               roomID: widget.seatManager.roomID,
               targetUser: ZegoUIKit().getUser(popupItem.data as String? ?? ''),
             );
             break;
-          case PopupItemValue.cancel:
+          case ZegoLiveAudioRoomPopupItemValue.cancel:
             break;
         }
 
@@ -154,19 +159,19 @@ class _ZegoPopUpSheetMenuState extends State<ZegoPopUpSheetMenu> {
 void showPopUpSheet({
   required String userID,
   required BuildContext context,
-  required List<PopupItem> popupItems,
+  required List<ZegoLiveAudioRoomPopupItem> popupItems,
   required ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText,
-  required ZegoLiveSeatManager seatManager,
-  required ZegoLiveConnectManager connectManager,
-  required ZegoPopUpManager popUpManager,
+  required ZegoLiveAudioRoomSeatManager seatManager,
+  required ZegoLiveAudioRoomConnectManager connectManager,
+  required ZegoLiveAudioRoomPopUpManager popUpManager,
 }) {
   final key = DateTime.now().millisecondsSinceEpoch;
   popUpManager.addAPopUpSheet(key);
 
   seatManager.setPopUpSheetVisible(true);
 
-  final takeOffSeatItemIndex = popupItems
-      .indexWhere((popupItem) => popupItem.value == PopupItemValue.takeOffSeat);
+  final takeOffSeatItemIndex = popupItems.indexWhere((popupItem) =>
+      popupItem.value == ZegoLiveAudioRoomPopupItemValue.takeOffSeat);
   if (-1 != takeOffSeatItemIndex) {
     /// seat user leave, will auto pop this sheet
     seatManager.setKickSeatDialogInfo(
@@ -197,7 +202,7 @@ void showPopUpSheet({
         child: Container(
           height: (popupItems.length * 101).zR,
           padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-          child: ZegoPopUpSheetMenu(
+          child: ZegoLiveAudioRoomPopUpSheetMenu(
             popupItems: popupItems,
             innerText: innerText,
             seatManager: seatManager,
@@ -207,8 +212,8 @@ void showPopUpSheet({
       );
     },
   ).whenComplete(() {
-    final takeOffSeatItemIndex = popupItems.indexWhere(
-        (popupItem) => popupItem.value == PopupItemValue.takeOffSeat);
+    final takeOffSeatItemIndex = popupItems.indexWhere((popupItem) =>
+        popupItem.value == ZegoLiveAudioRoomPopupItemValue.takeOffSeat);
     if (-1 != takeOffSeatItemIndex) {
       /// clear kickSeatDialogInfo
       if (seatManager.kickSeatDialogInfo.isExist(

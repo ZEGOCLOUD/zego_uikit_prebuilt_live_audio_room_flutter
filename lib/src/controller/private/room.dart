@@ -12,8 +12,8 @@ mixin ZegoLiveAudioRoomControllerRoomPrivate {
 class ZegoLiveAudioRoomControllerRoomPrivateImpl {
   ZegoUIKitPrebuiltLiveAudioRoomConfig? config;
   ZegoUIKitPrebuiltLiveAudioRoomEvents? events;
-  ZegoLiveConnectManager? connectManager;
-  ZegoLiveSeatManager? seatManager;
+  ZegoLiveAudioRoomConnectManager? connectManager;
+  ZegoLiveAudioRoomSeatManager? seatManager;
 
   /// Please do not call this interface. It is the internal logic of ZegoUIKitPrebuiltLiveStreaming.
   /// DO NOT CALL!!!
@@ -21,8 +21,8 @@ class ZegoLiveAudioRoomControllerRoomPrivateImpl {
   void initByPrebuilt({
     required ZegoUIKitPrebuiltLiveAudioRoomConfig config,
     required ZegoUIKitPrebuiltLiveAudioRoomEvents events,
-    required ZegoLiveConnectManager? connectManager,
-    required ZegoLiveSeatManager? seatManager,
+    required ZegoLiveAudioRoomConnectManager? connectManager,
+    required ZegoLiveAudioRoomSeatManager? seatManager,
   }) {
     ZegoLoggerService.logInfo(
       'init by prebuilt',

@@ -2,7 +2,7 @@
 import 'package:flutter/cupertino.dart';
 
 /// @nodoc
-class ZegoPopUpManager {
+class ZegoLiveAudioRoomPopUpManager {
   final List<int> _popupSheetKeys = [];
 
   void addAPopUpSheet(int key) {

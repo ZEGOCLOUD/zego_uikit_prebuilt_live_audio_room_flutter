@@ -16,6 +16,7 @@
         - [info](#info)
         - [play](#play)
         - [stop](#stop)
+        - [destroy](#destroy)
         - [pause](#pause)
         - [resume](#resume)
         - [seekTo](#seekto)
@@ -41,6 +42,10 @@
         - [localIsSpeaker](#localisspeaker)
         - [localIsCoHost](#localiscohost)
         - [localHasHostPermissions](#localhashostpermissions)
+        - [getUserByIndex](#getuserbyindex)
+        - [muteStateNotifier](#mutestatenotifier)
+        - [muteLocally](#mutelocally)
+        - [muteLocallyByUserID](#mutelocallybyuserid)
         - [host](#host)
             - [open](#open)
             - [close](#close)
@@ -48,6 +53,8 @@
             - [acceptTakingRequest](#accepttakingrequest)
             - [rejectTakingRequest](#rejecttakingrequest)
             - [inviteToTake](#invitetotake)
+            - [mute](#mute)
+            - [muteByUserID](#mutebyuserid)
         - [audience](#audience)
             - [take](#take)
             - [applyToTake](#applytotake)
@@ -65,13 +72,6 @@
             - [stateNotifier](#statenotifier)
             - [turnOn](#turnon)
             - [switchState](#switchstate)
-        - [camera](#camera)
-            - [localState](#localstate-2)
-            - [localStateNotifier](#localstatenotifier-2)
-            - [state](#state-2)
-            - [stateNotifier](#statenotifier-2)
-            - [turnOn](#turnon-2)
-            - [switchState](#switchstate-2)
     - [room](#room)
         - [property](#property)
             - [updateProperty/updateProperties](#updatepropertyupdateproperties)
@@ -150,7 +150,8 @@
 > You can pass the context [context] for any necessary pop-ups or page transitions.
 > By using the [showConfirmation] parameter, you can control whether to display a confirmation dialog to confirm ending the Live Audio Room.
 >
-> This function behaves the same as the close button in the calling interface's top right corner, and it is also affected by the [ZegoUIKitPrebuiltLiveAudioRoomEvents.onLeaveConfirmation] and [ZegoUIKitPrebuiltLiveAudioRoomEvents.onEnded] settings in the config.
+> This function behaves the same as the close button in the calling interface's top right corner, and it is also affected by the [ZegoUIKitPrebuiltLiveAudioRoomEvents.onLeaveConfirmation]
+> and [ZegoUIKitPrebuiltLiveAudioRoomEvents.onEnded] settings in the config.
 >
 > - function prototype:
 >
@@ -360,6 +361,17 @@ media series API
 >
 > ```dart
 > Future<void> stop() async
+> ```
+
+### destroy
+
+>
+> destroy current media
+>
+> - function prototype:
+>
+> ```dart
+> Future<void> destroy() async
 > ```
 
 ### pause
@@ -733,6 +745,73 @@ the APIs related to minimizing.
 > bool get localHasHostPermissions
 > ```
 
+### getUserByIndex
+
+>
+> get user who on the target seat index
+>
+> - function prototype:
+>
+> ```dart
+> ZegoUIKitUser? getUserByIndex(int targetIndex)
+> ```
+
+### muteStateNotifier
+
+>
+> Is the current seat muted or not.
+> Set `isLocally` to true to find out if it is muted locally.
+>
+> - function prototype:
+>
+> ```dart
+> ValueNotifier<bool> muteStateNotifier(
+>   int targetIndex, {
+>   bool isLocally = false,
+> })
+> ```
+
+### muteLocally
+
+>
+>
+> Mute the user at the `targetIndex` seat **locally**.
+> After mute, if you want to un-mute, you can set `muted` to false.
+>
+> And on side of the user at the `targetIndex` seat, return true/false in
+> the callback
+> of [ZegoLiveAudioRoomAudioVideoEvents.onMicrophoneTurnOnByOthersConfirmation](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Events-topic.html#onmicrophoneturnonbyothersconfirmation)
+> to open microphone or not.
+>
+> - function prototype:
+>
+> ```dart
+> Future<bool> muteLocally({
+>   int targetIndex = -1,
+>   bool muted = true,
+> }) async
+> ```
+
+### muteLocallyByUserID
+
+>
+> Mute the seat by `targetUserID` **locally**.
+> After mute, if you want to un-mute, you can set `muted` to false.
+>
+> And on side of the user at the `targetIndex` seat, return true/false in
+> the callback
+> of [ZegoLiveAudioRoomAudioVideoEvents.onMicrophoneTurnOnByOthersConfirmation](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Events-topic.html#onmicrophoneturnonbyothersconfirmation)
+> to open microphone or not.
+>
+> - function prototype:
+>
+> ```dart
+> Future<bool> muteLocallyByUserID(
+>   String targetUserID, {
+>   bool muted = true,
+> }) async
+> ```
+
 ### host
 
 > APIs of host
@@ -811,6 +890,48 @@ the APIs related to minimizing.
 >
 > ```dart
 > Future<bool> inviteToTake(String userID) async
+> ```
+
+#### mute
+
+>
+> Mute the user at the `targetIndex` seat
+>
+> After mute, if you want to un-mute, you can set `muted` to true.
+>
+> And on side of the user at the `targetIndex` seat, return true/false in
+> the callback
+> of [ZegoLiveAudioRoomAudioVideoEvents.onMicrophoneTurnOnByOthersConfirmation](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Events-topic.html#onmicrophoneturnonbyothersconfirmation)
+> to open microphone or not.
+>
+> - function prototype:
+>
+> ```dart
+> Future<bool> mute({
+>   int targetIndex = -1,
+>   bool muted = true,
+> }) async
+> ```
+
+#### muteByUserID
+
+>
+>  Mute the user on seat by `userID`
+>
+> After mute, if you want to un-mute, you can set `muted` to true.
+>
+> And on side of the user at the `targetIndex` seat, return true/false in
+> the callback
+> of [ZegoLiveAudioRoomAudioVideoEvents.onMicrophoneTurnOnByOthersConfirmation](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Events-topic.html#onmicrophoneturnonbyothersconfirmation)
+> to open microphone or not.
+>
+> - function prototype:
+>
+> ```dart
+> Future<bool> muteByUserID(
+>   String userID, {
+>   bool muted = true,
+> }) async
 > ```
 
 ### audience
@@ -951,76 +1072,6 @@ the APIs related to minimizing.
 >
 > ```dart
 > void switchState({String? userID})
-> ```
-
-### camera
-
-> camera series APIs
-
-#### localState
-
->
-> camera state of local user
->
-> - function prototype:
->
-> ```dart
-> bool get localState
-> ```
-
-#### localStateNotifier
-
->
-> camera state notifier of local user
->
-> - function prototype:
->
-> ```dart
-> ValueNotifier<bool> get localStateNotifier
-> ```
-
-#### state
-
->
-> camera state of `userID`
->
-> - function prototype:
->
-> ```dart
-> bool state(String userID)
-> ```
-
-#### stateNotifier
-
->
-> camera state notifier of `userID`
->
-> - function prototype:
->
-> ```dart
-> ValueNotifier<bool> stateNotifier(String userID)
-> ```
-
-#### turnOn
-
->
-> turn on/off `userID` camera, if `userID` is empty, then it refers to local user
->
-> - function prototype:
->
-> ```dart
-> void turnOn(bool isOn, {String? userID})
-> ```
-
-#### switchState
-
->
-> void switchState({String? userID})
->
-> - function prototype:
->
-> ```dart
-> switch `userID` camera state, if `userID` is empty, then it refers to local user
 > ```
 
 ### seiStream

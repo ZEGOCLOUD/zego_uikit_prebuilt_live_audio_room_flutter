@@ -10,7 +10,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/input
 import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 
 /// @nodoc
-class ZegoInRoomMessageInputBoardButton extends StatefulWidget {
+class ZegoLiveAudioRoomInRoomMessageInputBoardButton extends StatefulWidget {
   final Size? iconSize;
   final Size? buttonSize;
   final ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText;
@@ -19,7 +19,7 @@ class ZegoInRoomMessageInputBoardButton extends StatefulWidget {
   final Function(int)? onSheetPopUp;
   final Function(int)? onSheetPop;
 
-  const ZegoInRoomMessageInputBoardButton({
+  const ZegoLiveAudioRoomInRoomMessageInputBoardButton({
     Key? key,
     required this.innerText,
     this.rootNavigator = false,
@@ -30,13 +30,13 @@ class ZegoInRoomMessageInputBoardButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoInRoomMessageInputBoardButton> createState() =>
-      _ZegoInRoomMessageInputBoardButtonState();
+  State<ZegoLiveAudioRoomInRoomMessageInputBoardButton> createState() =>
+      _ZegoLiveAudioRoomInRoomMessageInputBoardButtonState();
 }
 
 /// @nodoc
-class _ZegoInRoomMessageInputBoardButtonState
-    extends State<ZegoInRoomMessageInputBoardButton> {
+class _ZegoLiveAudioRoomInRoomMessageInputBoardButtonState
+    extends State<ZegoLiveAudioRoomInRoomMessageInputBoardButton> {
   @override
   Widget build(BuildContext context) {
     return ZegoTextIconButton(
@@ -49,7 +49,7 @@ class _ZegoInRoomMessageInputBoardButtonState
           rootNavigator: widget.rootNavigator,
         )
             .push(
-          ZegoInRoomMessageInputBoard(
+          ZegoLiveAudioRoomInRoomMessageInputBoard(
             innerText: widget.innerText,
             rootNavigator: widget.rootNavigator,
           ),
@@ -59,8 +59,7 @@ class _ZegoInRoomMessageInputBoardButtonState
         });
       },
       icon: ButtonIcon(
-        icon:
-            PrebuiltLiveAudioRoomImage.asset(PrebuiltLiveAudioRoomIconUrls.im),
+        icon: ZegoLiveAudioRoomImage.asset(ZegoLiveAudioRoomIconUrls.im),
       ),
       iconSize: widget.iconSize ?? Size(72.zR, 72.zR),
       buttonSize: widget.buttonSize ?? Size(96.zR, 96.zR),

@@ -17,7 +17,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_button.dart';
 
 /// @nodoc
-class ZegoTopBar extends StatefulWidget {
+class ZegoLiveAudioRoomTopBar extends StatefulWidget {
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
   final ZegoUIKitPrebuiltLiveAudioRoomEvents events;
   final void Function(ZegoLiveAudioRoomEndEvent event) defaultEndAction;
@@ -25,11 +25,11 @@ class ZegoTopBar extends StatefulWidget {
     ZegoLiveAudioRoomLeaveConfirmationEvent event,
   ) defaultLeaveConfirmationAction;
 
-  final ZegoLiveSeatManager seatManager;
-  final ZegoLiveConnectManager connectManager;
+  final ZegoLiveAudioRoomSeatManager seatManager;
+  final ZegoLiveAudioRoomConnectManager connectManager;
   final ZegoUIKitPrebuiltLiveAudioRoomInnerText translationText;
 
-  const ZegoTopBar({
+  const ZegoLiveAudioRoomTopBar({
     Key? key,
     required this.config,
     required this.events,
@@ -41,11 +41,12 @@ class ZegoTopBar extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoTopBar> createState() => _ZegoTopBarState();
+  State<ZegoLiveAudioRoomTopBar> createState() =>
+      _ZegoLiveAudioRoomTopBarState();
 }
 
 /// @nodoc
-class _ZegoTopBarState extends State<ZegoTopBar> {
+class _ZegoLiveAudioRoomTopBarState extends State<ZegoLiveAudioRoomTopBar> {
   @override
   void initState() {
     super.initState();
@@ -83,12 +84,11 @@ class _ZegoTopBarState extends State<ZegoTopBar> {
   }
 
   Widget closeButton() {
-    return ZegoLeaveAudioRoomButton(
+    return ZegoLiveAudioRoomLeaveButton(
       buttonSize: Size(52.zR, 52.zR),
       iconSize: Size(24.zR, 24.zR),
       icon: ButtonIcon(
-        icon: PrebuiltLiveAudioRoomImage.asset(
-            PrebuiltLiveAudioRoomIconUrls.topQuit),
+        icon: ZegoLiveAudioRoomImage.asset(ZegoLiveAudioRoomIconUrls.topQuit),
         backgroundColor: Colors.white,
       ),
       config: widget.config,

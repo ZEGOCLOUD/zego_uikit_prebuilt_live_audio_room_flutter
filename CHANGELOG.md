@@ -1,14 +1,51 @@
+## 3.3.2
+
+- Update dependency.
+
+## 3.3.1
+
+- Update dependency.
+
+## 3.3.0
+
+- Add `muteLocally` and `muteLocallyByUserID` to the `ZegoUIKitPrebuiltLiveAudioRoomController.seat`.
+
+## 3.2.0
+
+- Add `destroy` to the `ZegoUIKitPrebuiltLiveAudioRoomController.media`.
+- Add `getUserByIndex` to the `ZegoUIKitPrebuiltLiveAudioRoomController.seat`.
+- Add `mute` and `muteByUserID` to the `ZegoUIKitPrebuiltLiveAudioRoomController.seat.host`.
+
+## 3.1.3
+
+- Update document.
+
+## 3.1.2
+
+- Update document.
+
+## 3.1.1
+
+- >
+> rename some parameter name in ZegoUIKitPrebuiltLiveAudioRoomConfig's constructor function
+> 💥 [breaking changes](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Migration_v3.x-topic.html#311)
+
+- Add configs document
+
 ## 3.1.0
 
 - Support scrolling on layout. When the number of seats exceeds the screen width or height, the seats area will be displayed by scrolling (horizontally or vertically).
 
 ## 3.0.0
 
-The 3.0 version has standardized and optimized the API and Event, simplifying the usage of most APIs.
-
-Most of the changes involve modifications to the calling path, such as changing from ZegoUIKitPrebuiltLiveAudioRoomController().isMinimizing() to ZegoUIKitPrebuiltLiveAudioRoomController().minimize.isMinimizing.
-
-💥 [breaking changes](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Migration:%203.x-topic.html)
+- >
+>
+> The 3.0 version has standardized and optimized the API and Event, simplifying the usage of most APIs.
+>
+> Most of the changes involve modifications to the calling path, such as changing from ZegoUIKitPrebuiltLiveAudioRoomController().isMinimizing() to ZegoUIKitPrebuiltLiveAudioRoomController()
+> .minimize.isMinimizing.
+>
+> 💥 [breaking changes](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Migration_v3.x-topic.html#30)
 
 - Support user/room/audioVideo series events
 

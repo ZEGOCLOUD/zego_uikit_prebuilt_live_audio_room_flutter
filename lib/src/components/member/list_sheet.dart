@@ -15,13 +15,13 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.d
 import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 
 /// @nodoc
-typedef ZegoMemberListSheetMoreButtonPressed = void Function(
+typedef ZegoLiveAudioRoomMemberListSheetMoreButtonPressed = void Function(
   ZegoUIKitUser user,
 );
 
 /// @nodoc
-class ZegoMemberListSheet extends StatefulWidget {
-  const ZegoMemberListSheet({
+class ZegoLiveAudioRoomMemberListSheet extends StatefulWidget {
+  const ZegoLiveAudioRoomMemberListSheet({
     Key? key,
     this.avatarBuilder,
     this.itemBuilder,
@@ -35,22 +35,24 @@ class ZegoMemberListSheet extends StatefulWidget {
   }) : super(key: key);
 
   final bool isPluginEnabled;
-  final ZegoLiveSeatManager seatManager;
-  final ZegoLiveConnectManager connectManager;
-  final ZegoPopUpManager popUpManager;
+  final ZegoLiveAudioRoomSeatManager seatManager;
+  final ZegoLiveAudioRoomConnectManager connectManager;
+  final ZegoLiveAudioRoomPopUpManager popUpManager;
   final ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText;
-  final ZegoMemberListSheetMoreButtonPressed? onMoreButtonPressed;
+  final ZegoLiveAudioRoomMemberListSheetMoreButtonPressed? onMoreButtonPressed;
   final ValueNotifier<List<String>>? hiddenUserIDsNotifier;
 
   final ZegoAvatarBuilder? avatarBuilder;
   final ZegoMemberListItemBuilder? itemBuilder;
 
   @override
-  State<ZegoMemberListSheet> createState() => _ZegoMemberListSheetState();
+  State<ZegoLiveAudioRoomMemberListSheet> createState() =>
+      _ZegoLiveAudioRoomMemberListSheetState();
 }
 
 /// @nodoc
-class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
+class _ZegoLiveAudioRoomMemberListSheetState
+    extends State<ZegoLiveAudioRoomMemberListSheet> {
   @override
   void initState() {
     super.initState();
@@ -174,7 +176,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
                                 SizedBox(
                                   width: 92.zR,
                                   height: 92.zR,
-                                  child: ZegoAvatarDefaultItem(
+                                  child: ZegoLiveAudioRoomAvatarDefaultItem(
                                     user: user,
                                     avatarBuilder: widget.avatarBuilder,
                                   ),
@@ -208,8 +210,8 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
             child: SizedBox(
               width: 70.zR,
               height: 70.zR,
-              child: PrebuiltLiveAudioRoomImage.asset(
-                  PrebuiltLiveAudioRoomIconUrls.back),
+              child:
+                  ZegoLiveAudioRoomImage.asset(ZegoLiveAudioRoomIconUrls.back),
             ),
           ),
           SizedBox(width: 10.zR),
@@ -348,7 +350,7 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
       return Container();
     }
 
-    final popupItems = <PopupItem>[];
+    final popupItems = <ZegoLiveAudioRoomPopupItem>[];
 
     if (widget.isPluginEnabled &&
         // locked
@@ -359,8 +361,8 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
         !widget.seatManager.seatsUserMapNotifier.value.values
             .contains(user.id)) {
       popupItems.add(
-        PopupItem(
-          PopupItemValue.inviteLink,
+        ZegoLiveAudioRoomPopupItem(
+          ZegoLiveAudioRoomPopupItemValue.inviteLink,
           widget.innerText.inviteToTakeSeatMenuDialogButton
               .replaceFirst(widget.innerText.param_1, user.name),
           data: user.id,
@@ -370,8 +372,8 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
 
     if (popupItems.isNotEmpty) {
       /// show useless more button if not a host
-      popupItems.add(PopupItem(
-        PopupItemValue.cancel,
+      popupItems.add(ZegoLiveAudioRoomPopupItem(
+        ZegoLiveAudioRoomPopupItemValue.cancel,
         widget.innerText.cancelMenuDialogButton,
       ));
     }
@@ -380,8 +382,8 @@ class _ZegoMemberListSheetState extends State<ZegoMemberListSheet> {
       buttonSize: Size(60.zR, 60.zR),
       iconSize: Size(60.zR, 60.zR),
       icon: ButtonIcon(
-        icon: PrebuiltLiveAudioRoomImage.asset(
-          PrebuiltLiveAudioRoomIconUrls.memberMore,
+        icon: ZegoLiveAudioRoomImage.asset(
+          ZegoLiveAudioRoomIconUrls.memberMore,
         ),
       ),
       onPressed: () {
@@ -455,11 +457,12 @@ void showMemberListSheet({
   ZegoMemberListItemBuilder? itemBuilder,
   required bool isPluginEnabled,
   required BuildContext context,
-  required ZegoLiveSeatManager seatManager,
-  required ZegoLiveConnectManager connectManager,
+  required ZegoLiveAudioRoomSeatManager seatManager,
+  required ZegoLiveAudioRoomConnectManager connectManager,
   required ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText,
-  required ZegoMemberListSheetMoreButtonPressed? onMoreButtonPressed,
-  required ZegoPopUpManager popUpManager,
+  required ZegoLiveAudioRoomMemberListSheetMoreButtonPressed?
+      onMoreButtonPressed,
+  required ZegoLiveAudioRoomPopUpManager popUpManager,
   ValueNotifier<List<String>>? hiddenUserIDsNotifier,
 }) {
   final key = DateTime.now().millisecondsSinceEpoch;
@@ -485,7 +488,7 @@ void showMemberListSheet({
           duration: const Duration(milliseconds: 50),
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            child: ZegoMemberListSheet(
+            child: ZegoLiveAudioRoomMemberListSheet(
               avatarBuilder: avatarBuilder,
               itemBuilder: itemBuilder,
               isPluginEnabled: isPluginEnabled,

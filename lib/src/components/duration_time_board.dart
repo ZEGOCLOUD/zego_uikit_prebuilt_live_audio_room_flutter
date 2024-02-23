@@ -13,14 +13,14 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/core/live_duration_manag
 import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 
 /// @nodoc
-class ColoredText extends StatelessWidget {
+class ZegoLiveAudioRoomColoredText extends StatelessWidget {
   final String text;
   final Color backgroundColor;
   final double? fontSize;
   final double verticalPadding;
   final double horizontalPadding;
 
-  const ColoredText({
+  const ZegoLiveAudioRoomColoredText({
     Key? key,
     required this.text,
     required this.backgroundColor,
@@ -71,7 +71,7 @@ class ColoredText extends StatelessWidget {
 class LiveDurationTimeBoard extends StatefulWidget {
   final ZegoLiveAudioRoomLiveDurationConfig config;
   final ZegoLiveAudioRoomDurationEvents? events;
-  final ZegoLiveDurationManager manager;
+  final ZegoLiveAudioRoomDurationManager manager;
 
   final double? fontSize;
 
@@ -84,11 +84,10 @@ class LiveDurationTimeBoard extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => CallDurationTimeBoardState();
+  State<StatefulWidget> createState() => _CallDurationTimeBoardState();
 }
 
-/// @nodoc
-class CallDurationTimeBoardState extends State<LiveDurationTimeBoard> {
+class _CallDurationTimeBoardState extends State<LiveDurationTimeBoard> {
   Timer? durationTimer;
   Duration? beginDuration;
   var durationNotifier = ValueNotifier<Duration>(Duration.zero);
@@ -142,7 +141,7 @@ class CallDurationTimeBoardState extends State<LiveDurationTimeBoard> {
                     ),
                   ),
                   Center(
-                    child: ColoredText(
+                    child: ZegoLiveAudioRoomColoredText(
                       text: durationFormatString(elapsedTime),
                       fontSize: widget.fontSize ?? 25.zR,
                       backgroundColor: Colors.black.withOpacity(0.2),

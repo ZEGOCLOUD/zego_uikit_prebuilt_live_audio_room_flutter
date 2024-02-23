@@ -7,7 +7,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_aud
 const deprecatedTips = ', '
     'deprecated since 3.0.0, '
     'will be removed after 3.5.0,'
-    'Migrate Guide:https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Migration:%203.x-topic.html';
+    'Migrate Guide:https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Migration_3.x-topic.html';
 
 @Deprecated(
     'Use ZegoUIKitPrebuiltLiveAudioRoomController instead$deprecatedTips')

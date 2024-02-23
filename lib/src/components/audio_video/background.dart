@@ -14,15 +14,15 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 
 /// @nodoc
-class ZegoSeatBackground extends StatefulWidget {
+class ZegoLiveAudioRoomSeatBackground extends StatefulWidget {
   final Size size;
   final ZegoUIKitUser? user;
   final Map<String, dynamic> extraInfo;
 
-  final ZegoLiveSeatManager seatManager;
+  final ZegoLiveAudioRoomSeatManager seatManager;
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
 
-  const ZegoSeatBackground({
+  const ZegoLiveAudioRoomSeatBackground({
     Key? key,
     this.user,
     this.extraInfo = const {},
@@ -32,11 +32,12 @@ class ZegoSeatBackground extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoSeatBackground> createState() => _ZegoSeatForegroundState();
+  State<ZegoLiveAudioRoomSeatBackground> createState() =>
+      _ZegoSeatForegroundState();
 }
 
 /// @nodoc
-class _ZegoSeatForegroundState extends State<ZegoSeatBackground> {
+class _ZegoSeatForegroundState extends State<ZegoLiveAudioRoomSeatBackground> {
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -77,12 +78,12 @@ class _ZegoSeatForegroundState extends State<ZegoSeatBackground> {
 
               return lockedSeat.contains(userSeatIndex)
                   ? (widget.config.seat.closeIcon ??
-                      PrebuiltLiveAudioRoomImage.asset(
-                        PrebuiltLiveAudioRoomIconUrls.seatLock,
+                      ZegoLiveAudioRoomImage.asset(
+                        ZegoLiveAudioRoomIconUrls.seatLock,
                       ))
                   : (widget.config.seat.openIcon ??
-                      PrebuiltLiveAudioRoomImage.asset(
-                        PrebuiltLiveAudioRoomIconUrls.seatEmpty,
+                      ZegoLiveAudioRoomImage.asset(
+                        ZegoLiveAudioRoomIconUrls.seatEmpty,
                       ));
             },
           )),

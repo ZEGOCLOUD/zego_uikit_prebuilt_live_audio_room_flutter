@@ -13,8 +13,8 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.d
 import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 
 /// @nodoc
-class ZegoMemberButton extends StatefulWidget {
-  const ZegoMemberButton({
+class ZegoLiveAudioRoomMemberButton extends StatefulWidget {
+  const ZegoLiveAudioRoomMemberButton({
     Key? key,
     this.avatarBuilder,
     this.itemBuilder,
@@ -34,9 +34,9 @@ class ZegoMemberButton extends StatefulWidget {
   final ZegoMemberListItemBuilder? itemBuilder;
 
   final bool isPluginEnabled;
-  final ZegoLiveSeatManager seatManager;
-  final ZegoLiveConnectManager connectManager;
-  final ZegoPopUpManager popUpManager;
+  final ZegoLiveAudioRoomSeatManager seatManager;
+  final ZegoLiveAudioRoomConnectManager connectManager;
+  final ZegoLiveAudioRoomPopUpManager popUpManager;
   final ValueNotifier<List<String>>? hiddenUserIDsNotifier;
   final ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText;
 
@@ -44,14 +44,16 @@ class ZegoMemberButton extends StatefulWidget {
   final Size? buttonSize;
   final ButtonIcon? icon;
 
-  final ZegoMemberListSheetMoreButtonPressed? onMoreButtonPressed;
+  final ZegoLiveAudioRoomMemberListSheetMoreButtonPressed? onMoreButtonPressed;
 
   @override
-  State<ZegoMemberButton> createState() => _ZegoMemberButtonState();
+  State<ZegoLiveAudioRoomMemberButton> createState() =>
+      _ZegoLiveAudioRoomMemberButtonState();
 }
 
 /// @nodoc
-class _ZegoMemberButtonState extends State<ZegoMemberButton> {
+class _ZegoLiveAudioRoomMemberButtonState
+    extends State<ZegoLiveAudioRoomMemberButton> {
   @override
   void initState() {
     super.initState();
@@ -94,8 +96,8 @@ class _ZegoMemberButtonState extends State<ZegoMemberButton> {
             child: SizedBox.fromSize(
               size: sizeBoxSize,
               child: widget.icon?.icon ??
-                  PrebuiltLiveAudioRoomImage.asset(
-                      PrebuiltLiveAudioRoomIconUrls.toolbarMember),
+                  ZegoLiveAudioRoomImage.asset(
+                      ZegoLiveAudioRoomIconUrls.toolbarMember),
             ),
           ),
           redPoint(),

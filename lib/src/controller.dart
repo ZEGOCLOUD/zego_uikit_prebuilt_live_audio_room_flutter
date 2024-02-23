@@ -50,7 +50,7 @@ part 'controller/private/seat.dart';
 /// Used to control the audio chat room functionality.
 ///
 /// [ZegoUIKitPrebuiltLiveAudioRoomController] is a **singleton instance** class,
-/// you can directly invoke it by ZegoLiveAudioRoomController().
+/// you can directly invoke it by ZegoUIKitPrebuiltLiveAudioRoomController().
 ///
 /// If the default audio chat room UI and interactions do not meet your requirements, you can use this [ZegoUIKitPrebuiltLiveAudioRoomController] to actively control the business logic.
 /// This class is used by setting the [controller] parameter in the constructor of [ZegoUIKitPrebuiltLiveAudioRoom].
@@ -106,7 +106,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomController
 
   ZegoUIKitPrebuiltLiveAudioRoomController._internal() {
     ZegoLoggerService.logInfo(
-      'ZegoLiveAudioRoomController create',
+      'ZegoUIKitPrebuiltLiveAudioRoomController create',
       tag: 'call',
       subTag: 'audio room controller(${identityHashCode(this)})',
     );

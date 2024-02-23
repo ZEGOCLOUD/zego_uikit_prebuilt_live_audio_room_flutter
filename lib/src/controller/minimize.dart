@@ -45,6 +45,15 @@ class ZegoLiveAudioRoomControllerMinimizingImpl
       return false;
     }
 
+    ZegoLoggerService.logInfo(
+      'restore, '
+      'context:$context, '
+      'rootNavigator:$rootNavigator, '
+      'withSafeArea:$withSafeArea, ',
+      tag: 'audio room',
+      subTag: 'controller.minimize',
+    );
+
     /// re-enter prebuilt call
     ZegoLiveAudioRoomInternalMiniOverlayMachine().changeState(
       ZegoLiveAudioRoomMiniOverlayPageState.inAudioRoom,
@@ -98,6 +107,14 @@ class ZegoLiveAudioRoomControllerMinimizingImpl
       return false;
     }
 
+    ZegoLoggerService.logInfo(
+      'minimize, '
+      'context:$context, '
+      'rootNavigator:$rootNavigator, ',
+      tag: 'audio room',
+      subTag: 'controller.minimize',
+    );
+
     ZegoLiveAudioRoomInternalMiniOverlayMachine().changeState(
       ZegoLiveAudioRoomMiniOverlayPageState.minimizing,
     );
@@ -123,6 +140,12 @@ class ZegoLiveAudioRoomControllerMinimizingImpl
 
   /// if audio room ended in minimizing state, not need to navigate, just hide the minimize widget.
   void hide() {
+    ZegoLoggerService.logInfo(
+      'hide, ',
+      tag: 'audio room',
+      subTag: 'controller.minimize',
+    );
+
     ZegoLiveAudioRoomInternalMiniOverlayMachine().changeState(
       ZegoLiveAudioRoomMiniOverlayPageState.idle,
     );

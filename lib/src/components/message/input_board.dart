@@ -8,8 +8,8 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 
 /// @nodoc
-class ZegoInRoomMessageInputBoard extends ModalRoute<String> {
-  ZegoInRoomMessageInputBoard({
+class ZegoLiveAudioRoomInRoomMessageInputBoard extends ModalRoute<String> {
+  ZegoLiveAudioRoomInRoomMessageInputBoard({
     required this.innerText,
     this.rootNavigator = false,
   }) : super();

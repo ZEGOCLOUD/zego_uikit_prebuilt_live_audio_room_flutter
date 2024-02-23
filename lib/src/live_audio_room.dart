@@ -33,7 +33,8 @@ import 'internal/events.dart';
 ///
 /// {@category APIs}
 /// {@category Events}
-/// {@category Migration: 3.x}
+/// {@category Configs}
+/// {@category Migration_v3.x}
 class ZegoUIKitPrebuiltLiveAudioRoom extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveAudioRoom({
     Key? key,
@@ -74,13 +75,11 @@ class ZegoUIKitPrebuiltLiveAudioRoom extends StatefulWidget {
   /// Initialize the event for the voice chat room.
   final ZegoUIKitPrebuiltLiveAudioRoomEvents? events;
 
-  /// @nodoc
   @override
   State<ZegoUIKitPrebuiltLiveAudioRoom> createState() =>
       _ZegoUIKitPrebuiltLiveAudioRoomState();
 }
 
-/// @nodoc
 class _ZegoUIKitPrebuiltLiveAudioRoomState
     extends State<ZegoUIKitPrebuiltLiveAudioRoom> with WidgetsBindingObserver {
   List<StreamSubscription<dynamic>?> subscriptions = [];
@@ -114,7 +113,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 3.0.0; $version',
+        'version: zego_uikit_prebuilt_live_audio_room: 3.3.2; $version',
         tag: 'audio room',
         subTag: 'prebuilt',
       );
@@ -184,7 +183,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     ZegoLiveAudioRoomManagers().updateContextQuery(() {
       return context;
     });
-    ZegoToast.instance.init(contextQuery: () {
+    ZegoLiveAudioRoomToast.instance.init(contextQuery: () {
       return context;
     });
 
@@ -298,7 +297,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
   @override
   Widget build(BuildContext context) {
-    return ZegoLivePage(
+    return ZegoLiveAudioRoomPage(
       appID: widget.appID,
       appSign: widget.appSign,
       userID: widget.userID,

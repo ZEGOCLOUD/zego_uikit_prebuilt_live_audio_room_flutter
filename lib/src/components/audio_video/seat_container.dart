@@ -9,13 +9,13 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/audio_room_layout.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/config.defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 
 /// @nodoc
 /// container of seat
-class ZegoSeatContainer extends StatefulWidget {
-  const ZegoSeatContainer({
+class ZegoLiveAudioRoomSeatContainer extends StatefulWidget {
+  const ZegoLiveAudioRoomSeatContainer({
     Key? key,
     required this.seatManager,
     required this.layoutConfig,
@@ -26,7 +26,7 @@ class ZegoSeatContainer extends StatefulWidget {
     this.showSoundWavesInAudioMode = true,
   }) : super(key: key);
 
-  final ZegoLiveSeatManager seatManager;
+  final ZegoLiveAudioRoomSeatManager seatManager;
 
   final ZegoLiveAudioRoomLayoutConfig layoutConfig;
 
@@ -45,11 +45,13 @@ class ZegoSeatContainer extends StatefulWidget {
   final bool showSoundWavesInAudioMode;
 
   @override
-  State<ZegoSeatContainer> createState() => _ZegoAudioVideoContainerState();
+  State<ZegoLiveAudioRoomSeatContainer> createState() =>
+      _ZegoAudioVideoContainerState();
 }
 
 /// @nodoc
-class _ZegoAudioVideoContainerState extends State<ZegoSeatContainer> {
+class _ZegoAudioVideoContainerState
+    extends State<ZegoLiveAudioRoomSeatContainer> {
   bool pendingUsers = false;
   List<ZegoUIKitUser> userList = [];
   List<StreamSubscription<dynamic>?> subscriptions = [];
@@ -81,7 +83,7 @@ class _ZegoAudioVideoContainerState extends State<ZegoSeatContainer> {
     return StreamBuilder<List<ZegoUIKitUser>>(
       stream: ZegoUIKit().getAudioVideoListStream(),
       builder: (context, snapshot) {
-        return ZegoAudioRoomLayout(
+        return ZegoLiveAudioRoomLayout(
           layoutConfig: widget.layoutConfig,
           backgroundBuilder: widget.backgroundBuilder,
           foregroundBuilder: widget.foregroundBuilder,

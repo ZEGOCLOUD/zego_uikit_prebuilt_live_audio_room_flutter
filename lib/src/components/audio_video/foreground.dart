@@ -20,19 +20,19 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 
 /// @nodoc
-class ZegoSeatForeground extends StatefulWidget {
+class ZegoLiveAudioRoomSeatForeground extends StatefulWidget {
   final Size size;
   final ZegoUIKitUser? user;
   final Map<String, dynamic> extraInfo;
 
-  final ZegoLiveSeatManager seatManager;
-  final ZegoLiveConnectManager connectManager;
-  final ZegoPopUpManager popUpManager;
+  final ZegoLiveAudioRoomSeatManager seatManager;
+  final ZegoLiveAudioRoomConnectManager connectManager;
+  final ZegoLiveAudioRoomPopUpManager popUpManager;
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
   final ZegoUIKitPrebuiltLiveAudioRoomEvents events;
   final ZegoUIKitPrebuiltLiveAudioRoomController? prebuiltController;
 
-  const ZegoSeatForeground({
+  const ZegoLiveAudioRoomSeatForeground({
     Key? key,
     this.user,
     this.extraInfo = const {},
@@ -46,11 +46,13 @@ class ZegoSeatForeground extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoSeatForeground> createState() => _ZegoSeatForegroundState();
+  State<ZegoLiveAudioRoomSeatForeground> createState() =>
+      _ZegoLiveAudioRoomSeatForegroundState();
 }
 
 /// @nodoc
-class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
+class _ZegoLiveAudioRoomSeatForegroundState
+    extends State<ZegoLiveAudioRoomSeatForeground> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -141,7 +143,7 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
       return;
     }
 
-    final popupItems = <PopupItem>[];
+    final popupItems = <ZegoLiveAudioRoomPopupItem>[];
 
     if (null == widget.user) {
       /// empty seat
@@ -158,8 +160,8 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
           if (!widget.seatManager.lockedSeatNotifier.value.contains(index)) {
             /// only room seat is not locked and index is not in locked seats
             /// if locked, can't apply by click seat
-            popupItems.add(PopupItem(
-              PopupItemValue.takeOnSeat,
+            popupItems.add(ZegoLiveAudioRoomPopupItem(
+              ZegoLiveAudioRoomPopupItemValue.takeOnSeat,
               widget.config.innerText.takeSeatMenuButton,
               data: index,
             ));
@@ -174,8 +176,8 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
         popupItems
 
           /// host can kick others off seat
-          ..add(PopupItem(
-            PopupItemValue.takeOffSeat,
+          ..add(ZegoLiveAudioRoomPopupItem(
+            ZegoLiveAudioRoomPopupItemValue.takeOffSeat,
             widget.config.innerText.removeSpeakerMenuDialogButton.replaceFirst(
               widget.config.innerText.param_1,
               widget.user?.name ?? '',
@@ -184,8 +186,8 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
           ))
 
           /// host can mute others
-          ..add(PopupItem(
-            PopupItemValue.muteSeat,
+          ..add(ZegoLiveAudioRoomPopupItem(
+            ZegoLiveAudioRoomPopupItemValue.muteSeat,
             widget.config.innerText.muteSpeakerMenuDialogButton.replaceFirst(
               widget.config.innerText.param_1,
               widget.user?.name ?? '',
@@ -207,8 +209,8 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
           /// only support by host
           if (widget.seatManager.isCoHost(widget.user)) {
             /// host revoke a co-host
-            popupItems.add(PopupItem(
-              PopupItemValue.revokeCoHost,
+            popupItems.add(ZegoLiveAudioRoomPopupItem(
+              ZegoLiveAudioRoomPopupItemValue.revokeCoHost,
               widget.config.innerText.revokeCoHostPrivilegesMenuDialogButton
                   .replaceFirst(
                 widget.config.innerText.param_1,
@@ -218,8 +220,8 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
             ));
           } else if (widget.seatManager.isSpeaker(widget.user)) {
             /// host can specify one speaker be a co-host if no co-host now
-            popupItems.add(PopupItem(
-              PopupItemValue.assignCoHost,
+            popupItems.add(ZegoLiveAudioRoomPopupItem(
+              ZegoLiveAudioRoomPopupItemValue.assignCoHost,
               widget.config.innerText.assignAsCoHostMenuDialogButton
                   .replaceFirst(
                 widget.config.innerText.param_1,
@@ -235,8 +237,8 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
         /// local is not a host, kick self
 
         /// speaker can local leave seat
-        popupItems.add(PopupItem(
-          PopupItemValue.leaveSeat,
+        popupItems.add(ZegoLiveAudioRoomPopupItem(
+          ZegoLiveAudioRoomPopupItemValue.leaveSeat,
           widget.config.innerText.leaveSeatDialogInfo.title,
         ));
       }
@@ -246,8 +248,8 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
       return;
     }
 
-    popupItems.add(PopupItem(
-      PopupItemValue.cancel,
+    popupItems.add(ZegoLiveAudioRoomPopupItem(
+      ZegoLiveAudioRoomPopupItemValue.cancel,
       widget.config.innerText.cancelMenuDialogButton,
     ));
 
@@ -266,8 +268,8 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
     return ConstrainedBox(
       constraints: BoxConstraints.loose(Size(maxWidth, seatHostFlagHeight)),
       child: Center(
-        child: PrebuiltLiveAudioRoomImage.asset(
-          PrebuiltLiveAudioRoomIconUrls.seatHost,
+        child: ZegoLiveAudioRoomImage.asset(
+          ZegoLiveAudioRoomIconUrls.seatHost,
         ),
       ),
     );
@@ -277,8 +279,8 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
     return ConstrainedBox(
       constraints: BoxConstraints.loose(Size(maxWidth, seatHostFlagHeight)),
       child: Center(
-        child: PrebuiltLiveAudioRoomImage.asset(
-          PrebuiltLiveAudioRoomIconUrls.seatCoHost,
+        child: ZegoLiveAudioRoomImage.asset(
+          ZegoLiveAudioRoomIconUrls.seatCoHost,
         ),
       ),
     );
@@ -314,8 +316,8 @@ class _ZegoSeatForegroundState extends State<ZegoSeatForeground> {
                 shape: BoxShape.circle,
                 color: Colors.black.withOpacity(0.5),
               ),
-              child: PrebuiltLiveAudioRoomImage.asset(
-                PrebuiltLiveAudioRoomIconUrls.seatMicrophoneOff,
+              child: ZegoLiveAudioRoomImage.asset(
+                ZegoLiveAudioRoomIconUrls.seatMicrophoneOff,
               ),
             ),
           );

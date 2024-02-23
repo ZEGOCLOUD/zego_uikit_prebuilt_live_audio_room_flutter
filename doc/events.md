@@ -245,7 +245,7 @@ seat to join and start chatting with others.
 > Note that when you set this callback, the **default behavior** of
 clicking on a seat to display a menu **will be disabled**.
 > You need to handle it yourself.
-> You can refer to the usage of [ZegoLiveAudioRoomController] for reference.
+> You can refer to the usage of [ZegoUIKitPrebuiltLiveAudioRoomController] for reference.
 >
 >- function prototype:
 >```dart
@@ -794,7 +794,7 @@ member list is clicked, such as viewing the profile of `user`.
 >
 > Note that when you set this callback, the **default behavior** of popping
 up a menu when clicking the "More" button on the member list will be **overridden**, and you need to handle it yourself.
-> You can refer to the usage of `ZegoLiveAudioRoomController`.
+> You can refer to the usage of `ZegoUIKitPrebuiltLiveAudioRoomController`.
 >
 >- function prototype:
 >```dart

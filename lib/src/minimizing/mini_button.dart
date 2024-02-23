@@ -73,8 +73,8 @@ class _ZegoMinimizingButtonState extends State<ZegoMinimizingButton> {
         child: SizedBox.fromSize(
           size: sizeBoxSize,
           child: widget.icon?.icon ??
-              PrebuiltLiveAudioRoomImage.asset(
-                  PrebuiltLiveAudioRoomIconUrls.minimizing),
+              ZegoLiveAudioRoomImage.asset(
+                  ZegoLiveAudioRoomIconUrls.minimizing),
         ),
       ),
     );

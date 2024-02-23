@@ -14,6 +14,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/plugins.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 
+/// @nodoc
 class ZegoLiveAudioRoomManagers {
   factory ZegoLiveAudioRoomManagers() => _instance;
 
@@ -60,7 +61,7 @@ class ZegoLiveAudioRoomManagers {
 
     _initialized = true;
 
-    plugins = ZegoPrebuiltPlugins(
+    plugins = ZegoLiveAudioRoomPlugins(
       appID: appID,
       appSign: appSign,
       userID: userID,
@@ -74,7 +75,7 @@ class ZegoLiveAudioRoomManagers {
       },
       onError: events.onError,
     );
-    seatManager = ZegoLiveSeatManager(
+    seatManager = ZegoLiveAudioRoomSeatManager(
       localUserID: userID,
       roomID: roomID,
       plugins: plugins!,
@@ -84,7 +85,7 @@ class ZegoLiveAudioRoomManagers {
       popUpManager: popUpManager,
       kickOutNotifier: kickOutNotifier,
     );
-    connectManager = ZegoLiveConnectManager(
+    connectManager = ZegoLiveAudioRoomConnectManager(
       config: config,
       events: events,
       seatManager: seatManager!,
@@ -94,7 +95,7 @@ class ZegoLiveAudioRoomManagers {
     );
     seatManager?.setConnectManager(connectManager!);
 
-    liveDurationManager = ZegoLiveDurationManager(
+    liveDurationManager = ZegoLiveAudioRoomDurationManager(
       seatManager: seatManager!,
     );
   }
@@ -130,11 +131,11 @@ class ZegoLiveAudioRoomManagers {
   }
 
   bool _initialized = false;
-  ZegoPrebuiltPlugins? plugins;
-  ZegoLiveSeatManager? seatManager;
-  ZegoLiveConnectManager? connectManager;
-  ZegoLiveDurationManager? liveDurationManager;
+  ZegoLiveAudioRoomPlugins? plugins;
+  ZegoLiveAudioRoomSeatManager? seatManager;
+  ZegoLiveAudioRoomConnectManager? connectManager;
+  ZegoLiveAudioRoomDurationManager? liveDurationManager;
 
-  final popUpManager = ZegoPopUpManager();
+  final popUpManager = ZegoLiveAudioRoomPopUpManager();
   final kickOutNotifier = ValueNotifier<bool>(false);
 }

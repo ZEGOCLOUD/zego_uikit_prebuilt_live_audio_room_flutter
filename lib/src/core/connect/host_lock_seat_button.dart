@@ -9,12 +9,12 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart'
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 
 /// @nodoc
-class ZegoHostLockSeatButton extends StatefulWidget {
+class ZegoLiveAudioRoomHostLockSeatButton extends StatefulWidget {
   final Size? iconSize;
   final Size? buttonSize;
-  final ZegoLiveSeatManager seatManager;
+  final ZegoLiveAudioRoomSeatManager seatManager;
 
-  const ZegoHostLockSeatButton({
+  const ZegoLiveAudioRoomHostLockSeatButton({
     Key? key,
     required this.seatManager,
     this.iconSize,
@@ -22,11 +22,13 @@ class ZegoHostLockSeatButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoHostLockSeatButton> createState() => _ZegoHostLockSeatButtonState();
+  State<ZegoLiveAudioRoomHostLockSeatButton> createState() =>
+      _ZegoLiveAudioRoomHostLockSeatButtonState();
 }
 
 /// @nodoc
-class _ZegoHostLockSeatButtonState extends State<ZegoHostLockSeatButton> {
+class _ZegoLiveAudioRoomHostLockSeatButtonState
+    extends State<ZegoLiveAudioRoomHostLockSeatButton> {
   var voiceChangerSelectedIDNotifier = ValueNotifier<String>('');
   var reverbSelectedIDNotifier = ValueNotifier<String>('');
 
@@ -52,10 +54,10 @@ class _ZegoHostLockSeatButtonState extends State<ZegoHostLockSeatButton> {
           child: ValueListenableBuilder<bool>(
               valueListenable: widget.seatManager.isRoomSeatLockedNotifier,
               builder: (context, isRoomSeatLocked, _) {
-                return PrebuiltLiveAudioRoomImage.asset(
+                return ZegoLiveAudioRoomImage.asset(
                   isRoomSeatLocked
-                      ? PrebuiltLiveAudioRoomIconUrls.toolbarHostUnLockSeat
-                      : PrebuiltLiveAudioRoomIconUrls.toolbarHostLockSeat,
+                      ? ZegoLiveAudioRoomIconUrls.toolbarHostUnLockSeat
+                      : ZegoLiveAudioRoomIconUrls.toolbarHostLockSeat,
                 );
               }),
         ),

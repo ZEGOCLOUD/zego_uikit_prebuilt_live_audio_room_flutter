@@ -39,7 +39,7 @@ And it includes the business logic along with the UI, enabling you to customize 
 
 - [APIs](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/APIs-topic.html)
 - [Events](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Events-topic.html)
-- [Configs](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoUIKitPrebuiltLiveAudioRoomConfig-class.html)
+- [Configs](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Configs-topic.html)
 
 > 
 > 
@@ -63,7 +63,8 @@ And it includes the business logic along with the UI, enabling you to customize 
 
 ## Migration Guides
 
-- [Migrating to 3.0.0](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Migration:%203.x-topic.html).
+- [Migrating to 3.0.0](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Migration_v3.x-topic.html#30).
+- [Migrating from 3.1.0 to 3.1.1](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Migration_v3.x-topic.html#311).
 
 ## More
 

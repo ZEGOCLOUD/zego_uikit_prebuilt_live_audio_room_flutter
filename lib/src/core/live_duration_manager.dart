@@ -11,14 +11,14 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 
 /// @nodoc
-class ZegoLiveDurationManager {
-  final ZegoLiveSeatManager seatManager;
+class ZegoLiveAudioRoomDurationManager {
+  final ZegoLiveAudioRoomSeatManager seatManager;
 
   bool _initialized = false;
 
   bool get isValid => notifier.value.millisecondsSinceEpoch > 0;
 
-  ZegoLiveDurationManager({
+  ZegoLiveAudioRoomDurationManager({
     required this.seatManager,
   }) {
     subscription =

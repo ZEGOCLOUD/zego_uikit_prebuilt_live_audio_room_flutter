@@ -12,8 +12,8 @@ mixin ZegoLiveAudioRoomControllerPrivate {
 class ZegoLiveAudioRoomControllerPrivateImpl {
   ZegoUIKitPrebuiltLiveAudioRoomConfig? prebuiltConfig;
   ZegoUIKitPrebuiltLiveAudioRoomEvents? prebuiltEvents;
-  ZegoLiveConnectManager? connectManager;
-  ZegoLiveSeatManager? seatManager;
+  ZegoLiveAudioRoomConnectManager? connectManager;
+  ZegoLiveAudioRoomSeatManager? seatManager;
 
   final _hiddenUsersOfMemberListNotifier = ValueNotifier<List<String>>([]);
 
@@ -26,8 +26,8 @@ class ZegoLiveAudioRoomControllerPrivateImpl {
   void initByPrebuilt({
     required ZegoUIKitPrebuiltLiveAudioRoomConfig config,
     required ZegoUIKitPrebuiltLiveAudioRoomEvents events,
-    required ZegoLiveConnectManager? connectManager,
-    required ZegoLiveSeatManager? seatManager,
+    required ZegoLiveAudioRoomConnectManager? connectManager,
+    required ZegoLiveAudioRoomSeatManager? seatManager,
   }) {
     ZegoLoggerService.logInfo(
       'init by prebuilt',

@@ -11,12 +11,13 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart' as styled_toast;
 typedef ContextQuery = BuildContext Function();
 
 /// @nodoc
-class ZegoToast {
-  factory ZegoToast() => instance;
+class ZegoLiveAudioRoomToast {
+  factory ZegoLiveAudioRoomToast() => instance;
 
-  ZegoToast._internal();
+  ZegoLiveAudioRoomToast._internal();
   ContextQuery? contextQuery;
-  static final ZegoToast instance = ZegoToast._internal();
+  static final ZegoLiveAudioRoomToast instance =
+      ZegoLiveAudioRoomToast._internal();
 
   TextStyle get textStyle => const TextStyle(
         fontSize: 14,
@@ -48,14 +49,16 @@ void showToast(String message) {}
 
 void showDebugToast(String message) {
   if (kDebugMode) {
-    ZegoToast.instance.show(message);
+    ZegoLiveAudioRoomToast.instance.show(message);
   }
 }
 
 void showSuccess(String message) {
-  ZegoToast.instance.show(message, backgroundColor: const Color(0xff55BC9E));
+  ZegoLiveAudioRoomToast.instance
+      .show(message, backgroundColor: const Color(0xff55BC9E));
 }
 
 void showError(String message) {
-  ZegoToast.instance.show(message, backgroundColor: const Color(0xffBD5454));
+  ZegoLiveAudioRoomToast.instance
+      .show(message, backgroundColor: const Color(0xffBD5454));
 }

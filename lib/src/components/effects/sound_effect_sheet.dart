@@ -11,7 +11,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manage
 import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 
 /// @nodoc
-class ZegoSoundEffectSheet extends StatefulWidget {
+class ZegoLiveAudioRoomSoundEffectSheet extends StatefulWidget {
   final ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText;
 
   final List<VoiceChangerType> voiceChangerEffect;
@@ -22,7 +22,7 @@ class ZegoSoundEffectSheet extends StatefulWidget {
 
   final bool rootNavigator;
 
-  const ZegoSoundEffectSheet({
+  const ZegoLiveAudioRoomSoundEffectSheet({
     Key? key,
     required this.innerText,
     required this.voiceChangerEffect,
@@ -33,13 +33,15 @@ class ZegoSoundEffectSheet extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoSoundEffectSheet> createState() => _ZegoSoundEffectSheetState();
+  State<ZegoLiveAudioRoomSoundEffectSheet> createState() =>
+      _ZegoLiveAudioRoomSoundEffectSheetState();
 }
 
 /// @nodoc
-class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
-  late ZegoEffectGridModel voiceChangerModel;
-  late ZegoEffectGridModel reverbPresetModel;
+class _ZegoLiveAudioRoomSoundEffectSheetState
+    extends State<ZegoLiveAudioRoomSoundEffectSheet> {
+  late ZegoLiveAudioRoomEffectGridModel voiceChangerModel;
+  late ZegoLiveAudioRoomEffectGridModel reverbPresetModel;
 
   @override
   void initState() {
@@ -60,12 +62,12 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
           height: 600.zR - 98.zR - 36.zR - 1.zR,
           child: ListView(
             children: [
-              ZegoEffectGrid(
+              ZegoLiveAudioRoomEffectGrid(
                 model: voiceChangerModel,
                 isSpaceEvenly: false,
               ),
               SizedBox(height: 36.zR),
-              ZegoEffectGrid(
+              ZegoLiveAudioRoomEffectGrid(
                 model: reverbPresetModel,
                 isSpaceEvenly: false,
                 withBorderColor: true,
@@ -92,8 +94,8 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
             child: SizedBox(
               width: 70.zR,
               height: 70.zR,
-              child: PrebuiltLiveAudioRoomImage.asset(
-                  PrebuiltLiveAudioRoomIconUrls.back),
+              child:
+                  ZegoLiveAudioRoomImage.asset(ZegoLiveAudioRoomIconUrls.back),
             ),
           ),
           SizedBox(width: 10.zR),
@@ -120,20 +122,20 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
           voiceChangerEffect.first.index.toString();
     }
 
-    voiceChangerModel = ZegoEffectGridModel(
+    voiceChangerModel = ZegoLiveAudioRoomEffectGridModel(
       title: widget.innerText.audioEffectVoiceChangingTitle,
       selectedID: widget.voiceChangerSelectedIDNotifier,
       items: voiceChangerEffect
           .map(
-            (effect) => ZegoEffectGridItem<VoiceChangerType>(
+            (effect) => ZegoLiveAudioRoomEffectGridItem<VoiceChangerType>(
               id: effect.index.toString(),
               effectType: effect,
               icon: ButtonIcon(
-                icon: PrebuiltLiveAudioRoomImage.asset(
+                icon: ZegoLiveAudioRoomImage.asset(
                     'assets/icons/voice_changer_${effect.name}.png'),
               ),
               selectIcon: ButtonIcon(
-                icon: PrebuiltLiveAudioRoomImage.asset(
+                icon: ZegoLiveAudioRoomImage.asset(
                     'assets/icons/voice_changer_${effect.name}_selected.png'),
               ),
               iconText: voiceChangerTypeText(effect),
@@ -159,16 +161,16 @@ class _ZegoSoundEffectSheetState extends State<ZegoSoundEffectSheet> {
           reverbEffect.first.index.toString();
     }
 
-    reverbPresetModel = ZegoEffectGridModel(
+    reverbPresetModel = ZegoLiveAudioRoomEffectGridModel(
       title: widget.innerText.audioEffectReverbTitle,
       selectedID: widget.reverbSelectedIDNotifier,
       items: reverbEffect
           .map(
-            (effect) => ZegoEffectGridItem<ReverbType>(
+            (effect) => ZegoLiveAudioRoomEffectGridItem<ReverbType>(
               id: effect.index.toString(),
               effectType: effect,
               icon: ButtonIcon(
-                icon: PrebuiltLiveAudioRoomImage.asset(
+                icon: ZegoLiveAudioRoomImage.asset(
                     'assets/icons/reverb_preset_${effect.name}.png'),
               ),
               iconText: reverbTypeText(effect),
@@ -250,7 +252,7 @@ void showSoundEffectSheet(
   required List<ReverbType> reverbEffect,
   required ValueNotifier<String> voiceChangerSelectedIDNotifier,
   required ValueNotifier<String> reverbSelectedIDNotifier,
-  required ZegoPopUpManager popUpManager,
+  required ZegoLiveAudioRoomPopUpManager popUpManager,
 }) {
   final key = DateTime.now().millisecondsSinceEpoch;
   popUpManager.addAPopUpSheet(key);
@@ -275,7 +277,7 @@ void showSoundEffectSheet(
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           child: SizedBox(
             height: 600.zR,
-            child: ZegoSoundEffectSheet(
+            child: ZegoLiveAudioRoomSoundEffectSheet(
               innerText: innerText,
               voiceChangerEffect: voiceChangeEffect,
               voiceChangerSelectedIDNotifier: voiceChangerSelectedIDNotifier,

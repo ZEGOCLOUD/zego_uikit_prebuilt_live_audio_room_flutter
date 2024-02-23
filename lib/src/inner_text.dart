@@ -8,7 +8,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
 /// **Note that the placeholder %0 in the text will be replaced with the corresponding username.**
 class ZegoUIKitPrebuiltLiveAudioRoomInnerText {
   /// %0: is a string placeholder, represents the first parameter of prompt
-  /// @nodoc
+
   final String param_1 = '%0';
 
   /// The button displayed in the popup menu when the audience clicks to request take a seat .

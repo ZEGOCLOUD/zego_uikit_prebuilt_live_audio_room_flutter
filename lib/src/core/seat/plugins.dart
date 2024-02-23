@@ -13,15 +13,15 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/defines.dart'
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/overlay_machine.dart';
 
 /// @nodoc
-enum PluginNetworkState {
+enum ZegoLiveAudioRoomPluginNetworkState {
   unknown,
   offline,
   online,
 }
 
 /// @nodoc
-class ZegoPrebuiltPlugins {
-  ZegoPrebuiltPlugins({
+class ZegoLiveAudioRoomPlugins {
+  ZegoLiveAudioRoomPlugins({
     required this.appID,
     required this.appSign,
     required this.userID,
@@ -47,7 +47,8 @@ class ZegoPrebuiltPlugins {
   final VoidCallback? onPluginReLogin;
   Function(ZegoUIKitError)? onError;
 
-  PluginNetworkState networkState = PluginNetworkState.unknown;
+  ZegoLiveAudioRoomPluginNetworkState networkState =
+      ZegoLiveAudioRoomPluginNetworkState.unknown;
   List<StreamSubscription<dynamic>?> subscriptions = [];
   ValueNotifier<ZegoSignalingPluginConnectionState> pluginUserStateNotifier =
       ValueNotifier<ZegoSignalingPluginConnectionState>(
@@ -361,7 +362,7 @@ class ZegoPrebuiltPlugins {
     switch (networkMode) {
       case ZegoNetworkMode.Offline:
       case ZegoNetworkMode.Unknown:
-        networkState = PluginNetworkState.offline;
+        networkState = ZegoLiveAudioRoomPluginNetworkState.offline;
         break;
       case ZegoNetworkMode.Ethernet:
       case ZegoNetworkMode.WiFi:
@@ -369,11 +370,11 @@ class ZegoPrebuiltPlugins {
       case ZegoNetworkMode.Mode3G:
       case ZegoNetworkMode.Mode4G:
       case ZegoNetworkMode.Mode5G:
-        if (PluginNetworkState.offline == networkState) {
+        if (ZegoLiveAudioRoomPluginNetworkState.offline == networkState) {
           tryReLogin();
         }
 
-        networkState = PluginNetworkState.online;
+        networkState = ZegoLiveAudioRoomPluginNetworkState.online;
         break;
     }
   }
@@ -448,7 +449,7 @@ class ZegoPrebuiltPlugins {
       return false;
     }
 
-    if (networkState != PluginNetworkState.online) {
+    if (networkState != ZegoLiveAudioRoomPluginNetworkState.online) {
       ZegoLoggerService.logInfo(
         'tryReEnterRoom, network is not connected',
         tag: 'audio room',

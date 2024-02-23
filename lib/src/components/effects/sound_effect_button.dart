@@ -11,7 +11,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manage
 import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 
 /// @nodoc
-class ZegoSoundEffectButton extends StatefulWidget {
+class ZegoLiveAudioRoomSoundEffectButton extends StatefulWidget {
   final ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText;
 
   final List<VoiceChangerType> voiceChangeEffect;
@@ -22,9 +22,9 @@ class ZegoSoundEffectButton extends StatefulWidget {
   final ButtonIcon? icon;
 
   final bool rootNavigator;
-  final ZegoPopUpManager popUpManager;
+  final ZegoLiveAudioRoomPopUpManager popUpManager;
 
-  const ZegoSoundEffectButton({
+  const ZegoLiveAudioRoomSoundEffectButton({
     Key? key,
     required this.innerText,
     required this.voiceChangeEffect,
@@ -37,11 +37,13 @@ class ZegoSoundEffectButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoSoundEffectButton> createState() => _ZegoSoundEffectButtonState();
+  State<ZegoLiveAudioRoomSoundEffectButton> createState() =>
+      _ZegoLiveAudioRoomSoundEffectButtonState();
 }
 
 /// @nodoc
-class _ZegoSoundEffectButtonState extends State<ZegoSoundEffectButton> {
+class _ZegoLiveAudioRoomSoundEffectButtonState
+    extends State<ZegoLiveAudioRoomSoundEffectButton> {
   var voiceChangerSelectedIDNotifier = ValueNotifier<String>('');
   var reverbSelectedIDNotifier = ValueNotifier<String>('');
 
@@ -72,8 +74,8 @@ class _ZegoSoundEffectButtonState extends State<ZegoSoundEffectButton> {
         child: SizedBox.fromSize(
           size: sizeBoxSize,
           child: widget.icon?.icon ??
-              PrebuiltLiveAudioRoomImage.asset(
-                  PrebuiltLiveAudioRoomIconUrls.toolbarSoundEffect),
+              ZegoLiveAudioRoomImage.asset(
+                  ZegoLiveAudioRoomIconUrls.toolbarSoundEffect),
         ),
       ),
     );

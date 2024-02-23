@@ -13,7 +13,7 @@ SizedBox get zegoLiveButtonPadding =>
     SizedBox.fromSize(size: Size.fromRadius(8.zR));
 
 /// @nodoc
-enum PopupItemValue {
+enum ZegoLiveAudioRoomPopupItemValue {
   takeOnSeat,
   takeOffSeat,
   leaveSeat,
@@ -24,16 +24,16 @@ enum PopupItemValue {
   cancel,
 }
 
-class PopupItem {
-  final PopupItemValue value;
+class ZegoLiveAudioRoomPopupItem {
+  final ZegoLiveAudioRoomPopupItemValue value;
   final String text;
   final dynamic data;
 
-  const PopupItem(this.value, this.text, {this.data});
+  const ZegoLiveAudioRoomPopupItem(this.value, this.text, {this.data});
 }
 
 /// @nodoc
-class PrebuiltLiveAudioRoomImage {
+class ZegoLiveAudioRoomImage {
   static Image asset(String name) {
     return Image.asset(name, package: 'zego_uikit_prebuilt_live_audio_room');
   }
@@ -44,7 +44,7 @@ class PrebuiltLiveAudioRoomImage {
 }
 
 /// @nodoc
-class PrebuiltLiveAudioRoomIconUrls {
+class ZegoLiveAudioRoomIconUrls {
   static const String im = 'assets/icons/toolbar_im.png';
   static const String back = 'assets/icons/back.png';
   static const String toolbarSoundEffect = 'assets/icons/toolbar_sound.png';

@@ -54,6 +54,17 @@ class ZegoLiveAudioRoomControllerRoomImpl
       return false;
     }
 
+    ZegoLoggerService.logInfo(
+      'updateProperties, '
+      'roomID:$roomID, '
+      'roomProperties:$roomProperties, '
+      'isForce:$isForce, '
+      'isDeleteAfterOwnerLeft:$isDeleteAfterOwnerLeft, '
+      'isUpdateOwner:$isUpdateOwner, ',
+      tag: 'audio room',
+      subTag: 'controller.room',
+    );
+
     return ZegoUIKit()
         .getSignalingPlugin()
         .updateRoomProperties(
@@ -94,6 +105,15 @@ class ZegoLiveAudioRoomControllerRoomImpl
       return false;
     }
 
+    ZegoLoggerService.logInfo(
+      'deleteRoomProperties, '
+      'roomID:$roomID, '
+      'keys:$keys, '
+      'isForce:$isForce, ',
+      tag: 'audio room',
+      subTag: 'controller.room',
+    );
+
     return ZegoUIKit()
         .getSignalingPlugin()
         .deleteRoomProperties(
@@ -129,6 +149,13 @@ class ZegoLiveAudioRoomControllerRoomImpl
 
       return <String, String>{};
     }
+
+    ZegoLoggerService.logInfo(
+      'queryProperties, '
+      'roomID:$roomID, ',
+      tag: 'audio room',
+      subTag: 'controller.room',
+    );
 
     return ZegoUIKit()
         .getSignalingPlugin()
@@ -179,6 +206,13 @@ class ZegoLiveAudioRoomControllerRoomImpl
 
       return false;
     }
+
+    ZegoLoggerService.logInfo(
+      'sendCommand, '
+      'roomID:$roomID, ',
+      tag: 'audio room',
+      subTag: 'controller.room',
+    );
 
     return ZegoUIKit()
         .getSignalingPlugin()

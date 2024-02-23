@@ -1,10 +1,12 @@
-enum ConnectState {
+/// @nodoc
+enum ZegoLiveAudioRoomConnectState {
   idle,
   connecting,
   connected,
 }
 
-enum ZegoInvitationType {
+/// @nodoc
+enum ZegoLiveAudioRoomInvitationType {
   ///  audience request host to take seat
   requestTakeSeat,
 
@@ -12,16 +14,18 @@ enum ZegoInvitationType {
   inviteToTakeSeat,
 }
 
-extension ZegoInvitationTypeExtension on ZegoInvitationType {
+/// @nodoc
+extension ZegoLiveAudioRoomInvitationTypeExtension
+    on ZegoLiveAudioRoomInvitationType {
   static const valueMap = {
-    ZegoInvitationType.requestTakeSeat: 2,
-    ZegoInvitationType.inviteToTakeSeat: 3,
+    ZegoLiveAudioRoomInvitationType.requestTakeSeat: 2,
+    ZegoLiveAudioRoomInvitationType.inviteToTakeSeat: 3,
   };
 
   int get value => valueMap[this] ?? -1;
 
-  static const Map<int, ZegoInvitationType> mapValue = {
-    2: ZegoInvitationType.requestTakeSeat,
-    3: ZegoInvitationType.inviteToTakeSeat,
+  static const Map<int, ZegoLiveAudioRoomInvitationType> mapValue = {
+    2: ZegoLiveAudioRoomInvitationType.requestTakeSeat,
+    3: ZegoLiveAudioRoomInvitationType.inviteToTakeSeat,
   };
 }

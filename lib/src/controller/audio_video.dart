@@ -15,7 +15,7 @@ class ZegoLiveAudioRoomControllerAudioVideoImpl
       private._microphone;
 
   /// camera series APIs
-  ZegoLiveStreamingControllerAudioVideoCameraImpl get camera => private._camera;
+  // ZegoLiveStreamingControllerAudioVideoCameraImpl get camera => private._camera;
 
   /// stream of SEI(Supplemental Enhancement Information)
   Stream<ZegoUIKitReceiveSEIEvent> seiStream() {
@@ -71,8 +71,8 @@ class ZegoLiveStreamingControllerAudioVideoMicrophoneImpl
     ZegoLoggerService.logInfo(
       "turn ${isOn ? "on" : "off"} $userID microphone,"
       "mute mode:$muteMode, ",
-      tag: 'live streaming',
-      subTag: 'controller-audioVideo',
+      tag: 'audio room',
+      subTag: 'controller.audioVideo.microphone',
     );
 
     return ZegoUIKit().turnMicrophoneOn(
@@ -84,6 +84,13 @@ class ZegoLiveStreamingControllerAudioVideoMicrophoneImpl
 
   /// switch [userID] microphone state, if [userID] is empty, then it refers to local user
   void switchState({String? userID}) {
+    ZegoLoggerService.logInfo(
+      "switchState,"
+      "userID:$userID, ",
+      tag: 'audio room',
+      subTag: 'controller.audioVideo.microphone',
+    );
+
     final targetUserID = userID ?? ZegoUIKit().getLocalUser().id;
     final currentMicrophoneState =
         ZegoUIKit().getMicrophoneStateNotifier(targetUserID).value;
@@ -113,8 +120,8 @@ class ZegoLiveStreamingControllerAudioVideoCameraImpl
   void turnOn(bool isOn, {String? userID}) {
     ZegoLoggerService.logInfo(
       "turn ${isOn ? "on" : "off"} $userID camera",
-      tag: 'live streaming',
-      subTag: 'controller-audioVideo',
+      tag: 'audio room',
+      subTag: 'controller.audioVideo.camera',
     );
 
     return ZegoUIKit().turnCameraOn(
@@ -125,6 +132,13 @@ class ZegoLiveStreamingControllerAudioVideoCameraImpl
 
   /// switch [userID] camera state, if [userID] is empty, then it refers to local user
   void switchState({String? userID}) {
+    ZegoLoggerService.logInfo(
+      "switchState,"
+      "userID:$userID, ",
+      tag: 'audio room',
+      subTag: 'controller.audioVideo.camera',
+    );
+
     final targetUserID = userID ?? ZegoUIKit().getLocalUser().id;
     final currentCameraState =
         ZegoUIKit().getCameraStateNotifier(targetUserID).value;

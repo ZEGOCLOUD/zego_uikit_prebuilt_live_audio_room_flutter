@@ -16,7 +16,7 @@ Future<void> checkPermissions({
   required BuildContext context,
   required ZegoUIKitPrebuiltLiveAudioRoomInnerText translationText,
   required bool rootNavigator,
-  required ZegoPopUpManager popUpManager,
+  required ZegoLiveAudioRoomPopUpManager popUpManager,
   required ValueNotifier<bool> kickOutNotifier,
   bool isShowDialog = false,
   List<Permission> checkStatuses = const [Permission.microphone],
@@ -58,7 +58,7 @@ Future<void> requestPermissions({
   required BuildContext context,
   required ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText,
   required bool rootNavigator,
-  required ZegoPopUpManager popUpManager,
+  required ZegoLiveAudioRoomPopUpManager popUpManager,
   required ValueNotifier<bool> kickOutNotifier,
   bool isShowDialog = false,
   List<Permission> checkStatuses = const [Permission.microphone],
@@ -106,7 +106,7 @@ Future<bool> showAppSettingsDialog(
   BuildContext context,
   ZegoLiveAudioRoomDialogInfo dialogInfo, {
   required bool rootNavigator,
-  required ZegoPopUpManager popUpManager,
+  required ZegoLiveAudioRoomPopUpManager popUpManager,
   required ValueNotifier<bool> kickOutNotifier,
 }) async {
   if (kickOutNotifier.value) {

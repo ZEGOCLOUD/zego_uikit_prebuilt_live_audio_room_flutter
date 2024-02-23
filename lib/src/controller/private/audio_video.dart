@@ -13,12 +13,12 @@ class ZegoLiveAudioRoomControllerAudioVideoImplPrivateImpl {
   final _microphone = ZegoLiveStreamingControllerAudioVideoMicrophoneImpl();
   final _camera = ZegoLiveStreamingControllerAudioVideoCameraImpl();
 
-  ZegoLiveSeatManager? seatManager;
+  ZegoLiveAudioRoomSeatManager? seatManager;
   ZegoUIKitPrebuiltLiveAudioRoomConfig? config;
 
   /// Please do not call this interface. It is the internal logic of ZegoUIKitPrebuiltLiveAudioRoom.
   void initByPrebuilt({
-    required ZegoLiveSeatManager? seatManager,
+    required ZegoLiveAudioRoomSeatManager? seatManager,
     required ZegoUIKitPrebuiltLiveAudioRoomConfig? config,
   }) {
     ZegoLoggerService.logInfo(

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 /// @nodoc
-class ZegoEffectGridItem<T> {
+class ZegoLiveAudioRoomEffectGridItem<T> {
   String id;
   T effectType;
 
@@ -14,7 +14,7 @@ class ZegoEffectGridItem<T> {
   String iconText;
   VoidCallback onPressed;
 
-  ZegoEffectGridItem({
+  ZegoLiveAudioRoomEffectGridItem({
     required this.id,
     required this.effectType,
     required this.icon,
@@ -24,21 +24,21 @@ class ZegoEffectGridItem<T> {
   });
 }
 
-class ZegoEffectGridModel {
+class ZegoLiveAudioRoomEffectGridModel {
   String title;
 
   ValueNotifier<String> selectedID;
-  List<ZegoEffectGridItem> items = [];
+  List<ZegoLiveAudioRoomEffectGridItem> items = [];
 
-  ZegoEffectGridModel({
+  ZegoLiveAudioRoomEffectGridModel({
     required this.title,
     required this.items,
     required this.selectedID,
   });
 }
 
-class ZegoEffectGrid extends StatefulWidget {
-  const ZegoEffectGrid({
+class ZegoLiveAudioRoomEffectGrid extends StatefulWidget {
+  const ZegoLiveAudioRoomEffectGrid({
     Key? key,
     required this.model,
     required this.isSpaceEvenly,
@@ -48,7 +48,7 @@ class ZegoEffectGrid extends StatefulWidget {
     this.itemSpacing,
   }) : super(key: key);
 
-  final ZegoEffectGridModel model;
+  final ZegoLiveAudioRoomEffectGridModel model;
   final bool withBorderColor;
   final Size? buttonSize;
   final Size? iconSize;
@@ -56,11 +56,13 @@ class ZegoEffectGrid extends StatefulWidget {
   final double? itemSpacing;
 
   @override
-  State<ZegoEffectGrid> createState() => _ZegoEffectGridState();
+  State<ZegoLiveAudioRoomEffectGrid> createState() =>
+      _ZegoLiveAudioRoomEffectGridState();
 }
 
 /// @nodoc
-class _ZegoEffectGridState extends State<ZegoEffectGrid> {
+class _ZegoLiveAudioRoomEffectGridState
+    extends State<ZegoLiveAudioRoomEffectGrid> {
   TextStyle get gridItemTextStyle => TextStyle(
         fontSize: 24.zR,
         fontWeight: FontWeight.w500,
@@ -143,7 +145,7 @@ class _ZegoEffectGridState extends State<ZegoEffectGrid> {
     );
   }
 
-  Widget gridItem(ZegoEffectGridItem item, Size buttonSize) {
+  Widget gridItem(ZegoLiveAudioRoomEffectGridItem item, Size buttonSize) {
     return ZegoTextIconButton(
       onPressed: () {
         widget.model.selectedID.value = item.id;

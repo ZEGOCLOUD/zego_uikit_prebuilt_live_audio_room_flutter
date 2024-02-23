@@ -134,7 +134,7 @@ class ZegoLiveAudioRoomSeatEvents {
   ///
   /// Note that when you set this callback, the **default behavior** of clicking on a seat to display a menu **will be disabled**.
   /// You need to handle it yourself.
-  /// You can refer to the usage of [ZegoLiveAudioRoomController] for reference.
+  /// You can refer to the usage of [ZegoUIKitPrebuiltLiveAudioRoomController] for reference.
   void Function(int index, ZegoUIKitUser? user)? onClicked;
 
   /// A callback function that is called when someone gets on/off/switches seat
@@ -224,7 +224,7 @@ class ZegoLiveAudioRoomMemberListEvents {
   /// If you want to perform additional operations when the "More" button on the member list is clicked, such as viewing the profile of `user`.
   ///
   /// Note that when you set this callback, the **default behavior** of popping up a menu when clicking the "More" button on the member list will be **overridden**, and you need to handle it yourself.
-  /// You can refer to the usage of `ZegoLiveAudioRoomController`.
+  /// You can refer to the usage of `ZegoUIKitPrebuiltLiveAudioRoomController`.
   void Function(ZegoUIKitUser user)? onMoreButtonPressed;
 
   ZegoLiveAudioRoomMemberListEvents({
@@ -238,8 +238,8 @@ class ZegoLiveAudioRoomDurationEvents {
   /// Call timing callback function, called every second.
   ///
   /// Example: Do something after 5 minutes.
-  /// ..durationConfig.isVisible = true
-  /// ..durationConfig.onDurationUpdate = (Duration duration) {
+  /// ..duration.isVisible = true
+  /// ..duration.onDurationUpdate = (Duration duration) {
   ///   if (duration.inSeconds >= 5 * 60) {
   ///     ///  Do something...
   ///   }

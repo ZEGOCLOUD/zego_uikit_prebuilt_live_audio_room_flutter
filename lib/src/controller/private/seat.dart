@@ -14,15 +14,15 @@ class ZegoLiveAudioRoomControllerSeatPrivateImpl {
   final audience = ZegoLiveAudioRoomControllerSeatAudienceImpl();
   final speaker = ZegoLiveAudioRoomControllerSeatSpeakerImpl();
 
-  ZegoLiveConnectManager? connectManager;
-  ZegoLiveSeatManager? seatManager;
+  ZegoLiveAudioRoomConnectManager? connectManager;
+  ZegoLiveAudioRoomSeatManager? seatManager;
 
   /// DO NOT CALL
   /// Call Inside By Prebuilt
   /// prebuilt assign value to internal variables
   void initByPrebuilt({
-    required ZegoLiveConnectManager? connectManager,
-    required ZegoLiveSeatManager? seatManager,
+    required ZegoLiveAudioRoomConnectManager? connectManager,
+    required ZegoLiveAudioRoomSeatManager? seatManager,
   }) {
     ZegoLoggerService.logInfo(
       'init by prebuilt',
@@ -76,15 +76,15 @@ mixin ZegoLiveAudioRoomControllerSeatRolePrivate {
 
 /// @nodoc
 class ZegoLiveAudioRoomControllerSeatRolePrivateImpl {
-  ZegoLiveConnectManager? connectManager;
-  ZegoLiveSeatManager? seatManager;
+  ZegoLiveAudioRoomConnectManager? connectManager;
+  ZegoLiveAudioRoomSeatManager? seatManager;
 
   /// DO NOT CALL
   /// Call Inside By Prebuilt
   /// prebuilt assign value to internal variables
   void _initByPrebuilt({
-    required ZegoLiveConnectManager? connectManager,
-    required ZegoLiveSeatManager? seatManager,
+    required ZegoLiveAudioRoomConnectManager? connectManager,
+    required ZegoLiveAudioRoomSeatManager? seatManager,
   }) {
     this.connectManager = connectManager;
     this.seatManager = seatManager;

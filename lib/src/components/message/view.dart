@@ -9,12 +9,12 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 
 /// @nodoc
-class ZegoInRoomLiveMessageView extends StatefulWidget {
+class ZegoLiveAudioRoomInRoomLiveMessageView extends StatefulWidget {
   final ZegoLiveAudioRoomInRoomMessageConfig? config;
   final ZegoLiveAudioRoomInRoomMessageEvents? events;
   final ZegoAvatarBuilder? avatarBuilder;
 
-  const ZegoInRoomLiveMessageView({
+  const ZegoLiveAudioRoomInRoomLiveMessageView({
     Key? key,
     this.config,
     this.events,
@@ -22,12 +22,13 @@ class ZegoInRoomLiveMessageView extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ZegoInRoomLiveMessageView> createState() =>
-      _ZegoInRoomLiveMessageViewState();
+  State<ZegoLiveAudioRoomInRoomLiveMessageView> createState() =>
+      _ZegoLiveAudioRoomInRoomLiveMessageViewState();
 }
 
 /// @nodoc
-class _ZegoInRoomLiveMessageViewState extends State<ZegoInRoomLiveMessageView> {
+class _ZegoLiveAudioRoomInRoomLiveMessageViewState
+    extends State<ZegoLiveAudioRoomInRoomLiveMessageView> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
