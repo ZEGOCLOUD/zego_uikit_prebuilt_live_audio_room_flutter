@@ -1,3 +1,40 @@
+## 3.6.5
+
+- Update dependency.
+
+## 3.6.4
+
+- Update dependency.
+
+## 3.6.3
+
+- Update dependency.
+
+## 3.6.2
+
+- Update dependency.
+
+## 3.6.1
+
+- Update dependency.
+
+## 3.6.0
+
+- Support to hide the top leave button by `ZegoLiveAudioRoomTopMenuBarConfig.showLeaveButton`
+- Support to hide the bottom toolbar by `ZegoLiveAudioRoomBottomMenuBarConfig.visible`
+- By setting the **showDialogConfirm** parameter to true in `ZegoUIKitPrebuiltLiveAudioRoomController().seat.host.removeSpeaker`, the host can remove the speaker from the stage directly.
+
+## 3.5.0
+
+- Add `getEmptySeats` in `ZegoUIKitPrebuiltLiveAudioRoomController.seat`
+
+## 3.4.0
+
+- Add `hostRoleIcon`, `coHostRoleIcon` and `microphoneOffIcon` in `ZegoUIKitPrebuiltLiveAudioRoomConfig.seat` to support custom partial icons
+- Add `keepOriginalForeground` in `ZegoUIKitPrebuiltLiveAudioRoomConfig.seat` to support keeping the original foreground when customizing foregroundBuilder
+- Add `getSeatIndexByUserID` in `ZegoUIKitPrebuiltLiveAudioRoomController.seat` to get the user's seat index
+- Fix `ZegoUIKitPrebuiltLiveAudioRoomController.muteStateNotifier` get wrong state when switching microphone scene
+
 ## 3.3.2
 
 - Update dependency.

@@ -45,6 +45,24 @@ class ZegoLiveAudioRoomControllerSeatImpl
   ZegoUIKitUser? getUserByIndex(int targetIndex) =>
       private.seatManager?.getUserByIndex(targetIndex);
 
+  /// get seat index of target user
+  int getSeatIndexByUserID(String targetUserID) =>
+      private.seatManager?.getIndexByUserID(targetUserID) ?? -1;
+
+  /// get the currently empty seat
+  ///
+  /// set [includeHostSeats] to true if [ZegoLiveAudioRoomSeatConfig.hostIndexes] is included, default does not include
+  List<int> getEmptySeats({
+    bool includeHostSeats = false,
+  }) {
+    var emptySeats = private.seatManager?.getEmptySeats() ?? [];
+    if (!includeHostSeats) {
+      emptySeats.removeWhere(
+          (seatIndex) => private.seatManager?.isAHostSeat(seatIndex) ?? false);
+    }
+    return emptySeats;
+  }
+
   /// Is the current seat muted or not.
   /// Set [isLocally] to true to find out if it is muted locally.
   ///
@@ -53,13 +71,39 @@ class ZegoLiveAudioRoomControllerSeatImpl
   /// [muteLocallyByUserID]
   /// [ZegoLiveAudioRoomControllerSeatHostImpl.mute]
   /// [ZegoLiveAudioRoomControllerSeatHostImpl.muteByUserID]
+  ///
+  /// example:
+  ///
+  /// Display different icons according to the mute state change.
+  ///
+  /// ``` dart
+  /// ValueListenableBuilder<bool>(
+  ///   valueListenable: ZegoUIKitPrebuiltLiveAudioRoomController()
+  ///       .seat
+  ///       .muteStateNotifier(
+  ///         ZegoUIKitPrebuiltLiveAudioRoomController()
+  ///             .seat
+  ///             .getSeatIndexByUserID($targetUserID),
+  ///       ),
+  ///   builder: (context, isMuted, _) {
+  ///     return Icon(isMuted ? Icons.volume_mute : Icons.volume_up);
+  ///   },
+  /// )
+  /// ```
   ValueNotifier<bool> muteStateNotifier(
     int targetIndex, {
     bool isLocally = false,
   }) {
     final targetUser = ZegoUIKit()
         .getUser(private.seatManager?.getUserByIndex(targetIndex)?.id ?? '');
-    return isLocally ? targetUser.microphoneMuteMode : targetUser.microphone;
+    if (targetUser.isEmpty()) {
+      return ValueNotifier<bool>(false);
+    }
+
+    return isLocally
+        ? targetUser.microphoneMuteMode
+        : private.microphoneMuteNotifier
+            .getMicrophoneMuteStateNotifier(targetUser);
   }
 
   /// Mute the user at the [targetIndex] seat **locally**.
@@ -186,7 +230,10 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
   }
 
   /// Removes the speaker with the user ID [userID] from the seat.
-  Future<void> removeSpeaker(String userID) async {
+  Future<void> removeSpeaker(
+    String userID, {
+    bool showDialogConfirm = true,
+  }) async {
     ZegoLoggerService.logInfo(
       'removeSpeaker, userID:$userID',
       tag: 'live audio',
@@ -194,7 +241,10 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
     );
 
     final index = private.seatManager?.getIndexByUserID(userID) ?? -1;
-    return private.seatManager?.kickSeat(index);
+    return private.seatManager?.kickSeat(
+      index,
+      showDialogConfirm: showDialogConfirm,
+    );
   }
 
   /// The host accepts the seat request from the audience with the ID [audienceUserID].

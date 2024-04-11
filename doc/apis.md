@@ -43,6 +43,8 @@
         - [localIsCoHost](#localiscohost)
         - [localHasHostPermissions](#localhashostpermissions)
         - [getUserByIndex](#getuserbyindex)
+        - [getEmptySeats](#getemptyseats)
+        - [getSeatIndexByUserID](#getseatindexbyuserid)
         - [muteStateNotifier](#mutestatenotifier)
         - [muteLocally](#mutelocally)
         - [muteLocallyByUserID](#mutelocallybyuserid)
@@ -756,6 +758,30 @@ the APIs related to minimizing.
 > ZegoUIKitUser? getUserByIndex(int targetIndex)
 > ```
 
+### getEmptySeats
+
+>
+> get the currently empty seat
+> 
+> set [includeHostSeats] to true if [ZegoLiveAudioRoomSeatConfig.hostIndexes] is included, default does not include
+>
+> - function prototype:
+>
+> ```dart
+> List<int> getEmptySeats({bool includeHostSeats = false,})
+> ```
+
+### getSeatIndexByUserID
+
+>
+> get seat index of target user
+>
+> - function prototype:
+>
+> ```dart
+> int getSeatIndexByUserID(String targetUserID)
+> ```
+
 ### muteStateNotifier
 
 >
@@ -856,7 +882,7 @@ the APIs related to minimizing.
 > - function prototype:
 >
 > ```dart
-> Future<void> removeSpeaker(String userID) async
+> Future<void> removeSpeaker(String userID, {bool showDialogConfirm = true,}) async
 > ```
 
 #### acceptTakingRequest

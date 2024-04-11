@@ -47,9 +47,20 @@
 
 - Image? `closeIcon`: The icon displayed for empty seats when all seats are closed (seats in the audio chat room are locked).
 
+- Image? hostRoleIcon: icon for host
+
+- Image? coHostRoleIcon: icon for co-host
+
+- Image? microphoneOffIcon: icon when speaker's microphone off
+
+- bool keepOriginalForeground: Whether to retain the original foreground
+
 - [ZegoAudioVideoViewForegroundBuilder](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoAudioVideoViewForegroundBuilder.html)? `foregroundBuilder`:
 >
 > Use this to customize the foreground view of the seat, and the `ZegoUIKitPrebuiltLiveAudioRoom` will returns the current user on the seat and the corresponding seat index.
+>
+> Please note that this will overwrite the original foreground.
+> If you want to keep the original foreground, set `keepOriginalForeground` to true.
 
 - [ZegoAudioVideoViewBackgroundBuilder](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoAudioVideoViewBackgroundBuilder.html)? `backgroundBuilder`:
 >
@@ -66,13 +77,15 @@
 
 - List\<[ZegoLiveAudioRoomMenuBarButtonName](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomMenuBarButtonName.html)\> `buttons`: These buttons will displayed on the menu bar, order by the list only support [minimizingButton] right now
 
+- bool `showLeaveButton`: show leave button or not
+
 ## [ZegoLiveAudioRoomBottomMenuBarConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomBottomMenuBarConfig-class.html) bottomMenuBar
 
 >
 >  Configuration options for the bottom menu bar (toolbar).
 >  You can use these options to customize the appearance and behavior of the bottom menu bar.
 
-
+- bool `visible`: If set to `false`, the bottom bar will be hidden. The default value is `true`.
 
 - bool `showInRoomMessageButton`:
 >

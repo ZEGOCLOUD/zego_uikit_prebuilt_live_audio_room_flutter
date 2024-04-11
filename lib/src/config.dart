@@ -262,7 +262,22 @@ class ZegoLiveAudioRoomSeatConfig {
   /// The icon displayed for empty seats when all seats are closed (seats in the audio chat room are locked).
   Image? closeIcon;
 
+  /// icon for host
+  Image? hostRoleIcon;
+
+  /// icon for co-host
+  Image? coHostRoleIcon;
+
+  /// icon when speaker's microphone off
+  Image? microphoneOffIcon;
+
+  /// Whether to retain the original foreground
+  bool keepOriginalForeground;
+
   /// Use this to customize the foreground view of the seat, and the `ZegoUIKitPrebuiltLiveAudioRoom` will returns the current user on the seat and the corresponding seat index.
+  ///
+  /// Please note that this will overwrite the original foreground.
+  /// If you want to keep the original foreground, set [keepOriginalForeground] to true.
   ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;
 
   /// Use this to customize the background view of the seat, and the `ZegoUIKitPrebuiltLiveAudioRoom` returns the current user on the seat and the corresponding seat index.
@@ -303,8 +318,12 @@ class ZegoLiveAudioRoomSeatConfig {
     this.closeIcon,
     this.showSoundWaveInAudioMode = true,
     this.avatarBuilder,
+    this.keepOriginalForeground = false,
     this.foregroundBuilder,
     this.backgroundBuilder,
+    this.hostRoleIcon,
+    this.coHostRoleIcon,
+    this.microphoneOffIcon,
   }) : layout = layout ?? ZegoLiveAudioRoomLayoutConfig();
 }
 
@@ -314,17 +333,30 @@ class ZegoLiveAudioRoomTopMenuBarConfig {
   /// only support [minimizingButton] right now
   List<ZegoLiveAudioRoomMenuBarButtonName> buttons;
 
+  ///  show leave button or not
+  /// todo: move to [buttons], ZegoLiveAudioRoomMenuBarButtonName.leaveButton
+  bool showLeaveButton;
+
   ZegoLiveAudioRoomTopMenuBarConfig({
     this.buttons = const [],
+    this.showLeaveButton = true,
   });
 }
 
 /// Configuration options for the bottom menu bar (toolbar).
 /// You can set the properties of this class through the [ZegoUIKitPrebuiltLiveAudioRoomConfig.bottomMenuBar] attribute.
 class ZegoLiveAudioRoomBottomMenuBarConfig {
+  /// If set to `false`, the bottom bar will be hidden. The default value is `true`.
+  bool visible;
+
   /// When set to `true`, the button for sending messages will be displayed.
   /// If you want to disable text messaging in the live audio room, set it to `false`.
   bool showInRoomMessageButton;
+
+  /// Controls the maximum number of buttons (including predefined and custom buttons) to be displayed in the menu bar (toolbar).
+  /// When the number of buttons exceeds the `maxCount` limit, a "More" button will appear.
+  /// Clicking on it will display a panel showing other buttons that cannot be displayed in the menu bar (toolbar).
+  int maxCount;
 
   /// The list of predefined buttons to be displayed when the user role is set to host.
   List<ZegoLiveAudioRoomMenuBarButtonName> hostButtons = [];
@@ -344,12 +376,8 @@ class ZegoLiveAudioRoomBottomMenuBarConfig {
   /// The list of custom buttons to be displayed when the user role is set to audience.
   List<Widget> audienceExtendButtons = [];
 
-  /// Controls the maximum number of buttons (including predefined and custom buttons) to be displayed in the menu bar (toolbar).
-  /// When the number of buttons exceeds the `maxCount` limit, a "More" button will appear.
-  /// Clicking on it will display a panel showing other buttons that cannot be displayed in the menu bar (toolbar).
-  int maxCount;
-
   ZegoLiveAudioRoomBottomMenuBarConfig({
+    this.visible = true,
     this.showInRoomMessageButton = true,
     this.hostButtons = const [
       ZegoLiveAudioRoomMenuBarButtonName.soundEffectButton,

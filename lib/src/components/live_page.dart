@@ -87,6 +87,9 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
 
   List<StreamSubscription<dynamic>?> subscriptions = [];
 
+  double get bottomBarHeight =>
+      widget.config.bottomMenuBar.visible ? 124.zR : 0;
+
   @override
   void initState() {
     super.initState();
@@ -193,7 +196,7 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
 
     final tempMaxWidth = maxWidth - containerHorizontalSpacing * 2;
     var tempMaxHeight = maxHeight - 169.zR; // top position
-    tempMaxHeight -= 124.zR; // bottom bar
+    tempMaxHeight -= bottomBarHeight; // bottom bar
 
     final fixedRow = widget.config.seat.layout.rowConfigs.length;
     var containerHeight = seatItemHeight * fixedRow +
@@ -306,7 +309,7 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
     return Align(
       alignment: Alignment.bottomCenter,
       child: ZegoLiveAudioRoomBottomBar(
-        height: 124.zR,
+        height: bottomBarHeight,
         buttonSize: zegoLiveButtonSize,
         config: widget.config,
         events: widget.events,
@@ -324,9 +327,12 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
   }
 
   Widget emptyArea(double maxHeight) {
-    if (widget.config.emptyAreaBuilder == null) return const SizedBox.shrink();
+    if (widget.config.emptyAreaBuilder == null) {
+      return const SizedBox.shrink();
+    }
+
     var tempMaxHeight = maxHeight - 169.zR; // top position
-    tempMaxHeight -= 124.zR; // bottom bar
+    tempMaxHeight -= bottomBarHeight; // bottom bar
     final fixedRow = widget.config.seat.layout.rowConfigs.length;
     var containerHeight = seatItemHeight * fixedRow +
         widget.config.seat.layout.rowSpacing * (fixedRow - 1);
@@ -338,7 +344,7 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
       left: 0,
       right: 0,
       top: 169.zR + containerHeight,
-      bottom: 124.zR,
+      bottom: bottomBarHeight,
       child: widget.config.emptyAreaBuilder!.call(context),
     );
   }
@@ -360,7 +366,8 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
     }
     return Positioned(
       left: widget.config.inRoomMessage.bottomLeft?.dx ?? 0,
-      bottom: 124.zR + (widget.config.inRoomMessage.bottomLeft?.dy ?? 0),
+      bottom:
+          bottomBarHeight + (widget.config.inRoomMessage.bottomLeft?.dy ?? 0),
       child: ConstrainedBox(
         constraints: BoxConstraints.loose(listSize),
         child: ZegoLiveAudioRoomInRoomLiveMessageView(

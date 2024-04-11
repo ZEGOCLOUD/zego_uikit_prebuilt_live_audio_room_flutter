@@ -990,7 +990,10 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
     return true;
   }
 
-  Future<void> kickSeat(int index) async {
+  Future<void> kickSeat(
+    int index, {
+    bool showDialogConfirm = true,
+  }) async {
     final targetUser = getUserByIndex(index);
     if (null == targetUser) {
       ZegoLoggerService.logInfo(
@@ -1002,10 +1005,19 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
     }
 
     ZegoLoggerService.logInfo(
-      'kick seat, index:$index, user:$targetUser',
+      'kick seat, '
+      'index:$index, '
+      'user:$targetUser, '
+      'showDialogConfirm:$showDialogConfirm, ',
       tag: 'audio room',
       subTag: 'seat manager',
     );
+
+    if (!showDialogConfirm) {
+      await takeOffSeat(index, isForce: true);
+
+      return;
+    }
 
     if (kickSeatDialogInfo.isNotEmpty) {
       ZegoLoggerService.logInfo(

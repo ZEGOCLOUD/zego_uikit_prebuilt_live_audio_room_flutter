@@ -193,6 +193,13 @@ class ZegoLiveAudioRoomControllerRoomImpl
   }
 
   /// send room command
+  ///
+  /// string encoded in UTF-8 and convert to Uint8List
+  ///
+  /// import 'dart:convert';
+  /// import 'dart:typed_data';
+  ///
+  /// Uint8List dataBytes = Uint8List.fromList(utf8.encode(commandString));
   Future<bool> sendCommand({
     required String roomID,
     required Uint8List command,
@@ -235,6 +242,14 @@ class ZegoLiveAudioRoomControllerRoomImpl
   }
 
   /// room command stream notify
+  ///
+  /// If you have a string encoded in UTF-8 and want to convert a Uint8List
+  /// to that string, you can use the following method:
+  ///
+  /// import 'dart:convert';
+  /// import 'dart:typed_data';
+  ///
+  /// Uint8List dataBytes = Uint8List.fromList(utf8.encode(commandString));
   Stream<ZegoSignalingPluginInRoomCommandMessageReceivedEvent>
       commandReceivedStream() {
     if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {

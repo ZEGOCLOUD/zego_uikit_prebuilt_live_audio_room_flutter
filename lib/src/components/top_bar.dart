@@ -84,6 +84,10 @@ class _ZegoLiveAudioRoomTopBarState extends State<ZegoLiveAudioRoomTopBar> {
   }
 
   Widget closeButton() {
+    if (!widget.config.topMenuBar.showLeaveButton) {
+      return Container();
+    }
+
     return ZegoLiveAudioRoomLeaveButton(
       buttonSize: Size(52.zR, 52.zR),
       iconSize: Size(24.zR, 24.zR),

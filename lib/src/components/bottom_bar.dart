@@ -87,6 +87,10 @@ class _ZegoLiveAudioRoomBottomBarState
 
   @override
   Widget build(BuildContext context) {
+    if (!widget.config.bottomMenuBar.visible) {
+      return Container();
+    }
+
     return Container(
       decoration: const BoxDecoration(color: Colors.transparent),
       height: widget.height,
