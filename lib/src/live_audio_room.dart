@@ -113,7 +113,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 3.6.5; $version',
+        'version: zego_uikit_prebuilt_live_audio_room: 3.6.7; $version',
         tag: 'audio room',
         subTag: 'prebuilt',
       );
@@ -160,6 +160,9 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
             events: events,
             connectManager: ZegoLiveAudioRoomManagers().connectManager,
             seatManager: ZegoLiveAudioRoomManagers().seatManager,
+          );
+      ZegoUIKitPrebuiltLiveAudioRoomController().user.private.initByPrebuilt(
+            config: widget.config,
           );
       ZegoUIKitPrebuiltLiveAudioRoomController().seat.private.initByPrebuilt(
             connectManager: ZegoLiveAudioRoomManagers().connectManager,
@@ -248,6 +251,10 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
           .uninitByPrebuilt();
       ZegoUIKitPrebuiltLiveAudioRoomController()
           .room
+          .private
+          .uninitByPrebuilt();
+      ZegoUIKitPrebuiltLiveAudioRoomController()
+          .user
           .private
           .uninitByPrebuilt();
       ZegoUIKitPrebuiltLiveAudioRoomController()

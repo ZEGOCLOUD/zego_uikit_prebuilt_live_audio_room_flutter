@@ -1,3 +1,12 @@
+
+## 3.6.7
+
+- Update dependency.
+
+## 3.6.6
+
+- add `isForce` in `ZegoUIKitPrebuiltLiveAudioRoomController().seat.take`, Specify whether to force take seat when someone is on.
+
 ## 3.6.5
 
 - Update dependency.

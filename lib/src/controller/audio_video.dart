@@ -17,6 +17,10 @@ class ZegoLiveAudioRoomControllerAudioVideoImpl
   /// camera series APIs
   // ZegoLiveStreamingControllerAudioVideoCameraImpl get camera => private._camera;
 
+  /// audio output series APIs
+  ZegoLiveStreamingControllerAudioVideoAudioOutputImpl get audioOutput =>
+      private._audioOutput;
+
   /// stream of SEI(Supplemental Enhancement Information)
   Stream<ZegoUIKitReceiveSEIEvent> seiStream() {
     return ZegoUIKit().getReceiveCustomSEIStream();
@@ -144,5 +148,24 @@ class ZegoLiveStreamingControllerAudioVideoCameraImpl
         ZegoUIKit().getCameraStateNotifier(targetUserID).value;
 
     turnOn(!currentCameraState, userID: targetUserID);
+  }
+}
+
+class ZegoLiveStreamingControllerAudioVideoAudioOutputImpl
+    with ZegoLiveStreamingControllerAudioVideoDeviceImplPrivate {
+  /// local audio output device notifier
+  ValueNotifier<ZegoUIKitAudioRoute> get localNotifier =>
+      notifier(ZegoUIKit().getLocalUser().id);
+
+  /// get audio output device notifier
+  ValueNotifier<ZegoUIKitAudioRoute> notifier(
+    String userID,
+  ) {
+    return ZegoUIKit().getAudioOutputDeviceNotifier(userID);
+  }
+
+  /// set audio output to speaker or earpiece(telephone receiver)
+  void switchToSpeaker(bool isSpeaker) {
+    ZegoUIKit().setAudioOutputToSpeaker(isSpeaker);
   }
 }

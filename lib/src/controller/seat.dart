@@ -416,7 +416,10 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
 class ZegoLiveAudioRoomControllerSeatAudienceImpl
     with ZegoLiveAudioRoomControllerSeatRolePrivate {
   /// Assigns the audience to the seat with the specified [index], where the index represents the seat number starting from 0.
-  Future<bool> take(int index) async {
+  Future<bool> take(
+    int index, {
+    bool isForce = false,
+  }) async {
     ZegoLoggerService.logInfo(
       'take, index:$index',
       tag: 'audio room',
@@ -425,7 +428,7 @@ class ZegoLiveAudioRoomControllerSeatAudienceImpl
 
     return await private.seatManager?.takeOnSeat(
           index,
-          isForce: true,
+          isForce: isForce,
           isUpdateOwner: true,
           isDeleteAfterOwnerLeft: true,
         ) ??

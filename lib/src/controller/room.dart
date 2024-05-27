@@ -266,4 +266,19 @@ class ZegoLiveAudioRoomControllerRoomImpl
         .getSignalingPlugin()
         .getInRoomCommandMessageReceivedEventStream();
   }
+
+  /// remove user from live, kick out
+  ///
+  /// @return Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
+  ///
+  /// @return A `Future` that representing whether the request was successful.
+  Future<bool> removeUser(List<String> userIDs) async {
+    ZegoLoggerService.logInfo(
+      'remove user:$userIDs',
+      tag: 'audio room',
+      subTag: 'controller.room',
+    );
+
+    return ZegoUIKit().removeUserFromRoom(userIDs);
+  }
 }

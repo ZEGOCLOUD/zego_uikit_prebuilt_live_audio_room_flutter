@@ -12,6 +12,7 @@ mixin ZegoLiveAudioRoomControllerAudioVideoImplPrivate {
 class ZegoLiveAudioRoomControllerAudioVideoImplPrivateImpl {
   final _microphone = ZegoLiveStreamingControllerAudioVideoMicrophoneImpl();
   final _camera = ZegoLiveStreamingControllerAudioVideoCameraImpl();
+  final _audioOutput = ZegoLiveStreamingControllerAudioVideoAudioOutputImpl();
 
   ZegoLiveAudioRoomSeatManager? seatManager;
   ZegoUIKitPrebuiltLiveAudioRoomConfig? config;
@@ -31,6 +32,7 @@ class ZegoLiveAudioRoomControllerAudioVideoImplPrivateImpl {
 
     _microphone.private.initByPrebuilt(config: config);
     _camera.private.initByPrebuilt(config: config);
+    _audioOutput.private.initByPrebuilt(config: config);
   }
 
   /// Please do not call this interface. It is the internal logic of ZegoUIKitPrebuiltLiveAudioRoom.
@@ -45,6 +47,7 @@ class ZegoLiveAudioRoomControllerAudioVideoImplPrivateImpl {
 
     _microphone.private.uninitByPrebuilt();
     _camera.private.uninitByPrebuilt();
+    _audioOutput.private.uninitByPrebuilt();
   }
 }
 

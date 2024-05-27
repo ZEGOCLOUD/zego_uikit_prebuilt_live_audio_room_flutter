@@ -37,6 +37,8 @@ part 'controller/minimize.dart';
 
 part 'controller/room.dart';
 
+part 'controller/user.dart';
+
 part 'controller/private/room.dart';
 
 part 'controller/private/private.dart';
@@ -46,6 +48,8 @@ part 'controller/private/audio_video.dart';
 part 'controller/private/minimize.dart';
 
 part 'controller/private/seat.dart';
+
+part 'controller/private/user.dart';
 
 /// Used to control the audio chat room functionality.
 ///
@@ -62,7 +66,8 @@ class ZegoUIKitPrebuiltLiveAudioRoomController
         ZegoLiveAudioRoomControllerMinimizing,
         ZegoLiveAudioRoomControllerSeat,
         ZegoLiveAudioRoomControllerAudioVideo,
-        ZegoLiveAudioRoomControllerRoom {
+        ZegoLiveAudioRoomControllerRoom,
+        ZegoLiveAudioRoomControllerUser {
   factory ZegoUIKitPrebuiltLiveAudioRoomController() => instance;
 
   /// This function is used to end the Live Audio Room.
@@ -86,6 +91,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomController
       private.uninitByPrebuilt();
       seat.private.uninitByPrebuilt();
       room.private.uninitByPrebuilt();
+      user.private.uninitByPrebuilt();
       minimize.private.uninitByPrebuilt();
       audioVideo.private.uninitByPrebuilt();
     }
