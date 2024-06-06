@@ -14,6 +14,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manage
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/core/protocol.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
@@ -47,7 +48,7 @@ class ZegoLiveAudioRoomConnectManager {
 
   /// audiences which requesting to take seat
   final audiencesRequestingTakeSeatNotifier =
-      ValueNotifier<List<ZegoUIKitUser>>([]);
+      ValueNotifier<List<ZegoLiveAudioRoomRequestingTakeSeatListItem>>([]);
 
   /// audiences which host invite to take seat
   final List<String> _audienceIDsInvitedTakeSeatByHost = [];
@@ -225,8 +226,13 @@ class ZegoLiveAudioRoomConnectManager {
     if (seatManager.localHasHostPermissions) {
       if (ZegoLiveAudioRoomInvitationType.requestTakeSeat == invitationType) {
         audiencesRequestingTakeSeatNotifier.value =
-            List<ZegoUIKitUser>.from(audiencesRequestingTakeSeatNotifier.value)
-              ..add(inviter);
+            List.from(audiencesRequestingTakeSeatNotifier.value)
+              ..add(
+                ZegoLiveAudioRoomRequestingTakeSeatListItem(
+                  user: inviter,
+                  data: data,
+                ),
+              );
 
         events.seat.host?.onTakingRequested?.call(inviter);
       }
@@ -334,7 +340,10 @@ class ZegoLiveAudioRoomConnectManager {
             kickOutNotifier: kickOutNotifier,
           ).then((_) {
             /// agree host's host, take seat, find the nearest seat index
-            final targetSeatIndex = seatManager.getNearestEmptyIndex();
+            final targetSeatIndex = seatManager
+                    .config.seat.takeIndexWhenAudienceRequesting
+                    ?.call(ZegoUIKit().getLocalUser()) ??
+                seatManager.getNearestEmptyIndex();
             ZegoLoggerService.logInfo(
               'accept take seat invite, target seat index is $targetSeatIndex',
               tag: 'live audio',
@@ -343,12 +352,15 @@ class ZegoLiveAudioRoomConnectManager {
             seatManager
                 .takeOnSeat(
               targetSeatIndex,
+              ignoreLocked: true,
               isForce: true,
               isDeleteAfterOwnerLeft: true,
             )
                 .then((result) {
               if (result) {
                 ZegoUIKit().turnMicrophoneOn(true);
+              } else {
+                events.seat.audience?.onTakingFailed?.call();
               }
             });
           });
@@ -386,7 +398,11 @@ class ZegoLiveAudioRoomConnectManager {
         kickOutNotifier: kickOutNotifier,
       ).then((value) {
         /// host agree take seat, find the nearest seat index
-        final targetSeatIndex = seatManager.getNearestEmptyIndex();
+        final requestConnectProtocol =
+            ZegoAudioRoomAudienceRequestConnectProtocol.fromJsonString(data);
+        final targetSeatIndex = requestConnectProtocol.isEmpty
+            ? seatManager.getNearestEmptyIndex()
+            : requestConnectProtocol.targetIndex;
         if (targetSeatIndex < 0) {
           ZegoLoggerService.logInfo(
             'on invitation accepted, target seat index is $targetSeatIndex invalid',
@@ -407,7 +423,11 @@ class ZegoLiveAudioRoomConnectManager {
         seatManager
             .takeOnSeat(
           targetSeatIndex,
-          isForce: true,
+          ignoreLocked: true,
+
+          /// If it is a designated seat from protocol, in order to prevent
+          /// occupy the taken seat, it cannot be forced
+          isForce: requestConnectProtocol.isEmpty,
           isDeleteAfterOwnerLeft: true,
         )
             .then((result) {
@@ -419,6 +439,9 @@ class ZegoLiveAudioRoomConnectManager {
 
           if (result) {
             ZegoUIKit().turnMicrophoneOn(true);
+          } else {
+            events.seat.audience?.onTakingFailed?.call();
+            updateAudienceConnectState(ZegoLiveAudioRoomConnectState.idle);
           }
         });
       });
@@ -437,8 +460,8 @@ class ZegoLiveAudioRoomConnectManager {
 
     if (seatManager.localHasHostPermissions) {
       audiencesRequestingTakeSeatNotifier.value =
-          List<ZegoUIKitUser>.from(audiencesRequestingTakeSeatNotifier.value)
-            ..removeWhere((user) => user.id == inviter.id);
+          List.from(audiencesRequestingTakeSeatNotifier.value)
+            ..removeWhere((item) => item.user.id == inviter.id);
 
       events.seat.host?.onTakingRequestCanceled?.call(inviter);
     }
@@ -492,8 +515,8 @@ class ZegoLiveAudioRoomConnectManager {
 
     if (seatManager.localHasHostPermissions) {
       audiencesRequestingTakeSeatNotifier.value =
-          List<ZegoUIKitUser>.from(audiencesRequestingTakeSeatNotifier.value)
-            ..removeWhere((user) => user.id == inviter.id);
+          List.from(audiencesRequestingTakeSeatNotifier.value)
+            ..removeWhere((item) => item.user.id == inviter.id);
     } else {
       /// hide invite take seat dialog
       if (_isInvitedTakeSeatDlgVisible) {
@@ -530,8 +553,8 @@ class ZegoLiveAudioRoomConnectManager {
 
   void removeRequestCoHostUsers(ZegoUIKitUser targetUser) {
     audiencesRequestingTakeSeatNotifier.value =
-        List<ZegoUIKitUser>.from(audiencesRequestingTakeSeatNotifier.value)
-          ..removeWhere((user) => user.id == targetUser.id);
+        List.from(audiencesRequestingTakeSeatNotifier.value)
+          ..removeWhere((item) => item.user.id == targetUser.id);
   }
 
   void updateAudienceConnectState(ZegoLiveAudioRoomConnectState state) {
@@ -662,7 +685,7 @@ class ZegoLiveAudioRoomConnectManager {
         .removeWhere((userID) => userIDs.contains(userID));
 
     audiencesRequestingTakeSeatNotifier.value =
-        List<ZegoUIKitUser>.from(audiencesRequestingTakeSeatNotifier.value)
-          ..removeWhere((user) => userIDs.contains(user.id));
+        List.from(audiencesRequestingTakeSeatNotifier.value)
+          ..removeWhere((item) => userIDs.contains(item.user.id));
   }
 }

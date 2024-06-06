@@ -7,7 +7,7 @@
 # parameters
 
 
-## [ZegoLiveAudioRoomSeatConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomSeatConfig-class.html) seat
+## [ZegoLiveAudioRoomSeatConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomSeatConfig-class.html) `seat`
 
 >
 >  Configuration for all seats.
@@ -18,14 +18,18 @@
 > The default layout of the audio chat room supports free layout with multiple rows and columns of seats.
 >
 > You can use this parameter to control the specific style of each row and column.
-- int rowSpacing: Spacing between rows, should be positive
-- List\<[ZegoLiveAudioRoomLayoutRowConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomLayoutRowConfig-class.html)\> rowConfigs: Configuration list for each row.
+- int `rowSpacing`: Spacing between rows, should be positive
+- List\<[ZegoLiveAudioRoomLayoutRowConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomLayoutRowConfig-class.html)\> `rowConfigs`: Configuration list for each row.
 
 - int `takeIndexWhenJoining`:
 >
 > Specifies the seat to occupy when joining the live audio room.
 >
 > This is only valid when the role is set to host or speaker.
+
+- int Function(ZegoUIKitUser user)? `takeIndexWhenAudienceRequesting`:
+>
+> When the audience take on seat, do you want specify a seat? If so, return to the seat you want to specify
 
 - bool `closeWhenJoining`:
 >
@@ -47,13 +51,13 @@
 
 - Image? `closeIcon`: The icon displayed for empty seats when all seats are closed (seats in the audio chat room are locked).
 
-- Image? hostRoleIcon: icon for host
+- Image? `hostRoleIcon`: icon for host
 
-- Image? coHostRoleIcon: icon for co-host
+- Image? `coHostRoleIcon`: icon for co-host
 
-- Image? microphoneOffIcon: icon when speaker's microphone off
+- Image? `microphoneOffIcon`: icon when speaker's microphone off
 
-- bool keepOriginalForeground: Whether to retain the original foreground
+- bool `keepOriginalForeground`: Whether to retain the original foreground
 
 - [ZegoAudioVideoViewForegroundBuilder](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoAudioVideoViewForegroundBuilder.html)? `foregroundBuilder`:
 >
@@ -69,7 +73,7 @@
 - [ZegoAvatarBuilder](https://pub.dev/documentation/zego_uikit/latest/zego_uikit/ZegoAvatarBuilder.html)? `avatarBuilder`: Use this to customize the avatar, and replace the default avatar with it.
 
 
-## [ZegoLiveAudioRoomTopMenuBarConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomTopMenuBarConfig-class.html) topMenuBar
+## [ZegoLiveAudioRoomTopMenuBarConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomTopMenuBarConfig-class.html) `topMenuBar`
 
 >
 >  Configuration options for the top menu bar (toolbar).
@@ -79,7 +83,7 @@
 
 - bool `showLeaveButton`: show leave button or not
 
-## [ZegoLiveAudioRoomBottomMenuBarConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomBottomMenuBarConfig-class.html) bottomMenuBar
+## [ZegoLiveAudioRoomBottomMenuBarConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomBottomMenuBarConfig-class.html) `bottomMenuBar`
 
 >
 >  Configuration options for the bottom menu bar (toolbar).
@@ -111,7 +115,7 @@
 > Clicking on it will display a panel showing other buttons that cannot be displayed in the menu bar (toolbar).
 
 
-## [ZegoLiveAudioRoomInRoomMessageConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomInRoomMessageConfig-class.html) inRoomMessage
+## [ZegoLiveAudioRoomInRoomMessageConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomInRoomMessageConfig-class.html) `inRoomMessage`
 
 >
 >  Configuration options for the message list.
@@ -158,12 +162,12 @@
 
 - Widget? `resendIcon`: resend button icon
 
-## [ZegoLiveAudioRoomAudioEffectConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomAudioEffectConfig-class.html) audioEffect
+## [ZegoLiveAudioRoomAudioEffectConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomAudioEffectConfig-class.html) `audioEffect`
 
 >
 >  You can use this to modify your voice and control reverb.
 
-- List\<[VoiceChangerType](https://pub.dev/documentation/zego_uikit/latest/zego_uikit/VoiceChangerType.html)\> voiceChangeEffect: List of voice changer effects. If you don't want a certain effect, simply remove it from the list.
+- List\<[VoiceChangerType](https://pub.dev/documentation/zego_uikit/latest/zego_uikit/VoiceChangerType.html)\> `voiceChangeEffect`: List of voice changer effects. If you don't want a certain effect, simply remove it from the list.
 
 >
 > ```dart
@@ -212,7 +216,7 @@
 >
 > ```
 
-- List\<[ReverbType](https://pub.dev/documentation/zego_uikit/latest/zego_uikit/ReverbType.html)\> reverbEffect: List of reverb effects. If you don't want a certain effect, simply remove it from the list.
+- List\<[ReverbType](https://pub.dev/documentation/zego_uikit/latest/zego_uikit/ReverbType.html)\> `reverbEffect`: List of reverb effects. If you don't want a certain effect, simply remove it from the list.
 
 >
 >```dart
@@ -256,26 +260,26 @@
 >}
 >```
 
-## [ZegoLiveAudioRoomLiveDurationConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomLiveDurationConfig-class.html) duration
+## [ZegoLiveAudioRoomLiveDurationConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomLiveDurationConfig-class.html) `duration`
 
 >
 >  Live audio room timing configuration.
 
-- bool isVisible: Whether to display Live Audio Room timing.
+- bool `isVisible`: Whether to display Live Audio Room timing.
 
-## [ZegoLiveAudioRoomMediaPlayerConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomMediaPlayerConfig-class.html) mediaPlayer
+## [ZegoLiveAudioRoomMediaPlayerConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomMediaPlayerConfig-class.html) `mediaPlayer`
 
 >
 >  the config of media player
 
 - bool supportTransparent: In iOS, to achieve transparency for a video using a platform view, you need to set [supportTransparent] to true.
 
-## [ZegoLiveAudioRoomBackgroundMediaConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomBackgroundMediaConfig-class.html) backgroundMedia
+## [ZegoLiveAudioRoomBackgroundMediaConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomBackgroundMediaConfig-class.html) `backgroundMedia`
 
 >
 >  the config of background music, the feature currently only works for the host
 
-- String? path:
+- String? `path`:
 >
 >  the path of background music, which can be either a local path or a network address.
 >
@@ -283,12 +287,12 @@
 
 - bool enableRepeat: whether to repeat playback.
 
-## [ZegoLiveAudioRoomMemberListConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomMemberListConfig-class.html) memberList
+## [ZegoLiveAudioRoomMemberListConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomMemberListConfig-class.html) `memberList`
 
 >
 >  Configuration related to the bottom member list, including displaying the member list, member list styles, and more.
 
-- [ZegoMemberListItemBuilder](https://pub.dev/documentation/zego_uikit/latest/zego_uikit/ZegoMemberListItemBuilder.html)? itemBuilder:
+- [ZegoMemberListItemBuilder](https://pub.dev/documentation/zego_uikit/latest/zego_uikit/ZegoMemberListItemBuilder.html)? `itemBuilder`:
 >
 >  Custom member list item view.
 > For example, suppose you have implemented a `CustomMemberListItem` component that can render a member list item view based on the user information. You can set it up like this:
@@ -305,7 +309,7 @@
 
 
 
-## [ZegoLiveAudioRoomRole](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomRole.html) role
+## [ZegoLiveAudioRoomRole](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomRole.html) `role`
 
 >
 >  Specifies the initial role when joining the live audio room.
@@ -327,7 +331,7 @@
 > ```
 
 
-## bool turnOnMicrophoneWhenJoining
+## bool `turnOnMicrophoneWhenJoining`
 
 >
 >  Whether to open the microphone when joining the audio chat room.
@@ -340,21 +344,21 @@
 >  Even if the user is an audience, they can set this value to true, and they can start chatting with others through voice after joining the room.
 >  Therefore, in general, if the role is an audience, this value should be set to false.
 
-## bool useSpeakerWhenJoining
+## bool `useSpeakerWhenJoining`
 
 >
 >  Whether to use the speaker to play audio when joining the audio chat room.
 >  The default value is `true`.
 >  If this value is set to `false`, the system's default playback device, such as the earpiece or Bluetooth headset, will be used for audio playback.
 
-## Widget? foreground
+## Widget? `foreground`
 
 >
 >  The foreground of the live audio room.
 >
 >  If you need to nest some widgets in [ZegoUIKitPrebuiltLiveAudioRoom], please use [foreground] nesting, otherwise these widgets will be lost when you minimize and restore the [ZegoUIKitPrebuiltLiveAudioRoom]
 
-## Widget? background
+## Widget? `background`
 
 >
 >  The background of the audio chat room.
@@ -375,13 +379,13 @@
 >        )))
 >  ```
 
-## [ZegoUIKitPrebuiltLiveAudioRoomInnerText](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoUIKitPrebuiltLiveAudioRoomInnerText-class.html) innerText
+## [ZegoUIKitPrebuiltLiveAudioRoomInnerText](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoUIKitPrebuiltLiveAudioRoomInnerText-class.html) `innerText`
 
 >
 >  Configuration options for modifying all text content on the UI.
 >  All visible text content on the UI can be modified using this single property.
 
-## String? userAvatarUrl
+## String? `userAvatarUrl`
 
 >
 >  Set the avatar URL for the current user.
@@ -390,7 +394,7 @@
 >  We recommend using short URLs for setting the avatar URL.
 >  If you have a specific need for using long avatar URLs, please contact [technical support](https://www.zegocloud.com).
 
-## Map<String, String> userInRoomAttributes
+## Map<String, String> `userInRoomAttributes`
 
 >
 >  Set the attributes for the current user in the current joined audio room.
@@ -400,14 +404,14 @@
 >  Each Key must be within 8 bytes, Each Value must be within 64 bytes.
 >  If you want to increase the upper limit, please contact [technical support](https://www.zegocloud.com).
 
-## [ZegoLiveAudioRoomDialogInfo](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomDialogInfo-class.html)? confirmDialogInfo
+## [ZegoLiveAudioRoomDialogInfo](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomDialogInfo-class.html)? `confirmDialogInfo`
 
 >
 >  Confirmation dialog information when leaving the audio chat room.
 >  If not set, clicking the exit button will directly exit the audio chat room.
 >  If set, a confirmation dialog will be displayed when clicking the exit button, and you will need to confirm the exit before actually exiting.
 
-## bool rootNavigator
+## bool `rootNavigator`
 
 >
 >  same as Flutter's Navigator's param
@@ -415,13 +419,13 @@
 >  this class is given instead. Useful for pushing contents above all
 >  subsequent instances of [Navigator].
 
-## Map<String, String> advanceConfigs
+## Map<String, String> `advanceConfigs`
 
 >
 >  Set advanced engine configuration, Used to enable advanced functions.
 >  For details, please consult ZEGO technical support.
 
-## Widget Function(BuildContext context)? emptyAreaBuilder
+## Widget Function(BuildContext context)? `emptyAreaBuilder`
 
 >
 >  The blank space between seat and bottomBar, which can be used to place custom widgets freely.

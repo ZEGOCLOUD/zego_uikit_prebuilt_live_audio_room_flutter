@@ -428,6 +428,7 @@ class ZegoLiveAudioRoomControllerSeatAudienceImpl
 
     return await private.seatManager?.takeOnSeat(
           index,
+          ignoreLocked: isForce,
           isForce: isForce,
           isUpdateOwner: true,
           isDeleteAfterOwnerLeft: true,
@@ -436,6 +437,9 @@ class ZegoLiveAudioRoomControllerSeatAudienceImpl
   }
 
   /// The audience actively requests to occupy a seat.
+  ///
+  ///  If you want to apply for a specific seat, set [index] that if the
+  ///  applied seat is busy, the seat will not be successfully take.
   ///
   /// Related APIs:
   /// [cancelTakingRequest]
@@ -457,6 +461,9 @@ class ZegoLiveAudioRoomControllerSeatAudienceImpl
       return false;
     }
 
+    final targetIndex = private
+        .connectManager?.config.seat.takeIndexWhenAudienceRequesting
+        ?.call(ZegoUIKit().getLocalUser());
     return ZegoUIKit()
         .getSignalingPlugin()
         .sendInvitation(
@@ -465,7 +472,12 @@ class ZegoLiveAudioRoomControllerSeatAudienceImpl
           invitees: private.seatManager?.hostsNotifier.value ?? [],
           timeout: 60,
           type: ZegoLiveAudioRoomInvitationType.requestTakeSeat.value,
-          data: '',
+          data: null == targetIndex
+              ? ''
+              : ZegoAudioRoomAudienceRequestConnectProtocol(
+                  user: ZegoUIKit().getLocalUser(),
+                  targetIndex: targetIndex,
+                ).toJsonString(),
         )
         .then((ZegoSignalingPluginSendInvitationResult result) {
       ZegoLoggerService.logInfo(
@@ -552,6 +564,7 @@ class ZegoLiveAudioRoomControllerSeatAudienceImpl
         return await private.seatManager
                 ?.takeOnSeat(
               private.seatManager?.getNearestEmptyIndex() ?? -1,
+              ignoreLocked: true,
               isForce: true,
               isDeleteAfterOwnerLeft: true,
             )

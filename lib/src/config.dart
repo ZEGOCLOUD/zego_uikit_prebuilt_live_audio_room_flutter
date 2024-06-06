@@ -230,6 +230,33 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
             backgroundMedia ?? ZegoLiveAudioRoomBackgroundMediaConfig(),
         innerText =
             translationText ?? ZegoUIKitPrebuiltLiveAudioRoomInnerText();
+
+  @override
+  String toString() {
+    return 'ZegoUIKitPrebuiltLiveAudioRoomConfig:{'
+        'seat:$seat, '
+        'topMenuBar:$topMenuBar, '
+        'bottomMenuBar:$bottomMenuBar, '
+        'inRoomMessage:$inRoomMessage, '
+        'audioEffect:$audioEffect, '
+        'duration:$duration, '
+        'mediaPlayer:$mediaPlayer, '
+        'backgroundMedia:$backgroundMedia, '
+        'memberList:$memberList, '
+        'role:$role, '
+        'turnOnMicrophoneWhenJoining:$turnOnMicrophoneWhenJoining, '
+        'useSpeakerWhenJoining:$useSpeakerWhenJoining, '
+        'foreground:$foreground, '
+        'background:$background, '
+        'innerText:$innerText, '
+        'userAvatarUrl:$userAvatarUrl, '
+        'userInRoomAttributes:$userInRoomAttributes, '
+        'confirmDialogInfo:$confirmDialogInfo, '
+        'rootNavigator:$rootNavigator, '
+        'advanceConfigs:$advanceConfigs, '
+        'emptyAreaBuilder:$emptyAreaBuilder, '
+        '}';
+  }
 }
 
 /// Configuration options for controlling seat behavior and style.
@@ -242,6 +269,10 @@ class ZegoLiveAudioRoomSeatConfig {
   /// Specifies the seat to occupy when joining the live audio room.
   /// This is only valid when the role is set to host or speaker.
   int takeIndexWhenJoining;
+
+  /// When the audience take on seat, do you want specify a seat? If so,
+  /// return to the seat you want to specify
+  int Function(ZegoUIKitUser user)? takeIndexWhenAudienceRequesting;
 
   /// Specifies whether to lock the seat automatically after entering the room.
   /// It only takes effect when set by the host
@@ -276,8 +307,8 @@ class ZegoLiveAudioRoomSeatConfig {
 
   /// Use this to customize the foreground view of the seat, and the `ZegoUIKitPrebuiltLiveAudioRoom` will returns the current user on the seat and the corresponding seat index.
   ///
-  /// Please note that this will overwrite the original foreground.
-  /// If you want to keep the original foreground, set [keepOriginalForeground] to true.
+  /// Please note that this will overwrite the original foreground(user name, host flag, co-host flag, mic-off flag).
+  /// If you want to keep the original foreground, please set [keepOriginalForeground] be true.
   ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;
 
   /// Use this to customize the background view of the seat, and the `ZegoUIKitPrebuiltLiveAudioRoom` returns the current user on the seat and the corresponding seat index.
@@ -312,6 +343,7 @@ class ZegoLiveAudioRoomSeatConfig {
   ZegoLiveAudioRoomSeatConfig({
     ZegoLiveAudioRoomLayoutConfig? layout,
     this.takeIndexWhenJoining = -1,
+    this.takeIndexWhenAudienceRequesting,
     this.closeWhenJoining = true,
     this.hostIndexes = const [0],
     this.openIcon,
@@ -325,6 +357,27 @@ class ZegoLiveAudioRoomSeatConfig {
     this.coHostRoleIcon,
     this.microphoneOffIcon,
   }) : layout = layout ?? ZegoLiveAudioRoomLayoutConfig();
+
+  @override
+  String toString() {
+    return 'ZegoLiveAudioRoomSeatConfig:{'
+        'layout:$layout, '
+        'takeIndexWhenJoining:$takeIndexWhenJoining, '
+        'takeIndexWhenAudienceRequesting:$takeIndexWhenAudienceRequesting, '
+        'closeWhenJoining:$closeWhenJoining, '
+        'hostIndexes:$hostIndexes, '
+        'openIcon:$openIcon, '
+        'closeIcon:$closeIcon, '
+        'showSoundWaveInAudioMode:$showSoundWaveInAudioMode, '
+        'avatarBuilder:$avatarBuilder, '
+        'keepOriginalForeground:$keepOriginalForeground, '
+        'foregroundBuilder:$foregroundBuilder, '
+        'backgroundBuilder:$backgroundBuilder, '
+        'hostRoleIcon:$hostRoleIcon, '
+        'coHostRoleIcon:$coHostRoleIcon, '
+        'microphoneOffIcon:$microphoneOffIcon, '
+        '}';
+  }
 }
 
 /// Configuration options for the top menu bar (toolbar).
@@ -341,6 +394,14 @@ class ZegoLiveAudioRoomTopMenuBarConfig {
     this.buttons = const [],
     this.showLeaveButton = true,
   });
+
+  @override
+  String toString() {
+    return 'ZegoLiveAudioRoomTopMenuBarConfig:{'
+        'buttons:$buttons, '
+        'showLeaveButton:$showLeaveButton, '
+        '}';
+  }
 }
 
 /// Configuration options for the bottom menu bar (toolbar).
@@ -399,6 +460,21 @@ class ZegoLiveAudioRoomBottomMenuBarConfig {
     this.audienceExtendButtons = const [],
     this.maxCount = 5,
   });
+
+  @override
+  String toString() {
+    return 'ZegoLiveAudioRoomBottomMenuBarConfig:{'
+        'visible:$visible, '
+        'showInRoomMessageButton:$showInRoomMessageButton, '
+        'maxCount:$maxCount, '
+        'hostButtons:$hostButtons, '
+        'speakerButtons:$speakerButtons, '
+        'audienceButtons:$audienceButtons, '
+        'hostExtendButtons:$hostExtendButtons, '
+        'speakerExtendButtons:$speakerExtendButtons, '
+        'audienceExtendButtons:$audienceExtendButtons, '
+        '}';
+  }
 }
 
 /// Control options for the bottom-left message list.
@@ -487,6 +563,28 @@ class ZegoLiveAudioRoomInRoomMessageConfig {
     this.showName = true,
     this.showAvatar = true,
   });
+
+  @override
+  String toString() {
+    return 'ZegoLiveAudioRoomInRoomMessageConfig:{'
+        'visible:$visible, '
+        'width:$width, '
+        'height:$height, '
+        'bottomLeft:$bottomLeft, '
+        'opacity:$opacity, '
+        'maxLines:$maxLines, '
+        'nameTextStyle:$nameTextStyle, '
+        'messageTextStyle:$messageTextStyle, '
+        'backgroundColor:$backgroundColor, '
+        'borderRadius:$borderRadius, '
+        'paddings:$paddings, '
+        'resendIcon:$resendIcon, '
+        'background:$background, '
+        'itemBuilder:$itemBuilder, '
+        'showName:$showName, '
+        'showAvatar:$showAvatar, '
+        '}';
+  }
 }
 
 /// Configuration for the member list.
@@ -515,6 +613,13 @@ class ZegoLiveAudioRoomMemberListConfig {
   ZegoLiveAudioRoomMemberListConfig({
     this.itemBuilder,
   });
+
+  @override
+  String toString() {
+    return 'ZegoLiveAudioRoomMemberListConfig:{'
+        'itemBuilder:$itemBuilder, '
+        '}';
+  }
 }
 
 /// Configuration options for voice changer and reverberation effects.
@@ -566,6 +671,14 @@ class ZegoLiveAudioRoomAudioEffectConfig {
   bool get isSupportVoiceChange => voiceChangeEffect.isNotEmpty;
 
   bool get isSupportReverb => reverbEffect.isNotEmpty;
+
+  @override
+  String toString() {
+    return 'ZegoLiveAudioRoomAudioEffectConfig:{'
+        'voiceChangeEffect:$voiceChangeEffect, '
+        'reverbEffect:$reverbEffect, '
+        '}';
+  }
 }
 
 /// Live Audio Room timing configuration.
@@ -576,6 +689,12 @@ class ZegoLiveAudioRoomLiveDurationConfig {
   ZegoLiveAudioRoomLiveDurationConfig({
     this.isVisible = true,
   });
+  @override
+  String toString() {
+    return 'ZegoLiveAudioRoomLiveDurationConfig:{'
+        'isVisible:$isVisible, '
+        '}';
+  }
 }
 
 /// Live Audio Room background media configuration.
@@ -591,6 +710,13 @@ class ZegoLiveAudioRoomBackgroundMediaConfig {
     this.path,
     this.enableRepeat = true,
   });
+  @override
+  String toString() {
+    return 'ZegoLiveAudioRoomBackgroundMediaConfig:{'
+        'path:$path, '
+        'enableRepeat:$enableRepeat, '
+        '}';
+  }
 }
 
 /// media player config
@@ -601,4 +727,10 @@ class ZegoLiveAudioRoomMediaPlayerConfig {
   ZegoLiveAudioRoomMediaPlayerConfig({
     this.supportTransparent = false,
   });
+  @override
+  String toString() {
+    return 'ZegoLiveAudioRoomMediaPlayerConfig:{'
+        'supportTransparent:$supportTransparent, '
+        '}';
+  }
 }

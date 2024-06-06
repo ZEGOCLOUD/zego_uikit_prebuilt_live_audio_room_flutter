@@ -430,6 +430,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
       );
       await takeOnSeat(
         config.seat.takeIndexWhenJoining,
+        ignoreLocked: true,
         isForce: true,
         isUpdateOwner: true,
         isDeleteAfterOwnerLeft: true,
@@ -743,6 +744,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
 
   Future<bool> takeOnSeat(
     int index, {
+    bool ignoreLocked = false,
     bool isForce = false,
     bool isUpdateOwner = false,
     bool isDeleteAfterOwnerLeft = false,
@@ -756,7 +758,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
       return false;
     }
 
-    if (!isForce && lockedSeatNotifier.value.contains(index)) {
+    if (!ignoreLocked && lockedSeatNotifier.value.contains(index)) {
       ZegoLoggerService.logInfo(
         'switch seat $index, but seat index is locked:${lockedSeatNotifier.value}',
         tag: 'audio room',

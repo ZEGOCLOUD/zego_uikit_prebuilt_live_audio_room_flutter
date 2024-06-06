@@ -9,11 +9,13 @@ import 'package:file_picker/file_picker.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/core_managers.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/core/protocol.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
@@ -23,7 +25,6 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/live_audio_room.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/data.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/overlay_machine.dart';
-import 'components/dialogs.dart';
 
 part 'controller/media.dart';
 

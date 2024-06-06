@@ -192,10 +192,14 @@ class ZegoLiveAudioRoomSeatAudienceEvents {
   /// The audience has received a notification that the host has invited them to take a seat.
   VoidCallback? onTakingInvitationReceived;
 
+  /// The audience take a seat has failed, invited or requested
+  VoidCallback? onTakingFailed;
+
   ZegoLiveAudioRoomSeatAudienceEvents({
     this.onTakingRequestFailed,
     this.onTakingRequestRejected,
     this.onTakingInvitationReceived,
+    this.onTakingFailed,
   });
 }
 

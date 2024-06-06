@@ -1,5 +1,3 @@
-// Dart imports:
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -11,6 +9,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/components.da
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/core/protocol.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
@@ -106,10 +105,18 @@ class _ZegoLiveAudioRoomAudienceConnectButtonState
         ? widget.seatManager.hostsNotifier.value
         : widget.seatManager.coHostsNotifier.value;
 
+    final targetIndex = widget
+        .connectManager.config.seat.takeIndexWhenAudienceRequesting
+        ?.call(ZegoUIKit().getLocalUser());
     return ZegoStartInvitationButton(
       invitationType: ZegoLiveAudioRoomInvitationType.requestTakeSeat.value,
       invitees: invitees,
-      data: '',
+      data: null == targetIndex
+          ? ''
+          : ZegoAudioRoomAudienceRequestConnectProtocol(
+              user: ZegoUIKit().getLocalUser(),
+              targetIndex: targetIndex,
+            ).toJsonString(), //
       icon: buttonIcon,
       buttonSize: Size(330.zR, 72.zR),
       iconSize: Size(48.zR, 48.zR),

@@ -1,4 +1,16 @@
+## 3.7.2
 
+- Update dependency.
+
+## 3.7.1
+
+- Update dependency.
+
+## 3.7.0
+
+- Features: 
+  - Support specify the seat index when the audience take on seat by `ZegoUIKitPrebuiltLiveAudioRoomConfig.seat.takeIndexWhenAudienceRequesting`
+  
 ## 3.6.7
 
 - Update dependency.

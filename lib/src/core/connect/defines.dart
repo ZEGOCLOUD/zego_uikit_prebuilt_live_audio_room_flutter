@@ -1,3 +1,6 @@
+// Package imports:
+import 'package:zego_uikit/zego_uikit.dart';
+
 /// @nodoc
 enum ZegoLiveAudioRoomConnectState {
   idle,
@@ -12,6 +15,16 @@ enum ZegoLiveAudioRoomInvitationType {
 
   ///  host invite audience take seat
   inviteToTakeSeat,
+}
+
+class ZegoLiveAudioRoomRequestingTakeSeatListItem {
+  const ZegoLiveAudioRoomRequestingTakeSeatListItem({
+    required this.user,
+    required this.data,
+  });
+
+  final ZegoUIKitUser user;
+  final String data;
 }
 
 /// @nodoc

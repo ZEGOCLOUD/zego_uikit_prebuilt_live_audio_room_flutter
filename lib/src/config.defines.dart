@@ -66,6 +66,9 @@ class ZegoLiveAudioRoomLayoutConfig {
   /// @nodoc
   @override
   String toString() {
-    return 'spacing:$rowSpacing, row configs:${rowConfigs.map((e) => e.toString()).toList()}';
+    return 'ZegoLiveAudioRoomLayoutConfig:{'
+        'spacing:$rowSpacing, '
+        'row configs:${rowConfigs.map((e) => e.toString()).toList()}'
+        '}';
   }
 }

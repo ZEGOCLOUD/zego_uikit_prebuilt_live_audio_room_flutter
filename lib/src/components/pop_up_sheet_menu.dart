@@ -86,6 +86,7 @@ class _ZegoLiveAudioRoomPopUpSheetMenuState
           case ZegoLiveAudioRoomPopupItemValue.takeOnSeat:
             widget.seatManager.takeOnSeat(
               popupItem.data as int,
+              ignoreLocked: false,
               isForce: false,
               isDeleteAfterOwnerLeft: true,
             );

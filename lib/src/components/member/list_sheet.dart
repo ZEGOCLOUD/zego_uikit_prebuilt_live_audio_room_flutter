@@ -11,6 +11,8 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manage
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_sheet_menu.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/core/protocol.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 
@@ -78,7 +80,9 @@ class _ZegoLiveAudioRoomMemberListSheetState
                   return ValueListenableBuilder<Map<String, String>>(
                       valueListenable: widget.seatManager.seatsUserMapNotifier,
                       builder: (context, _, __) {
-                        return ValueListenableBuilder<List<ZegoUIKitUser>>(
+                        return ValueListenableBuilder<
+                                List<
+                                    ZegoLiveAudioRoomRequestingTakeSeatListItem>>(
                             valueListenable: widget.connectManager
                                 .audiencesRequestingTakeSeatNotifier,
                             builder: (context, requestCoHostUsers, _) {
@@ -271,16 +275,22 @@ class _ZegoLiveAudioRoomMemberListSheetState
     return ValueListenableBuilder<bool>(
       valueListenable: widget.seatManager.isRoomSeatLockedNotifier,
       builder: (context, isRoomSeatLocked, _) {
-        return ValueListenableBuilder<List<ZegoUIKitUser>>(
+        return ValueListenableBuilder<
+            List<ZegoLiveAudioRoomRequestingTakeSeatListItem>>(
           valueListenable:
               widget.connectManager.audiencesRequestingTakeSeatNotifier,
           builder: (context, requestTakeSeatUsers, _) {
-            final index = requestTakeSeatUsers.indexWhere(
-                (requestCoHostUser) => user.id == requestCoHostUser.id);
-            if (-1 != index) {
+            final requestUserIndex = requestTakeSeatUsers
+                .indexWhere((item) => user.id == item.user.id);
+            if (-1 != requestUserIndex) {
               if (isRoomSeatLocked) {
                 /// on show agree/disagree when seat is locked
-                return requestTakeSeatUserControlItem(user);
+                return requestTakeSeatUserControlItem(
+                  user,
+                  ZegoAudioRoomAudienceRequestConnectProtocol.fromJsonString(
+                    requestTakeSeatUsers[requestUserIndex].data,
+                  ),
+                );
               }
             } else if (widget.seatManager.localHasHostPermissions) {
               return hostPermissionControlItems(user);
@@ -293,7 +303,10 @@ class _ZegoLiveAudioRoomMemberListSheetState
     );
   }
 
-  Widget requestTakeSeatUserControlItem(ZegoUIKitUser user) {
+  Widget requestTakeSeatUserControlItem(
+    ZegoUIKitUser user,
+    ZegoAudioRoomAudienceRequestConnectProtocol requestConnectProtocol,
+  ) {
     return Row(
       children: [
         controlButton(
@@ -327,7 +340,12 @@ class _ZegoLiveAudioRoomMemberListSheetState
             onPressed: () {
               ZegoUIKit()
                   .getSignalingPlugin()
-                  .acceptInvitation(inviterID: user.id, data: '')
+                  .acceptInvitation(
+                    inviterID: user.id,
+                    data: requestConnectProtocol.isEmpty
+                        ? ''
+                        : requestConnectProtocol.toJsonString(),
+                  )
                   .then((result) {
                 ZegoLoggerService.logInfo(
                   'accept audience ${user.name} link request, result:$result',
@@ -448,7 +466,7 @@ class _ZegoLiveAudioRoomMemberListSheetState
   bool isUserInRequestSpeaker(String userID) {
     return -1 !=
         widget.connectManager.audiencesRequestingTakeSeatNotifier.value
-            .indexWhere((requestUser) => userID == requestUser.id);
+            .indexWhere((item) => userID == item.user.id);
   }
 }
 
