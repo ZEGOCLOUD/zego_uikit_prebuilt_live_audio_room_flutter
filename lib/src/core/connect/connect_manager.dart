@@ -64,8 +64,8 @@ class ZegoLiveAudioRoomConnectManager {
     if (_initialized) {
       ZegoLoggerService.logInfo(
         'had already init',
-        tag: 'live audio',
-        subTag: 'seat manager',
+        tag: 'audio-room-seat',
+        subTag: 'connect manager',
       );
       return;
     }
@@ -74,7 +74,7 @@ class ZegoLiveAudioRoomConnectManager {
 
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'live audio',
+      tag: 'audio-room-seat',
       subTag: 'connect manager',
     );
 
@@ -86,7 +86,7 @@ class ZegoLiveAudioRoomConnectManager {
     if (!_initialized) {
       ZegoLoggerService.logInfo(
         'not init before',
-        tag: 'live audio',
+        tag: 'audio-room-seat',
         subTag: 'connect manager',
       );
     }
@@ -95,7 +95,7 @@ class ZegoLiveAudioRoomConnectManager {
 
     ZegoLoggerService.logInfo(
       'uninit',
-      tag: 'live audio',
+      tag: 'audio-room-seat',
       subTag: 'connect manager',
     );
 
@@ -143,14 +143,14 @@ class ZegoLiveAudioRoomConnectManager {
   Future<bool> inviteAudienceConnect(ZegoUIKitUser invitee) async {
     ZegoLoggerService.logInfo(
       'invite audience take seat, ${invitee.id} ${invitee.name}',
-      tag: 'live audio',
+      tag: 'audio-room-seat',
       subTag: 'connect manager',
     );
 
     if (invitee.isEmpty()) {
       ZegoLoggerService.logInfo(
         'invitee is empty',
-        tag: 'live audio',
+        tag: 'audio-room-seat',
         subTag: 'connect manager',
       );
     }
@@ -158,7 +158,7 @@ class ZegoLiveAudioRoomConnectManager {
     if (_audienceIDsInvitedTakeSeatByHost.contains(invitee.id)) {
       ZegoLoggerService.logInfo(
         'audience is inviting take seat',
-        tag: 'live audio',
+        tag: 'audio-room-seat',
         subTag: 'connect manager',
       );
       return false;
@@ -192,7 +192,7 @@ class ZegoLiveAudioRoomConnectManager {
   void clearAudienceIDsInvitedTakeSeatByHost() {
     ZegoLoggerService.logInfo(
       'clear audience ids invited take seat by host',
-      tag: 'live audio',
+      tag: 'audio-room-seat',
       subTag: 'connect manager',
     );
 
@@ -203,7 +203,7 @@ class ZegoLiveAudioRoomConnectManager {
     if (seatManager.isLeavingRoom) {
       ZegoLoggerService.logInfo(
         'on invitation received, but is leaving room...',
-        tag: 'live audio',
+        tag: 'audio-room-seat',
         subTag: 'connect manager',
       );
       return;
@@ -219,7 +219,7 @@ class ZegoLiveAudioRoomConnectManager {
     ZegoLoggerService.logInfo(
       'on invitation received, inviter:$inviter,'
       ' $type($invitationType) $data',
-      tag: 'live audio',
+      tag: 'audio-room-seat',
       subTag: 'connect manager',
     );
 
@@ -247,7 +247,7 @@ class ZegoLiveAudioRoomConnectManager {
     if (_isInvitedTakeSeatDlgVisible) {
       ZegoLoggerService.logInfo(
         'invite to take seat dialog is visible',
-        tag: 'live audio',
+        tag: 'audio-room-seat',
         subTag: 'connect manager',
       );
       return;
@@ -256,7 +256,7 @@ class ZegoLiveAudioRoomConnectManager {
     if (-1 != seatManager.getIndexByUserID(ZegoUIKit().getLocalUser().id)) {
       ZegoLoggerService.logInfo(
         'audience is take on seat now',
-        tag: 'live audio',
+        tag: 'audio-room-seat',
         subTag: 'connect manager',
       );
       return;
@@ -267,7 +267,7 @@ class ZegoLiveAudioRoomConnectManager {
     /// self-cancellation if requesting when host invite you
     ZegoLoggerService.logInfo(
       'audience self-cancel take seat request if requesting',
-      tag: 'live audio',
+      tag: 'audio-room-seat',
       subTag: 'connect manager',
     );
     audienceCancelTakeSeatRequest().then((value) {
@@ -296,7 +296,7 @@ class ZegoLiveAudioRoomConnectManager {
             .then((result) {
           ZegoLoggerService.logInfo(
             'refuse take seat invite, result:$result',
-            tag: 'live audio',
+            tag: 'audio-room-seat',
             subTag: 'connect manager',
           );
         });
@@ -312,7 +312,7 @@ class ZegoLiveAudioRoomConnectManager {
 
         ZegoLoggerService.logInfo(
           'accept take seat invite',
-          tag: 'live audio',
+          tag: 'audio-room-seat',
           subTag: 'connect manager',
         );
 
@@ -322,7 +322,7 @@ class ZegoLiveAudioRoomConnectManager {
             .then((result) {
           ZegoLoggerService.logInfo(
             'accept take seat invite, result:$result',
-            tag: 'live audio',
+            tag: 'audio-room-seat',
             subTag: 'connect manager',
           );
 
@@ -346,7 +346,7 @@ class ZegoLiveAudioRoomConnectManager {
                 seatManager.getNearestEmptyIndex();
             ZegoLoggerService.logInfo(
               'accept take seat invite, target seat index is $targetSeatIndex',
-              tag: 'live audio',
+              tag: 'audio-room-seat',
               subTag: 'connect manager',
             );
             seatManager
@@ -382,7 +382,7 @@ class ZegoLiveAudioRoomConnectManager {
 
     ZegoLoggerService.logInfo(
       'on invitation accepted, invitee:$invitee, data:$data',
-      tag: 'live audio',
+      tag: 'audio-room-seat',
       subTag: 'connect manager',
     );
 
@@ -406,7 +406,7 @@ class ZegoLiveAudioRoomConnectManager {
         if (targetSeatIndex < 0) {
           ZegoLoggerService.logInfo(
             'on invitation accepted, target seat index is $targetSeatIndex invalid',
-            tag: 'live audio',
+            tag: 'audio-room-seat',
             subTag: 'connect manager',
           );
 
@@ -416,7 +416,7 @@ class ZegoLiveAudioRoomConnectManager {
 
         ZegoLoggerService.logInfo(
           'on invitation accepted, target seat index is $targetSeatIndex',
-          tag: 'live audio',
+          tag: 'audio-room-seat',
           subTag: 'connect manager',
         );
 
@@ -433,7 +433,7 @@ class ZegoLiveAudioRoomConnectManager {
             .then((result) {
           ZegoLoggerService.logInfo(
             'on invitation accepted, take on seat result:$result',
-            tag: 'live audio',
+            tag: 'audio-room-seat',
             subTag: 'connect manager',
           );
 
@@ -454,7 +454,7 @@ class ZegoLiveAudioRoomConnectManager {
 
     ZegoLoggerService.logInfo(
       'on invitation canceled, inviter:$inviter, data:$data',
-      tag: 'live audio',
+      tag: 'audio-room-seat',
       subTag: 'connect manager',
     );
 
@@ -482,7 +482,7 @@ class ZegoLiveAudioRoomConnectManager {
 
     ZegoLoggerService.logInfo(
       'on invitation refused, data: $data, invitee:$invitee',
-      tag: 'live audio',
+      tag: 'audio-room-seat',
       subTag: 'connect manager',
     );
 
@@ -509,7 +509,7 @@ class ZegoLiveAudioRoomConnectManager {
 
     ZegoLoggerService.logInfo(
       'on invitation timeout, inviter:$inviter, data:$data',
-      tag: 'live audio',
+      tag: 'audio-room-seat',
       subTag: 'connect manager',
     );
 
@@ -536,7 +536,7 @@ class ZegoLiveAudioRoomConnectManager {
     ZegoLoggerService.logInfo(
       'on invitation response timeout, data: $data, '
       'invitees:${invitees.map((e) => e.toString())}',
-      tag: 'live audio',
+      tag: 'audio-room-seat',
       subTag: 'connect manager',
     );
 
@@ -561,7 +561,7 @@ class ZegoLiveAudioRoomConnectManager {
     if (state == audienceLocalConnectStateNotifier.value) {
       ZegoLoggerService.logInfo(
         'audience connect state is same: $state',
-        tag: 'live audio',
+        tag: 'audio-room-seat',
         subTag: 'connect manager',
       );
       return;
@@ -569,7 +569,7 @@ class ZegoLiveAudioRoomConnectManager {
 
     ZegoLoggerService.logInfo(
       'update audience connect state: $state',
-      tag: 'live audio',
+      tag: 'audio-room-seat',
       subTag: 'connect manager',
     );
 
@@ -602,7 +602,7 @@ class ZegoLiveAudioRoomConnectManager {
   void onSeatLockedChanged(bool isLocked) {
     ZegoLoggerService.logInfo(
       'on seat locked changed: $isLocked',
-      tag: 'live audio',
+      tag: 'audio-room-seat',
       subTag: 'connect manager',
     );
 
@@ -624,7 +624,7 @@ class ZegoLiveAudioRoomConnectManager {
   void hostCancelTakeSeatInvitation() {
     ZegoLoggerService.logInfo(
       'host cancel take seat invitation',
-      tag: 'live audio',
+      tag: 'audio-room-seat',
       subTag: 'connect manager',
     );
 
@@ -641,7 +641,7 @@ class ZegoLiveAudioRoomConnectManager {
   Future<bool> audienceCancelTakeSeatRequest() async {
     ZegoLoggerService.logInfo(
       'audience cancel take seat request, connect state: ${audienceLocalConnectStateNotifier.value}',
-      tag: 'live audio',
+      tag: 'audio-room-seat',
       subTag: 'connect manager',
     );
 
@@ -661,7 +661,7 @@ class ZegoLiveAudioRoomConnectManager {
           'code:${result.error?.code}, '
           'message:${result.error?.message}, '
           'errorInvitees:${result.errorInvitees}',
-          tag: 'audio room',
+          tag: 'audio-room-seat',
           subTag: 'connect manager',
         );
 
@@ -675,7 +675,7 @@ class ZegoLiveAudioRoomConnectManager {
   void onUserListLeaveUpdated(List<ZegoUIKitUser> users) {
     ZegoLoggerService.logInfo(
       'users leave, ${users.map((e) => e.toString()).toList()}',
-      tag: 'live audio',
+      tag: 'audio-room-seat',
       subTag: 'connect manager',
     );
 

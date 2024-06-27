@@ -64,7 +64,7 @@ class _ZegoLiveAudioRoomLeaveButtonState
         if (widget.seatManager.isRoomAttributesBatching) {
           ZegoLoggerService.logInfo(
             'room attribute is batching, ignore',
-            tag: 'audio room',
+            tag: 'audio-room',
             subTag: 'leave button',
           );
           return false;

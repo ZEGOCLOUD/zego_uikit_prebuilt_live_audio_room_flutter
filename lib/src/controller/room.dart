@@ -46,23 +46,22 @@ class ZegoLiveAudioRoomControllerRoomImpl
   }) async {
     if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {
       ZegoLoggerService.logInfo(
-        'updateProperties, signaling is null',
-        tag: 'audio room',
-        subTag: 'controller.room',
+        'signaling is null',
+        tag: 'audio-room',
+        subTag: 'controller.room, updateProperties',
       );
 
       return false;
     }
 
     ZegoLoggerService.logInfo(
-      'updateProperties, '
       'roomID:$roomID, '
       'roomProperties:$roomProperties, '
       'isForce:$isForce, '
       'isDeleteAfterOwnerLeft:$isDeleteAfterOwnerLeft, '
       'isUpdateOwner:$isUpdateOwner, ',
-      tag: 'audio room',
-      subTag: 'controller.room',
+      tag: 'audio-room',
+      subTag: 'controller.room, updateProperties',
     );
 
     return ZegoUIKit()
@@ -77,9 +76,9 @@ class ZegoLiveAudioRoomControllerRoomImpl
         .then((result) {
       if (null != result.error) {
         ZegoLoggerService.logInfo(
-          'updateProperties, error:$result',
-          tag: 'audio room',
-          subTag: 'controller.room',
+          'error:$result',
+          tag: 'audio-room',
+          subTag: 'controller.room, updateProperties',
         );
 
         return false;
@@ -97,21 +96,20 @@ class ZegoLiveAudioRoomControllerRoomImpl
   }) async {
     if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {
       ZegoLoggerService.logInfo(
-        'deleteRoomProperties, signaling is null',
-        tag: 'audio room',
-        subTag: 'controller.room',
+        'signaling is null',
+        tag: 'audio-room',
+        subTag: 'controller.room, deleteRoomProperties',
       );
 
       return false;
     }
 
     ZegoLoggerService.logInfo(
-      'deleteRoomProperties, '
       'roomID:$roomID, '
       'keys:$keys, '
       'isForce:$isForce, ',
-      tag: 'audio room',
-      subTag: 'controller.room',
+      tag: 'audio-room',
+      subTag: 'controller.room, deleteRoomProperties',
     );
 
     return ZegoUIKit()
@@ -124,9 +122,9 @@ class ZegoLiveAudioRoomControllerRoomImpl
         .then((result) {
       if (null != result.error) {
         ZegoLoggerService.logInfo(
-          'deleteRoomProperties, error:$result',
-          tag: 'audio room',
-          subTag: 'controller.room',
+          'error:$result',
+          tag: 'audio-room',
+          subTag: 'controller.room, deleteRoomProperties',
         );
 
         return false;
@@ -142,19 +140,18 @@ class ZegoLiveAudioRoomControllerRoomImpl
   }) async {
     if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {
       ZegoLoggerService.logInfo(
-        'queryRoomProperties, signaling is null',
-        tag: 'audio room',
-        subTag: 'controller.room',
+        'signaling is null',
+        tag: 'audio-room',
+        subTag: 'controller.room， queryProperties',
       );
 
       return <String, String>{};
     }
 
     ZegoLoggerService.logInfo(
-      'queryProperties, '
       'roomID:$roomID, ',
-      tag: 'audio room',
-      subTag: 'controller.room',
+      tag: 'audio-room',
+      subTag: 'controller.room， queryProperties',
     );
 
     return ZegoUIKit()
@@ -165,9 +162,9 @@ class ZegoLiveAudioRoomControllerRoomImpl
         .then((result) {
       if (null != result.error) {
         ZegoLoggerService.logInfo(
-          'queryRoomProperties, error:${result.error}',
-          tag: 'audio room',
-          subTag: 'controller.room',
+          'error:${result.error}',
+          tag: 'audio-room',
+          subTag: 'controller.room， queryProperties',
         );
 
         return <String, String>{};
@@ -181,8 +178,8 @@ class ZegoLiveAudioRoomControllerRoomImpl
   Stream<ZegoSignalingPluginRoomPropertiesUpdatedEvent> propertiesStream() {
     if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {
       ZegoLoggerService.logInfo(
-        'getRoomPropertiesStream, signaling is null',
-        tag: 'audio room',
+        'propertiesStream, signaling is null',
+        tag: 'audio-room',
         subTag: 'controller.room',
       );
 
@@ -206,19 +203,18 @@ class ZegoLiveAudioRoomControllerRoomImpl
   }) async {
     if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {
       ZegoLoggerService.logInfo(
-        'sendCommand, signaling is null',
-        tag: 'audio room',
-        subTag: 'controller.room',
+        'signaling is null',
+        tag: 'audio-room',
+        subTag: 'controller.room，sendCommand',
       );
 
       return false;
     }
 
     ZegoLoggerService.logInfo(
-      'sendCommand, '
       'roomID:$roomID, ',
-      tag: 'audio room',
-      subTag: 'controller.room',
+      tag: 'audio-room',
+      subTag: 'controller.room，sendCommand',
     );
 
     return ZegoUIKit()
@@ -230,9 +226,9 @@ class ZegoLiveAudioRoomControllerRoomImpl
         .then((result) {
       if (null != result.error) {
         ZegoLoggerService.logInfo(
-          'sendCommand, error:${result.error}',
-          tag: 'audio room',
-          subTag: 'controller.room',
+          'error:${result.error}',
+          tag: 'audio-room',
+          subTag: 'controller.room，sendCommand',
         );
 
         return false;
@@ -255,7 +251,7 @@ class ZegoLiveAudioRoomControllerRoomImpl
     if (null == ZegoUIKit().getPlugin(ZegoUIKitPluginType.signaling)) {
       ZegoLoggerService.logInfo(
         'commandReceivedStream, signaling is null',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'controller.room',
       );
 
@@ -275,7 +271,7 @@ class ZegoLiveAudioRoomControllerRoomImpl
   Future<bool> removeUser(List<String> userIDs) async {
     ZegoLoggerService.logInfo(
       'remove user:$userIDs',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.room',
     );
 

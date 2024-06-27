@@ -14,16 +14,27 @@ class AudioRoomMessageControllerImpl {
   /// @return Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
   ///
   /// @return A `Future` that representing whether the request was successful.
-  Future<bool> send(String message) async {
-    return ZegoUIKit().sendInRoomMessage(message);
+  Future<bool> send(
+    String message, {
+    ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
+  }) async {
+    ZegoLoggerService.logInfo(
+      'send',
+      tag: 'audio-room',
+      subTag: 'controller.message',
+    );
+
+    return ZegoUIKit().sendInRoomMessage(message, type: type);
   }
 
   /// Retrieves a list of chat messages that already exist in the room.
   ///
   /// @return A `List` of [ZegoInRoomMessage] objects representing the chat messages that
   /// already exist in the room.
-  List<ZegoInRoomMessage> list() {
-    return ZegoUIKit().getInRoomMessages();
+  List<ZegoInRoomMessage> list({
+    ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
+  }) {
+    return ZegoUIKit().getInRoomMessages(type: type);
   }
 
   /// Retrieves a list stream of chat messages that already exist in the room.
@@ -62,7 +73,9 @@ class AudioRoomMessageControllerImpl {
   ///     ),
   ///   )
   /// ```
-  Stream<List<ZegoInRoomMessage>> stream() {
-    return ZegoUIKit().getInRoomMessageListStream();
+  Stream<List<ZegoInRoomMessage>> stream({
+    ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
+  }) {
+    return ZegoUIKit().getInRoomMessageListStream(type: type);
   }
 }

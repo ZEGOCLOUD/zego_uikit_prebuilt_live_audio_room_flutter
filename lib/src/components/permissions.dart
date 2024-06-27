@@ -93,7 +93,7 @@ Future<void> requestPermissions({
         } else {
           ZegoLoggerService.logInfo(
             'requestPermissions, context not mounted',
-            tag: 'live audio room',
+            tag: 'audio-room',
             subTag: 'prebuilt',
           );
         }
@@ -112,7 +112,7 @@ Future<bool> showAppSettingsDialog(
   if (kickOutNotifier.value) {
     ZegoLoggerService.logInfo(
       'local user is kick-out, ignore show app settings dialog',
-      tag: 'live audio room',
+      tag: 'audio-room',
       subTag: 'prebuilt',
     );
     return false;
@@ -144,7 +144,7 @@ Future<bool> showAppSettingsDialog(
       } else {
         ZegoLoggerService.logInfo(
           'showAppSettingsDialog, context not mounted',
-          tag: 'live audio room',
+          tag: 'audio-room',
           subTag: 'prebuilt',
         );
       }

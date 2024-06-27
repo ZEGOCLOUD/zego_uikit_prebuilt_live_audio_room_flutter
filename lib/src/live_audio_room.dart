@@ -113,9 +113,10 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 3.7.2; $version, '
-        'config: ${widget.config}, ',
-        tag: 'audio room',
+        'version: zego_uikit_prebuilt_live_audio_room: 3.7.5; $version, \n'
+        'config: ${widget.config}, '
+        'events: ${widget.events}, ',
+        tag: 'audio-room',
         subTag: 'prebuilt',
       );
     });
@@ -136,7 +137,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     if (isPrebuiltFromMinimizing) {
       ZegoLoggerService.logInfo(
         'mini machine state is not idle, plugin manager will not be init',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'prebuilt',
       );
     } else {
@@ -196,13 +197,13 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       checkPermissions().then((value) {
         ZegoLoggerService.logInfo(
           'plugins init done',
-          tag: 'audio room',
+          tag: 'audio-room',
           subTag: 'prebuilt',
         );
         ZegoLiveAudioRoomManagers().seatManager?.init().then((value) {
           ZegoLoggerService.logInfo(
             'seat manager init done',
-            tag: 'audio room',
+            tag: 'audio-room',
             subTag: 'prebuilt',
           );
 
@@ -213,13 +214,13 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoLoggerService.logInfo(
       'mini machine state is ${ZegoLiveAudioRoomInternalMiniOverlayMachine().state()}',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'prebuilt',
     );
     if (isPrebuiltFromMinimizing) {
       ZegoLoggerService.logInfo(
         'mini machine state is not idle, context will not be init',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'prebuilt',
       );
     } else {
@@ -269,7 +270,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     } else {
       ZegoLoggerService.logInfo(
         'mini machine state is minimizing, room will not be leave',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'prebuilt',
       );
     }
@@ -285,7 +286,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoLoggerService.logInfo(
       'didChangeAppLifecycleState $state',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'prebuilt',
     );
 
@@ -329,7 +330,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       widget.config.bottomMenuBar.maxCount = 5;
       ZegoLoggerService.logInfo(
         "menu bar buttons limited count's value is exceeding the maximum limit",
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'prebuilt',
       );
     }
@@ -339,7 +340,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
         rowConfig.count = 1;
         ZegoLoggerService.logInfo(
           'config column count(${rowConfig.count}) is small than 0, set to 1',
-          tag: 'audio room',
+          tag: 'audio-room',
           subTag: 'prebuilt',
         );
       }
@@ -348,7 +349,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       //   rowConfig.count = 4;
       //   ZegoLoggerService.logInfo(
       //     'config column count(${rowConfig.count}) is bigger than 4, set to 4',
-      //     tag: 'audio room',
+      //     tag: 'audio-room',
       //     subTag: 'prebuilt',
       //   );
       // }
@@ -358,7 +359,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       ZegoLoggerService.logInfo(
         'config row spacing(${widget.config.seat.layout.rowSpacing}) '
         'is not valid, set to 0',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'prebuilt',
       );
     }
@@ -371,7 +372,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       ZegoLoggerService.logInfo(
         'config seat index is not valid, change role to audience '
         'and seat index set to -1',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'prebuilt',
       );
       widget.config.role = ZegoLiveAudioRoomRole.audience;
@@ -381,7 +382,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
         isSeatIndexValid) {
       ZegoLoggerService.logInfo(
         'audience config should not on seat default, set to -1',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'prebuilt',
       );
       widget.config.seat.takeIndexWhenJoining = -1;
@@ -392,7 +393,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       ZegoLoggerService.logInfo(
         "config ${widget.config.role}'s index is not valid, "
         'change role to audience and seat index set to -1',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'prebuilt',
       );
       widget.config.role = ZegoLiveAudioRoomRole.audience;
@@ -401,7 +402,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoLoggerService.logInfo(
       'layout config:${widget.config.seat.layout}',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'prebuilt',
     );
   }
@@ -413,7 +414,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     }
 
     if (!isMicrophoneGranted) {
-      if (context.mounted) {
+      if (mounted) {
         await showAppSettingsDialog(
           context,
           widget.config.innerText.microphonePermissionSettingDialogInfo,
@@ -424,7 +425,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       } else {
         ZegoLoggerService.logError(
           'checkPermissions, context not mounted',
-          tag: 'live audio room',
+          tag: 'audio-room',
           subTag: 'prebuilt',
         );
       }
@@ -479,7 +480,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     if (result.errorCode != 0) {
       ZegoLoggerService.logError(
         'failed to login room:${result.errorCode},${result.extendedData}',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'prebuilt',
       );
     }
@@ -499,7 +500,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       ZegoLoggerService.logInfo(
         'try play media:${widget.config.backgroundMedia.path!}, '
         'repeat:${widget.config.backgroundMedia.enableRepeat}',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'prebuilt',
       );
       ZegoUIKit()
@@ -510,7 +511,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
           .then((playResult) {
         ZegoLoggerService.logInfo(
           'media play result:${playResult.errorCode}',
-          tag: 'audio room',
+          tag: 'audio-room',
           subTag: 'prebuilt',
         );
       });
@@ -568,7 +569,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
             'leave confirmation left click, '
             'navigator exception:$e, '
             'event:$event',
-            tag: 'live audio room',
+            tag: 'audio-room',
             subTag: 'prebuilt',
           );
         }
@@ -586,7 +587,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
             'leave confirmation left click, '
             'navigator exception:$e, '
             'event:$event',
-            tag: 'live audio room',
+            tag: 'audio-room',
             subTag: 'prebuilt',
           );
         }
@@ -599,7 +600,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
   ) {
     ZegoLoggerService.logInfo(
       'default end event, event:$event',
-      tag: 'live audio room',
+      tag: 'audio-room',
       subTag: 'prebuilt',
     );
 
@@ -618,7 +619,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
           } catch (e) {
             ZegoLoggerService.logError(
               'live end, navigator exception:$e, event:$event',
-              tag: 'live audio room',
+              tag: 'audio-room',
               subTag: 'prebuilt',
             );
           }
@@ -650,7 +651,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
   void onMeRemovedFromRoom(String fromUserID) {
     ZegoLoggerService.logInfo(
       'local user removed by $fromUserID',
-      tag: 'live audio room',
+      tag: 'audio-room',
       subTag: 'prebuilt',
     );
 
@@ -681,7 +682,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
   void onUIKitError(ZegoUIKitError error) {
     ZegoLoggerService.logError(
       'on uikit error:$error',
-      tag: 'live audio room',
+      tag: 'audio-room',
       subTag: 'prebuilt',
     );
 

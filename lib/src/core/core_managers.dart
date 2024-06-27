@@ -26,7 +26,7 @@ class ZegoLiveAudioRoomManagers {
   void updateContextQuery(BuildContext Function() contextQuery) {
     ZegoLoggerService.logInfo(
       'update context query',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'core manager',
     );
 
@@ -46,7 +46,7 @@ class ZegoLiveAudioRoomManagers {
     if (_initialized) {
       ZegoLoggerService.logInfo(
         'had init',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'core manager',
       );
 
@@ -55,7 +55,7 @@ class ZegoLiveAudioRoomManagers {
 
     ZegoLoggerService.logInfo(
       'init plugin and managers',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'core manager',
     );
 
@@ -103,14 +103,14 @@ class ZegoLiveAudioRoomManagers {
   Future<void> uninitPluginAndManagers() async {
     ZegoLoggerService.logInfo(
       'uninit plugin and managers',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'core manager',
     );
 
     if (!_initialized) {
       ZegoLoggerService.logInfo(
         'had not init',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'core manager',
       );
 

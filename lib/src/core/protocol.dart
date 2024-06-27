@@ -44,7 +44,7 @@ class ZegoAudioRoomAudienceRequestConnectProtocol {
     } catch (e) {
       ZegoLoggerService.logInfo(
         '$jsonString is not a json',
-        tag: 'live audio room',
+        tag: 'audio-room',
         subTag: 'audience connect protocol',
       );
     }

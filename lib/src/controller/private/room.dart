@@ -26,7 +26,7 @@ class ZegoLiveAudioRoomControllerRoomPrivateImpl {
   }) {
     ZegoLoggerService.logInfo(
       'init by prebuilt',
-      tag: 'live streaming',
+      tag: 'audio-room',
       subTag: 'controller.room.p',
     );
 
@@ -42,7 +42,7 @@ class ZegoLiveAudioRoomControllerRoomPrivateImpl {
   void uninitByPrebuilt() {
     ZegoLoggerService.logInfo(
       'uninit by prebuilt',
-      tag: 'live streaming',
+      tag: 'audio-room',
       subTag: 'controller.room.p',
     );
 
@@ -59,7 +59,7 @@ class ZegoLiveAudioRoomControllerRoomPrivateImpl {
     if (null == seatManager) {
       ZegoLoggerService.logInfo(
         'leave, param is invalid, seatManager:$seatManager',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'controller.room',
       );
 
@@ -69,7 +69,7 @@ class ZegoLiveAudioRoomControllerRoomPrivateImpl {
     if (seatManager?.isLeavingRoom ?? false) {
       ZegoLoggerService.logInfo(
         'leave, is leave requesting...',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'controller.room',
       );
 
@@ -79,7 +79,7 @@ class ZegoLiveAudioRoomControllerRoomPrivateImpl {
     if (seatManager?.isRoomAttributesBatching ?? false) {
       ZegoLoggerService.logInfo(
         'room attribute is batching, ignore',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'leave button',
       );
       return false;
@@ -87,7 +87,7 @@ class ZegoLiveAudioRoomControllerRoomPrivateImpl {
 
     ZegoLoggerService.logInfo(
       'leave, show confirmation:$showConfirmation',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.room',
     );
 
@@ -103,7 +103,7 @@ class ZegoLiveAudioRoomControllerRoomPrivateImpl {
       if (!canLeave) {
         ZegoLoggerService.logInfo(
           'leave, refuse',
-          tag: 'audio room',
+          tag: 'audio-room',
           subTag: 'controller.room',
         );
 
@@ -129,7 +129,7 @@ class ZegoLiveAudioRoomControllerRoomPrivateImpl {
     final result = await ZegoUIKit().leaveRoom().then((result) {
       ZegoLoggerService.logInfo(
         'leave, leave room result, ${result.errorCode} ${result.extendedData}',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'controller.room',
       );
 
@@ -152,7 +152,7 @@ class ZegoLiveAudioRoomControllerRoomPrivateImpl {
 
     ZegoLoggerService.logInfo(
       'leave, finished',
-      tag: 'live audio room',
+      tag: 'audio-room',
       subTag: 'controller.room',
     );
 
@@ -166,7 +166,7 @@ class ZegoLiveAudioRoomControllerRoomPrivateImpl {
   ) async {
     ZegoLoggerService.logInfo(
       'default call end event, event:$event',
-      tag: 'live audio room',
+      tag: 'audio-room',
       subTag: 'controller.room.p',
     );
 
@@ -184,14 +184,14 @@ class ZegoLiveAudioRoomControllerRoomPrivateImpl {
         } else {
           ZegoLoggerService.logInfo(
             'live audio room end, context is not mounted',
-            tag: 'live streaming',
+            tag: 'audio-room',
             subTag: 'controller.room.p',
           );
         }
       } catch (e) {
         ZegoLoggerService.logError(
           'live audio room end, navigator exception:$e, event:$event',
-          tag: 'live streaming',
+          tag: 'audio-room',
           subTag: 'controller.room.p',
         );
       }
@@ -230,7 +230,7 @@ class ZegoLiveAudioRoomControllerRoomPrivateImpl {
             'leave confirmation left click, '
             'navigator exception:$e, '
             'event:$event',
-            tag: 'live audio room',
+            tag: 'audio-room',
             subTag: 'prebuilt',
           );
         }
@@ -248,7 +248,7 @@ class ZegoLiveAudioRoomControllerRoomPrivateImpl {
             'leave confirmation left click, '
             'navigator exception:$e, '
             'event:$event',
-            tag: 'live audio room',
+            tag: 'audio-room',
             subTag: 'prebuilt',
           );
         }

@@ -52,7 +52,7 @@ class ZegoLiveAudioRoomControllerMediaImpl {
       'play, '
       'filePathOrURL:$filePathOrURL, '
       'enableRepeat:$enableRepeat, ',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.media',
     );
 
@@ -66,7 +66,7 @@ class ZegoLiveAudioRoomControllerMediaImpl {
   Future<void> stop() async {
     ZegoLoggerService.logInfo(
       'stop, ',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.media',
     );
 
@@ -77,7 +77,7 @@ class ZegoLiveAudioRoomControllerMediaImpl {
   Future<void> destroy() async {
     ZegoLoggerService.logInfo(
       'destroy, ',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.media',
     );
 
@@ -88,7 +88,7 @@ class ZegoLiveAudioRoomControllerMediaImpl {
   Future<void> pause() async {
     ZegoLoggerService.logInfo(
       'pause, ',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.media',
     );
 
@@ -99,7 +99,7 @@ class ZegoLiveAudioRoomControllerMediaImpl {
   Future<void> resume() async {
     ZegoLoggerService.logInfo(
       'resume, ',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.media',
     );
 
@@ -112,7 +112,7 @@ class ZegoLiveAudioRoomControllerMediaImpl {
     ZegoLoggerService.logInfo(
       'seekTo, '
       'millisecond:$millisecond, ',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.media',
     );
 
@@ -126,7 +126,7 @@ class ZegoLiveAudioRoomControllerMediaImpl {
     ZegoLoggerService.logInfo(
       'setVolume, '
       'volume:$volume, ',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.media',
     );
 
@@ -138,7 +138,7 @@ class ZegoLiveAudioRoomControllerMediaImpl {
     ZegoLoggerService.logInfo(
       'muteLocal, '
       'mute:$mute, ',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.media',
     );
 
@@ -149,7 +149,7 @@ class ZegoLiveAudioRoomControllerMediaImpl {
   Future<List<PlatformFile>> pickPureAudioFile() async {
     ZegoLoggerService.logInfo(
       'pickPureAudioFile, ',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.media',
     );
 
@@ -160,7 +160,7 @@ class ZegoLiveAudioRoomControllerMediaImpl {
   Future<List<PlatformFile>> pickVideoFile() async {
     ZegoLoggerService.logInfo(
       'pickVideoFile, ',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.media',
     );
 
@@ -193,7 +193,7 @@ class ZegoLiveAudioRoomControllerMediaImpl {
     ZegoLoggerService.logInfo(
       'pickFile, '
       'allowedExtensions:$allowedExtensions, ',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.media',
     );
 

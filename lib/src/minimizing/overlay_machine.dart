@@ -44,7 +44,7 @@ class ZegoLiveAudioRoomInternalMiniOverlayMachine {
     _machine.onAfterTransition.listen((event) {
       ZegoLoggerService.logInfo(
         'mini overlay, from ${event.source} to ${event.target}',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'overlay machine',
       );
 
@@ -64,7 +64,7 @@ class ZegoLiveAudioRoomInternalMiniOverlayMachine {
   void changeState(ZegoLiveAudioRoomMiniOverlayPageState state) {
     ZegoLoggerService.logInfo(
       'change state outside to $state',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'overlay machine',
     );
 
@@ -92,7 +92,7 @@ class ZegoLiveAudioRoomInternalMiniOverlayMachine {
   Future<void> onMeRemovedFromRoom(String fromUserID) async {
     ZegoLoggerService.logInfo(
       'local user removed by $fromUserID',
-      tag: 'live audio room',
+      tag: 'audio-room',
       subTag: 'mini overlay page',
     );
 

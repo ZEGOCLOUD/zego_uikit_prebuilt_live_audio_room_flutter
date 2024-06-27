@@ -127,7 +127,7 @@ class _ZegoLiveAudioRoomSeatForegroundState
     if (-1 == index) {
       ZegoLoggerService.logInfo(
         'ERROR!!! click seat index is invalid',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'foreground',
       );
       return;
@@ -136,7 +136,7 @@ class _ZegoLiveAudioRoomSeatForegroundState
     if (widget.events.seat.onClicked != null) {
       ZegoLoggerService.logInfo(
         'ERROR!!! click seat event is deal outside',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'foreground',
       );
 

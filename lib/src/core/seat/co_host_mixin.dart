@@ -24,7 +24,7 @@ mixin ZegoLiveSeatCoHost {
   }) async {
     ZegoLoggerService.logInfo(
       '$targetUserID set co-host in-room attribute: $isCoHost',
-      tag: 'audio room',
+      tag: 'audio-room-seat',
       subTag: 'seat manager',
     );
 
@@ -38,13 +38,13 @@ mixin ZegoLiveSeatCoHost {
       if (success) {
         ZegoLoggerService.logInfo(
           'host set co-host in-room attribute result success',
-          tag: 'audio room',
+          tag: 'audio-room-seat',
           subTag: 'seat manager',
         );
       } else {
         ZegoLoggerService.logError(
           'host set co-host in-room attribute result failed, error:${result.error}',
-          tag: 'audio room',
+          tag: 'audio-room-seat',
           subTag: 'seat manager',
         );
 
@@ -61,14 +61,14 @@ mixin ZegoLiveSeatCoHost {
   }) async {
     ZegoLoggerService.logInfo(
       'invite speaker to be the co-host, ${targetUser.id} ${targetUser.name}',
-      tag: 'live audio',
+      tag: 'audio-room-seat',
       subTag: 'connect manager',
     );
 
     if (targetUser.isEmpty()) {
       ZegoLoggerService.logInfo(
         'target user is empty',
-        tag: 'live audio',
+        tag: 'audio-room-seat',
         subTag: 'connect manager',
       );
     }
@@ -77,7 +77,7 @@ mixin ZegoLiveSeatCoHost {
       if (isCoHost(user)) {
         ZegoLoggerService.logInfo(
           'target user($user) is co-host before, co-host is unique, so revoke this co-host now',
-          tag: 'live audio',
+          tag: 'audio-room-seat',
           subTag: 'connect manager',
         );
 
@@ -98,14 +98,14 @@ mixin ZegoLiveSeatCoHost {
   }) async {
     ZegoLoggerService.logInfo(
       'revoke the co-host, ${targetUser.id} ${targetUser.name}',
-      tag: 'live audio',
+      tag: 'audio-room-seat',
       subTag: 'connect manager',
     );
 
     if (targetUser.isEmpty()) {
       ZegoLoggerService.logInfo(
         'target user is empty',
-        tag: 'live audio',
+        tag: 'audio-room-seat',
         subTag: 'connect manager',
       );
     }

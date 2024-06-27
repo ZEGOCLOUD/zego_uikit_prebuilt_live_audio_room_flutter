@@ -136,8 +136,8 @@ class ZegoLiveAudioRoomControllerSeatImpl
     bool muted = true,
   }) async {
     ZegoLoggerService.logInfo(
-      'muteLocal, targetIndex:$targetIndex, muted:$muted,',
-      tag: 'audio room',
+      'muteLocally, targetIndex:$targetIndex, muted:$muted,',
+      tag: 'audio-room',
       subTag: 'controller.seat',
     );
 
@@ -178,7 +178,7 @@ class ZegoLiveAudioRoomControllerSeatImpl
   }) async {
     ZegoLoggerService.logInfo(
       'muteLocalByUserID, targetUserID:$targetUserID, muted:$muted',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.seat',
     );
 
@@ -198,7 +198,7 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
   }) async {
     ZegoLoggerService.logInfo(
       'open, targetIndex:$targetIndex',
-      tag: 'live audio',
+      tag: 'audio-room',
       subTag: 'controller.seat',
     );
 
@@ -218,7 +218,7 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
   }) async {
     ZegoLoggerService.logInfo(
       'close, targetIndex:$targetIndex',
-      tag: 'live audio',
+      tag: 'audio-room',
       subTag: 'controller.seat',
     );
 
@@ -236,7 +236,7 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
   }) async {
     ZegoLoggerService.logInfo(
       'removeSpeaker, userID:$userID',
-      tag: 'live audio',
+      tag: 'audio-room',
       subTag: 'controller.seat',
     );
 
@@ -256,7 +256,7 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
   Future<bool> acceptTakingRequest(String audienceUserID) async {
     ZegoLoggerService.logInfo(
       'acceptTakingRequest, audienceUserID:$audienceUserID',
-      tag: 'live audio',
+      tag: 'audio-room',
       subTag: 'controller.seat',
     );
 
@@ -265,8 +265,9 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
         .acceptInvitation(inviterID: audienceUserID, data: '')
         .then((result) {
       ZegoLoggerService.logInfo(
-        'accept $audienceUserID seat taking request , result:$result',
-        tag: 'live audio',
+        'acceptTakingRequest of $audienceUserID, '
+        'result:$result',
+        tag: 'audio-room',
         subTag: 'controller.seat',
       );
       if (result.error == null) {
@@ -274,8 +275,8 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
             ?.removeRequestCoHostUsers(ZegoUIKit().getUser(audienceUserID));
       } else {
         ZegoLoggerService.logInfo(
-          'accept seat taking request error:${result.error}',
-          tag: 'audio room',
+          'acceptTakingRequest, error:${result.error}',
+          tag: 'audio-room',
           subTag: 'controller.seat',
         );
       }
@@ -293,7 +294,7 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
   Future<bool> rejectTakingRequest(String audienceUserID) async {
     ZegoLoggerService.logInfo(
       'rejectTakingRequest, audienceUserID:$audienceUserID',
-      tag: 'live audio',
+      tag: 'audio-room',
       subTag: 'controller.seat',
     );
 
@@ -302,8 +303,9 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
         .refuseInvitation(inviterID: audienceUserID, data: '')
         .then((result) {
       ZegoLoggerService.logInfo(
-        'refuse audience $audienceUserID link request, $result',
-        tag: 'live audio',
+        'rejectTakingRequest of $audienceUserID, '
+        '$result',
+        tag: 'audio-room',
         subTag: 'controller.seat',
       );
 
@@ -312,8 +314,8 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
             ?.removeRequestCoHostUsers(ZegoUIKit().getUser(audienceUserID));
       } else {
         ZegoLoggerService.logInfo(
-          'reject seat taking request error:${result.error}',
-          tag: 'audio room',
+          'rejectTakingRequest error:${result.error}',
+          tag: 'audio-room',
           subTag: 'controller.seat',
         );
       }
@@ -329,7 +331,7 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
   Future<bool> inviteToTake(String userID) async {
     ZegoLoggerService.logInfo(
       'inviteToTake, userID:$userID',
-      tag: 'live audio',
+      tag: 'audio-room',
       subTag: 'controller.seat',
     );
 
@@ -357,7 +359,7 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
   }) async {
     ZegoLoggerService.logInfo(
       'mute, targetIndex:$targetIndex, muted:$muted',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.seat',
     );
 
@@ -388,7 +390,7 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
   }) async {
     ZegoLoggerService.logInfo(
       'muteByUserID, targetUserID:$targetUserID, muted:$muted',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.seat',
     );
 
@@ -396,8 +398,8 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
         private.seatManager?.getIndexByUserID(targetUserID) ?? -1;
     if (-1 == targetIndex) {
       ZegoLoggerService.logInfo(
-        'mute $targetUserID, but user is not on seat',
-        tag: 'audio room',
+        'muteByUserID to $targetUserID, but user is not on seat',
+        tag: 'audio-room',
         subTag: 'controller.seat',
       );
 
@@ -422,7 +424,7 @@ class ZegoLiveAudioRoomControllerSeatAudienceImpl
   }) async {
     ZegoLoggerService.logInfo(
       'take, index:$index',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.seat',
     );
 
@@ -448,14 +450,14 @@ class ZegoLiveAudioRoomControllerSeatAudienceImpl
   Future<bool> applyToTake() async {
     ZegoLoggerService.logInfo(
       'applyToTake',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.seat',
     );
 
     if (private.seatManager?.hostsNotifier.value.isEmpty ?? false) {
       ZegoLoggerService.logInfo(
-        'Failed to apply for take seat, host is not exist',
-        tag: 'audio room',
+        'applyToTake, failed, host is not exist',
+        tag: 'audio-room',
         subTag: 'controller.seat',
       );
       return false;
@@ -481,11 +483,11 @@ class ZegoLiveAudioRoomControllerSeatAudienceImpl
         )
         .then((ZegoSignalingPluginSendInvitationResult result) {
       ZegoLoggerService.logInfo(
-        'apply to take seat finished, code:${result.error?.code}, '
+        'applyToTake finished, code:${result.error?.code}, '
         'message:${result.error?.message}, '
         'invitationID:${result.invitationID}, '
         'errorInvitees:${result.errorInvitees.keys.toList()}',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'controller.seat',
       );
 
@@ -507,7 +509,7 @@ class ZegoLiveAudioRoomControllerSeatAudienceImpl
   Future<bool> cancelTakingRequest() async {
     ZegoLoggerService.logInfo(
       'cancelTakingRequest',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.seat',
     );
 
@@ -525,7 +527,7 @@ class ZegoLiveAudioRoomControllerSeatAudienceImpl
   }) async {
     ZegoLoggerService.logInfo(
       'acceptTakingInvitation, context:$context, rootNavigator:$rootNavigator',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.seat',
     );
 
@@ -537,15 +539,15 @@ class ZegoLiveAudioRoomControllerSeatAudienceImpl
         )
         .then((result) async {
       ZegoLoggerService.logInfo(
-        'accept host take seat invitation, result:$result',
-        tag: 'live audio',
+        'acceptTakingInvitation, result:$result',
+        tag: 'audio-room',
         subTag: 'controller.seat',
       );
 
       if (result.error != null) {
         ZegoLoggerService.logInfo(
-          'accept host take seat invitation error: ${result.error}',
-          tag: 'live audio',
+          'acceptTakingInvitation error: ${result.error}',
+          tag: 'audio-room',
           subTag: 'controller.seat',
         );
         return false;
@@ -588,7 +590,7 @@ class ZegoLiveAudioRoomControllerSeatSpeakerImpl
   Future<bool> leave({bool showDialog = true}) async {
     ZegoLoggerService.logInfo(
       'leave, showDialog:$showDialog',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.seat',
     );
 

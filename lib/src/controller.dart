@@ -84,6 +84,12 @@ class ZegoUIKitPrebuiltLiveAudioRoomController
     BuildContext context, {
     bool showConfirmation = true,
   }) async {
+    ZegoLoggerService.logInfo(
+      'leave',
+      tag: 'audio-room',
+      subTag: 'controller',
+    );
+
     final result = await room.private._leave(
       context,
       showConfirmation: showConfirmation,
@@ -99,7 +105,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomController
 
     ZegoLoggerService.logInfo(
       'leave, finished',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller',
     );
 
@@ -108,6 +114,12 @@ class ZegoUIKitPrebuiltLiveAudioRoomController
 
   /// hide some user in member list
   void hideInMemberList(List<String> userIDs) {
+    ZegoLoggerService.logInfo(
+      'hideInMemberList',
+      tag: 'audio-room',
+      subTag: 'controller',
+    );
+
     private.hiddenUsersOfMemberListNotifier.value = List<String>.from(userIDs);
   }
 

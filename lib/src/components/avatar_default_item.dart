@@ -76,7 +76,7 @@ class _ZegoLiveAudioRoomAvatarDefaultItemState
                 errorWidget: (context, url, error) {
                   ZegoLoggerService.logInfo(
                     '$user avatar url is invalid',
-                    tag: 'live audio',
+                    tag: 'audio-room',
                     subTag: 'live page',
                   );
                   return textAvatar();

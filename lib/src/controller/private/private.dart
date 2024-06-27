@@ -31,7 +31,7 @@ class ZegoLiveAudioRoomControllerPrivateImpl {
   }) {
     ZegoLoggerService.logInfo(
       'init by prebuilt',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.p',
     );
 
@@ -47,7 +47,7 @@ class ZegoLiveAudioRoomControllerPrivateImpl {
   void uninitByPrebuilt() {
     ZegoLoggerService.logInfo(
       'un-init by prebuilt',
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.p',
     );
 

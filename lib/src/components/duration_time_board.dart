@@ -99,7 +99,7 @@ class _CallDurationTimeBoardState extends State<LiveDurationTimeBoard> {
     if (widget.config.isVisible) {
       ZegoLoggerService.logInfo(
         'init duration',
-        tag: 'live audio room',
+        tag: 'audio-room',
         subTag: 'prebuilt',
       );
 
@@ -173,7 +173,7 @@ class _CallDurationTimeBoardState extends State<LiveDurationTimeBoard> {
       if (null == networkTimeNow.value) {
         ZegoLoggerService.logInfo(
           'network time is null, wait...',
-          tag: 'live audio room',
+          tag: 'audio-room',
           subTag: 'duration time board',
         );
 
@@ -194,7 +194,7 @@ class _CallDurationTimeBoardState extends State<LiveDurationTimeBoard> {
     final networkTimeNow = ZegoUIKit().getNetworkTime();
     ZegoLoggerService.logInfo(
       'network time update:$networkTimeNow',
-      tag: 'live audio room',
+      tag: 'audio-room',
       subTag: 'duration time board',
     );
 
@@ -204,7 +204,7 @@ class _CallDurationTimeBoardState extends State<LiveDurationTimeBoard> {
   void startDurationTimer(DateTime networkTimeNow) {
     ZegoLoggerService.logInfo(
       'start duration timer, network time is $networkTimeNow, live begin time is ${widget.manager.notifier.value}',
-      tag: 'live streaming',
+      tag: 'live-streaming',
       subTag: 'duration time board',
     );
 

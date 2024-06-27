@@ -33,7 +33,7 @@ class ZegoLiveAudioRoomDurationManager {
     if (_initialized) {
       ZegoLoggerService.logInfo(
         'had already init',
-        tag: 'live audio room',
+        tag: 'audio-room',
         subTag: 'seat manager',
       );
 
@@ -44,7 +44,7 @@ class ZegoLiveAudioRoomDurationManager {
 
     ZegoLoggerService.logInfo(
       'init',
-      tag: 'live audio room',
+      tag: 'audio-room',
       subTag: 'live duration manager',
     );
 
@@ -55,7 +55,7 @@ class ZegoLiveAudioRoomDurationManager {
     if (!_initialized) {
       ZegoLoggerService.logInfo(
         'not init before',
-        tag: 'live audio room',
+        tag: 'audio-room',
         subTag: 'seat manager',
       );
 
@@ -66,7 +66,7 @@ class ZegoLiveAudioRoomDurationManager {
 
     ZegoLoggerService.logInfo(
       'uninit',
-      tag: 'live audio room',
+      tag: 'audio-room',
       subTag: 'live duration manager',
     );
     subscription?.cancel();
@@ -76,7 +76,7 @@ class ZegoLiveAudioRoomDurationManager {
     final roomProperties = ZegoUIKit().getRoomProperties();
     ZegoLoggerService.logInfo(
       'onRoomPropertiesUpdated roomProperties:$roomProperties, updatedProperties:$updatedProperties',
-      tag: 'live streaming',
+      tag: 'audio-room',
       subTag: 'live duration manager',
     );
 
@@ -89,7 +89,7 @@ class ZegoLiveAudioRoomDurationManager {
 
       ZegoLoggerService.logInfo(
         'live duration value is exist:${notifier.value}',
-        tag: 'live audio room',
+        tag: 'audio-room',
         subTag: 'live duration manager',
       );
 
@@ -101,7 +101,7 @@ class ZegoLiveAudioRoomDurationManager {
     if (!seatManager.localIsAHost) {
       ZegoLoggerService.logInfo(
         'try set value, but is not a host',
-        tag: 'live audio room',
+        tag: 'audio-room',
         subTag: 'live duration manager',
       );
       return;
@@ -113,7 +113,7 @@ class ZegoLiveAudioRoomDurationManager {
     if (null == networkTimeNow.value) {
       ZegoLoggerService.logInfo(
         'network time is null, wait..',
-        tag: 'live audio room',
+        tag: 'audio-room',
         subTag: 'live duration manager',
       );
 
@@ -133,7 +133,7 @@ class ZegoLiveAudioRoomDurationManager {
     final networkTimeNow = ZegoUIKit().getNetworkTime();
     ZegoLoggerService.logInfo(
       'network time update:$networkTimeNow',
-      tag: 'live audio room',
+      tag: 'audio-room',
       subTag: 'live duration manager',
     );
 
@@ -145,7 +145,7 @@ class ZegoLiveAudioRoomDurationManager {
 
     ZegoLoggerService.logInfo(
       'host set value:${notifier.value}',
-      tag: 'live audio room',
+      tag: 'audio-room',
       subTag: 'live duration manager',
     );
 

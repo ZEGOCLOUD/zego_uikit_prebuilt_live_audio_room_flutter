@@ -73,7 +73,7 @@ class _ZegoLiveAudioRoomPopUpSheetMenuState
       onTap: () async {
         ZegoLoggerService.logInfo(
           'click ${popupItem.text}',
-          tag: 'audio room',
+          tag: 'audio-room',
           subTag: 'pop-up sheet',
         );
 
@@ -226,7 +226,7 @@ void showPopUpSheet({
       )) {
         ZegoLoggerService.logInfo(
           'clear seat dialog info when popup sheet complete',
-          tag: 'audio room',
+          tag: 'audio-room',
           subTag: 'seat manager',
         );
         seatManager.kickSeatDialogInfo.clear();

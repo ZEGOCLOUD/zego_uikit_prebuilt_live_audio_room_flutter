@@ -18,8 +18,8 @@ class ZegoLiveAudioRoomControllerUserImpl
   Future<bool> remove(List<String> userIDs) async {
     ZegoLoggerService.logInfo(
       'remove user:$userIDs',
-      tag: 'audio room',
-      subTag: 'controller.room',
+      tag: 'audio-room',
+      subTag: 'controller.user',
     );
 
     return ZegoUIKit().removeUserFromRoom(userIDs);

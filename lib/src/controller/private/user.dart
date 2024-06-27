@@ -20,7 +20,7 @@ class ZegoLiveAudioRoomControllerUserPrivateImpl {
   }) {
     ZegoLoggerService.logInfo(
       'init by prebuilt',
-      tag: 'live streaming',
+      tag: 'audio-room',
       subTag: 'controller.user.p',
     );
 
@@ -33,7 +33,7 @@ class ZegoLiveAudioRoomControllerUserPrivateImpl {
   void uninitByPrebuilt() {
     ZegoLoggerService.logInfo(
       'uninit by prebuilt',
-      tag: 'live streaming',
+      tag: 'audio-room',
       subTag: 'controller.user.p',
     );
 

@@ -399,14 +399,14 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
       ZegoUIKitReceiveTurnOnLocalMicrophoneEvent event) async {
     ZegoLoggerService.logInfo(
       'onTurnOnYourMicrophoneRequest, event:$event',
-      tag: 'live audio',
+      tag: 'audio-room',
       subTag: 'live page',
     );
 
     if (ZegoUIKit().getLocalUser().microphone.value) {
       ZegoLoggerService.logInfo(
         'microphone is open now, not need request',
-        tag: 'live audio',
+        tag: 'audio-room',
         subTag: 'live page',
       );
 
@@ -419,7 +419,7 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
         false;
     ZegoLoggerService.logInfo(
       'canMicrophoneTurnOnByOthers:$canMicrophoneTurnOnByOthers',
-      tag: 'live audio',
+      tag: 'audio-room',
       subTag: 'live page',
     );
     if (canMicrophoneTurnOnByOthers) {

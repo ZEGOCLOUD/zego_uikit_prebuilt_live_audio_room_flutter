@@ -1,3 +1,12 @@
+## 3.7.4
+
+- Update dependency.
+- ZegoInRoomMessage: The type of `messageID` is changed from **int** to **String**.💥 [breaking changes](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Migration_v3.x-topic.html#384)
+
+## 3.7.3
+
+- Update dependency.
+
 ## 3.7.2
 
 - Update dependency.

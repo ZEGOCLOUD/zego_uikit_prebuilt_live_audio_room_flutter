@@ -38,7 +38,7 @@ class ZegoLiveAudioRoomControllerAudioVideoImpl
     if (-1 == localSeatIndex) {
       ZegoLoggerService.logInfo(
         'local is not on seat, could not sed SEI',
-        tag: 'audio room',
+        tag: 'audio-room',
         subTag: 'controller.audioVideo',
       );
       return false;
@@ -75,7 +75,7 @@ class ZegoLiveStreamingControllerAudioVideoMicrophoneImpl
     ZegoLoggerService.logInfo(
       "turn ${isOn ? "on" : "off"} $userID microphone,"
       "mute mode:$muteMode, ",
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.audioVideo.microphone',
     );
 
@@ -91,7 +91,7 @@ class ZegoLiveStreamingControllerAudioVideoMicrophoneImpl
     ZegoLoggerService.logInfo(
       "switchState,"
       "userID:$userID, ",
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.audioVideo.microphone',
     );
 
@@ -124,7 +124,7 @@ class ZegoLiveStreamingControllerAudioVideoCameraImpl
   void turnOn(bool isOn, {String? userID}) {
     ZegoLoggerService.logInfo(
       "turn ${isOn ? "on" : "off"} $userID camera",
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.audioVideo.camera',
     );
 
@@ -139,7 +139,7 @@ class ZegoLiveStreamingControllerAudioVideoCameraImpl
     ZegoLoggerService.logInfo(
       "switchState,"
       "userID:$userID, ",
-      tag: 'audio room',
+      tag: 'audio-room',
       subTag: 'controller.audioVideo.camera',
     );
 

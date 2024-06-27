@@ -131,6 +131,14 @@ class _ZegoLiveAudioRoomAudienceConnectButtonState
         String invitationID,
         List<String> errorInvitees,
       ) {
+        ZegoLoggerService.logInfo(
+          'result, code:$code, message:$message, '
+          'invitationID:$invitationID, '
+          'errorInvitees:$errorInvitees, ',
+          tag: 'audio-room-seat',
+          subTag: 'requestConnectButton',
+        );
+
         if (code.isNotEmpty) {
           widget.connectManager.events.seat.audience?.onTakingRequestFailed
               ?.call();
@@ -143,7 +151,6 @@ class _ZegoLiveAudioRoomAudienceConnectButtonState
           widget.connectManager.updateAudienceConnectState(
               ZegoLiveAudioRoomConnectState.connecting);
         }
-        //
       },
       clickableTextColor: Colors.white,
       clickableBackgroundColor: const Color(0xff1E2740).withOpacity(0.4),
@@ -165,6 +172,13 @@ class _ZegoLiveAudioRoomAudienceConnectButtonState
       textStyle: buttonTextStyle,
       verticalLayout: false,
       onPressed: (String code, String message, List<String> errorInvitees) {
+        ZegoLoggerService.logInfo(
+          'result, code:$code, message:$message, '
+          'errorInvitees:$errorInvitees, ',
+          tag: 'audio-room-seat',
+          subTag: 'cancelRequestConnectButton',
+        );
+
         widget.connectManager
             .updateAudienceConnectState(ZegoLiveAudioRoomConnectState.idle);
         //
@@ -191,6 +205,13 @@ class _ZegoLiveAudioRoomAudienceConnectButtonState
       if (withToast) {
         showDebugToast('Failed to apply for take seat, host is not exist');
       }
+
+      ZegoLoggerService.logInfo(
+        'checkHostAndCoHostExist, host is not exist',
+        tag: 'audio-room-seat',
+        subTag: 'requestConnectButton',
+      );
+
       return false;
     }
 

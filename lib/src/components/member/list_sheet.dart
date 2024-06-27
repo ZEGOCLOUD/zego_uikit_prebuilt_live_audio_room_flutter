@@ -319,7 +319,7 @@ class _ZegoLiveAudioRoomMemberListSheetState
                   .then((result) {
                 ZegoLoggerService.logInfo(
                   'refuse audience ${user.name} link request, $result',
-                  tag: 'live audio',
+                  tag: 'audio-room',
                   subTag: 'member list',
                 );
                 if (result.error == null) {
@@ -349,7 +349,7 @@ class _ZegoLiveAudioRoomMemberListSheetState
                   .then((result) {
                 ZegoLoggerService.logInfo(
                   'accept audience ${user.name} link request, result:$result',
-                  tag: 'live audio',
+                  tag: 'audio-room',
                   subTag: 'member list',
                 );
                 if (result.error == null) {

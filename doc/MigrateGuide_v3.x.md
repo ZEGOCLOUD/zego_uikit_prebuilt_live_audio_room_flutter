@@ -20,9 +20,24 @@
 
 # Versions
 
+- [3.7.4](#374)  **(💥 breaking changes)**
 - [3.1.1](#311)  **(💥 breaking changes)**
 - [3.0](#30)  **(💥 breaking changes)**
 
+<br />
+<br />
+
+# 3.7.4
+---
+
+# Introduction
+
+>
+> In this migration guide, we will explain how to upgrade from version 3.7.3 to the latest 3.7.4 version.
+
+# Major Interface Changes
+
+- ZegoInRoomMessage: The type of `messageID` is changed from **int** to **String**.
 
 <br />
 <br />
