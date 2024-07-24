@@ -1,3 +1,32 @@
+## 3.10.0
+
+- Features
+  - Support clear messages by `ZegoUIKitPrebuiltLiveAudioRoomController().message.clear()`
+
+
+## 3.9.1
+
+- Update dependency
+
+## 3.9.0
+
+- Features
+  - Added `ZegoUIKitPrebuiltLiveAudioRoomMiniPopScope` to protect the interface from being destroyed when minimized
+  - Added `license` in `ZegoBeautyPluginConfig` to setting license to beauty
+
+## 3.8.1
+
+- Update dependency
+
+## 3.8.0
+
+- Features
+  - Support login by token 
+
+## 3.7.6
+
+- Optimization score warning
+
 ## 3.7.4
 
 - Update dependency.

@@ -11,6 +11,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomMinimizeData {
   const ZegoUIKitPrebuiltLiveAudioRoomMinimizeData({
     required this.appID,
     required this.appSign,
+    required this.token,
     required this.roomID,
     required this.userID,
     required this.userName,
@@ -26,6 +27,8 @@ class ZegoUIKitPrebuiltLiveAudioRoomMinimizeData {
   /// for Android/iOS
   /// you need to fill in the appID you obtained from console.zegocloud.com
   final String appSign;
+
+  final String token;
 
   /// local user info
   final String userID;
@@ -45,7 +48,10 @@ class ZegoUIKitPrebuiltLiveAudioRoomMinimizeData {
 
   @override
   String toString() {
-    return '{app id:$appID, app sign:$appSign, room id:$roomID, '
+    return '{app id:$appID, '
+        'has appSign:${appSign.isNotEmpty}, '
+        'has token:${token.isNotEmpty}, '
+        'room id:$roomID, '
         'isPrebuiltFromMinimizing: $isPrebuiltFromMinimizing, '
         'user id:$userID, user name:$userName, config:$config}';
   }

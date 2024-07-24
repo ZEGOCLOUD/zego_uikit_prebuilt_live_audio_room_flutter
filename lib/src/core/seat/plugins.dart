@@ -24,6 +24,7 @@ class ZegoLiveAudioRoomPlugins {
   ZegoLiveAudioRoomPlugins({
     required this.appID,
     required this.appSign,
+    required this.token,
     required this.userID,
     required this.userName,
     required this.roomID,
@@ -36,6 +37,7 @@ class ZegoLiveAudioRoomPlugins {
 
   final int appID;
   final String appSign;
+  final String token;
 
   final String userID;
   final String userName;
@@ -139,7 +141,11 @@ class ZegoLiveAudioRoomPlugins {
     );
     await ZegoUIKit()
         .getSignalingPlugin()
-        .login(id: userID, name: userName)
+        .login(
+          id: userID,
+          name: userName,
+          token: token,
+        )
         .then((result) async {
       ZegoLoggerService.logInfo(
         'plugins login done, login result:$result, try to join room...',
@@ -277,7 +283,11 @@ class ZegoLiveAudioRoomPlugins {
     }
 
     await ZegoUIKit().getSignalingPlugin().logout();
-    await ZegoUIKit().getSignalingPlugin().login(id: userID, name: userName);
+    await ZegoUIKit().getSignalingPlugin().login(
+          id: userID,
+          name: userName,
+          token: token,
+        );
   }
 
   void onUserConnectionState(
@@ -412,7 +422,11 @@ class ZegoLiveAudioRoomPlugins {
     );
     tryReLogging = true;
     await ZegoUIKit().getSignalingPlugin().logout().then((value) async {
-      await ZegoUIKit().getSignalingPlugin().login(id: userID, name: userName);
+      await ZegoUIKit().getSignalingPlugin().login(
+            id: userID,
+            name: userName,
+            token: token,
+          );
     });
   }
 

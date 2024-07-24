@@ -78,4 +78,21 @@ class AudioRoomMessageControllerImpl {
   }) {
     return ZegoUIKit().getInRoomMessageListStream(type: type);
   }
+
+  /// clear local message and remote message
+  Future<bool> clear({
+    ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
+    bool clearRemote = true,
+  }) {
+    ZegoLoggerService.logInfo(
+      'clear',
+      tag: 'audio-room',
+      subTag: 'controller.message',
+    );
+
+    return ZegoUIKit().clearMessage(
+      type: type,
+      clearRemote: clearRemote,
+    );
+  }
 }

@@ -29,8 +29,10 @@
         - [send](#send)
         - [list](#list)
         - [stream](#stream)
+        - [clear](#clear)
     - [minimizing](#minimizing)
         - [state](#state)
+        - [isMinimizing](#isminimizingnotifiervaluenotifierbool)
         - [isMinimizing](#isminimizing)
         - [restore](#restore)
         - [minimize](#minimize)
@@ -539,7 +541,9 @@ media series API
 > - function prototype:
 >
 > ```dart
-> Future<bool> send(String message) async
+> Future<bool> send(String message, {
+>     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
+> }) async
 > ```
 
 ### list
@@ -552,7 +556,7 @@ media series API
 > - function prototype:
 >
 > ```dart
-> List<ZegoInRoomMessage> list()
+> List<ZegoInRoomMessage> list({ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage})
 > ```
 
 ### stream
@@ -598,7 +602,21 @@ media series API
 > - function prototype:
 >
 > ```dart
-> Stream<List<ZegoInRoomMessage>> stream()
+> Stream<List<ZegoInRoomMessage>> stream({ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage})
+> ```
+
+### clear
+
+> clear local messages and remote messages
+>
+>
+> - function prototype:
+>
+> ```dart
+> List<ZegoInRoomMessage> clear({
+>     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
+>     bool clearRemote = true,
+> })
 > ```
 
 ## minimizing
@@ -622,6 +640,22 @@ the APIs related to minimizing.
 >   minimizing,
 > }
 > 
+> ```
+
+### isMinimizingNotifier(ValueNotifier<bool>)
+
+> is it currently in the minimized state or not
+>
+> - example:
+>
+> ```dart
+> ValueListenableBuilder<bool>(
+>   valueListenable:
+>   ZegoUIKitPrebuiltLiveAudioRoomController().minimize.isMinimizingNotifier,
+>   builder: (context, isMinimized, _) {
+>     ...
+>   },
+> )
 > ```
 
 ### isMinimizing

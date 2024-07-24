@@ -14,6 +14,8 @@ class ZegoLiveAudioRoomControllerMinimizingPrivateImpl {
 
   ZegoUIKitPrebuiltLiveAudioRoomMinimizeData? _minimizeData;
 
+  final isMinimizingNotifier = ValueNotifier<bool>(false);
+
   /// Please do not call this interface. It is the internal logic of ZegoUIKitPrebuiltLiveAudioRoom.
   void initByPrebuilt({
     required ZegoUIKitPrebuiltLiveAudioRoomMinimizeData minimizeData,
@@ -25,6 +27,11 @@ class ZegoLiveAudioRoomControllerMinimizingPrivateImpl {
     );
 
     _minimizeData = minimizeData;
+
+    isMinimizingNotifier.value =
+        ZegoLiveAudioRoomInternalMiniOverlayMachine().isMinimizing;
+    ZegoLiveAudioRoomInternalMiniOverlayMachine()
+        .listenStateChanged(onMiniOverlayMachineStateChanged);
   }
 
   /// Please do not call this interface. It is the internal logic of ZegoUIKitPrebuiltLiveAudioRoom.
@@ -36,5 +43,15 @@ class ZegoLiveAudioRoomControllerMinimizingPrivateImpl {
     );
 
     _minimizeData = null;
+
+    ZegoLiveAudioRoomInternalMiniOverlayMachine()
+        .removeListenStateChanged(onMiniOverlayMachineStateChanged);
+  }
+
+  void onMiniOverlayMachineStateChanged(
+    ZegoLiveAudioRoomMiniOverlayPageState state,
+  ) {
+    isMinimizingNotifier.value =
+        ZegoLiveAudioRoomMiniOverlayPageState.minimizing == state;
   }
 }

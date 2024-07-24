@@ -15,8 +15,8 @@ class ZegoLiveAudioRoomControllerMinimizingImpl
       ZegoLiveAudioRoomInternalMiniOverlayMachine().state();
 
   /// is it currently in the minimized state or not
-  bool get isMinimizing =>
-      ZegoLiveAudioRoomInternalMiniOverlayMachine().isMinimizing;
+  bool get isMinimizing => isMinimizingNotifier.value;
+  ValueNotifier<bool> get isMinimizingNotifier => _private.isMinimizingNotifier;
 
   /// restore the [ZegoUIKitPrebuiltLiveAudioRoom] from minimize
   bool restore(
@@ -65,6 +65,7 @@ class ZegoLiveAudioRoomControllerMinimizingImpl
           final prebuiltAudioRoom = ZegoUIKitPrebuiltLiveAudioRoom(
             appID: minimizeData.appID,
             appSign: minimizeData.appSign,
+            token: minimizeData.token,
             userID: minimizeData.userID,
             userName: minimizeData.userName,
             roomID: minimizeData.roomID,

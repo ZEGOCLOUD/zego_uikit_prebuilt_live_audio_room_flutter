@@ -37,6 +37,7 @@ class ZegoLiveAudioRoomManagers {
   void initPluginAndManagers({
     required int appID,
     required String appSign,
+    required String token,
     required String userID,
     required String userName,
     required String roomID,
@@ -64,6 +65,7 @@ class ZegoLiveAudioRoomManagers {
     plugins = ZegoLiveAudioRoomPlugins(
       appID: appID,
       appSign: appSign,
+      token: token,
       userID: userID,
       userName: userName,
       roomID: roomID,

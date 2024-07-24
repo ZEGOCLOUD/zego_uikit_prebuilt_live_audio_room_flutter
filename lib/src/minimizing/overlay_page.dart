@@ -58,7 +58,9 @@ import 'package:zego_uikit_prebuilt_live_audio_room/zego_uikit_prebuilt_live_aud
 ///   Widget build(BuildContext context) {
 ///     return MaterialApp(
 ///       title: 'Flutter Demo',
-///       home: HomePage(),
+///       home: const ZegoUIKitPrebuiltLiveAudioRoomMiniPopScope(
+///         child: HomePage(),
+///       ),
 ///       navigatorKey: widget.navigatorKey,
 ///       builder: (BuildContext context, Widget? child) {
 ///         return Stack(
@@ -209,9 +211,12 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
     preferItemSizeNotifier.value =
         isZoom ? preferSize * _animation.value : preferSize;
 
-    return WillPopScope(
-      onWillPop: () async {
-        return false;
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) async {
+        if (didPop) {
+          return;
+        }
       },
       child: Visibility(
         visible: visibility,

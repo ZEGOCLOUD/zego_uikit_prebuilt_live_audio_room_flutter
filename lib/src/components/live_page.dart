@@ -112,8 +112,13 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: WillPopScope(
-        onWillPop: () async {
+      body: PopScope(
+        canPop: false,
+        onPopInvoked: (bool didPop) async {
+          if (didPop) {
+            return;
+          }
+
           final endConfirmationEvent = ZegoLiveAudioRoomLeaveConfirmationEvent(
             context: context,
           );
@@ -121,10 +126,30 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
             return widget.defaultLeaveConfirmationAction(endConfirmationEvent);
           }
 
-          return widget.events.onLeaveConfirmation!(
+          final canLeave = await widget.events.onLeaveConfirmation!(
             endConfirmationEvent,
             defaultAction,
           );
+          ZegoLoggerService.logInfo(
+            'onPopInvoked, canLeave:$canLeave',
+            tag: 'audio-room',
+            subTag: 'prebuilt',
+          );
+
+          if (canLeave) {
+            if (context.mounted) {
+              Navigator.of(
+                context,
+                rootNavigator: widget.config.rootNavigator,
+              ).pop(false);
+            } else {
+              ZegoLoggerService.logInfo(
+                'onPopInvoked, context not mounted',
+                tag: 'audio-room',
+                subTag: 'prebuilt',
+              );
+            }
+          }
         },
         child: ZegoScreenUtilInit(
           designSize: const Size(750, 1334),

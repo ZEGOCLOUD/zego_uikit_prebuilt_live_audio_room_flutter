@@ -34,24 +34,40 @@ import 'internal/events.dart';
 /// {@category APIs}
 /// {@category Events}
 /// {@category Configs}
+/// {@category Components}
 /// {@category Migration_v3.x}
 class ZegoUIKitPrebuiltLiveAudioRoom extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveAudioRoom({
     Key? key,
     required this.appID,
-    required this.appSign,
     required this.userID,
     required this.userName,
     required this.roomID,
     required this.config,
+    this.appSign = '',
+    this.token = '',
     this.events,
   }) : super(key: key);
 
   /// You can create a project and obtain an appID from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com).
   final int appID;
 
+  /// log in by using [appID] + [appSign].
+  ///
   /// You can create a project and obtain an appSign from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com).
+  ///
+  /// Of course, you can also log in by using [appID] + [token]. For details, see [token].
   final String appSign;
+
+  /// log in by using [appID] + [token].
+  ///
+  /// The token issued by the developer's business server is used to ensure security.
+  /// Please note that if you want to use [appID] + [token] login, do not assign a value to [appSign]
+  ///
+  /// For the generation rules, please refer to [Using Token Authentication] (https://doc-zh.zego.im/article/10360), the default is an empty string, that is, no authentication.
+  ///
+  /// if appSign is not passed in or if appSign is empty, this parameter must be set for authentication when logging in to a room.
+  final String token;
 
   /// The ID of the currently logged-in user.
   /// It can be any valid string.
@@ -100,6 +116,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     minimizeData = ZegoUIKitPrebuiltLiveAudioRoomMinimizeData(
       appID: widget.appID,
       appSign: widget.appSign,
+      token: widget.token,
       roomID: widget.roomID,
       userID: widget.userID,
       userName: widget.userName,
@@ -113,7 +130,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 3.7.5; $version, \n'
+        'version: zego_uikit_prebuilt_live_audio_room: 3.10.0; $version, \n'
         'config: ${widget.config}, '
         'events: ${widget.events}, ',
         tag: 'audio-room',
@@ -129,6 +146,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       ..add(ZegoUIKit().getUserLeaveStream().listen(onUserLeave))
       ..add(
           ZegoUIKit().getMeRemovedFromRoomStream().listen(onMeRemovedFromRoom))
+      ..add(ZegoUIKit().getRoomTokenExpiredStream().listen(onRoomTokenExpired))
       ..add(ZegoUIKit().getErrorStream().listen(onUIKitError));
 
     final isPrebuiltFromMinimizing =
@@ -144,6 +162,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       ZegoLiveAudioRoomManagers().initPluginAndManagers(
         appID: widget.appID,
         appSign: widget.appSign,
+        token: widget.token,
         roomID: widget.roomID,
         userID: widget.userID,
         userName: widget.userName,
@@ -436,7 +455,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     assert(widget.userID.isNotEmpty);
     assert(widget.userName.isNotEmpty);
     assert(widget.appID > 0);
-    assert(widget.appSign.isNotEmpty);
+    assert(widget.appSign.isNotEmpty || widget.token.isNotEmpty);
 
     ZegoUIKit().login(widget.userID, widget.userName);
 
@@ -470,13 +489,14 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       ..setAudioOutputToSpeaker(widget.config.useSpeakerWhenJoining)
       ..setAudioVideoResourceMode(ZegoAudioVideoResourceMode.onlyRTC);
 
-    ZegoUIKit().joinRoom(widget.roomID).then((result) async {
+    ZegoUIKit()
+        .joinRoom(widget.roomID, token: widget.token)
+        .then((result) async {
       await onRoomLogin(result);
     });
   }
 
   Future<void> onRoomLogin(ZegoRoomLoginResult result) async {
-    assert(result.errorCode == 0);
     if (result.errorCode != 0) {
       ZegoLoggerService.logError(
         'failed to login room:${result.errorCode},${result.extendedData}',
@@ -484,6 +504,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
         subTag: 'prebuilt',
       );
     }
+    assert(result.errorCode == 0);
 
     await ZegoLiveAudioRoomManagers().liveDurationManager!.init();
 
@@ -646,6 +667,10 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     }
 
     onInRoomUserAttributesUpdated();
+  }
+
+  void onRoomTokenExpired(int remainSeconds) {
+    widget.events?.room.onTokenExpired?.call(remainSeconds);
   }
 
   void onMeRemovedFromRoom(String fromUserID) {
