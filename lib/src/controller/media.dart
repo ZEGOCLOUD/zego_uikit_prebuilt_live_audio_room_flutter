@@ -121,16 +121,27 @@ class ZegoLiveAudioRoomControllerMediaImpl {
 
   /// Set media player volume. Both the local play volume and the publish volume are set.
   ///
+  /// set [isSyncToRemote] to be true if you want to sync both the local play volume
+  /// and the publish volume, if [isSyncToRemote] is false, that will only adjust the
+  /// local play volume.
+  ///
   /// - [volume] The range is 0 ~ 100. The default is 30.
-  Future<void> setVolume(int volume) async {
+  Future<void> setVolume(
+    int volume, {
+    bool isSyncToRemote = false,
+  }) async {
     ZegoLoggerService.logInfo(
       'setVolume, '
-      'volume:$volume, ',
+      'volume:$volume, '
+      'isSyncToRemote:$isSyncToRemote, ',
       tag: 'audio-room',
       subTag: 'controller.media',
     );
 
-    return ZegoUIKit().setMediaVolume(volume);
+    return ZegoUIKit().setMediaVolume(
+      volume,
+      isSyncToRemote: isSyncToRemote,
+    );
   }
 
   /// mute current media

@@ -422,10 +422,14 @@ media series API
 > set media player volume. Both the local play volume and the publish volume are set.
 > the range is 0 ~ 100. The default is 30.
 >
+> set **isSyncToRemote** to be true if you want to sync both the local play volume
+> and the publish volume, if **isSyncToRemote** is false, that will only adjust the
+> local play volume.
+>
 > - function prototype:
 >
 > ```dart
-> Future<void> setVolume(int volume) async
+> Future<void> setVolume(int volume, {bool isSyncToRemote = false,}) async
 > ```
 
 ### muteLocal

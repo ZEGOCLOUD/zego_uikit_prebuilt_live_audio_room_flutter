@@ -1,3 +1,14 @@
+
+
+## 3.11.1
+
+- Update document
+
+## 3.11.0
+
+- Features
+  - Support sync remote media volume by **isSyncToRemote** in **ZegoUIKitPrebuiltLiveAudioRoomController().media.setVolume** 
+
 ## 3.10.0
 
 - Features
