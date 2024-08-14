@@ -22,6 +22,7 @@ class ZegoLiveAudioRoomLayout extends StatefulWidget {
     this.backgroundColor,
     this.borderRadius,
     this.showSoundWavesInAudioMode = true,
+    this.soundWaveColor,
     this.usersItemIndex = const {},
     this.foregroundBuilder,
     this.backgroundBuilder,
@@ -34,6 +35,7 @@ class ZegoLiveAudioRoomLayout extends StatefulWidget {
   final Color? backgroundColor;
   final double? borderRadius;
   final bool showSoundWavesInAudioMode;
+  final Color? soundWaveColor;
 
   final ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;
   final ZegoAudioVideoViewBackgroundBuilder? backgroundBuilder;
@@ -136,7 +138,8 @@ class _ZegoLiveAudioRoomLayoutState extends State<ZegoLiveAudioRoomLayout> {
                     showInAudioMode: true,
                     showSoundWavesInAudioMode: widget.showSoundWavesInAudioMode,
                     builder: widget.avatarBuilder,
-                    soundWaveColor: const Color(0xff2254f6),
+                    soundWaveColor:
+                        widget.soundWaveColor ?? const Color(0xff2254f6),
                     size: Size(seatIconWidth, seatIconHeight),
                     verticalAlignment: ZegoAvatarAlignment.start,
                   ),

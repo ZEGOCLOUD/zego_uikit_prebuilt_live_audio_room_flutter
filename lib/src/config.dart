@@ -287,6 +287,9 @@ class ZegoLiveAudioRoomSeatConfig {
   /// Whether to display a wave indicator around the avatar.
   bool showSoundWaveInAudioMode;
 
+  ///  sound wave color
+  Color? soundWaveColor;
+
   /// The icon displayed for empty seats when all seats are open (seats in the audio chat room are not locked).
   Image? openIcon;
 
@@ -349,6 +352,7 @@ class ZegoLiveAudioRoomSeatConfig {
     this.openIcon,
     this.closeIcon,
     this.showSoundWaveInAudioMode = true,
+    this.soundWaveColor,
     this.avatarBuilder,
     this.keepOriginalForeground = false,
     this.foregroundBuilder,

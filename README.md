@@ -1,21 +1,19 @@
+*If you find this package helpful, please help by giving it a 👍 on pub.dev↗️!*
+
+*Your support and encouragement motivate us to continue improving and maintaining this package.*
+
+*Thank you for recognizing our work! 👏👏*
+
+---
 
 # Live Audio Room Kit
 
 **Live Audio Room Kit** is a prebuilt component that helps you to build full-featured live audio rooms into your apps easier.
 
-And it includes the business logic along with the UI, enabling you to customize your live audio apps faster with more flexibility. 
-
->
->
->If you find this package helpful, please help by giving it a 👍 on pub.dev↗️!
->
->Your support and encouragement motivate us to continue improving and maintaining this package.
->
->Thank you for recognizing our work! 👏👏
-
----
+And it includes the business logic along with the UI, enabling you to customize your live audio apps faster with more flexibility.
 
 # When do you need the Live Audio Room Kit
+
 - When you want to build live audio rooms easier and faster, it allows you:
   - Build or prototype live audio apps ASAP
   - Finish the integration in the shortest possible time
@@ -25,6 +23,7 @@ And it includes the business logic along with the UI, enabling you to customize 
   - Add or remove features accordingly
 
 # Embedded features
+
 - Ready-to-use Live Audio Room
 - Remove speakers
 - Speaker seats changing & management
@@ -40,9 +39,6 @@ And it includes the business logic along with the UI, enabling you to customize 
 - [APIs](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/APIs-topic.html)
 - [Events](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Events-topic.html)
 - [Configs](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Configs-topic.html)
-
-> 
-> 
 
 - [Quick start](https://docs.zegocloud.com/article/15079)
 - Customize Features

@@ -24,6 +24,7 @@ class ZegoLiveAudioRoomSeatContainer extends StatefulWidget {
     this.backgroundBuilder,
     this.sortAudioVideo,
     this.showSoundWavesInAudioMode = true,
+    this.soundWaveColor,
   }) : super(key: key);
 
   final ZegoLiveAudioRoomSeatManager seatManager;
@@ -43,6 +44,8 @@ class ZegoLiveAudioRoomSeatContainer extends StatefulWidget {
   final ZegoAvatarBuilder? avatarBuilder;
 
   final bool showSoundWavesInAudioMode;
+
+  final Color? soundWaveColor;
 
   @override
   State<ZegoLiveAudioRoomSeatContainer> createState() =>
@@ -90,6 +93,7 @@ class _ZegoAudioVideoContainerState
           userList: userList,
           usersItemIndex: getUsersItemIndexIfSpecify(),
           showSoundWavesInAudioMode: widget.showSoundWavesInAudioMode,
+          soundWaveColor: widget.soundWaveColor,
           avatarBuilder: widget.avatarBuilder,
         );
       },

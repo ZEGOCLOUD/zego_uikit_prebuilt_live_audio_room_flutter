@@ -1,4 +1,11 @@
 
+## 3.11.3
+
+- Update dependency
+
+## 3.11.2
+
+- Support sound wave color by `ZegoUIKitPrebuiltLiveAudioRoomConfig.seat.soundWaveColor` 
 
 ## 3.11.1
 
