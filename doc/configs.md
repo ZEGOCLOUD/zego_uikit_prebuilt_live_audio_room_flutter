@@ -18,8 +18,12 @@
 > The default layout of the audio chat room supports free layout with multiple rows and columns of seats.
 >
 > You can use this parameter to control the specific style of each row and column.
+
 - int `rowSpacing`: Spacing between rows, should be positive
+
 - List\<[ZegoLiveAudioRoomLayoutRowConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomLayoutRowConfig-class.html)\> `rowConfigs`: Configuration list for each row.
+
+- Point<double>? `topLeft`: the topLeft point of seat
 
 - int `takeIndexWhenJoining`:
 >

@@ -665,7 +665,7 @@ class ZegoLiveAudioRoomConnectManager {
           subTag: 'connect manager',
         );
 
-        return result.error?.code.isNotEmpty ?? true;
+        return result.error?.code.isEmpty ?? true;
       });
     }
 

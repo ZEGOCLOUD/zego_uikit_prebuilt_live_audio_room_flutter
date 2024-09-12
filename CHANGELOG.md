@@ -1,4 +1,14 @@
 
+
+## 3.12.1
+
+- Update dependency
+
+## 3.12.0
+
+- Features
+  - You can customize the seating area position by setting `seat.topLeft` in `ZegoUIKitPrebuiltLiveAudioRoomConfig`
+
 ## 3.11.3
 
 - Update dependency

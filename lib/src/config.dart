@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -266,6 +268,9 @@ class ZegoLiveAudioRoomSeatConfig {
   /// You can use this parameter to control the specific style of each row and column.
   ZegoLiveAudioRoomLayoutConfig layout;
 
+  /// the topLeft point of seat
+  Point<double>? topLeft;
+
   /// Specifies the seat to occupy when joining the live audio room.
   /// This is only valid when the role is set to host or speaker.
   int takeIndexWhenJoining;
@@ -345,6 +350,7 @@ class ZegoLiveAudioRoomSeatConfig {
 
   ZegoLiveAudioRoomSeatConfig({
     ZegoLiveAudioRoomLayoutConfig? layout,
+    this.topLeft,
     this.takeIndexWhenJoining = -1,
     this.takeIndexWhenAudienceRequesting,
     this.closeWhenJoining = true,

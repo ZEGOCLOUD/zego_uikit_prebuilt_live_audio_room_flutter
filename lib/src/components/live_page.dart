@@ -1,6 +1,7 @@
 // Dart imports:
 import 'dart:async';
 import 'dart:core';
+import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -288,9 +289,14 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
       soundWaveColor: widget.config.seat.soundWaveColor,
     );
 
+    final topLeft = widget.config.seat.topLeft ??
+        Point(
+          35.zW,
+          169.zR,
+        );
     return Positioned(
-      top: 169.zR,
-      left: 35.zW,
+      left: topLeft.x,
+      top: topLeft.y,
       child: SizedBox(
         width: null != scrollDirection ? containerWidth : tempMaxWidth,
         height: containerHeight,
