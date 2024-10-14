@@ -7,6 +7,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/leave_button.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pip_button.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
@@ -65,6 +66,7 @@ class _ZegoLiveAudioRoomTopBarState extends State<ZegoLiveAudioRoomTopBar> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          pipButton(),
           minimizingButton(),
           const Expanded(child: SizedBox()),
           closeButton(),
@@ -72,6 +74,16 @@ class _ZegoLiveAudioRoomTopBarState extends State<ZegoLiveAudioRoomTopBar> {
         ],
       ),
     );
+  }
+
+  Widget pipButton() {
+    return widget.config.topMenuBar.buttons
+            .contains(ZegoLiveAudioRoomMenuBarButtonName.pipButton)
+        ? ZegoAudioRoomPIPButton(
+            aspectWidth: widget.config.pip.aspectWidth,
+            aspectHeight: widget.config.pip.aspectHeight,
+          )
+        : Container();
   }
 
   Widget minimizingButton() {

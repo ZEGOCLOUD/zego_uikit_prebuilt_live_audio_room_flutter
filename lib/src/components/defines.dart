@@ -53,6 +53,7 @@ class ZegoLiveAudioRoomIconUrls {
   static const String toolbarMember = 'assets/icons/toolbar_member.png';
   static const String toolbarMore = 'assets/icons/toolbar_more.png';
   static const String minimizing = 'assets/icons/minimizing.png';
+  static const String pip = 'assets/icons/pip.png';
 
   static const String memberMore = 'assets/icons/member_more.png';
   static const String toolbarAudienceConnect =

@@ -33,6 +33,12 @@ enum ZegoLiveAudioRoomMenuBarButtonName {
   /// otherwise these widgets will be lost when you minimize and restore the [ZegoUIKitPrebuiltLiveAudioRoom]
   minimizingButton,
 
+  /// Button for PIP the current [ZegoUIKitPrebuiltLiveAudioRoom] widget outside the app.
+  /// When clicked, the [ZegoUIKitPrebuiltLiveAudioRoom] widget will shrink into a small draggable widget on mobile desktop.
+  ///
+  /// In PIP Mode, just only show, some configs maybe useless
+  pipButton,
+
   /// Button for toggling the seat availability.
   /// When the seat is **open**, all audience members can freely choose an empty seat to join and start chatting with others.
   /// If the seat is **closed**, audience members need to request permission from the host or be invited by the host to occupy a seat.

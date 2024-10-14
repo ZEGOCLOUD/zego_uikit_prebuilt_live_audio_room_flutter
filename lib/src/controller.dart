@@ -1,11 +1,15 @@
 // Dart imports:
+import 'dart:async';
+import 'dart:math';
 import 'dart:typed_data';
+import 'dart:io' show Platform;
 
 // Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:file_picker/file_picker.dart';
+import 'package:floating/floating.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
@@ -36,6 +40,8 @@ part 'controller/audio_video.dart';
 
 part 'controller/minimize.dart';
 
+part 'controller/pip.dart';
+
 part 'controller/room.dart';
 
 part 'controller/user.dart';
@@ -47,6 +53,8 @@ part 'controller/private/private.dart';
 part 'controller/private/audio_video.dart';
 
 part 'controller/private/minimize.dart';
+
+part 'controller/private/pip.dart';
 
 part 'controller/private/seat.dart';
 
@@ -65,6 +73,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomController
         ZegoLiveAudioRoomControllerMedia,
         ZegoLiveAudioRoomControllerMessage,
         ZegoLiveAudioRoomControllerMinimizing,
+        ZegoLiveAudioRoomControllerPIP,
         ZegoLiveAudioRoomControllerSeat,
         ZegoLiveAudioRoomControllerAudioVideo,
         ZegoLiveAudioRoomControllerRoom,
@@ -94,14 +103,16 @@ class ZegoUIKitPrebuiltLiveAudioRoomController
       context,
       showConfirmation: showConfirmation,
     );
-    if (result) {
-      private.uninitByPrebuilt();
-      seat.private.uninitByPrebuilt();
-      room.private.uninitByPrebuilt();
-      user.private.uninitByPrebuilt();
-      minimize.private.uninitByPrebuilt();
-      audioVideo.private.uninitByPrebuilt();
-    }
+
+    await ZegoUIKitPrebuiltLiveAudioRoomController().pip.cancelBackground();
+
+    private.uninitByPrebuilt();
+    seat.private.uninitByPrebuilt();
+    room.private.uninitByPrebuilt();
+    user.private.uninitByPrebuilt();
+    minimize.private.uninitByPrebuilt();
+    pip.private.uninitByPrebuilt();
+    audioVideo.private.uninitByPrebuilt();
 
     ZegoLoggerService.logInfo(
       'leave, finished',

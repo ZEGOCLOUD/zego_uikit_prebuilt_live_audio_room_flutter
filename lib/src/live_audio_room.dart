@@ -2,11 +2,13 @@
 import 'dart:async';
 import 'dart:core';
 import 'dart:io' show Platform;
+import 'dart:ui';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:floating/floating.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
@@ -24,6 +26,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/data.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/overlay_machine.dart';
+import 'components/mini_audio.dart';
 import 'internal/events.dart';
 
 /// Live Audio Room Widget.
@@ -130,7 +133,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 3.12.1; $version, \n'
+        'version: zego_uikit_prebuilt_live_audio_room: 3.14.3; $version, \n'
         'config: ${widget.config}, '
         'events: ${widget.events}, ',
         tag: 'audio-room',
@@ -194,6 +197,9 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
           .private
           .initByPrebuilt(
             minimizeData: minimizeData,
+          );
+      ZegoUIKitPrebuiltLiveAudioRoomController().pip.private.initByPrebuilt(
+            config: widget.config,
           );
       ZegoUIKitPrebuiltLiveAudioRoomController()
           .audioVideo
@@ -259,6 +265,8 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     _eventListener?.uninit();
 
+    ZegoUIKitPrebuiltLiveAudioRoomController().pip.cancelBackground();
+
     if (ZegoLiveAudioRoomMiniOverlayPageState.minimizing !=
         ZegoLiveAudioRoomInternalMiniOverlayMachine().state()) {
       ZegoLiveAudioRoomManagers().uninitPluginAndManagers();
@@ -282,6 +290,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
           .minimize
           .private
           .uninitByPrebuilt();
+      ZegoUIKitPrebuiltLiveAudioRoomController().pip.private.uninitByPrebuilt();
       ZegoUIKitPrebuiltLiveAudioRoomController()
           .audioVideo
           .private
@@ -325,22 +334,76 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
   @override
   Widget build(BuildContext context) {
-    return ZegoLiveAudioRoomPage(
-      appID: widget.appID,
-      appSign: widget.appSign,
-      userID: widget.userID,
-      userName: widget.userName,
-      liveID: widget.roomID,
-      config: widget.config,
-      events: events,
-      defaultEndAction: defaultEndAction,
-      defaultLeaveConfirmationAction: defaultLeaveConfirmationAction,
-      plugins: ZegoLiveAudioRoomManagers().plugins,
-      seatManager: ZegoLiveAudioRoomManagers().seatManager!,
-      connectManager: ZegoLiveAudioRoomManagers().connectManager!,
-      popUpManager: ZegoLiveAudioRoomManagers().popUpManager,
-      liveDurationManager: ZegoLiveAudioRoomManagers().liveDurationManager!,
-      minimizeData: minimizeData,
+    final normalPage = SafeArea(
+      child: ZegoLiveAudioRoomPage(
+        appID: widget.appID,
+        appSign: widget.appSign,
+        userID: widget.userID,
+        userName: widget.userName,
+        liveID: widget.roomID,
+        config: widget.config,
+        events: events,
+        defaultEndAction: defaultEndAction,
+        defaultLeaveConfirmationAction: defaultLeaveConfirmationAction,
+        plugins: ZegoLiveAudioRoomManagers().plugins,
+        seatManager: ZegoLiveAudioRoomManagers().seatManager!,
+        connectManager: ZegoLiveAudioRoomManagers().connectManager!,
+        popUpManager: ZegoLiveAudioRoomManagers().popUpManager,
+        liveDurationManager: ZegoLiveAudioRoomManagers().liveDurationManager!,
+        minimizeData: minimizeData,
+      ),
+    );
+
+    if (Platform.isAndroid) {
+      return PiPSwitcher(
+        floating:
+            ZegoUIKitPrebuiltLiveAudioRoomController().pip.private.floating,
+        childWhenDisabled: normalPage,
+        childWhenEnabled: ZegoScreenUtilInit(
+          designSize: const Size(750, 1334),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          builder: (context, child) {
+            return pipPage();
+          },
+        ),
+      );
+    }
+
+    return normalPage;
+  }
+
+  Widget pipPage() {
+    final screenSize = MediaQuery.of(context).size;
+    final width = screenSize.width / 3.0;
+    final height =
+        widget.config.pip.aspectHeight / widget.config.pip.aspectWidth * width;
+    return Scaffold(
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return ZegoMinimizingAudioRoomPage(
+            size: Size(constraints.maxWidth, constraints.maxHeight),
+            background: widget.config.pip.android.background ??
+                BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 5.0),
+                  child: Container(
+                    color: Colors.black.withOpacity(0.8),
+                  ),
+                ),
+            withCircleBorder: false,
+            backgroundBuilder: widget.config.seat.backgroundBuilder,
+            foregroundBuilder: widget.config.seat.foregroundBuilder,
+            avatarBuilder: widget.config.seat.avatarBuilder,
+            showMicrophoneButton: false,
+            showLeaveButton: false,
+            showUserName: widget.config.pip.android.showUserName,
+            userNameTextColor:
+                widget.config.pip.android.userNameTextColor ?? Colors.white,
+            durationConfig: widget.config.duration,
+            durationEvents: widget.events?.duration,
+          );
+        },
+      ),
     );
   }
 
@@ -696,6 +759,8 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     defaultAction() {
       defaultEndAction(endEvent);
     }
+
+    ZegoUIKitPrebuiltLiveAudioRoomController().pip.cancelBackground();
 
     if (null != events.onEnded) {
       events.onEnded!.call(endEvent, defaultAction);

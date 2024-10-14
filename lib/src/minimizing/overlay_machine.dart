@@ -104,6 +104,8 @@ class ZegoLiveAudioRoomInternalMiniOverlayMachine {
     await ZegoUIKit().resetBeautyEffect();
     // await ZegoUIKit().leaveRoom(); //  kick-out will leave in zego_uikit
 
+    await ZegoUIKitPrebuiltLiveAudioRoomController().pip.cancelBackground();
+
     ZegoUIKitPrebuiltLiveAudioRoomController().private.uninitByPrebuilt();
     ZegoUIKitPrebuiltLiveAudioRoomController().seat.private.uninitByPrebuilt();
     ZegoUIKitPrebuiltLiveAudioRoomController().room.private.uninitByPrebuilt();
@@ -112,6 +114,7 @@ class ZegoLiveAudioRoomInternalMiniOverlayMachine {
         .minimize
         .private
         .uninitByPrebuilt();
+    ZegoUIKitPrebuiltLiveAudioRoomController().pip.private.uninitByPrebuilt();
     ZegoUIKitPrebuiltLiveAudioRoomController()
         .audioVideo
         .private

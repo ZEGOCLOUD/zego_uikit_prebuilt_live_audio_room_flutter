@@ -53,7 +53,7 @@ And it includes the business logic along with the UI, enabling you to customize 
   - [Customize the text message UI](https://docs.zegocloud.com/article/16292)
 - Advanced Features
   - [Integrate Minigame](https://docs.zegocloud.com/article/16744)
-  - [Minimize audio room window](https://docs.zegocloud.com/article/16179)
+  - [Overlay(Minimize)/PIP](https://docs.zegocloud.com/article/16179)
   - [Sharing Media](https://docs.zegocloud.com/article/16407)
   - [Send virtual gifts](https://docs.zegocloud.com/article/16819)
 
@@ -69,3 +69,38 @@ And it includes the business logic along with the UI, enabling you to customize 
 <br />
 
 [Please visit our official website for more details.](https://docs.zegocloud.com/article/15073)
+
+## Previews
+
+- take the stage 
+
+  <img src="https://media-resource.spreading.io/docuo/workspace564/27e54a759d23575969552654cb45bf89/d421fe51b3.gif" alt="take seat" height="480">
+
+- apply for take seat/lock seat
+
+  <img src="https://media-resource.spreading.io/docuo/workspace564/27e54a759d23575969552654cb45bf89/0558bb0e51.gif" alt="apply seat" height="480">
+
+- audio effect
+
+  <img src="https://media-resource.spreading.io/docuo/workspace564/27e54a759d23575969552654cb45bf89/ef27110582.jpeg" alt="media" height="480">
+
+- cohost
+
+  <img src="https://media-resource.spreading.io/docuo/workspace564/27e54a759d23575969552654cb45bf89/c2bead0bea.jpeg" alt="media" height="480">
+
+- sharing media
+  
+  <img src="https://media-resource.spreading.io/docuo/workspace564/27e54a759d23575969552654cb45bf89/98dd64a092.gif" alt="media" height="480">
+  
+- virtual gift
+  
+  <img src="https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/live/send_virtual_gift.gif" alt="overlay" height="480">
+
+- overlay(minimized)
+  
+  <img src="https://storage.zego.im/sdk-doc/Pics/ZegoUIKit/Flutter/audio_room/audio_room_mini.gif" alt="overlay" height="480">
+
+- PIP
+  
+  <img src="https://media-resource.spreading.io/docuo/workspace564/27e54a759d23575969552654cb45bf89/40d9a4b8b4.gif" alt="pip" height="480">
+

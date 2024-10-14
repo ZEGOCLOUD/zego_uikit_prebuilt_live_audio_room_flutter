@@ -1,90 +1,93 @@
 - [ZegoUIKitPrebuiltLiveAudioRoom](#zegouikitprebuiltliveaudioroom)
-- [ZegoUIKitPrebuiltLiveAudioRoomConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoUIKitPrebuiltLiveAudioRoomConfig-class.html)
 - [ZegoUIKitPrebuiltLiveAudioRoomController](#zegouikitprebuiltliveaudioroomcontroller)
-    - [leave](#leave)
-    - [hideInMemberList](#hideinmemberlist)
-    - [media](#media)
-        - [volume](#volume)
-        - [totalDuration](#totalduration)
-        - [currentProgress](#currentprogress)
-        - [type](#type)
-        - [volumeNotifier](#volumenotifier)
-        - [currentProgressNotifier](#currentprogressnotifier)
-        - [playStateNotifier](#playstatenotifier)
-        - [typeNotifier](#typenotifier)
-        - [muteNotifier](#mutenotifier)
-        - [info](#info)
-        - [play](#play)
-        - [stop](#stop)
-        - [destroy](#destroy)
-        - [pause](#pause)
-        - [resume](#resume)
-        - [seekTo](#seekto)
-        - [setVolume](#setvolume)
-        - [muteLocal](#mutelocal)
-        - [pickPureAudioFile](#pickpureaudiofile)
-        - [pickVideoFile](#pickvideofile)
-        - [pickFile](#pickfile)
-    - [message](#message)
-        - [send](#send)
-        - [list](#list)
-        - [stream](#stream)
-        - [clear](#clear)
-    - [minimizing](#minimizing)
-        - [state](#state)
-        - [isMinimizing](#isminimizingnotifiervaluenotifierbool)
-        - [isMinimizing](#isminimizing)
-        - [restore](#restore)
-        - [minimize](#minimize)
-        - [hide](#hide)
-    - [seat](#seat)
-        - [userMapNotifier](#usermapnotifier)
-        - [localIsHost](#localishost)
-        - [localIsAudience](#localisaudience)
-        - [localIsSpeaker](#localisspeaker)
-        - [localIsCoHost](#localiscohost)
-        - [localHasHostPermissions](#localhashostpermissions)
-        - [getUserByIndex](#getuserbyindex)
-        - [getEmptySeats](#getemptyseats)
-        - [getSeatIndexByUserID](#getseatindexbyuserid)
-        - [muteStateNotifier](#mutestatenotifier)
-        - [muteLocally](#mutelocally)
-        - [muteLocallyByUserID](#mutelocallybyuserid)
-        - [host](#host)
-            - [open](#open)
-            - [close](#close)
-            - [removeSpeaker](#removespeaker)
-            - [acceptTakingRequest](#accepttakingrequest)
-            - [rejectTakingRequest](#rejecttakingrequest)
-            - [inviteToTake](#invitetotake)
-            - [mute](#mute)
-            - [muteByUserID](#mutebyuserid)
-        - [audience](#audience)
-            - [take](#take)
-            - [applyToTake](#applytotake)
-            - [cancelTakingRequest](#canceltakingrequest)
-            - [acceptTakingInvitation](#accepttakinginvitation)
-        - [speaker](#speaker)
-            - [leave](#leave-2)
-    - [audioVideo](#audiovideo)
-        - [seiStream](#seistream)
-        - [sendSEI](#sendsei)
-        - [microphone](#microphone)
-            - [localState](#localstate)
-            - [localStateNotifier](#localstatenotifier)
-            - [state](#state)
-            - [stateNotifier](#statenotifier)
-            - [turnOn](#turnon)
-            - [switchState](#switchstate)
-    - [room](#room)
-        - [property](#property)
-            - [updateProperty/updateProperties](#updatepropertyupdateproperties)
-            - [deleteProperties](#deleteproperties)
-            - [queryProperties](#queryproperties)
-            - [propertiesStream](#propertiesstream)
-        - [command](#command)
-            - [sendCommand](#sendcommand)
-            - [commandReceivedStream](#commandreceivedstream)
+  - [leave](#leave)
+  - [hideInMemberList](#hideinmemberlist)
+  - [media](#media)
+    - [volume](#volume)
+    - [totalDuration](#totalduration)
+    - [currentProgress](#currentprogress)
+    - [type](#type)
+    - [volumeNotifier](#volumenotifier)
+    - [currentProgressNotifier](#currentprogressnotifier)
+    - [playStateNotifier](#playstatenotifier)
+    - [typeNotifier](#typenotifier)
+    - [muteNotifier](#mutenotifier)
+    - [info](#info)
+    - [play](#play)
+    - [stop](#stop)
+    - [destroy](#destroy)
+    - [pause](#pause)
+    - [resume](#resume)
+    - [seekTo](#seekto)
+    - [setVolume](#setvolume)
+    - [muteLocal](#mutelocal)
+    - [pickPureAudioFile](#pickpureaudiofile)
+    - [pickVideoFile](#pickvideofile)
+    - [pickFile](#pickfile)
+  - [message](#message)
+    - [send](#send)
+    - [list](#list)
+    - [stream](#stream)
+    - [clear](#clear)
+  - [minimizing](#minimizing)
+    - [state](#state)
+    - [isMinimizingNotifier(ValueNotifier)](#isminimizingnotifiervaluenotifier)
+    - [isMinimizing](#isminimizing)
+    - [restore](#restore)
+    - [minimize](#minimize)
+    - [hide](#hide)
+  - [pip](#pip)
+    - [enable](#enable)
+    - [enableWhenBackground](#enablewhenbackground)
+    - [cancelBackground](#cancelbackground)
+  - [seat](#seat)
+    - [userMapNotifier](#usermapnotifier)
+    - [localIsHost](#localishost)
+    - [localIsAudience](#localisaudience)
+    - [localIsSpeaker](#localisspeaker)
+    - [localIsCoHost](#localiscohost)
+    - [localHasHostPermissions](#localhashostpermissions)
+    - [getUserByIndex](#getuserbyindex)
+    - [getEmptySeats](#getemptyseats)
+    - [getSeatIndexByUserID](#getseatindexbyuserid)
+    - [muteStateNotifier](#mutestatenotifier)
+    - [muteLocally](#mutelocally)
+    - [muteLocallyByUserID](#mutelocallybyuserid)
+    - [host](#host)
+      - [open](#open)
+      - [close](#close)
+      - [removeSpeaker](#removespeaker)
+      - [acceptTakingRequest](#accepttakingrequest)
+      - [rejectTakingRequest](#rejecttakingrequest)
+      - [inviteToTake](#invitetotake)
+      - [mute](#mute)
+      - [muteByUserID](#mutebyuserid)
+    - [audience](#audience)
+      - [take](#take)
+      - [applyToTake](#applytotake)
+      - [cancelTakingRequest](#canceltakingrequest)
+      - [acceptTakingInvitation](#accepttakinginvitation)
+    - [speaker](#speaker)
+      - [leave](#leave-1)
+  - [audio video](#audio-video)
+    - [microphone](#microphone)
+      - [localState](#localstate)
+      - [localStateNotifier](#localstatenotifier)
+      - [state](#state-1)
+      - [stateNotifier](#statenotifier)
+      - [turnOn](#turnon)
+      - [switchState](#switchstate)
+    - [seiStream](#seistream)
+    - [sendSEI](#sendsei)
+  - [room](#room)
+    - [property](#property)
+      - [updateProperty/updateProperties](#updatepropertyupdateproperties)
+      - [deleteProperties](#deleteproperties)
+      - [queryProperties](#queryproperties)
+      - [propertiesStream](#propertiesstream)
+    - [command](#command)
+      - [sendCommand](#sendcommand)
+      - [commandReceivedStream](#commandreceivedstream)
 
 ---
 
@@ -712,6 +715,42 @@ the APIs related to minimizing.
 > ```dart
 > void hide()
 > ```
+
+## pip
+
+### enable
+
+>
+> - function prototype:
+>
+> ```dart
+> Future<PiPStatus> enable({
+>   int aspectWidth = 1,
+>   int aspectHeight = 1,
+> }) async
+> ```
+
+### enableWhenBackground
+
+>
+> - function prototype:
+>
+> ```dart
+> Future<PiPStatus> enableWhenBackground({
+>   int aspectWidth = 1,
+>   int aspectHeight = 1,
+> }) async
+> ```
+
+### cancelBackground
+
+>
+> - function prototype:
+>
+> ```dart
+> Future<PiPStatus> cancelBackground() async
+> ```
+
 
 ## seat
 

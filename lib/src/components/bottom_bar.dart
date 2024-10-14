@@ -9,6 +9,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/components.da
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/effects/sound_effect_button.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/leave_button.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/input_board_button.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pip_button.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
@@ -168,12 +169,16 @@ class _ZegoLiveAudioRoomBottomBarState
     bool isRoomSeatLocked,
     ZegoLiveAudioRoomRole localRole,
   ) {
+    final needRestoreDeviceState = widget
+            .minimizeData.isPrebuiltFromMinimizing ||
+        ZegoUIKitPrebuiltLiveAudioRoomController().pip.private.isRestoreFromPIP;
+
     final buttonList = <Widget>[
       ...getDefaultButtons(
         context,
         isRoomSeatLocked: isRoomSeatLocked,
         localRole: localRole,
-        microphoneDefaultValueFunc: widget.minimizeData.isPrebuiltFromMinimizing
+        microphoneDefaultValueFunc: needRestoreDeviceState
             ? () {
                 /// if is minimizing, take the local device state
                 return ZegoUIKit()
@@ -407,6 +412,13 @@ class _ZegoLiveAudioRoomBottomBarState
       case ZegoLiveAudioRoomMenuBarButtonName.minimizingButton:
         return ZegoMinimizingButton(
           rootNavigator: widget.config.rootNavigator,
+        );
+      case ZegoLiveAudioRoomMenuBarButtonName.pipButton:
+        return ZegoAudioRoomPIPButton(
+          buttonSize: buttonSize,
+          iconSize: iconSize,
+          aspectWidth: widget.config.pip.aspectWidth,
+          aspectHeight: widget.config.pip.aspectHeight,
         );
     }
   }

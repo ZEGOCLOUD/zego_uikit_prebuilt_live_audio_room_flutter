@@ -412,6 +412,17 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
         ) ??
         false;
   }
+
+  Future<bool> assignCoHost({
+    required String roomID,
+    required ZegoUIKitUser targetUser,
+  }) async {
+    return await private.seatManager?.assignCoHost(
+          roomID: roomID,
+          targetUser: targetUser,
+        ) ??
+        false;
+  }
 }
 
 /// APIs of audience

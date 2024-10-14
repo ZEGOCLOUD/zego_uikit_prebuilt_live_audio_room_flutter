@@ -1,6 +1,7 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:math';
 
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -34,6 +35,8 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
 
   /// Live audio room timing configuration.
   ZegoLiveAudioRoomLiveDurationConfig duration;
+
+  ZegoLiveAudioRoomPIPConfig pip;
 
   /// the config of media player
   ZegoLiveAudioRoomMediaPlayerConfig mediaPlayer;
@@ -153,6 +156,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         memberList = ZegoLiveAudioRoomMemberListConfig(),
         audioEffect = ZegoLiveAudioRoomAudioEffectConfig(),
         duration = ZegoLiveAudioRoomLiveDurationConfig(),
+        pip = ZegoLiveAudioRoomPIPConfig(),
         mediaPlayer = ZegoLiveAudioRoomMediaPlayerConfig(),
         backgroundMedia = ZegoLiveAudioRoomBackgroundMediaConfig(),
         innerText = ZegoUIKitPrebuiltLiveAudioRoomInnerText(),
@@ -190,6 +194,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         memberList = ZegoLiveAudioRoomMemberListConfig(),
         audioEffect = ZegoLiveAudioRoomAudioEffectConfig(),
         duration = ZegoLiveAudioRoomLiveDurationConfig(),
+        pip = ZegoLiveAudioRoomPIPConfig(),
         mediaPlayer = ZegoLiveAudioRoomMediaPlayerConfig(),
         backgroundMedia = ZegoLiveAudioRoomBackgroundMediaConfig(),
         innerText = ZegoUIKitPrebuiltLiveAudioRoomInnerText();
@@ -213,6 +218,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
     ZegoLiveAudioRoomMemberListConfig? memberList,
     ZegoLiveAudioRoomAudioEffectConfig? effect,
     ZegoLiveAudioRoomLiveDurationConfig? duration,
+    ZegoLiveAudioRoomPIPConfig? pip,
     ZegoLiveAudioRoomMediaPlayerConfig? mediaPlayer,
     ZegoLiveAudioRoomBackgroundMediaConfig? backgroundMedia,
   })  : seat = seat ??
@@ -227,6 +233,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         memberList = memberList ?? ZegoLiveAudioRoomMemberListConfig(),
         audioEffect = effect ?? ZegoLiveAudioRoomAudioEffectConfig(),
         duration = duration ?? ZegoLiveAudioRoomLiveDurationConfig(),
+        pip = pip ?? ZegoLiveAudioRoomPIPConfig(),
         mediaPlayer = mediaPlayer ?? ZegoLiveAudioRoomMediaPlayerConfig(),
         backgroundMedia =
             backgroundMedia ?? ZegoLiveAudioRoomBackgroundMediaConfig(),
@@ -242,6 +249,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         'inRoomMessage:$inRoomMessage, '
         'audioEffect:$audioEffect, '
         'duration:$duration, '
+        'pip:$pip, '
         'mediaPlayer:$mediaPlayer, '
         'backgroundMedia:$backgroundMedia, '
         'memberList:$memberList, '
@@ -741,6 +749,66 @@ class ZegoLiveAudioRoomMediaPlayerConfig {
   String toString() {
     return 'ZegoLiveAudioRoomMediaPlayerConfig:{'
         'supportTransparent:$supportTransparent, '
+        '}';
+  }
+}
+
+/// pip config
+class ZegoLiveAudioRoomPIPConfig {
+  ZegoLiveAudioRoomPIPConfig({
+    this.aspectWidth = 1,
+    this.aspectHeight = 1,
+    this.enableWhenBackground = true,
+    ZegoLiveAudioRoomPIPAndroidConfig? android,
+  }) : android = android ?? ZegoLiveAudioRoomPIPAndroidConfig();
+
+  /// android config
+  ZegoLiveAudioRoomPIPAndroidConfig android;
+
+  /// aspect width
+  int aspectWidth;
+
+  /// aspect height
+  int aspectHeight;
+
+  /// android: only available on SDK higher than 31(>=31)
+  /// iOS: not limit
+  bool enableWhenBackground;
+
+  @override
+  String toString() {
+    return 'ZegoLiveAudioRoomPIPConfig:{'
+        'android:$android, '
+        'aspectWidth:$aspectWidth, '
+        'aspectHeight:$aspectHeight, '
+        'enableWhenAppBackToDesktop:$enableWhenBackground, '
+        '}';
+  }
+}
+
+/// android pip
+/// only available on SDK higher than 26(>=26)
+class ZegoLiveAudioRoomPIPAndroidConfig {
+  ZegoLiveAudioRoomPIPAndroidConfig({
+    this.background,
+    this.userNameTextColor,
+    this.showUserName = true,
+  });
+
+  /// default is black
+  Widget? background;
+
+  ///  show user name or not
+  bool showUserName;
+
+  /// default is white
+  Color? userNameTextColor;
+
+  @override
+  String toString() {
+    return 'ZegoLiveAudioRoomPIPAndroidConfig:{'
+        'showUserName:$showUserName, '
+        'userNameTextColor:$userNameTextColor, '
         '}';
   }
 }

@@ -91,6 +91,8 @@ class _ZegoLiveAudioRoomLeaveButtonState
         return canLeave;
       },
       onPress: () async {
+        await ZegoUIKitPrebuiltLiveAudioRoomController().pip.cancelBackground();
+
         final endEvent = ZegoLiveAudioRoomEndEvent(
           reason: ZegoLiveAudioRoomEndReason.localLeave,
           isFromMinimizing: ZegoLiveAudioRoomMiniOverlayPageState.minimizing ==

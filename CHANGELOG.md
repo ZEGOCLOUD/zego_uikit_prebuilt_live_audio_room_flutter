@@ -1,4 +1,31 @@
+## 3.14.3
 
+- Bugs
+  - Fix the occasional crash of pip on some android machines
+
+## 3.14.2
+
+- Update dependency
+
+## 3.14.1
+
+- Bugs
+  - hide pip logic in iOS, or an exception will occur
+
+## 3.14.0
+
+- Features
+  - Support PIP(android only)
+
+
+## 3.13.1
+
+- Update dependency
+
+## 3.13.0
+
+- Features
+  - Support **assignCoHost** by **ZegoUIKitPrebuiltLiveAudioRoomController.seat**
 
 ## 3.12.1
 
