@@ -330,6 +330,10 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
                 widget.defaultLeaveConfirmationAction,
             seatManager: widget.seatManager,
             connectManager: widget.connectManager,
+            popUpManager: widget.popUpManager,
+            prebuiltController: widget.prebuiltController,
+            isPluginEnabled: widget.plugins?.isEnabled ?? false,
+            avatarBuilder: widget.config.seat.avatarBuilder,
             translationText: widget.config.innerText,
           );
         },

@@ -48,7 +48,6 @@ class ZegoLiveAudioRoomBottomBar extends StatefulWidget {
 
   const ZegoLiveAudioRoomBottomBar({
     Key? key,
-    this.avatarBuilder,
     required this.config,
     required this.events,
     required this.defaultEndAction,
@@ -61,6 +60,7 @@ class ZegoLiveAudioRoomBottomBar extends StatefulWidget {
     required this.height,
     required this.buttonSize,
     required this.minimizeData,
+    this.avatarBuilder,
   }) : super(key: key);
 
   @override

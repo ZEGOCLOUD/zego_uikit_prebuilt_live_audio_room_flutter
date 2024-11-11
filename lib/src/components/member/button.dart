@@ -87,18 +87,20 @@ class _ZegoLiveAudioRoomMemberButtonState
       },
       child: Stack(
         children: [
-          Container(
-            width: containerSize.width,
-            height: containerSize.height,
-            decoration: BoxDecoration(
-              color: widget.icon?.backgroundColor ?? Colors.transparent,
-              shape: BoxShape.circle,
-            ),
-            child: SizedBox.fromSize(
-              size: sizeBoxSize,
-              child: widget.icon?.icon ??
-                  ZegoLiveAudioRoomImage.asset(
-                      ZegoLiveAudioRoomIconUrls.toolbarMember),
+          Center(
+            child: Container(
+              width: containerSize.width,
+              height: containerSize.height,
+              decoration: BoxDecoration(
+                color: widget.icon?.backgroundColor ?? Colors.transparent,
+                shape: BoxShape.circle,
+              ),
+              child: SizedBox.fromSize(
+                size: sizeBoxSize,
+                child: widget.icon?.icon ??
+                    ZegoLiveAudioRoomImage.asset(
+                        ZegoLiveAudioRoomIconUrls.toolbarMember),
+              ),
             ),
           ),
           redPoint(),

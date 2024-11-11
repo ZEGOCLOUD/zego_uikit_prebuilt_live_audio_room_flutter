@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
+// Project imports:
+import 'package:zego_uikit_prebuilt_live_audio_room/src/config.defines.dart';
+
 // size
 Size get zegoLiveButtonSize => Size(72.zR, 72.zR);
 
@@ -12,24 +15,59 @@ Size get zegoLiveButtonIconSize => Size(40.zR, 40.zR);
 SizedBox get zegoLiveButtonPadding =>
     SizedBox.fromSize(size: Size.fromRadius(8.zR));
 
-/// @nodoc
-enum ZegoLiveAudioRoomPopupItemValue {
-  takeOnSeat,
-  takeOffSeat,
-  leaveSeat,
-  muteSeat,
-  inviteLink,
-  assignCoHost,
-  revokeCoHost,
-  cancel,
+extension ZegoLiveAudioRoomPopupItemValueExtension
+    on ZegoLiveAudioRoomPopupItemValue {
+  static ZegoLiveAudioRoomPopupItemValue fromIndex(int index) {
+    Map<int, ZegoLiveAudioRoomPopupItemValue> values = {
+      0: ZegoLiveAudioRoomPopupItemValue.takeOnSeat,
+      1: ZegoLiveAudioRoomPopupItemValue.takeOffSeat,
+      2: ZegoLiveAudioRoomPopupItemValue.switchSeat,
+      3: ZegoLiveAudioRoomPopupItemValue.leaveSeat,
+      4: ZegoLiveAudioRoomPopupItemValue.muteSeat,
+      5: ZegoLiveAudioRoomPopupItemValue.inviteLink,
+      6: ZegoLiveAudioRoomPopupItemValue.assignCoHost,
+      7: ZegoLiveAudioRoomPopupItemValue.revokeCoHost,
+      8: ZegoLiveAudioRoomPopupItemValue.cancel,
+      100: ZegoLiveAudioRoomPopupItemValue.customStartIndex,
+    };
+
+    return values[index] ?? ZegoLiveAudioRoomPopupItemValue.customStartIndex;
+  }
+
+  static int getIndex(ZegoLiveAudioRoomPopupItemValue value) {
+    Map<ZegoLiveAudioRoomPopupItemValue, int> values = {
+      ZegoLiveAudioRoomPopupItemValue.takeOnSeat: 0,
+      ZegoLiveAudioRoomPopupItemValue.takeOffSeat: 1,
+      ZegoLiveAudioRoomPopupItemValue.switchSeat: 2,
+      ZegoLiveAudioRoomPopupItemValue.leaveSeat: 3,
+      ZegoLiveAudioRoomPopupItemValue.muteSeat: 4,
+      ZegoLiveAudioRoomPopupItemValue.inviteLink: 5,
+      ZegoLiveAudioRoomPopupItemValue.assignCoHost: 6,
+      ZegoLiveAudioRoomPopupItemValue.revokeCoHost: 7,
+      ZegoLiveAudioRoomPopupItemValue.cancel: 8,
+      ZegoLiveAudioRoomPopupItemValue.customStartIndex: 100,
+    };
+
+    return values[value] ?? -1;
+  }
+
+  int get index {
+    return getIndex(this);
+  }
 }
 
 class ZegoLiveAudioRoomPopupItem {
-  final ZegoLiveAudioRoomPopupItemValue value;
+  final int index;
   final String text;
   final dynamic data;
+  final void Function()? onPressed;
 
-  const ZegoLiveAudioRoomPopupItem(this.value, this.text, {this.data});
+  const ZegoLiveAudioRoomPopupItem(
+    this.index,
+    this.text, {
+    this.data,
+    this.onPressed,
+  });
 }
 
 /// @nodoc

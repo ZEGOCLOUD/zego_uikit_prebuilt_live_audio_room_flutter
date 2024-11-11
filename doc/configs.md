@@ -13,6 +13,7 @@
   - [mediaPlayer](#mediaplayer)
   - [backgroundMedia](#backgroundmedia)
   - [memberList](#memberlist)
+  - [popUpMenu](#popupmenu)
   - [role](#role)
   - [innerText](#innertext)
   - [confirmDialogInfo](#confirmdialoginfo)
@@ -64,6 +65,19 @@
 > Specifies the seat to occupy when joining the live audio room.
 >
 > This is only valid when the role is set to host or speaker.
+
+- bool Function(int seatIndex)? `canAutoSwitchOnClicked`:
+>
+> By default, the speaker will auto switch seat when click the seat that
+> can be take on(the room is not locked the seats, and the seat is empty)
+> 
+> If you don't want to switch automatically, return false.
+> 
+> ```dart
+>  seat.canAutoSwitchOnClicked = (index) {
+>   return false;
+>  }
+> ```
 
 - int Function(ZegoUIKitUser user)? `takeIndexWhenAudienceRequesting`:
 >
@@ -379,7 +393,35 @@
 >
 > In this example, we pass the builder function of the custom view, `CustomMemberListItem`, to the [itemBuilder] property so that the member list item will be rendered using the custom component.
 
+## popUpMenu
 
+> [ZegoLiveAudioRoomPopUpMenuConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomPopUpMenuConfig-class.html)
+>
+- [ZegoLiveAudioRoomPopUpSeatClickedMenuConfig](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomPopUpSeatClickedMenuConfig-class.html) `seatClicked`: pop up menu when on seat clicked
+  - List\<[ZegoLiveAudioRoomPopupItemValue](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomPopupItemValue.html)\> `hiddenMenus`: If you don't want some system menus (except cancel, customStartIndex) to appear, specify to hide them here
+  - List\<[ZegoLiveAudioRoomPopUpSeatClickedMenuInfo](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomPopUpSeatClickedMenuInfo-class.html)\> `hostExtendMenus`: The custom menus to be displayed when the seat's user is host.
+  - List\<[ZegoLiveAudioRoomPopUpSeatClickedMenuInfo](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomPopUpSeatClickedMenuInfo-class.html)\> `coHostExtendMenus`: The custom menus to be displayed when the seat's user is co-host.
+  - List\<[ZegoLiveAudioRoomPopUpSeatClickedMenuInfo](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomPopUpSeatClickedMenuInfo-class.html)\> `speakerExtendMenus`: The custom menus to be displayed when the seat's user is speaker.
+  - List\<[ZegoLiveAudioRoomPopUpSeatClickedMenuInfo](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomPopUpSeatClickedMenuInfo-class.html)\> `audienceExtendMenus`: The custom menus to be displayed when the seat's user is audience.
+  - List\<[ZegoLiveAudioRoomPopUpSeatClickedMenuInfo](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomPopUpSeatClickedMenuInfo-class.html)\> `emptyExtendMenus`: The custom menus to be displayed when seat is empty.
+
+> /// example:
+> ```dart
+> popUpMenu.seatClicked = ZegoLiveAudioRoomPopUpSeatClickedMenuConfig(
+>   hiddenMenus: [
+>     ZegoLiveAudioRoomPopupItemValue.takeOnSeat,
+>   ],
+>   hostExtendMenus: [
+>     ZegoLiveAudioRoomPopUpSeatClickedMenuInfo(
+>       onClicked: (event) {
+>         debugPrint('host event:$event');
+>       },
+>       title: 'Host Custom',
+>       data: 'host',
+>     ),
+>   ],
+> )
+> ```
 
 ## role
 

@@ -1,3 +1,29 @@
+## 3.16.0
+
+- Features
+  - member-list button can be added to the top toolbar, which is not displayed by default.
+
+## 3.15.2
+
+- Bugs
+  - Catch and log crashes in certain scenes
+
+## 3.15.1
+
+- Update dependency
+
+## 3.15.0
+
+- Features
+  - **ZegoUIKitPrebuiltLiveAudioRoomController().seat**
+    - Added `isRoomSeatLocked` to determine if the seats of room has been locked
+    - Added `isAHostSeatIndex` to determine if it is the seat specified in **ZegoUIKitPrebuiltLiveAudioRoomConfig.seat.hostIndexes**
+  - **ZegoUIKitPrebuiltLiveAudioRoomConfig** add `popUpMenu` configuration
+    - Through `seatClicked`, you can customize the pop-up menu when click the seat
+      - The default menu can be hidden through `hiddenMenus`
+      - Customize the extended menu on empty seats through `emptyExtendMenus`
+      - Extended menus can be customized according to user role through `hostExtendMenus`/`coHostExtendMenus`/`speakerExtendMenus`/`audienceExtendMenus`
+
 ## 3.14.3
 
 - Bugs

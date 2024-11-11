@@ -41,6 +41,10 @@ class ZegoLiveAudioRoomControllerSeatImpl
   bool get localHasHostPermissions =>
       private.seatManager?.localHasHostPermissions ?? false;
 
+  ///  is room seat locked or not
+  bool get isRoomSeatLocked =>
+      private.seatManager?.isRoomSeatLockedNotifier.value ?? false;
+
   /// get user who on the target seat index
   ZegoUIKitUser? getUserByIndex(int targetIndex) =>
       private.seatManager?.getUserByIndex(targetIndex);
@@ -48,6 +52,10 @@ class ZegoLiveAudioRoomControllerSeatImpl
   /// get seat index of target user
   int getSeatIndexByUserID(String targetUserID) =>
       private.seatManager?.getIndexByUserID(targetUserID) ?? -1;
+
+  ///  is a host seat index or not
+  bool isAHostSeatIndex(int seatIndex) =>
+      private.seatManager?.isAHostSeat(seatIndex) ?? false;
 
   /// get the currently empty seat
   ///

@@ -1,6 +1,8 @@
 // Dart imports:
 
 // Flutter imports:
+
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,6 +15,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart'
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_sheet_menu.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/config.defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
@@ -135,7 +138,7 @@ class _ZegoLiveAudioRoomSeatForegroundState
 
     if (widget.events.seat.onClicked != null) {
       ZegoLoggerService.logInfo(
-        'ERROR!!! click seat event is deal outside',
+        'WARN!!! click seat event is deal outside',
         tag: 'audio-room',
         subTag: 'foreground',
       );
@@ -145,24 +148,48 @@ class _ZegoLiveAudioRoomSeatForegroundState
     }
 
     final popupItems = <ZegoLiveAudioRoomPopupItem>[];
+    void addPopUpItemWithFilterConfig(ZegoLiveAudioRoomPopupItem item) {
+      if (widget.config.popUpMenu.seatClicked.hiddenMenus.contains(
+          ZegoLiveAudioRoomPopupItemValueExtension.fromIndex(item.index))) {
+        ZegoLoggerService.logInfo(
+          'pop up menu of ${item.text} is hide by \'config.popUpMenu.seatClicked.hiddenMenus\', '
+          'which is ${widget.config.popUpMenu.seatClicked.hiddenMenus}',
+          tag: 'audio-room',
+          subTag: 'foreground',
+        );
 
-    if (null == widget.user) {
-      /// empty seat
+        return;
+      }
+
+      popupItems.add(item);
+    }
+
+    final isEmptySeat = null == widget.user;
+    if (isEmptySeat) {
       /// forbid host switch seat and speaker/audience take locked seat
       if (!widget.seatManager.localIsAHost &&
           !widget.seatManager.isAHostSeat(index)) {
-        if (-1 !=
-            widget.seatManager
-                .getIndexByUserID(ZegoUIKit().getLocalUser().id)) {
-          /// local user is on seat
-          widget.seatManager.switchToSeat(index);
+        final isLocalUserOnSeat = -1 !=
+            widget.seatManager.getIndexByUserID(ZegoUIKit().getLocalUser().id);
+        if (isLocalUserOnSeat) {
+          if (widget.config.seat.canAutoSwitchOnClicked?.call(index) ?? true) {
+            /// auto switch
+            widget.seatManager.switchToSeat(index);
+          } else {
+            addPopUpItemWithFilterConfig(ZegoLiveAudioRoomPopupItem(
+              ZegoLiveAudioRoomPopupItemValue.switchSeat.index,
+              widget.config.innerText.switchSeatMenuButton,
+              data: index,
+            ));
+          }
         } else {
-          /// local user is not on seat
-          if (!widget.seatManager.lockedSeatNotifier.value.contains(index)) {
+          final isSeatIndexLocked =
+              widget.seatManager.lockedSeatNotifier.value.contains(index);
+          if (!isSeatIndexLocked) {
             /// only room seat is not locked and index is not in locked seats
             /// if locked, can't apply by click seat
-            popupItems.add(ZegoLiveAudioRoomPopupItem(
-              ZegoLiveAudioRoomPopupItemValue.takeOnSeat,
+            addPopUpItemWithFilterConfig(ZegoLiveAudioRoomPopupItem(
+              ZegoLiveAudioRoomPopupItemValue.takeOnSeat.index,
               widget.config.innerText.takeSeatMenuButton,
               data: index,
             ));
@@ -174,31 +201,30 @@ class _ZegoLiveAudioRoomSeatForegroundState
       if (widget.seatManager.localHasHostPermissions &&
           widget.user?.id != ZegoUIKit().getLocalUser().id) {
         /// local is host, click others
-        popupItems
 
-          /// host can kick others off seat
-          ..add(ZegoLiveAudioRoomPopupItem(
-            ZegoLiveAudioRoomPopupItemValue.takeOffSeat,
-            widget.config.innerText.removeSpeakerMenuDialogButton.replaceFirst(
-              widget.config.innerText.param_1,
-              widget.user?.name ?? '',
-            ),
-            data: index,
-          ))
+        /// host can kick others off seat
+        addPopUpItemWithFilterConfig(ZegoLiveAudioRoomPopupItem(
+          ZegoLiveAudioRoomPopupItemValue.takeOffSeat.index,
+          widget.config.innerText.removeSpeakerMenuDialogButton.replaceFirst(
+            widget.config.innerText.param_1,
+            widget.user?.name ?? '',
+          ),
+          data: index,
+        ));
 
-          /// host can mute others
-          ..add(ZegoLiveAudioRoomPopupItem(
-            ZegoLiveAudioRoomPopupItemValue.muteSeat,
-            widget.config.innerText.muteSpeakerMenuDialogButton.replaceFirst(
-              widget.config.innerText.param_1,
-              widget.user?.name ?? '',
-            ),
-            data: index,
-          ));
+        /// host can mute others
+        addPopUpItemWithFilterConfig(ZegoLiveAudioRoomPopupItem(
+          ZegoLiveAudioRoomPopupItemValue.muteSeat.index,
+          widget.config.innerText.muteSpeakerMenuDialogButton.replaceFirst(
+            widget.config.innerText.param_1,
+            widget.user?.name ?? '',
+          ),
+          data: index,
+        ));
 
         if (widget.seatManager.localIsAHost) {
           ///
-          // popupItems.add(PopupItem(
+          // addPopUpItemWithFilterConfig(PopupItem(
           //   PopupItemValue.kickOut,
           //   widget.config.innerText.removeUserMenuDialogButton.replaceFirst(
           //     widget.config.innerText.param_1,
@@ -210,8 +236,8 @@ class _ZegoLiveAudioRoomSeatForegroundState
           /// only support by host
           if (widget.seatManager.isCoHost(widget.user)) {
             /// host revoke a co-host
-            popupItems.add(ZegoLiveAudioRoomPopupItem(
-              ZegoLiveAudioRoomPopupItemValue.revokeCoHost,
+            addPopUpItemWithFilterConfig(ZegoLiveAudioRoomPopupItem(
+              ZegoLiveAudioRoomPopupItemValue.revokeCoHost.index,
               widget.config.innerText.revokeCoHostPrivilegesMenuDialogButton
                   .replaceFirst(
                 widget.config.innerText.param_1,
@@ -221,8 +247,8 @@ class _ZegoLiveAudioRoomSeatForegroundState
             ));
           } else if (widget.seatManager.isSpeaker(widget.user)) {
             /// host can specify one speaker be a co-host if no co-host now
-            popupItems.add(ZegoLiveAudioRoomPopupItem(
-              ZegoLiveAudioRoomPopupItemValue.assignCoHost,
+            addPopUpItemWithFilterConfig(ZegoLiveAudioRoomPopupItem(
+              ZegoLiveAudioRoomPopupItemValue.assignCoHost.index,
               widget.config.innerText.assignAsCoHostMenuDialogButton
                   .replaceFirst(
                 widget.config.innerText.param_1,
@@ -238,19 +264,24 @@ class _ZegoLiveAudioRoomSeatForegroundState
         /// local is not a host, kick self
 
         /// speaker can local leave seat
-        popupItems.add(ZegoLiveAudioRoomPopupItem(
-          ZegoLiveAudioRoomPopupItemValue.leaveSeat,
+        addPopUpItemWithFilterConfig(ZegoLiveAudioRoomPopupItem(
+          ZegoLiveAudioRoomPopupItemValue.leaveSeat.index,
           widget.config.innerText.leaveSeatDialogInfo.title,
         ));
       }
     }
+
+    addCustomPopMenuItems(
+      seatIndex: index,
+      currentPopupItems: popupItems,
+    );
 
     if (popupItems.isEmpty) {
       return;
     }
 
     popupItems.add(ZegoLiveAudioRoomPopupItem(
-      ZegoLiveAudioRoomPopupItemValue.cancel,
+      ZegoLiveAudioRoomPopupItemValue.cancel.index,
       widget.config.innerText.cancelMenuDialogButton,
     ));
 
@@ -263,6 +294,81 @@ class _ZegoLiveAudioRoomSeatForegroundState
       popUpManager: widget.popUpManager,
       innerText: widget.config.innerText,
     );
+  }
+
+  void addCustomPopMenuItems({
+    required int seatIndex,
+    required List<ZegoLiveAudioRoomPopupItem> currentPopupItems,
+  }) {
+    int addCustomPopUpMenu({
+      required int menuStartIndex,
+      required List<ZegoLiveAudioRoomPopUpSeatClickedMenuInfo> extendMenus,
+    }) {
+      for (var emptyExtendMenu in extendMenus) {
+        menuStartIndex += 1;
+        final event = ZegoLiveAudioRoomPopUpSeatClickedMenuEvent(
+          index: seatIndex,
+          isAHostSeat: widget.seatManager.isAHostSeat(seatIndex),
+          isRoomSeatLocked: widget.seatManager.isRoomSeatLockedNotifier.value,
+          data: emptyExtendMenu.data,
+          localIsCoHost: widget.seatManager.localIsCoHost,
+          localRole: widget.seatManager.localRole.value,
+          localUser: ZegoUIKit().getLocalUser(),
+          targetIsCoHost: widget.seatManager.isCoHost(widget.user),
+          targetRole: widget.seatManager.getRole(widget.user),
+          targetUser: widget.user,
+        );
+        currentPopupItems.add(
+          ZegoLiveAudioRoomPopupItem(
+            menuStartIndex,
+            emptyExtendMenu.title,
+            data: emptyExtendMenu.data,
+            onPressed: () {
+              emptyExtendMenu.onClicked.call(event);
+            },
+          ),
+        );
+      }
+      return menuStartIndex;
+    }
+
+    var customIndex = ZegoLiveAudioRoomPopupItemValue.customStartIndex.index;
+    if (null == widget.user) {
+      customIndex = addCustomPopUpMenu(
+        menuStartIndex: customIndex,
+        extendMenus: widget.config.popUpMenu.seatClicked.emptyExtendMenus,
+      );
+    } else {
+      if (widget.seatManager.isCoHost(widget.user)) {
+        customIndex = addCustomPopUpMenu(
+          menuStartIndex: customIndex,
+          extendMenus: widget.config.popUpMenu.seatClicked.coHostExtendMenus,
+        );
+      } else {
+        switch (widget.seatManager.getRole(widget.user)) {
+          case ZegoLiveAudioRoomRole.host:
+            customIndex = addCustomPopUpMenu(
+              menuStartIndex: customIndex,
+              extendMenus: widget.config.popUpMenu.seatClicked.hostExtendMenus,
+            );
+            break;
+          case ZegoLiveAudioRoomRole.speaker:
+            customIndex = addCustomPopUpMenu(
+              menuStartIndex: customIndex,
+              extendMenus:
+                  widget.config.popUpMenu.seatClicked.speakerExtendMenus,
+            );
+            break;
+          case ZegoLiveAudioRoomRole.audience:
+            customIndex = addCustomPopUpMenu(
+              menuStartIndex: customIndex,
+              extendMenus:
+                  widget.config.popUpMenu.seatClicked.audienceExtendMenus,
+            );
+            break;
+        }
+      }
+    }
   }
 
   Widget hostFlag(BuildContext context, double maxWidth) {

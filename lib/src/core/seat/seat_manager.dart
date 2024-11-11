@@ -91,6 +91,25 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
   final Map<String, Map<String, String>> _pendingUserRoomAttributes = {};
   final List<StreamSubscription<dynamic>?> _subscriptions = [];
 
+  ZegoLiveAudioRoomRole getRole(ZegoUIKitUser? user) {
+    if (null == user) {
+      return ZegoLiveAudioRoomRole.audience;
+    }
+
+    if (ZegoUIKit().getLocalUser().id == user.id) {
+      return localRole.value;
+    }
+
+    /// remote user
+    if (isAttributeHost(user)) {
+      return ZegoLiveAudioRoomRole.host;
+    }
+    if (isSpeaker(user)) {
+      return ZegoLiveAudioRoomRole.speaker;
+    }
+    return ZegoLiveAudioRoomRole.audience;
+  }
+
   bool get localIsAHost => ZegoLiveAudioRoomRole.host == localRole.value;
 
   bool get localIsAAudience =>

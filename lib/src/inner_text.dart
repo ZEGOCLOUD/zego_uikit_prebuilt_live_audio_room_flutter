@@ -15,6 +15,10 @@ class ZegoUIKitPrebuiltLiveAudioRoomInnerText {
   /// The **default value** is *"Take the seat"*.
   String takeSeatMenuButton;
 
+  /// The button displayed in the popup menu when the audience clicks to request take a seat .
+  /// The **default value** is *"Switch the seat"*.
+  String switchSeatMenuButton;
+
   /// The button displayed in the popup menu when the host clicks on the "speaker" on a seat to move the speaker down.
   /// The **default value** is *"Remove %0 from seat"*, where %0 will be replaced with the corresponding username.
   String removeSpeakerMenuDialogButton;
@@ -212,6 +216,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomInnerText {
 
   ZegoUIKitPrebuiltLiveAudioRoomInnerText({
     String? takeSeatMenuButton,
+    String? switchSeatMenuButton,
     String? removeSpeakerMenuDialogButton,
     String? muteSpeakerMenuDialogButton,
     String? cancelMenuDialogButton,
@@ -263,6 +268,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomInnerText {
     String? reverbTypePopularTitle,
     String? reverbTypeGramophoneTitle,
   })  : takeSeatMenuButton = takeSeatMenuButton ?? 'Take the seat',
+        switchSeatMenuButton = switchSeatMenuButton ?? 'Switch the seat',
         removeSpeakerMenuDialogButton =
             removeSpeakerMenuDialogButton ?? 'Remove %0 from seat',
         muteSpeakerMenuDialogButton = muteSpeakerMenuDialogButton ?? 'Mute %0',

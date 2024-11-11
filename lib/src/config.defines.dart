@@ -1,3 +1,9 @@
+// Package imports:
+import 'package:zego_uikit/zego_uikit.dart';
+
+// Project imports:
+import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
+
 /// The alignment of the seat layout.
 /// This enum type is used for the [alignment] property in [ZegoLiveAudioRoomLayoutRowConfig].
 enum ZegoLiveAudioRoomLayoutAlignment {
@@ -71,4 +77,93 @@ class ZegoLiveAudioRoomLayoutConfig {
         'row configs:${rowConfigs.map((e) => e.toString()).toList()}'
         '}';
   }
+}
+
+class ZegoLiveAudioRoomPopUpSeatClickedMenuEvent {
+  int index;
+  bool isAHostSeat;
+  bool isRoomSeatLocked;
+
+  /// **data** from [ZegoLiveAudioRoomPopUpSeatClickedMenuInfo]
+  dynamic data;
+
+  bool localIsCoHost;
+  ZegoLiveAudioRoomRole localRole;
+  ZegoUIKitUser localUser;
+
+  bool targetIsCoHost;
+  ZegoLiveAudioRoomRole targetRole;
+
+  /// null if seat is empty, no user on current seat
+  ZegoUIKitUser? targetUser;
+
+  ZegoLiveAudioRoomPopUpSeatClickedMenuEvent({
+    required this.index,
+    required this.isAHostSeat,
+    required this.isRoomSeatLocked,
+    required this.localIsCoHost,
+    required this.localRole,
+    required this.localUser,
+    required this.targetIsCoHost,
+    required this.targetRole,
+    required this.targetUser,
+    this.data,
+  });
+
+  @override
+  String toString() {
+    return '{'
+        'index:$index, '
+        'isAHostSeat:$isAHostSeat, '
+        'isRoomSeatLocked:$isRoomSeatLocked, '
+        'data:$data, '
+        'localIsCoHost:$localIsCoHost, '
+        'localRole:$localRole, '
+        'localUser:${localUser.toSimpleString()}, '
+        'targetIsCoHost:$targetIsCoHost, '
+        'targetRole:$targetRole, '
+        'targetUser:${targetUser?.toSimpleString()}, '
+        '}';
+  }
+}
+
+/// pop up menu info when on seat clicked
+class ZegoLiveAudioRoomPopUpSeatClickedMenuInfo {
+  String title;
+  dynamic data;
+
+  void Function(
+    ZegoLiveAudioRoomPopUpSeatClickedMenuEvent event,
+  ) onClicked;
+
+  ZegoLiveAudioRoomPopUpSeatClickedMenuInfo({
+    required this.onClicked,
+    required this.title,
+    this.data,
+  });
+
+  @override
+  String toString() {
+    return 'ZegoLiveAudioRoomPopUpSeatClickedMenuInfo:{'
+        'onClicked:$onClicked, '
+        'title:$title, '
+        'data:$data, '
+        '}';
+  }
+}
+
+/// pop-up item
+enum ZegoLiveAudioRoomPopupItemValue {
+  takeOnSeat,
+  takeOffSeat,
+  switchSeat,
+  leaveSeat,
+  muteSeat,
+  inviteLink,
+  assignCoHost,
+  revokeCoHost,
+  cancel,
+
+  /// user custom
+  customStartIndex,
 }

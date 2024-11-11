@@ -133,7 +133,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 3.14.3; $version, \n'
+        'version: zego_uikit_prebuilt_live_audio_room: 3.16.0; $version, \n'
         'config: ${widget.config}, '
         'events: ${widget.events}, ',
         tag: 'audio-room',
@@ -249,7 +249,13 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
         subTag: 'prebuilt',
       );
     } else {
-      initContext();
+      initContext().catchError((e) {
+        ZegoLoggerService.logError(
+          'initContext exception:$e',
+          tag: 'audio-room',
+          subTag: 'prebuilt',
+        );
+      });
     }
 
     ZegoLiveAudioRoomInternalMiniOverlayMachine().changeState(
@@ -374,10 +380,6 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
   }
 
   Widget pipPage() {
-    final screenSize = MediaQuery.of(context).size;
-    final width = screenSize.width / 3.0;
-    final height =
-        widget.config.pip.aspectHeight / widget.config.pip.aspectWidth * width;
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {

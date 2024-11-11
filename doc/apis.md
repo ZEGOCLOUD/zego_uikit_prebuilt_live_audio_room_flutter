@@ -47,6 +47,8 @@
     - [localIsSpeaker](#localisspeaker)
     - [localIsCoHost](#localiscohost)
     - [localHasHostPermissions](#localhashostpermissions)
+    - [isRoomSeatLocked](#isroomseatlocked)
+    - [isAHostSeatIndex](#isahostseatindex)
     - [getUserByIndex](#getuserbyindex)
     - [getEmptySeats](#getemptyseats)
     - [getSeatIndexByUserID](#getseatindexbyuserid)
@@ -822,6 +824,26 @@ the APIs related to minimizing.
 >
 > ```dart
 > bool get localHasHostPermissions
+> ```
+
+### isRoomSeatLocked
+
+> is room seat locked or not
+> 
+> - function prototype:
+>
+> ```dart
+> bool get isRoomSeatLocked
+> ```
+
+### isAHostSeatIndex
+
+>  is a host seat index or not
+> 
+> - function prototype:
+>
+> ```dart
+> bool isAHostSeatIndex(int seatIndex)
 > ```
 
 ### getUserByIndex

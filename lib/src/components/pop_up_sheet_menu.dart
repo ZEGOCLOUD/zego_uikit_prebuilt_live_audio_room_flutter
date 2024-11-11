@@ -9,6 +9,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/config.defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
@@ -72,7 +73,7 @@ class _ZegoLiveAudioRoomPopUpSheetMenuState
     return GestureDetector(
       onTap: () async {
         ZegoLoggerService.logInfo(
-          'click ${popupItem.text}',
+          'click ${popupItem.text} with ${popupItem.data}',
           tag: 'audio-room',
           subTag: 'pop-up sheet',
         );
@@ -82,52 +83,60 @@ class _ZegoLiveAudioRoomPopUpSheetMenuState
           rootNavigator: widget.seatManager.config.rootNavigator,
         ).pop();
 
-        switch (popupItem.value) {
-          case ZegoLiveAudioRoomPopupItemValue.takeOnSeat:
-            widget.seatManager.takeOnSeat(
-              popupItem.data as int,
-              ignoreLocked: false,
-              isForce: false,
-              isDeleteAfterOwnerLeft: true,
-            );
-            break;
-          case ZegoLiveAudioRoomPopupItemValue.takeOffSeat:
-            // clear popup sheet info
-            widget.seatManager
-                .setKickSeatDialogInfo(KickSeatDialogInfo.empty());
-            await widget.seatManager.kickSeat(popupItem.data as int);
-            break;
-          case ZegoLiveAudioRoomPopupItemValue.leaveSeat:
-            await widget.seatManager.leaveSeat(showDialog: true);
-            break;
-          case ZegoLiveAudioRoomPopupItemValue.muteSeat:
-            await widget.seatManager.muteSeat(
-              popupItem.data as int,
-              muted: true,
-            );
-            break;
-          case ZegoLiveAudioRoomPopupItemValue.inviteLink:
-            await widget.connectManager.inviteAudienceConnect(
-              ZegoUIKit().getUser(popupItem.data as String? ?? ''),
-            );
-            break;
-          case ZegoLiveAudioRoomPopupItemValue.assignCoHost:
-            await widget.seatManager.assignCoHost(
-              roomID: widget.seatManager.roomID,
-              targetUser: ZegoUIKit().getUser(popupItem.data as String? ?? ''),
-            );
-            break;
-          case ZegoLiveAudioRoomPopupItemValue.revokeCoHost:
-            await widget.seatManager.revokeCoHost(
-              roomID: widget.seatManager.roomID,
-              targetUser: ZegoUIKit().getUser(popupItem.data as String? ?? ''),
-            );
-            break;
-          case ZegoLiveAudioRoomPopupItemValue.cancel:
-            break;
+        if (ZegoLiveAudioRoomPopupItemValue.takeOnSeat.index ==
+            popupItem.index) {
+          widget.seatManager.takeOnSeat(
+            popupItem.data as int,
+            ignoreLocked: false,
+            isForce: false,
+            isDeleteAfterOwnerLeft: true,
+          );
+        } else if (ZegoLiveAudioRoomPopupItemValue.takeOffSeat.index ==
+            popupItem.index) {
+          // clear popup sheet info
+          widget.seatManager.setKickSeatDialogInfo(KickSeatDialogInfo.empty());
+          await widget.seatManager.kickSeat(popupItem.data as int);
+        } else if (ZegoLiveAudioRoomPopupItemValue.switchSeat.index ==
+            popupItem.index) {
+          await widget.seatManager.switchToSeat(popupItem.data as int);
+        } else if (ZegoLiveAudioRoomPopupItemValue.leaveSeat.index ==
+            popupItem.index) {
+          await widget.seatManager.leaveSeat(showDialog: true);
+        } else if (ZegoLiveAudioRoomPopupItemValue.muteSeat.index ==
+            popupItem.index) {
+          await widget.seatManager.muteSeat(
+            popupItem.data as int,
+            muted: true,
+          );
+        } else if (ZegoLiveAudioRoomPopupItemValue.inviteLink.index ==
+            popupItem.index) {
+          await widget.connectManager.inviteAudienceConnect(
+            ZegoUIKit().getUser(popupItem.data as String? ?? ''),
+          );
+        } else if (ZegoLiveAudioRoomPopupItemValue.assignCoHost.index ==
+            popupItem.index) {
+          await widget.seatManager.assignCoHost(
+            roomID: widget.seatManager.roomID,
+            targetUser: ZegoUIKit().getUser(popupItem.data as String? ?? ''),
+          );
+        } else if (ZegoLiveAudioRoomPopupItemValue.revokeCoHost.index ==
+            popupItem.index) {
+          await widget.seatManager.revokeCoHost(
+            roomID: widget.seatManager.roomID,
+            targetUser: ZegoUIKit().getUser(popupItem.data as String? ?? ''),
+          );
+        } else if (ZegoLiveAudioRoomPopupItemValue.cancel.index ==
+            popupItem.index) {
+          /// do nothing
+        } else if (popupItem.index >=
+            ZegoLiveAudioRoomPopupItemValue.customStartIndex.index) {
+          /// custom menu
+          popupItem.onPressed?.call();
         }
 
-        widget.onPressed?.call(popupItem.value);
+        widget.onPressed?.call(
+          ZegoLiveAudioRoomPopupItemValueExtension.fromIndex(popupItem.index),
+        );
       },
       child: Container(
         width: double.infinity,
@@ -171,8 +180,10 @@ void showPopUpSheet({
 
   seatManager.setPopUpSheetVisible(true);
 
-  final takeOffSeatItemIndex = popupItems.indexWhere((popupItem) =>
-      popupItem.value == ZegoLiveAudioRoomPopupItemValue.takeOffSeat);
+  final takeOffSeatItemIndex = popupItems.indexWhere(
+    (popupItem) =>
+        popupItem.index == ZegoLiveAudioRoomPopupItemValue.takeOffSeat.index,
+  );
   if (-1 != takeOffSeatItemIndex) {
     /// seat user leave, will auto pop this sheet
     seatManager.setKickSeatDialogInfo(
@@ -213,8 +224,10 @@ void showPopUpSheet({
       );
     },
   ).whenComplete(() {
-    final takeOffSeatItemIndex = popupItems.indexWhere((popupItem) =>
-        popupItem.value == ZegoLiveAudioRoomPopupItemValue.takeOffSeat);
+    final takeOffSeatItemIndex = popupItems.indexWhere(
+      (popupItem) =>
+          popupItem.index == ZegoLiveAudioRoomPopupItemValue.takeOffSeat.index,
+    );
     if (-1 != takeOffSeatItemIndex) {
       /// clear kickSeatDialogInfo
       if (seatManager.kickSeatDialogInfo.isExist(

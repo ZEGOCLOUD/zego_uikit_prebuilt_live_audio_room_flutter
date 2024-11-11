@@ -10,6 +10,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart'
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_sheet_menu.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/config.defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/protocol.dart';
@@ -369,6 +370,21 @@ class _ZegoLiveAudioRoomMemberListSheetState
     }
 
     final popupItems = <ZegoLiveAudioRoomPopupItem>[];
+    void addPopUpItemWithFilterConfig(ZegoLiveAudioRoomPopupItem item) {
+      if (widget.seatManager.config.popUpMenu.seatClicked.hiddenMenus.contains(
+          ZegoLiveAudioRoomPopupItemValueExtension.fromIndex(item.index))) {
+        ZegoLoggerService.logInfo(
+          'pop up menu of ${item.text} is hide by \'config.popUpMenu.seatClicked.hiddenMenus\', '
+          'which is ${widget.seatManager.config.popUpMenu.seatClicked.hiddenMenus}',
+          tag: 'audio-room',
+          subTag: 'member list',
+        );
+
+        return;
+      }
+
+      popupItems.add(item);
+    }
 
     if (widget.isPluginEnabled &&
         // locked
@@ -378,9 +394,9 @@ class _ZegoLiveAudioRoomMemberListSheetState
         //  not on seat
         !widget.seatManager.seatsUserMapNotifier.value.values
             .contains(user.id)) {
-      popupItems.add(
+      addPopUpItemWithFilterConfig(
         ZegoLiveAudioRoomPopupItem(
-          ZegoLiveAudioRoomPopupItemValue.inviteLink,
+          ZegoLiveAudioRoomPopupItemValue.inviteLink.index,
           widget.innerText.inviteToTakeSeatMenuDialogButton
               .replaceFirst(widget.innerText.param_1, user.name),
           data: user.id,
@@ -391,7 +407,7 @@ class _ZegoLiveAudioRoomMemberListSheetState
     if (popupItems.isNotEmpty) {
       /// show useless more button if not a host
       popupItems.add(ZegoLiveAudioRoomPopupItem(
-        ZegoLiveAudioRoomPopupItemValue.cancel,
+        ZegoLiveAudioRoomPopupItemValue.cancel.index,
         widget.innerText.cancelMenuDialogButton,
       ));
     }
