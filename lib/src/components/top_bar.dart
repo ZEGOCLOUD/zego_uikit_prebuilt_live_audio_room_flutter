@@ -5,9 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/components.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/leave_button.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pip_button.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
@@ -15,9 +18,6 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_button.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/components/components.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 
 /// @nodoc
 class ZegoLiveAudioRoomTopBar extends StatefulWidget {

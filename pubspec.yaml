@@ -25,7 +25,7 @@ dependencies:
   statemachine: ^3.3.1
   permission_handler: ^11.3.1
   collection: ^1.18.0
-  floating: ^4.0.1
+  floating: ^5.0.1
 
 dev_dependencies:
   flutter_test:
