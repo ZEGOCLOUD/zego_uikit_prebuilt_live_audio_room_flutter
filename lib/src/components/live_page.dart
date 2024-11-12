@@ -218,33 +218,48 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
   }
 
   Widget audioVideoContainer(double maxWidth, double maxHeight) {
-    final containerHorizontalSpacing = 35.zW;
+    final topLeft = widget.config.seat.topLeft ??
+        Point(
+          35.zW,
+          169.zR,
+        );
 
-    final tempMaxWidth = maxWidth - containerHorizontalSpacing * 2;
-    var tempMaxHeight = maxHeight - 169.zR; // top position
+    var tempMaxWidth = maxWidth;
+    var tempMaxHeight = maxHeight;
+
+    final containerHorizontalSpacing = topLeft.x;
+    tempMaxWidth -= containerHorizontalSpacing * 2;
+
+    tempMaxHeight -= topLeft.y; // top position
     tempMaxHeight -= bottomBarHeight; // bottom bar
 
-    final fixedRow = widget.config.seat.layout.rowConfigs.length;
-    var containerHeight = seatItemHeight * fixedRow +
-        widget.config.seat.layout.rowSpacing * (fixedRow - 1);
-
-    var maxColumn = 1;
-    var maxColumnSpacing = 0;
-    for (var rowConfig in widget.config.seat.layout.rowConfigs) {
-      maxColumn = (rowConfig.count > maxColumn) ? rowConfig.count : maxColumn;
-      maxColumnSpacing = (rowConfig.seatSpacing > maxColumnSpacing)
-          ? rowConfig.seatSpacing
-          : maxColumnSpacing;
-    }
-    var containerWidth =
-        seatItemWidth * maxColumn + maxColumnSpacing * (maxColumn - 1);
-
+    late Size containerSize;
     Axis? scrollDirection;
-    if (containerHeight > tempMaxHeight) {
-      containerHeight = tempMaxHeight;
+    if (null == widget.config.seat.containerSize) {
+      final fixedRowCount = widget.config.seat.layout.rowConfigs.length;
+      var containerHeight = seatItemHeight * fixedRowCount +
+          widget.config.seat.layout.rowSpacing * (fixedRowCount - 1);
+
+      var maxColumn = 1;
+      var maxColumnSpacing = 0;
+      for (var rowConfig in widget.config.seat.layout.rowConfigs) {
+        maxColumn = (rowConfig.count > maxColumn) ? rowConfig.count : maxColumn;
+        maxColumnSpacing = (rowConfig.seatSpacing > maxColumnSpacing)
+            ? rowConfig.seatSpacing
+            : maxColumnSpacing;
+      }
+      var containerWidth =
+          seatItemWidth * maxColumn + maxColumnSpacing * (maxColumn - 1);
+
+      containerSize = Size(containerWidth, containerHeight);
+    } else {
+      containerSize = widget.config.seat.containerSize!;
+    }
+    if (containerSize.height > tempMaxHeight) {
+      containerSize = Size(containerSize.width, tempMaxHeight);
       scrollDirection = Axis.vertical;
-    } else if (containerWidth > tempMaxWidth) {
-      containerWidth = tempMaxWidth;
+    } else if (containerSize.width > tempMaxWidth) {
+      containerSize = Size(tempMaxWidth, containerSize.height);
       scrollDirection = Axis.horizontal;
     }
 
@@ -289,17 +304,12 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
       soundWaveColor: widget.config.seat.soundWaveColor,
     );
 
-    final topLeft = widget.config.seat.topLeft ??
-        Point(
-          35.zW,
-          169.zR,
-        );
     return Positioned(
       left: topLeft.x,
       top: topLeft.y,
       child: SizedBox(
-        width: null != scrollDirection ? containerWidth : tempMaxWidth,
-        height: containerHeight,
+        width: containerSize.width,
+        height: containerSize.height,
         child: null != scrollDirection
             ? SingleChildScrollView(
                 scrollDirection: scrollDirection,

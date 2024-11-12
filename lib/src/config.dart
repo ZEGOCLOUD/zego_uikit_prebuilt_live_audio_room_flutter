@@ -287,6 +287,9 @@ class ZegoLiveAudioRoomSeatConfig {
   /// the topLeft point of seat
   Point<double>? topLeft;
 
+  /// the size of seat container
+  Size? containerSize;
+
   /// Specifies the seat to occupy when joining the live audio room.
   /// This is only valid when the role is set to host or speaker.
   int takeIndexWhenJoining;
@@ -373,6 +376,7 @@ class ZegoLiveAudioRoomSeatConfig {
   ZegoLiveAudioRoomSeatConfig({
     ZegoLiveAudioRoomLayoutConfig? layout,
     this.topLeft,
+    this.containerSize,
     this.takeIndexWhenJoining = -1,
     this.canAutoSwitchOnClicked,
     this.takeIndexWhenAudienceRequesting,
