@@ -294,6 +294,28 @@ class ZegoLiveAudioRoomSeatConfig {
   /// If you don't want to use the default seat container, you can pass a
   /// custom component through this parameter. and if return null, will be
   /// display the default view
+  ///
+  /// ```dart
+  /// containerBuilder = (
+  ///   BuildContext context,
+  ///   List<ZegoUIKitUser> allUsers,
+  ///   List<ZegoUIKitUser> audioVideoUsers,
+  ///   Widget Function(ZegoUIKitUser user, int seatIndex) audioVideoViewCreator,
+  /// ) {
+  ///   return ListView.builder(
+  ///     shrinkWrap: true,
+  ///     scrollDirection: Axis.horizontal,
+  ///     itemCount: audioVideoUsers.length,
+  ///     itemBuilder: (BuildContext context, int index) {
+  ///       final user = audioVideoUsers[index];
+  ///       return SizedBox(
+  ///         width: 100,
+  ///         child: audioVideoViewCreator.call(user, index),
+  ///       );
+  ///     },
+  ///   );
+  /// }
+  /// ```
   ZegoLiveAudioRoomAudioVideoContainerBuilder? containerBuilder;
 
   /// Specifies the seat to occupy when joining the live audio room.

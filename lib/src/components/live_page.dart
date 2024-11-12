@@ -251,7 +251,7 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
 
     Size preferredSize = Size(preferredWidth, preferredHeight);
 
-    late Size containerSize;
+    Size containerSize = preferredSize;
     Axis? scrollDirection;
     if (null == widget.config.seat.containerSize) {
       if (preferredSize.height > tempMaxHeight) {
@@ -296,37 +296,45 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
       );
     }
 
-    final audioVideoContainer = null != widget.config.seat.containerBuilder
-        ? StreamBuilder<List<ZegoUIKitUser>>(
-            stream: ZegoUIKit().getUserListStream(),
-            builder: (context, snapshot) {
-              final allUsers = ZegoUIKit().getAllUsers();
-              return StreamBuilder<List<ZegoUIKitUser>>(
-                stream: ZegoUIKit().getAudioVideoListStream(),
-                builder: (context, snapshot) {
-                  return widget.config.seat.containerBuilder?.call(
-                        context,
-                        allUsers,
-                        ZegoUIKit().getAudioVideoList(),
-                        seatWidgetCreator,
-                      ) ??
-                      defaultAudioVideoContainer();
-                },
-              );
-            },
-          )
-        : defaultAudioVideoContainer();
+    final audioVideoContainer = SizedBox(
+      width: containerSize.width,
+      height: containerSize.height,
+      child: null != widget.config.seat.containerBuilder
+          ? StreamBuilder<List<ZegoUIKitUser>>(
+              stream: ZegoUIKit().getUserListStream(),
+              builder: (context, snapshot) {
+                final allUsers = ZegoUIKit().getAllUsers();
+                return StreamBuilder<List<ZegoUIKitUser>>(
+                  stream: ZegoUIKit().getAudioVideoListStream(),
+                  builder: (context, snapshot) {
+                    return widget.config.seat.containerBuilder?.call(
+                          context,
+                          allUsers,
+                          ZegoUIKit().getAudioVideoList(),
+                          seatWidgetCreator,
+                        ) ??
+                        defaultAudioVideoContainer();
+                  },
+                );
+              },
+            )
+          : defaultAudioVideoContainer(),
+    );
 
     final test = Container(
       decoration: BoxDecoration(border: Border.all(color: Colors.red)),
       child: audioVideoContainer,
     );
     return Positioned(
-      left: topLeft.x,
-      top: topLeft.y,
-      child: SizedBox(
-        width: containerSize.width,
-        height: containerSize.height,
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0,
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: topLeft.x,
+          top: topLeft.y,
+        ),
         child: null != scrollDirection
             ? SingleChildScrollView(
                 scrollDirection: scrollDirection,
