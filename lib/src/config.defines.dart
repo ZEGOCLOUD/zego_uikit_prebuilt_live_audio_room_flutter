@@ -1,3 +1,6 @@
+// Flutter imports:
+import 'package:flutter/cupertino.dart';
+
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
@@ -167,3 +170,15 @@ enum ZegoLiveAudioRoomPopupItemValue {
   /// user custom
   customStartIndex,
 }
+
+typedef ZegoLiveAudioRoomAudioVideoContainerBuilder = Widget? Function(
+  BuildContext context,
+  List<ZegoUIKitUser> allUsers,
+  List<ZegoUIKitUser> audioVideoUsers,
+
+  /// seat index
+  int seatIndex,
+
+  /// The default seat view creator, you can also custom widget by [user]
+  Widget Function(ZegoUIKitUser user, int seatIndex) audioVideoViewCreator,
+);

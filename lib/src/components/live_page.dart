@@ -233,77 +233,97 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
     tempMaxHeight -= topLeft.y; // top position
     tempMaxHeight -= bottomBarHeight; // bottom bar
 
+    final fixedRowCount = widget.config.seat.layout.rowConfigs.length;
+    var preferredHeight = seatItemHeight * fixedRowCount +
+        widget.config.seat.layout.rowSpacing * (fixedRowCount - 1);
+
+    var maxColumnCount = 1;
+    var maxColumnSpacing = 0;
+    for (var rowConfig in widget.config.seat.layout.rowConfigs) {
+      maxColumnCount =
+          (rowConfig.count > maxColumnCount) ? rowConfig.count : maxColumnCount;
+      maxColumnSpacing = (rowConfig.seatSpacing > maxColumnSpacing)
+          ? rowConfig.seatSpacing
+          : maxColumnSpacing;
+    }
+    var preferredWidth = seatItemWidth * maxColumnCount +
+        maxColumnSpacing * (maxColumnCount - 1);
+
+    Size preferredSize = Size(preferredWidth, preferredHeight);
+
     late Size containerSize;
     Axis? scrollDirection;
     if (null == widget.config.seat.containerSize) {
-      final fixedRowCount = widget.config.seat.layout.rowConfigs.length;
-      var containerHeight = seatItemHeight * fixedRowCount +
-          widget.config.seat.layout.rowSpacing * (fixedRowCount - 1);
-
-      var maxColumn = 1;
-      var maxColumnSpacing = 0;
-      for (var rowConfig in widget.config.seat.layout.rowConfigs) {
-        maxColumn = (rowConfig.count > maxColumn) ? rowConfig.count : maxColumn;
-        maxColumnSpacing = (rowConfig.seatSpacing > maxColumnSpacing)
-            ? rowConfig.seatSpacing
-            : maxColumnSpacing;
+      if (preferredSize.height > tempMaxHeight) {
+        containerSize = Size(preferredSize.width, tempMaxHeight);
+        scrollDirection = Axis.vertical;
+      } else if (preferredSize.width > tempMaxWidth) {
+        containerSize = Size(tempMaxWidth, preferredSize.height);
+        scrollDirection = Axis.horizontal;
       }
-      var containerWidth =
-          seatItemWidth * maxColumn + maxColumnSpacing * (maxColumn - 1);
-
-      containerSize = Size(containerWidth, containerHeight);
     } else {
       containerSize = widget.config.seat.containerSize!;
-    }
-    if (containerSize.height > tempMaxHeight) {
-      containerSize = Size(containerSize.width, tempMaxHeight);
-      scrollDirection = Axis.vertical;
-    } else if (containerSize.width > tempMaxWidth) {
-      containerSize = Size(tempMaxWidth, containerSize.height);
-      scrollDirection = Axis.horizontal;
+
+      if (containerSize.height < preferredSize.height) {
+        scrollDirection = Axis.vertical;
+      } else if (containerSize.width < preferredSize.width) {
+        scrollDirection = Axis.horizontal;
+      }
     }
 
-    final seatContainer = ZegoLiveAudioRoomSeatContainer(
-      seatManager: widget.seatManager,
-      layoutConfig: widget.config.seat.layout,
-      foregroundBuilder: (
-        BuildContext context,
-        Size size,
-        ZegoUIKitUser? user,
-        Map<String, dynamic> extraInfo,
-      ) {
-        return ZegoLiveAudioRoomSeatForeground(
-          user: user,
-          extraInfo: extraInfo,
-          size: size,
-          seatManager: widget.seatManager,
-          connectManager: widget.connectManager,
-          popUpManager: widget.popUpManager,
-          config: widget.config,
-          events: widget.events,
-          prebuiltController: widget.prebuiltController,
-        );
-      },
-      backgroundBuilder: (
-        BuildContext context,
-        Size size,
-        ZegoUIKitUser? user,
-        Map<String, dynamic> extraInfo,
-      ) {
-        return ZegoLiveAudioRoomSeatBackground(
-          user: user,
-          extraInfo: extraInfo,
-          size: size,
-          seatManager: widget.seatManager,
-          config: widget.config,
-        );
-      },
-      sortAudioVideo: audioVideoViewSorter,
-      avatarBuilder: widget.config.seat.avatarBuilder,
-      showSoundWavesInAudioMode: widget.config.seat.showSoundWaveInAudioMode,
-      soundWaveColor: widget.config.seat.soundWaveColor,
+    seatWidgetCreator(ZegoUIKitUser user, int seatIndex) {
+      return ValueListenableBuilder<bool>(
+        valueListenable: ZegoUIKit().getMicrophoneStateNotifier(user.id),
+        builder: (context, isMicrophoneEnabled, _) {
+          return ZegoAudioVideoView(
+            user: user,
+            borderColor: Colors.transparent,
+            extraInfo: {layoutGridItemIndexKey: seatIndex},
+            foregroundBuilder: audioVideoForegroundBuilder,
+            backgroundBuilder: audioVideoBackgroundBuilder,
+            avatarConfig: ZegoAvatarConfig(
+              showInAudioMode: true,
+              showSoundWavesInAudioMode:
+                  widget.config.seat.showSoundWaveInAudioMode,
+              builder: widget.config.seat.avatarBuilder,
+              soundWaveColor:
+                  widget.config.seat.soundWaveColor ?? zegoLiveSoundWaveColor,
+              size: Size(seatIconWidth, seatIconHeight),
+              verticalAlignment: ZegoAvatarAlignment.start,
+            ),
+          );
+        },
+      );
+    }
+
+    final audioVideoContainer = null != widget.config.seat.containerBuilder
+        ? StreamBuilder<List<ZegoUIKitUser>>(
+            stream: ZegoUIKit().getUserListStream(),
+            builder: (context, snapshot) {
+              final allUsers = ZegoUIKit().getAllUsers();
+              var seatIndex = -1;
+              return StreamBuilder<List<ZegoUIKitUser>>(
+                stream: ZegoUIKit().getAudioVideoListStream(),
+                builder: (context, snapshot) {
+                  ++seatIndex;
+                  return widget.config.seat.containerBuilder?.call(
+                        context,
+                        allUsers,
+                        ZegoUIKit().getAudioVideoList(),
+                        seatIndex,
+                        seatWidgetCreator,
+                      ) ??
+                      defaultAudioVideoContainer();
+                },
+              );
+            },
+          )
+        : defaultAudioVideoContainer();
+
+    final test = Container(
+      decoration: BoxDecoration(border: Border.all(color: Colors.red)),
+      child: audioVideoContainer,
     );
-
     return Positioned(
       left: topLeft.x,
       top: topLeft.y,
@@ -313,10 +333,57 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
         child: null != scrollDirection
             ? SingleChildScrollView(
                 scrollDirection: scrollDirection,
-                child: seatContainer,
+                child: test,
               )
-            : seatContainer,
+            : test,
       ),
+    );
+  }
+
+  Widget audioVideoForegroundBuilder(
+    BuildContext context,
+    Size size,
+    ZegoUIKitUser? user,
+    Map<String, dynamic> extraInfo,
+  ) {
+    return ZegoLiveAudioRoomSeatForeground(
+      user: user,
+      extraInfo: extraInfo,
+      size: size,
+      seatManager: widget.seatManager,
+      connectManager: widget.connectManager,
+      popUpManager: widget.popUpManager,
+      config: widget.config,
+      events: widget.events,
+      prebuiltController: widget.prebuiltController,
+    );
+  }
+
+  Widget audioVideoBackgroundBuilder(
+    BuildContext context,
+    Size size,
+    ZegoUIKitUser? user,
+    Map<String, dynamic> extraInfo,
+  ) {
+    return ZegoLiveAudioRoomSeatBackground(
+      user: user,
+      extraInfo: extraInfo,
+      size: size,
+      seatManager: widget.seatManager,
+      config: widget.config,
+    );
+  }
+
+  Widget defaultAudioVideoContainer() {
+    return ZegoLiveAudioRoomSeatContainer(
+      seatManager: widget.seatManager,
+      layoutConfig: widget.config.seat.layout,
+      foregroundBuilder: audioVideoForegroundBuilder,
+      backgroundBuilder: audioVideoBackgroundBuilder,
+      sortAudioVideo: audioVideoViewSorter,
+      avatarBuilder: widget.config.seat.avatarBuilder,
+      soundWaveColor: widget.config.seat.soundWaveColor,
+      showSoundWavesInAudioMode: widget.config.seat.showSoundWaveInAudioMode,
     );
   }
 

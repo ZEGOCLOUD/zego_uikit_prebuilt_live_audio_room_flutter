@@ -7,6 +7,10 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/config.defines.dart';
 
+/// @nodoc
+const layoutGridItemIndexKey = 'index';
+
+Color get zegoLiveSoundWaveColor => const Color(0xff2254f6);
 // size
 Size get zegoLiveButtonSize => Size(72.zR, 72.zR);
 

@@ -290,6 +290,12 @@ class ZegoLiveAudioRoomSeatConfig {
   /// the size of seat container
   Size? containerSize;
 
+  /// Custom seat container totally
+  /// If you don't want to use the default seat container, you can pass a
+  /// custom component through this parameter. and if return null, will be
+  /// display the default view
+  ZegoLiveAudioRoomAudioVideoContainerBuilder? containerBuilder;
+
   /// Specifies the seat to occupy when joining the live audio room.
   /// This is only valid when the role is set to host or speaker.
   int takeIndexWhenJoining;
@@ -377,6 +383,7 @@ class ZegoLiveAudioRoomSeatConfig {
     ZegoLiveAudioRoomLayoutConfig? layout,
     this.topLeft,
     this.containerSize,
+    this.containerBuilder,
     this.takeIndexWhenJoining = -1,
     this.canAutoSwitchOnClicked,
     this.takeIndexWhenAudienceRequesting,
