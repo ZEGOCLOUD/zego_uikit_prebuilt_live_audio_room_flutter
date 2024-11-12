@@ -176,9 +176,6 @@ typedef ZegoLiveAudioRoomAudioVideoContainerBuilder = Widget? Function(
   List<ZegoUIKitUser> allUsers,
   List<ZegoUIKitUser> audioVideoUsers,
 
-  /// seat index
-  int seatIndex,
-
   /// The default seat view creator, you can also custom widget by [user]
   Widget Function(ZegoUIKitUser user, int seatIndex) audioVideoViewCreator,
 );

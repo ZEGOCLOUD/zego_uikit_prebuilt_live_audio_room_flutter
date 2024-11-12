@@ -301,16 +301,13 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
             stream: ZegoUIKit().getUserListStream(),
             builder: (context, snapshot) {
               final allUsers = ZegoUIKit().getAllUsers();
-              var seatIndex = -1;
               return StreamBuilder<List<ZegoUIKitUser>>(
                 stream: ZegoUIKit().getAudioVideoListStream(),
                 builder: (context, snapshot) {
-                  ++seatIndex;
                   return widget.config.seat.containerBuilder?.call(
                         context,
                         allUsers,
                         ZegoUIKit().getAudioVideoList(),
-                        seatIndex,
                         seatWidgetCreator,
                       ) ??
                       defaultAudioVideoContainer();
