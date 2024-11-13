@@ -321,10 +321,6 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
           : defaultAudioVideoContainer(),
     );
 
-    final test = Container(
-      decoration: BoxDecoration(border: Border.all(color: Colors.red)),
-      child: audioVideoContainer,
-    );
     return Positioned(
       left: 0,
       top: 0,
@@ -338,9 +334,9 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
         child: null != scrollDirection
             ? SingleChildScrollView(
                 scrollDirection: scrollDirection,
-                child: test,
+                child: audioVideoContainer,
               )
-            : test,
+            : audioVideoContainer,
       ),
     );
   }

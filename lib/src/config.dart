@@ -296,25 +296,7 @@ class ZegoLiveAudioRoomSeatConfig {
   /// display the default view
   ///
   /// ```dart
-  /// containerBuilder = (
-  ///   BuildContext context,
-  ///   List<ZegoUIKitUser> allUsers,
-  ///   List<ZegoUIKitUser> audioVideoUsers,
-  ///   Widget Function(ZegoUIKitUser user, int seatIndex) audioVideoViewCreator,
-  /// ) {
-  ///   return ListView.builder(
-  ///     shrinkWrap: true,
-  ///     scrollDirection: Axis.horizontal,
-  ///     itemCount: audioVideoUsers.length,
-  ///     itemBuilder: (BuildContext context, int index) {
-  ///       final user = audioVideoUsers[index];
-  ///       return SizedBox(
-  ///         width: 100,
-  ///         child: audioVideoViewCreator.call(user, index),
-  ///       );
-  ///     },
-  ///   );
-  /// }
+  /// containerBuilder = ZegoLiveAudioRoomAudioVideoContainerBuilderExtension.center()
   /// ```
   ZegoLiveAudioRoomAudioVideoContainerBuilder? containerBuilder;
 

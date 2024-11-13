@@ -1,10 +1,12 @@
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
 
 /// The alignment of the seat layout.
@@ -179,3 +181,36 @@ typedef ZegoLiveAudioRoomAudioVideoContainerBuilder = Widget? Function(
   /// The default seat view creator, you can also custom widget by [user]
   Widget Function(ZegoUIKitUser user, int seatIndex) audioVideoViewCreator,
 );
+
+extension ZegoLiveAudioRoomAudioVideoContainerBuilderExtension
+    on ZegoLiveAudioRoomAudioVideoContainerBuilder {
+  static ZegoLiveAudioRoomAudioVideoContainerBuilder center() {
+    return (
+      BuildContext context,
+      List<ZegoUIKitUser> allUsers,
+      List<ZegoUIKitUser> audioVideoUsers,
+      Widget Function(ZegoUIKitUser user, int seatIndex) audioVideoViewCreator,
+    ) {
+      List<Widget> seatItems = [];
+      for (int index = 0; index < audioVideoUsers.length; ++index) {
+        final user = audioVideoUsers[index];
+        seatItems.add(
+          SizedBox(
+            width: seatItemWidth,
+            height: seatItemHeight,
+            child: audioVideoViewCreator.call(user, index),
+          ),
+        );
+      }
+      return Center(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: seatItems,
+          ),
+        ),
+      );
+    };
+  }
+}
