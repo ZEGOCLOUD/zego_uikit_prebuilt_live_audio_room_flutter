@@ -60,6 +60,19 @@
 
 - Point<double>? `topLeft`: the topLeft point of seat
 
+- Size? `containerSize`: he size of seat container
+
+- [ZegoLiveAudioRoomAudioVideoContainerBuilder](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/zego_uikit_prebuilt_live_audio_room/ZegoLiveAudioRoomAudioVideoContainerBuilder-class.html)\>? `containerBuilder`: 
+>
+> Custom seat container totally
+> If you don't want to use the default seat container, you can pass a
+> custom component through this parameter. and if return null, will be
+> display the default view
+>
+> ```dart
+> containerBuilder = ZegoLiveAudioRoomAudioVideoContainerBuilderExtension.center()
+> ```
+
 - int `takeIndexWhenJoining`:
 >
 > Specifies the seat to occupy when joining the live audio room.
