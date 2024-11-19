@@ -867,13 +867,12 @@ class ZegoLiveAudioRoomMediaPlayerDefaultPlayerConfig {
   /// roles can control(pick/start/stop)
   List<ZegoLiveAudioRoomRole> rolesCanControl;
 
-  /// size of this widget display on parent
-  Size? Function(ZegoLiveAudioRoomMediaPlayerQueryParameter)?
-      containerSizeQuery;
+  /// top-left position
+  Point<double> Function(ZegoLiveAudioRoomMediaPlayerQueryParameter)?
+      topLeftQuery;
 
-  /// top-left position display this widget on parent widget
-  Offset? Function(ZegoLiveAudioRoomMediaPlayerQueryParameter)?
-      containerTopLeftQuery;
+  /// rect query
+  Rect? Function(ZegoLiveAudioRoomMediaPlayerQueryParameter)? rectQuery;
 
   /// config
   ZegoUIKitMediaPlayerConfig? Function(
@@ -890,8 +889,8 @@ class ZegoLiveAudioRoomMediaPlayerDefaultPlayerConfig {
     this.rolesCanControl = const [
       ZegoLiveAudioRoomRole.host,
     ],
-    this.containerSizeQuery,
-    this.containerTopLeftQuery,
+    this.topLeftQuery,
+    this.rectQuery,
     this.configQuery,
     this.styleQuery,
   });

@@ -19,7 +19,7 @@ dependencies:
   zego_uikit_signaling_plugin: ^2.8.6
   zego_plugin_adapter: ^2.13.4
 
-  file_picker: ^8.0.6
+  file_picker: ^8.1.4
   flutter_styled_toast: ^2.2.1
   cached_network_image: ^3.3.0
   statemachine: ^3.3.1

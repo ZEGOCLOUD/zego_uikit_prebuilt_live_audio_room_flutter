@@ -180,11 +180,11 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
                       constraints.maxWidth,
                       constraints.maxHeight,
                     ),
+                    messageList(),
+                    sharingMedia(constraints),
                     durationTimeBoard(),
                     topBar(),
                     bottomBar(),
-                    messageList(),
-                    sharingMedia(constraints),
                     emptyArea(constraints.maxHeight),
                     foreground(context, constraints.maxHeight),
                   ],
@@ -475,21 +475,28 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
             ? ValueListenableBuilder(
                 valueListenable: widget.seatManager.localRole,
                 builder: (context, localRole, _) {
+                  final spacing = 20.zW;
+
                   final queryParameter =
                       ZegoLiveAudioRoomMediaPlayerQueryParameter(
                     localRole: widget.seatManager.localRole.value,
                   );
 
-                  final topLeft = widget
-                      .config.mediaPlayer.defaultPlayer.containerTopLeftQuery
+                  final rect = widget.config.mediaPlayer.defaultPlayer.rectQuery
                       ?.call(queryParameter);
-                  final playerSize = widget
-                          .config.mediaPlayer.defaultPlayer.containerSizeQuery
-                          ?.call(queryParameter) ??
+                  final playerSize = rect?.size ??
                       Size(
-                        constraints.maxWidth - 20.zW * 2,
+                        constraints.maxWidth - spacing * 2,
                         constraints.maxWidth * 9 / 16,
                       );
+                  final topLeft = widget
+                          .config.mediaPlayer.defaultPlayer.topLeftQuery
+                          ?.call(queryParameter) ??
+                      Point<double>(
+                        spacing,
+                        169.zR + containerHeight(constraints.maxHeight),
+                      );
+
                   var config = widget
                           .config.mediaPlayer.defaultPlayer.configQuery
                           ?.call(queryParameter) ??
@@ -498,14 +505,14 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
                             widget.seatManager.localRole.value,
                       );
 
-                  final mediaPlayer = Positioned(
-                    left: topLeft?.dx ?? 0,
-                    right: 0,
-                    top: topLeft?.dy ??
-                        (169.zR + containerHeight(constraints.maxHeight)),
-                    bottom: (null == topLeft)
-                        ? bottomBarHeight
-                        : (topLeft.dy + playerSize.height),
+                  final mediaPlayer = Positioned.fromRect(
+                    rect: rect ??
+                        Rect.fromLTWH(
+                          spacing,
+                          spacing,
+                          constraints.maxWidth - 2 * spacing,
+                          constraints.maxHeight - 2 * spacing,
+                        ),
                     child: ValueListenableBuilder<String?>(
                       valueListenable:
                           ZegoUIKitPrebuiltLiveAudioRoomController()
@@ -516,6 +523,7 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
                       builder: (context, sharingPath, _) {
                         return ZegoUIKitMediaPlayer(
                           size: playerSize,
+                          initPosition: Offset(topLeft.x, topLeft.y),
                           config: config,
                           filePathOrURL: sharingPath,
                           event: widget.events.media,
