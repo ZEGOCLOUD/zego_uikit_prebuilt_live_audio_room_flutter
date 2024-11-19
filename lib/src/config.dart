@@ -543,7 +543,7 @@ class ZegoLiveAudioRoomInRoomMessageConfig {
   /// For example, you can modify the background color, opacity, border radius, or add additional information like the sender's level or role.
   ZegoInRoomMessageItemBuilder? itemBuilder;
 
-  /// background
+  /// message view background(not item)
   Widget? background;
 
   /// If set to `false`, the message list will be hidden. The default value is `true`.
@@ -817,6 +817,7 @@ class ZegoLiveAudioRoomBackgroundMediaConfig {
     this.path,
     this.enableRepeat = true,
   });
+
   @override
   String toString() {
     return 'ZegoLiveAudioRoomBackgroundMediaConfig:{'
@@ -831,13 +832,74 @@ class ZegoLiveAudioRoomMediaPlayerConfig {
   /// In iOS, to achieve transparency for a video using a platform view, you need to set [supportTransparent] to true.
   bool supportTransparent;
 
+  /// default player
+  ZegoLiveAudioRoomMediaPlayerDefaultPlayerConfig defaultPlayer;
+
   ZegoLiveAudioRoomMediaPlayerConfig({
     this.supportTransparent = false,
-  });
+    ZegoLiveAudioRoomMediaPlayerDefaultPlayerConfig? defaultPlayer,
+  }) : defaultPlayer =
+            defaultPlayer ?? ZegoLiveAudioRoomMediaPlayerDefaultPlayerConfig();
+
   @override
   String toString() {
     return 'ZegoLiveAudioRoomMediaPlayerConfig:{'
         'supportTransparent:$supportTransparent, '
+        'defaultPlayer:$defaultPlayer, '
+        '}';
+  }
+}
+
+/// default media player query parameter
+class ZegoLiveAudioRoomMediaPlayerQueryParameter {
+  ZegoLiveAudioRoomRole localRole;
+
+  ZegoLiveAudioRoomMediaPlayerQueryParameter({
+    required this.localRole,
+  });
+}
+
+/// default media player config
+class ZegoLiveAudioRoomMediaPlayerDefaultPlayerConfig {
+  /// support or not
+  bool support;
+
+  /// roles can control(pick/start/stop)
+  List<ZegoLiveAudioRoomRole> rolesCanControl;
+
+  /// size of this widget display on parent
+  Size? Function(ZegoLiveAudioRoomMediaPlayerQueryParameter)?
+      containerSizeQuery;
+
+  /// top-left position display this widget on parent widget
+  Offset? Function(ZegoLiveAudioRoomMediaPlayerQueryParameter)?
+      containerTopLeftQuery;
+
+  /// config
+  ZegoUIKitMediaPlayerConfig? Function(
+    ZegoLiveAudioRoomMediaPlayerQueryParameter,
+  )? configQuery;
+
+  /// style
+  ZegoUIKitMediaPlayerStyle? Function(
+    ZegoLiveAudioRoomMediaPlayerQueryParameter,
+  )? styleQuery;
+
+  ZegoLiveAudioRoomMediaPlayerDefaultPlayerConfig({
+    this.support = false,
+    this.rolesCanControl = const [
+      ZegoLiveAudioRoomRole.host,
+    ],
+    this.containerSizeQuery,
+    this.containerTopLeftQuery,
+    this.configQuery,
+    this.styleQuery,
+  });
+
+  @override
+  String toString() {
+    return 'ZegoLiveAudioRoomMediaPlayerDefaultPlayerConfig:{'
+        'support:$support, '
         '}';
   }
 }

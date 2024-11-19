@@ -110,6 +110,7 @@ class ZegoLiveAudioRoomInternalMiniOverlayMachine {
     ZegoUIKitPrebuiltLiveAudioRoomController().seat.private.uninitByPrebuilt();
     ZegoUIKitPrebuiltLiveAudioRoomController().room.private.uninitByPrebuilt();
     ZegoUIKitPrebuiltLiveAudioRoomController().user.private.uninitByPrebuilt();
+    ZegoUIKitPrebuiltLiveAudioRoomController().media.private.uninitByPrebuilt();
     ZegoUIKitPrebuiltLiveAudioRoomController()
         .minimize
         .private
