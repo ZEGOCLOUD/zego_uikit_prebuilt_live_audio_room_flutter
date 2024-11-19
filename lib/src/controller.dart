@@ -16,6 +16,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/controller/private/media_player.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/core_managers.dart';
@@ -59,6 +60,8 @@ part 'controller/private/pip.dart';
 part 'controller/private/seat.dart';
 
 part 'controller/private/user.dart';
+
+part 'controller/private/media.dart';
 
 /// Used to control the audio chat room functionality.
 ///
@@ -110,6 +113,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomController
     seat.private.uninitByPrebuilt();
     room.private.uninitByPrebuilt();
     user.private.uninitByPrebuilt();
+    media.private.uninitByPrebuilt();
     minimize.private.uninitByPrebuilt();
     pip.private.uninitByPrebuilt();
     audioVideo.private.uninitByPrebuilt();
