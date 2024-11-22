@@ -1,3 +1,9 @@
+## 3.16.0-beta.2
+- Features
+  - Support playing multimedia (video/audio) directly.
+    - API: Add **defaultPlayer** in **ZegoUIKitPrebuiltLiveAudioRoomController().media**. play on default player through **sharing/show/hide** API
+    - Config: Add **ZegoLiveAudioRoomMediaPlayerDefaultPlayerConfig** in **ZegoLiveAudioRoomMediaPlayerConfig**
+
 ## 3.16.0-beta.1
 
 - Features
