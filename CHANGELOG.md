@@ -1,3 +1,7 @@
+## 3.16.1
+
+- Update dependency
+
 ## 3.16.0
 
 - Features
