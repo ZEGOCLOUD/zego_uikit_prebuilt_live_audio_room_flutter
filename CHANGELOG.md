@@ -1,11 +1,8 @@
-## 3.16.1
-
-- Update dependency
-
-## 3.16.0
+## 3.15.3
 
 - Features
   - member-list button can be added to the top toolbar, which is not displayed by default.
+- Update dependency
 
 ## 3.15.2
 
