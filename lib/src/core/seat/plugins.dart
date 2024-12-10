@@ -13,13 +13,6 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/defines.dart'
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/overlay_machine.dart';
 
 /// @nodoc
-enum ZegoLiveAudioRoomPluginNetworkState {
-  unknown,
-  offline,
-  online,
-}
-
-/// @nodoc
 class ZegoLiveAudioRoomPlugins {
   ZegoLiveAudioRoomPlugins({
     required this.appID,
@@ -49,8 +42,6 @@ class ZegoLiveAudioRoomPlugins {
   final VoidCallback? onPluginReLogin;
   Function(ZegoUIKitError)? onError;
 
-  ZegoLiveAudioRoomPluginNetworkState networkState =
-      ZegoLiveAudioRoomPluginNetworkState.unknown;
   List<StreamSubscription<dynamic>?> subscriptions = [];
   ValueNotifier<ZegoSignalingPluginConnectionState> pluginUserStateNotifier =
       ValueNotifier<ZegoSignalingPluginConnectionState>(
@@ -124,8 +115,7 @@ class ZegoLiveAudioRoomPlugins {
         ..add(ZegoUIKit()
             .getSignalingPlugin()
             .getRoomStateStream()
-            .listen(onRoomState))
-        ..add(ZegoUIKit().getNetworkModeStream().listen(onNetworkModeChanged));
+            .listen(onRoomState));
 
       ZegoLoggerService.logInfo(
         'plugins init done',
@@ -326,7 +316,7 @@ class ZegoLiveAudioRoomPlugins {
     roomStateNotifier.value = event.state;
 
     ZegoLoggerService.logInfo(
-      '[plugin] onRoomState, state: ${event.state}, networkState:$networkState',
+      '[plugin] onRoomState, state: ${event.state}, networkState:${ZegoUIKit().getNetworkState()}',
       tag: 'audio-room',
       subTag: 'plugin',
     );
@@ -360,33 +350,6 @@ class ZegoLiveAudioRoomPlugins {
       message: error.message,
       method: error.method,
     ));
-  }
-
-  void onNetworkModeChanged(ZegoNetworkMode networkMode) {
-    ZegoLoggerService.logInfo(
-      'onNetworkModeChanged $networkMode, previous network state: $networkState',
-      tag: 'audio-room',
-      subTag: 'plugin',
-    );
-
-    switch (networkMode) {
-      case ZegoNetworkMode.Offline:
-      case ZegoNetworkMode.Unknown:
-        networkState = ZegoLiveAudioRoomPluginNetworkState.offline;
-        break;
-      case ZegoNetworkMode.Ethernet:
-      case ZegoNetworkMode.WiFi:
-      case ZegoNetworkMode.Mode2G:
-      case ZegoNetworkMode.Mode3G:
-      case ZegoNetworkMode.Mode4G:
-      case ZegoNetworkMode.Mode5G:
-        if (ZegoLiveAudioRoomPluginNetworkState.offline == networkState) {
-          tryReLogin();
-        }
-
-        networkState = ZegoLiveAudioRoomPluginNetworkState.online;
-        break;
-    }
   }
 
   Future<void> tryReLogin() async {
@@ -432,7 +395,7 @@ class ZegoLiveAudioRoomPlugins {
 
   Future<bool> tryReEnterRoom() async {
     ZegoLoggerService.logInfo(
-      'tryReEnterRoom, room state: ${roomStateNotifier.value}, networkState:$networkState',
+      'tryReEnterRoom, room state: ${roomStateNotifier.value}, networkState:${ZegoUIKit().getNetworkState()}',
       tag: 'audio-room',
       subTag: 'plugin',
     );
@@ -463,7 +426,7 @@ class ZegoLiveAudioRoomPlugins {
       return false;
     }
 
-    if (networkState != ZegoLiveAudioRoomPluginNetworkState.online) {
+    if (ZegoUIKit().getNetworkState() != ZegoUIKitNetworkState.online) {
       ZegoLoggerService.logInfo(
         'tryReEnterRoom, network is not connected',
         tag: 'audio-room',

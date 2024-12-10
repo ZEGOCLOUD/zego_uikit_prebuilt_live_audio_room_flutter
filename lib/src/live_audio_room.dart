@@ -133,7 +133,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((version) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 3.16.1; $version, \n'
+        'version: zego_uikit_prebuilt_live_audio_room: 3.15.4; $version, \n'
         'config: ${widget.config}, '
         'events: ${widget.events}, ',
         tag: 'audio-room',
@@ -534,6 +534,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
         .init(
       appID: widget.appID,
       appSign: widget.appSign,
+      token: widget.token,
       scenario: ZegoScenario.Broadcast,
       enablePlatformView: enablePlatformView,
     )
