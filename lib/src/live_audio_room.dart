@@ -111,7 +111,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       (widget.events ?? ZegoUIKitPrebuiltLiveAudioRoomEvents())
         ..onLeaveConfirmation ??= defaultLeaveConfirmation;
 
-  String get version => "3.15.4";
+  String get version => "3.15.5";
 
   @override
   void initState() {
