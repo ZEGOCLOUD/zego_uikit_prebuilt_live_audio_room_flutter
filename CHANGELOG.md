@@ -1,3 +1,9 @@
+
+
+## 3.16.0-beta.3
+
+- Merge version to 3.15.5
+
 ## 3.16.0-beta.2
 - Features
   - Support playing multimedia (video/audio) directly.
