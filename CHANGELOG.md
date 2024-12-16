@@ -10,6 +10,21 @@
   - Support the member-list button can be added to the top toolbar, which is not displayed by default and can be configured through **topMenuBar.buttons**.
   - Support the fully customizable function of the seat area, use **topLeft** positioning, specify the size by **containerSize**, and customize the seat display with **containerBuilder**
 
+## 3.15.5
+
+- Update dependency
+
+## 3.15.4
+
+- Update dependency
+
+
+## 3.15.3
+
+- Features
+  - member-list button can be added to the top toolbar, which is not displayed by default.
+- Update dependency
+
 ## 3.15.2
 
 - Bugs

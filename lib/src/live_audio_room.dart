@@ -23,6 +23,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/core/core_managers.dart'
 import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/events.defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/internal/reporter.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/data.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/overlay_machine.dart';
@@ -110,9 +111,29 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       (widget.events ?? ZegoUIKitPrebuiltLiveAudioRoomEvents())
         ..onLeaveConfirmation ??= defaultLeaveConfirmation;
 
+  String get version => "3.16.0-beta.2";
+
   @override
   void initState() {
     super.initState();
+
+    ZegoUIKit().reporter().create(
+      appID: widget.appID,
+      signOrToken: widget.appSign.isNotEmpty ? widget.appSign : widget.token,
+      params: {
+        ZegoAudioRoomReporter.eventKeyKitVersion: version,
+        ZegoUIKitReporter.eventKeyUserID: widget.userID,
+      },
+    ).then((_) {
+      ZegoUIKit().reporter().report(
+        event: ZegoAudioRoomReporter.eventInit,
+        params: {
+          ZegoUIKitReporter.eventKeyErrorCode: 0,
+          ZegoUIKitReporter.eventKeyStartTime:
+              DateTime.now().millisecondsSinceEpoch,
+        },
+      );
+    });
 
     correctConfigValue();
 
@@ -131,9 +152,9 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     WidgetsBinding.instance.addObserver(this);
 
-    ZegoUIKit().getZegoUIKitVersion().then((version) {
+    ZegoUIKit().getZegoUIKitVersion().then((uikitVersion) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: 3.16.0-beta.2; $version, \n'
+        'version: zego_uikit_prebuilt_live_audio_room: $version; $uikitVersion, \n'
         'config: ${widget.config}, '
         'events: ${widget.events}, ',
         tag: 'audio-room',
@@ -319,6 +340,8 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     for (final subscription in subscriptions) {
       subscription?.cancel();
     }
+
+    ZegoUIKit().reporter().report(event: ZegoAudioRoomReporter.eventUninit);
   }
 
   @override
@@ -541,6 +564,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
         .init(
       appID: widget.appID,
       appSign: widget.appSign,
+      token: widget.token,
       scenario: ZegoScenario.Broadcast,
       enablePlatformView: enablePlatformView,
     )
