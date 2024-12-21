@@ -123,7 +123,6 @@ class ZegoLiveAudioRoomControllerRoomPrivateImpl {
       await ZegoLiveAudioRoomManagers().uninitPluginAndManagers();
 
       await ZegoUIKit().resetSoundEffect();
-      await ZegoUIKit().resetBeautyEffect();
     }
 
     final result = await ZegoUIKit().leaveRoom().then((result) {

@@ -637,7 +637,6 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
   Future<void> uninitContext() async {
     await ZegoUIKit().resetSoundEffect();
-    await ZegoUIKit().resetBeautyEffect();
 
     await ZegoUIKit().leaveRoom();
 

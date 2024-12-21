@@ -101,7 +101,6 @@ class ZegoLiveAudioRoomInternalMiniOverlayMachine {
     ZegoLiveAudioRoomManagers().uninitPluginAndManagers();
 
     await ZegoUIKit().resetSoundEffect();
-    await ZegoUIKit().resetBeautyEffect();
     // await ZegoUIKit().leaveRoom(); //  kick-out will leave in zego_uikit
 
     await ZegoUIKitPrebuiltLiveAudioRoomController().pip.cancelBackground();
