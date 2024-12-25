@@ -125,28 +125,24 @@ class _ZegoLiveAudioRoomAudienceConnectButtonState
       textStyle: buttonTextStyle,
       verticalLayout: false,
       onWillPressed: checkHostAndCoHostExist,
-      onPressed: (
-        String code,
-        String message,
-        String invitationID,
-        List<String> errorInvitees,
-      ) {
+      onPressed: (ZegoStartInvitationButtonResult result) {
         ZegoLoggerService.logInfo(
-          'result, code:$code, message:$message, '
-          'invitationID:$invitationID, '
-          'errorInvitees:$errorInvitees, ',
+          'result:$result,',
           tag: 'audio-room-seat',
           subTag: 'requestConnectButton',
         );
 
-        if (code.isNotEmpty) {
+        if (result.code.isNotEmpty) {
           widget.connectManager.events.seat.audience?.onTakingRequestFailed
               ?.call();
 
-          showDebugToast('Failed to apply for take seat, $code $message');
+          showDebugToast(
+            'Failed to apply for take seat, ${result.code} ${result.message}',
+          );
         } else {
           showDebugToast(
-              'You are applying to take seat, please wait for confirmation.');
+            'You are applying to take seat, please wait for confirmation.',
+          );
 
           widget.connectManager.updateAudienceConnectState(
               ZegoLiveAudioRoomConnectState.connecting);
@@ -171,17 +167,16 @@ class _ZegoLiveAudioRoomAudienceConnectButtonState
       text: widget.innerText.cancelTheTakeSeatApplicationButton,
       textStyle: buttonTextStyle,
       verticalLayout: false,
-      onPressed: (String code, String message, List<String> errorInvitees) {
+      onPressed: (ZegoCancelInvitationButtonResult result) {
         ZegoLoggerService.logInfo(
-          'result, code:$code, message:$message, '
-          'errorInvitees:$errorInvitees, ',
+          'result:$result, ',
           tag: 'audio-room-seat',
           subTag: 'cancelRequestConnectButton',
         );
 
-        widget.connectManager
-            .updateAudienceConnectState(ZegoLiveAudioRoomConnectState.idle);
-        //
+        widget.connectManager.updateAudienceConnectState(
+          ZegoLiveAudioRoomConnectState.idle,
+        );
       },
       clickableTextColor: Colors.white,
       clickableBackgroundColor: const Color(0xff1E2740).withOpacity(0.4),
