@@ -1,5 +1,9 @@
 
 
+## 3.16.0-beta.4
+
+- Merge version to 3.15.7
+
 ## 3.16.0-beta.3
 
 - Merge version to 3.15.5
@@ -16,6 +20,14 @@
   - Support the member-list button can be added to the top toolbar, which is not displayed by default and can be configured through **topMenuBar.buttons**.
   - Support the fully customizable function of the seat area, use **topLeft** positioning, specify the size by **containerSize**, and customize the seat display with **containerBuilder**
 
+## 3.15.7
+
+- Fix screen-sharing outside the app, remote pull-based streaming has no sound
+
+## 3.15.6
+
+- Update dependency
+
 ## 3.15.5
 
 - Update dependency
@@ -23,7 +35,6 @@
 ## 3.15.4
 
 - Update dependency
-
 
 ## 3.15.3
 
