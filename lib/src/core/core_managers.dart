@@ -70,6 +70,7 @@ class ZegoLiveAudioRoomManagers {
       userName: userName,
       roomID: roomID,
       plugins: [ZegoUIKitSignalingPlugin()],
+      signalingPluginConfig: config.signalingPlugin,
       onPluginReLogin: () {
         seatManager?.queryRoomAllAttributes(withToast: false).then((value) {
           seatManager?.initRoleAndSeat();

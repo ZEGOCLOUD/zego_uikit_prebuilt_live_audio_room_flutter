@@ -10,6 +10,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/overlay_machine.dart';
 
 /// @nodoc
@@ -22,6 +23,7 @@ class ZegoLiveAudioRoomPlugins {
     required this.userName,
     required this.roomID,
     required this.plugins,
+    required this.signalingPluginConfig,
     this.onPluginReLogin,
     this.onError,
   }) {
@@ -39,6 +41,7 @@ class ZegoLiveAudioRoomPlugins {
 
   final List<IZegoUIKitPlugin> plugins;
 
+  final ZegoLiveAudioRoomSignalingPluginConfig? signalingPluginConfig;
   final VoidCallback? onPluginReLogin;
   Function(ZegoUIKitError)? onError;
 
@@ -208,12 +211,16 @@ class ZegoLiveAudioRoomPlugins {
         subTag: 'plugin',
       );
     } else {
-      await ZegoUIKit().getSignalingPlugin().leaveRoom();
+      if (signalingPluginConfig?.leaveRoomOnDispose ?? true) {
+        await ZegoUIKit().getSignalingPlugin().leaveRoom();
+      }
 
       /// not need logout
       // await ZegoUIKit().getSignalingPlugin().logout();
       /// not need destroy signaling sdk
-      await ZegoUIKit().getSignalingPlugin().uninit(forceDestroy: false);
+      if (signalingPluginConfig?.uninitOnDispose ?? true) {
+        await ZegoUIKit().getSignalingPlugin().uninit(forceDestroy: false);
+      }
     }
 
     for (final streamSubscription in subscriptions) {
