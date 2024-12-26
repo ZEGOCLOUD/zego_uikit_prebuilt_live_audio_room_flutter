@@ -50,6 +50,8 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   ///  config of menus
   ZegoLiveAudioRoomPopUpMenuConfig popUpMenu;
 
+  ZegoLiveAudioRoomSignalingPluginConfig signalingPlugin;
+
   /// Specifies the initial role when joining the live audio room.
   /// The role change after joining is not constrained by this property.
   ZegoLiveAudioRoomRole role = ZegoLiveAudioRoomRole.audience;
@@ -157,6 +159,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         bottomMenuBar = ZegoLiveAudioRoomBottomMenuBarConfig(),
         inRoomMessage = ZegoLiveAudioRoomInRoomMessageConfig(),
         popUpMenu = ZegoLiveAudioRoomPopUpMenuConfig(),
+        signalingPlugin = ZegoLiveAudioRoomSignalingPluginConfig(),
         memberList = ZegoLiveAudioRoomMemberListConfig(),
         audioEffect = ZegoLiveAudioRoomAudioEffectConfig(),
         duration = ZegoLiveAudioRoomLiveDurationConfig(),
@@ -196,6 +199,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         bottomMenuBar = ZegoLiveAudioRoomBottomMenuBarConfig(),
         inRoomMessage = ZegoLiveAudioRoomInRoomMessageConfig(),
         popUpMenu = ZegoLiveAudioRoomPopUpMenuConfig(),
+        signalingPlugin = ZegoLiveAudioRoomSignalingPluginConfig(),
         memberList = ZegoLiveAudioRoomMemberListConfig(),
         audioEffect = ZegoLiveAudioRoomAudioEffectConfig(),
         duration = ZegoLiveAudioRoomLiveDurationConfig(),
@@ -221,6 +225,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
     ZegoLiveAudioRoomLayoutConfig? layout,
     ZegoLiveAudioRoomInRoomMessageConfig? message,
     ZegoLiveAudioRoomPopUpMenuConfig? popUpMenu,
+    ZegoLiveAudioRoomSignalingPluginConfig? signalingPlugin,
     ZegoLiveAudioRoomMemberListConfig? memberList,
     ZegoLiveAudioRoomAudioEffectConfig? effect,
     ZegoLiveAudioRoomLiveDurationConfig? duration,
@@ -238,6 +243,8 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         inRoomMessage = message ?? ZegoLiveAudioRoomInRoomMessageConfig(),
         memberList = memberList ?? ZegoLiveAudioRoomMemberListConfig(),
         popUpMenu = popUpMenu ?? ZegoLiveAudioRoomPopUpMenuConfig(),
+        signalingPlugin =
+            signalingPlugin ?? ZegoLiveAudioRoomSignalingPluginConfig(),
         audioEffect = effect ?? ZegoLiveAudioRoomAudioEffectConfig(),
         duration = duration ?? ZegoLiveAudioRoomLiveDurationConfig(),
         pip = pip ?? ZegoLiveAudioRoomPIPConfig(),
@@ -261,6 +268,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         'backgroundMedia:$backgroundMedia, '
         'memberList:$memberList, '
         'popUpMenu:$popUpMenu, '
+        'signalingPlugin:$signalingPlugin, '
         'role:$role, '
         'turnOnMicrophoneWhenJoining:$turnOnMicrophoneWhenJoining, '
         'useSpeakerWhenJoining:$useSpeakerWhenJoining, '
@@ -961,4 +969,14 @@ class ZegoLiveAudioRoomPIPAndroidConfig {
         'userNameTextColor:$userNameTextColor, '
         '}';
   }
+}
+
+class ZegoLiveAudioRoomSignalingPluginConfig {
+  bool leaveRoomOnDispose;
+  bool uninitOnDispose;
+
+  ZegoLiveAudioRoomSignalingPluginConfig({
+    this.leaveRoomOnDispose = true,
+    this.uninitOnDispose = true,
+  });
 }
