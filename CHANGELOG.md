@@ -1,4 +1,8 @@
 
+## 3.16.0-beta.5
+
+- Features
+  - Add signalingPlugin to config to fix the issue of not receiving invitations again when exiting LIVE(please set uninitOnDispose to false) if using LIVE and call-invitation at the same time.
 
 ## 3.16.0-beta.4
 
