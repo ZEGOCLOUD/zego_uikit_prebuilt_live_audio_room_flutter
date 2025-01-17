@@ -1,4 +1,8 @@
 
+## 3.16.0-beta.6
+
+- Merge version to 3.15.8
+
 ## 3.16.0-beta.5
 
 - Features
@@ -23,6 +27,10 @@
 - Features
   - Support the member-list button can be added to the top toolbar, which is not displayed by default and can be configured through **topMenuBar.buttons**.
   - Support the fully customizable function of the seat area, use **topLeft** positioning, specify the size by **containerSize**, and customize the seat display with **containerBuilder**
+
+## 3.15.8
+
+- Update dependency
 
 ## 3.15.7
 

@@ -217,9 +217,16 @@ class ZegoLiveAudioRoomPlugins {
 
       /// not need logout
       // await ZegoUIKit().getSignalingPlugin().logout();
+
       /// not need destroy signaling sdk
       if (signalingPluginConfig?.uninitOnDispose ?? true) {
         await ZegoUIKit().getSignalingPlugin().uninit(forceDestroy: false);
+
+        ZegoUIKit().uninstallPlugins(
+          plugins
+              .where((e) => e.getPluginType() == ZegoUIKitPluginType.signaling)
+              .toList(),
+        );
       }
     }
 

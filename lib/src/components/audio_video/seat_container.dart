@@ -10,6 +10,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/audio_room_layout.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/config.defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/style.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 
 /// @nodoc
@@ -18,6 +19,7 @@ class ZegoLiveAudioRoomSeatContainer extends StatefulWidget {
   const ZegoLiveAudioRoomSeatContainer({
     Key? key,
     required this.seatManager,
+    required this.style,
     required this.layoutConfig,
     this.avatarBuilder,
     this.foregroundBuilder,
@@ -28,7 +30,7 @@ class ZegoLiveAudioRoomSeatContainer extends StatefulWidget {
   }) : super(key: key);
 
   final ZegoLiveAudioRoomSeatManager seatManager;
-
+  final ZegoUIKitPrebuiltLiveAudioRoomStyle style;
   final ZegoLiveAudioRoomLayoutConfig layoutConfig;
 
   /// foreground builder of audio video view

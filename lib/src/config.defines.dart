@@ -124,10 +124,10 @@ class ZegoLiveAudioRoomPopUpSeatClickedMenuEvent {
         'data:$data, '
         'localIsCoHost:$localIsCoHost, '
         'localRole:$localRole, '
-        'localUser:${localUser.toSimpleString()}, '
+        'localUser:$localUser, '
         'targetIsCoHost:$targetIsCoHost, '
         'targetRole:$targetRole, '
-        'targetUser:${targetUser?.toSimpleString()}, '
+        'targetUser:$targetUser, '
         '}';
   }
 }

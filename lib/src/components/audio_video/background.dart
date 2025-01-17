@@ -75,15 +75,18 @@ class _ZegoSeatForegroundState extends State<ZegoLiveAudioRoomSeatBackground> {
                       widget.extraInfo[layoutGridItemIndexKey].toString()) ??
                   -1;
 
-              return lockedSeat.contains(userSeatIndex)
-                  ? (widget.config.seat.closeIcon ??
-                      ZegoLiveAudioRoomImage.asset(
-                        ZegoLiveAudioRoomIconUrls.seatLock,
-                      ))
-                  : (widget.config.seat.openIcon ??
-                      ZegoLiveAudioRoomImage.asset(
-                        ZegoLiveAudioRoomIconUrls.seatEmpty,
-                      ));
+              return Opacity(
+                opacity: 0.6,
+                child: lockedSeat.contains(userSeatIndex)
+                    ? (widget.config.seat.closeIcon ??
+                        ZegoLiveAudioRoomImage.asset(
+                          ZegoLiveAudioRoomIconUrls.seatLock,
+                        ))
+                    : (widget.config.seat.openIcon ??
+                        ZegoLiveAudioRoomImage.asset(
+                          ZegoLiveAudioRoomIconUrls.seatEmpty,
+                        )),
+              );
             },
           )),
     );
