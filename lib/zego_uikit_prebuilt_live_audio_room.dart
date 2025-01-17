@@ -11,5 +11,6 @@ export 'src/events.defines.dart';
 export 'src/inner_text.dart';
 export 'src/live_audio_room.dart';
 export 'src/minimizing/export.dart';
+export 'src/style.dart';
 
 export 'src/deprecated/deprecated.dart';

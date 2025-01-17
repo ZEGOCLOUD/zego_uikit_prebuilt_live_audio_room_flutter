@@ -12,6 +12,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/input
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pip_button.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/style.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_button.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
@@ -37,6 +38,7 @@ class ZegoLiveAudioRoomBottomBar extends StatefulWidget {
 
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
   final ZegoUIKitPrebuiltLiveAudioRoomEvents events;
+  final ZegoUIKitPrebuiltLiveAudioRoomStyle style;
   final void Function(ZegoLiveAudioRoomEndEvent event) defaultEndAction;
   final Future<bool> Function(
     ZegoLiveAudioRoomLeaveConfirmationEvent event,
@@ -49,6 +51,7 @@ class ZegoLiveAudioRoomBottomBar extends StatefulWidget {
   const ZegoLiveAudioRoomBottomBar({
     Key? key,
     required this.config,
+    required this.style,
     required this.events,
     required this.defaultEndAction,
     required this.defaultLeaveConfirmationAction,
@@ -106,15 +109,18 @@ class _ZegoLiveAudioRoomBottomBarState
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   zegoLiveButtonPadding,
-                  ZegoLiveAudioRoomInRoomMessageInputBoardButton(
-                    innerText: widget.config.innerText,
-                    rootNavigator: widget.config.rootNavigator,
-                    onSheetPopUp: (int key) {
-                      widget.popUpManager.addAPopUpSheet(key);
-                    },
-                    onSheetPop: (int key) {
-                      widget.popUpManager.removeAPopUpSheet(key);
-                    },
+                  Opacity(
+                    opacity: widget.style.opacity,
+                    child: ZegoLiveAudioRoomInRoomMessageInputBoardButton(
+                      innerText: widget.config.innerText,
+                      rootNavigator: widget.config.rootNavigator,
+                      onSheetPopUp: (int key) {
+                        widget.popUpManager.addAPopUpSheet(key);
+                      },
+                      onSheetPop: (int key) {
+                        widget.popUpManager.removeAPopUpSheet(key);
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -245,8 +251,10 @@ class _ZegoLiveAudioRoomBottomBarState
     return displayButtonsWithSpacing;
   }
 
-  Widget buttonWrapper(
-      {required Widget child, ZegoLiveAudioRoomMenuBarButtonName? type}) {
+  Widget buttonWrapper({
+    required Widget child,
+    ZegoLiveAudioRoomMenuBarButtonName? type,
+  }) {
     var buttonSize = widget.buttonSize;
     switch (type) {
       case ZegoLiveAudioRoomMenuBarButtonName.applyToTakeSeatButton:
@@ -266,10 +274,13 @@ class _ZegoLiveAudioRoomBottomBarState
         break;
     }
 
-    return SizedBox(
-      width: buttonSize.width,
-      height: buttonSize.height,
-      child: child,
+    return Opacity(
+      opacity: widget.style.opacity,
+      child: SizedBox(
+        width: buttonSize.width,
+        height: buttonSize.height,
+        child: child,
+      ),
     );
   }
 

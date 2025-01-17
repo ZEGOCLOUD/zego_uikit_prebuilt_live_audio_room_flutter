@@ -11,6 +11,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/style.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
@@ -22,6 +23,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 /// @nodoc
 class ZegoLiveAudioRoomTopBar extends StatefulWidget {
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
+  final ZegoUIKitPrebuiltLiveAudioRoomStyle style;
   final ZegoUIKitPrebuiltLiveAudioRoomEvents events;
   final void Function(ZegoLiveAudioRoomEndEvent event) defaultEndAction;
   final Future<bool> Function(
@@ -41,6 +43,7 @@ class ZegoLiveAudioRoomTopBar extends StatefulWidget {
   const ZegoLiveAudioRoomTopBar({
     Key? key,
     required this.config,
+    required this.style,
     required this.events,
     required this.defaultEndAction,
     required this.defaultLeaveConfirmationAction,
@@ -81,13 +84,22 @@ class _ZegoLiveAudioRoomTopBarState extends State<ZegoLiveAudioRoomTopBar> {
     );
   }
 
+  Widget buttonWrapper(Widget button) {
+    return Opacity(
+      opacity: widget.style.opacity,
+      child: button,
+    );
+  }
+
   List<Widget> pipButton() {
     return widget.config.topMenuBar.buttons
             .contains(ZegoLiveAudioRoomMenuBarButtonName.pipButton)
         ? [
-            ZegoAudioRoomPIPButton(
-              aspectWidth: widget.config.pip.aspectWidth,
-              aspectHeight: widget.config.pip.aspectHeight,
+            buttonWrapper(
+              ZegoAudioRoomPIPButton(
+                aspectWidth: widget.config.pip.aspectWidth,
+                aspectHeight: widget.config.pip.aspectHeight,
+              ),
             ),
             spacing,
           ]
@@ -98,8 +110,10 @@ class _ZegoLiveAudioRoomTopBarState extends State<ZegoLiveAudioRoomTopBar> {
     return widget.config.topMenuBar.buttons
             .contains(ZegoLiveAudioRoomMenuBarButtonName.minimizingButton)
         ? [
-            ZegoMinimizingButton(
-              rootNavigator: widget.config.rootNavigator,
+            buttonWrapper(
+              ZegoMinimizingButton(
+                rootNavigator: widget.config.rootNavigator,
+              ),
             ),
             spacing,
           ]
@@ -110,24 +124,27 @@ class _ZegoLiveAudioRoomTopBarState extends State<ZegoLiveAudioRoomTopBar> {
     return widget.config.topMenuBar.buttons
             .contains(ZegoLiveAudioRoomMenuBarButtonName.showMemberListButton)
         ? [
-            ZegoLiveAudioRoomMemberButton(
-              buttonSize: Size(52.zR, 52.zR),
-              iconSize: Size(24.zR, 24.zR),
-              icon: ButtonIcon(
-                icon: ZegoLiveAudioRoomImage.asset(
-                    ZegoLiveAudioRoomIconUrls.toolbarMember),
-                backgroundColor: Colors.white,
+            buttonWrapper(
+              ZegoLiveAudioRoomMemberButton(
+                buttonSize: Size(52.zR, 52.zR),
+                iconSize: Size(24.zR, 24.zR),
+                icon: ButtonIcon(
+                  icon: ZegoLiveAudioRoomImage.asset(
+                      ZegoLiveAudioRoomIconUrls.toolbarMember),
+                  backgroundColor: Colors.white,
+                ),
+                avatarBuilder: widget.avatarBuilder,
+                itemBuilder: widget.config.memberList.itemBuilder,
+                isPluginEnabled: widget.isPluginEnabled,
+                seatManager: widget.seatManager,
+                connectManager: widget.connectManager,
+                popUpManager: widget.popUpManager,
+                innerText: widget.config.innerText,
+                onMoreButtonPressed:
+                    widget.events.memberList.onMoreButtonPressed,
+                hiddenUserIDsNotifier: widget.prebuiltController?.private
+                    .hiddenUsersOfMemberListNotifier,
               ),
-              avatarBuilder: widget.avatarBuilder,
-              itemBuilder: widget.config.memberList.itemBuilder,
-              isPluginEnabled: widget.isPluginEnabled,
-              seatManager: widget.seatManager,
-              connectManager: widget.connectManager,
-              popUpManager: widget.popUpManager,
-              innerText: widget.config.innerText,
-              onMoreButtonPressed: widget.events.memberList.onMoreButtonPressed,
-              hiddenUserIDsNotifier: widget
-                  .prebuiltController?.private.hiddenUsersOfMemberListNotifier,
             ),
             spacing,
           ]
@@ -140,18 +157,20 @@ class _ZegoLiveAudioRoomTopBarState extends State<ZegoLiveAudioRoomTopBar> {
       return Container();
     }
 
-    return ZegoLiveAudioRoomLeaveButton(
-      buttonSize: Size(52.zR, 52.zR),
-      iconSize: Size(24.zR, 24.zR),
-      icon: ButtonIcon(
-        icon: ZegoLiveAudioRoomImage.asset(ZegoLiveAudioRoomIconUrls.topQuit),
-        backgroundColor: Colors.white,
+    return buttonWrapper(
+      ZegoLiveAudioRoomLeaveButton(
+        buttonSize: Size(52.zR, 52.zR),
+        iconSize: Size(24.zR, 24.zR),
+        icon: ButtonIcon(
+          icon: ZegoLiveAudioRoomImage.asset(ZegoLiveAudioRoomIconUrls.topQuit),
+          backgroundColor: Colors.white,
+        ),
+        config: widget.config,
+        events: widget.events,
+        defaultEndAction: widget.defaultEndAction,
+        defaultLeaveConfirmationAction: widget.defaultLeaveConfirmationAction,
+        seatManager: widget.seatManager,
       ),
-      config: widget.config,
-      events: widget.events,
-      defaultEndAction: widget.defaultEndAction,
-      defaultLeaveConfirmationAction: widget.defaultLeaveConfirmationAction,
-      seatManager: widget.seatManager,
     );
   }
 }

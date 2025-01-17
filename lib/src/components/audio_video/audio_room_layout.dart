@@ -84,30 +84,33 @@ class _ZegoLiveAudioRoomLayoutState extends State<ZegoLiveAudioRoomLayout> {
     var baseIndex = 0;
     var currentRowIndex = -1;
     return Column(
-      children: widget.layoutConfig.rowConfigs
-          .map((ZegoLiveAudioRoomLayoutRowConfig rowConfig) {
-        final rowUsers = users.sublist(0, rowConfig.count);
-        users.removeRange(0, rowConfig.count);
+      children: widget.layoutConfig.rowConfigs.map(
+        (
+          ZegoLiveAudioRoomLayoutRowConfig rowConfig,
+        ) {
+          final rowUsers = users.sublist(0, rowConfig.count);
+          users.removeRange(0, rowConfig.count);
 
-        currentRowIndex += 1;
-        final addMargin =
-            currentRowIndex < (widget.layoutConfig.rowConfigs.length - 1);
-        final rowWidget = Container(
-          margin: addMargin
-              ? EdgeInsets.only(
-                  bottom: widget.layoutConfig.rowSpacing.toDouble(),
-                )
-              : null,
-          child: Row(
-            mainAxisAlignment: getRowAlignment(rowConfig.alignment),
-            children: getRowChildren(rowUsers, rowConfig, baseIndex),
-          ),
-        );
+          currentRowIndex += 1;
+          final addMargin =
+              currentRowIndex < (widget.layoutConfig.rowConfigs.length - 1);
+          final rowWidget = Container(
+            margin: addMargin
+                ? EdgeInsets.only(
+                    bottom: widget.layoutConfig.rowSpacing.toDouble(),
+                  )
+                : null,
+            child: Row(
+              mainAxisAlignment: getRowAlignment(rowConfig.alignment),
+              children: getRowChildren(rowUsers, rowConfig, baseIndex),
+            ),
+          );
 
-        baseIndex += rowConfig.count;
+          baseIndex += rowConfig.count;
 
-        return rowWidget;
-      }).toList(),
+          return rowWidget;
+        },
+      ).toList(),
     );
   }
 

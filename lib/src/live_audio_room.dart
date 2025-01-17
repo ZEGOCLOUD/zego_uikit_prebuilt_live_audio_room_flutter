@@ -27,8 +27,9 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/internal/reporter.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/data.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/overlay_machine.dart';
-import 'components/mini_audio.dart';
-import 'internal/events.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/style.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/mini_audio.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/internal/events.dart';
 
 /// Live Audio Room Widget.
 /// You can embed this widget into any page of your project to integrate the functionality of a audio chat room.
@@ -48,6 +49,7 @@ class ZegoUIKitPrebuiltLiveAudioRoom extends StatefulWidget {
     required this.userName,
     required this.roomID,
     required this.config,
+    this.style,
     this.appSign = '',
     this.token = '',
     this.events,
@@ -91,6 +93,9 @@ class ZegoUIKitPrebuiltLiveAudioRoom extends StatefulWidget {
 
   /// Initialize the configuration for the voice chat room.
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
+
+  /// style
+  final ZegoUIKitPrebuiltLiveAudioRoomStyle? style;
 
   /// Initialize the event for the voice chat room.
   final ZegoUIKitPrebuiltLiveAudioRoomEvents? events;
@@ -371,6 +376,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
         userName: widget.userName,
         liveID: widget.roomID,
         config: widget.config,
+        style: widget.style ?? ZegoUIKitPrebuiltLiveAudioRoomStyle(),
         events: events,
         defaultEndAction: defaultEndAction,
         defaultLeaveConfirmationAction: defaultLeaveConfirmationAction,
