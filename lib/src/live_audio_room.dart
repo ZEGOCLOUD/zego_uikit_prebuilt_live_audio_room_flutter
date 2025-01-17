@@ -27,8 +27,9 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/internal/reporter.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/data.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/overlay_machine.dart';
-import 'components/mini_audio.dart';
-import 'internal/events.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/style.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/mini_audio.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/internal/events.dart';
 
 /// Live Audio Room Widget.
 /// You can embed this widget into any page of your project to integrate the functionality of a audio chat room.
@@ -48,6 +49,7 @@ class ZegoUIKitPrebuiltLiveAudioRoom extends StatefulWidget {
     required this.userName,
     required this.roomID,
     required this.config,
+    this.style,
     this.appSign = '',
     this.token = '',
     this.events,
@@ -92,6 +94,9 @@ class ZegoUIKitPrebuiltLiveAudioRoom extends StatefulWidget {
   /// Initialize the configuration for the voice chat room.
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
 
+  /// style
+  final ZegoUIKitPrebuiltLiveAudioRoomStyle? style;
+
   /// Initialize the event for the voice chat room.
   final ZegoUIKitPrebuiltLiveAudioRoomEvents? events;
 
@@ -111,8 +116,6 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       (widget.events ?? ZegoUIKitPrebuiltLiveAudioRoomEvents())
         ..onLeaveConfirmation ??= defaultLeaveConfirmation;
 
-  String get version => "3.15.6";
-
   @override
   void initState() {
     super.initState();
@@ -121,7 +124,8 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       appID: widget.appID,
       signOrToken: widget.appSign.isNotEmpty ? widget.appSign : widget.token,
       params: {
-        ZegoAudioRoomReporter.eventKeyKitVersion: version,
+        ZegoAudioRoomReporter.eventKeyKitVersion:
+            ZegoUIKitPrebuiltLiveAudioRoomController().version,
         ZegoUIKitReporter.eventKeyUserID: widget.userID,
       },
     ).then((_) {
@@ -154,7 +158,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((uikitVersion) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: $version; $uikitVersion, \n'
+        'version: zego_uikit_prebuilt_live_audio_room: ${ZegoUIKitPrebuiltLiveAudioRoomController().version};$uikitVersion, \n'
         'config: ${widget.config}, '
         'events: ${widget.events}, ',
         tag: 'audio-room',
@@ -371,6 +375,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
         userName: widget.userName,
         liveID: widget.roomID,
         config: widget.config,
+        style: widget.style ?? ZegoUIKitPrebuiltLiveAudioRoomStyle(),
         events: events,
         defaultEndAction: defaultEndAction,
         defaultLeaveConfirmationAction: defaultLeaveConfirmationAction,

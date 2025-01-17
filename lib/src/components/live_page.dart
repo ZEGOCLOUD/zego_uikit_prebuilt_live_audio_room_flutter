@@ -21,6 +21,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/view.
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/top_bar.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/style.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/live_duration_manager.dart';
@@ -42,6 +43,7 @@ class ZegoLiveAudioRoomPage extends StatefulWidget {
     required this.userName,
     required this.liveID,
     required this.config,
+    required this.style,
     required this.events,
     required this.defaultEndAction,
     required this.defaultLeaveConfirmationAction,
@@ -63,6 +65,7 @@ class ZegoLiveAudioRoomPage extends StatefulWidget {
 
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
   final ZegoUIKitPrebuiltLiveAudioRoomEvents events;
+  final ZegoUIKitPrebuiltLiveAudioRoomStyle style;
   final void Function(ZegoLiveAudioRoomEndEvent event) defaultEndAction;
   final Future<bool> Function(
     ZegoLiveAudioRoomLeaveConfirmationEvent event,
@@ -202,13 +205,28 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
     return Positioned(
       top: 0,
       left: 0,
-      child: Container(
+      child: SizedBox(
         width: 750.zW,
         height: height,
-        decoration: const BoxDecoration(
-          color: Color(0xffF4F4F6),
+        child: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    const Color(0xFF00008B).withOpacity(0.5),
+                    const Color(0xFF800080).withOpacity(0.3),
+                    const Color(0xFF006400).withOpacity(0.5),
+                  ],
+                  stops: const [0.3, 0.5, 0.9], // color ratio
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+            ),
+            widget.config.background ?? Container(),
+          ],
         ),
-        child: widget.config.background,
       ),
     );
   }
@@ -251,6 +269,7 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
     final seatContainer = ZegoLiveAudioRoomSeatContainer(
       seatManager: widget.seatManager,
       layoutConfig: widget.config.seat.layout,
+      style: widget.style,
       foregroundBuilder: (
         BuildContext context,
         Size size,
@@ -275,12 +294,15 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
         ZegoUIKitUser? user,
         Map<String, dynamic> extraInfo,
       ) {
-        return ZegoLiveAudioRoomSeatBackground(
-          user: user,
-          extraInfo: extraInfo,
-          size: size,
-          seatManager: widget.seatManager,
-          config: widget.config,
+        return Opacity(
+          opacity: widget.style.opacity,
+          child: ZegoLiveAudioRoomSeatBackground(
+            user: user,
+            extraInfo: extraInfo,
+            size: size,
+            seatManager: widget.seatManager,
+            config: widget.config,
+          ),
         );
       },
       sortAudioVideo: audioVideoViewSorter,
@@ -324,6 +346,7 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
         builder: (context, roomState, _) {
           return ZegoLiveAudioRoomTopBar(
             config: widget.config,
+            style: widget.style,
             events: widget.events,
             defaultEndAction: widget.defaultEndAction,
             defaultLeaveConfirmationAction:
@@ -348,6 +371,7 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
         height: bottomBarHeight,
         buttonSize: zegoLiveButtonSize,
         config: widget.config,
+        style: widget.style,
         events: widget.events,
         defaultEndAction: widget.defaultEndAction,
         defaultLeaveConfirmationAction: widget.defaultLeaveConfirmationAction,
