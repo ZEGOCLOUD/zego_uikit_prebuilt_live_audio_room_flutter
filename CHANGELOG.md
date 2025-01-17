@@ -1,3 +1,7 @@
+## 3.15.8
+
+- Update dependency
+
 ## 3.15.7
 
 - Fix screen-sharing outside the app, remote pull-based streaming has no sound
