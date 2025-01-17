@@ -111,8 +111,6 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       (widget.events ?? ZegoUIKitPrebuiltLiveAudioRoomEvents())
         ..onLeaveConfirmation ??= defaultLeaveConfirmation;
 
-  String get version => "3.16.0-beta.5";
-
   @override
   void initState() {
     super.initState();
@@ -121,7 +119,8 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       appID: widget.appID,
       signOrToken: widget.appSign.isNotEmpty ? widget.appSign : widget.token,
       params: {
-        ZegoAudioRoomReporter.eventKeyKitVersion: version,
+        ZegoAudioRoomReporter.eventKeyKitVersion:
+            ZegoUIKitPrebuiltLiveAudioRoomController().version,
         ZegoUIKitReporter.eventKeyUserID: widget.userID,
       },
     ).then((_) {
@@ -154,7 +153,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((uikitVersion) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: $version; $uikitVersion, \n'
+        'version: zego_uikit_prebuilt_live_audio_room: ${ZegoUIKitPrebuiltLiveAudioRoomController().version}; $uikitVersion, \n'
         'config: ${widget.config}, '
         'events: ${widget.events}, ',
         tag: 'audio-room',
