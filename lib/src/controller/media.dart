@@ -51,6 +51,7 @@ class ZegoLiveAudioRoomControllerMediaImpl
   Future<ZegoUIKitMediaPlayResult> play({
     required String filePathOrURL,
     bool enableRepeat = false,
+    bool autoStart = true,
   }) async {
     ZegoLoggerService.logInfo(
       'play, '
@@ -63,6 +64,7 @@ class ZegoLiveAudioRoomControllerMediaImpl
     return ZegoUIKit().playMedia(
       filePathOrURL: filePathOrURL,
       enableRepeat: enableRepeat,
+      autoStart: autoStart,
     );
   }
 

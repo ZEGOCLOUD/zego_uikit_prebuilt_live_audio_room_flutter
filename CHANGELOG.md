@@ -1,4 +1,9 @@
 
+## 3.16.0-beta.7
+
+- Update dependency
+
+
 ## 3.16.0-beta.6
 
 - Merge version to 3.15.8
