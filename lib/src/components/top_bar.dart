@@ -14,11 +14,11 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/style.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/mini_button.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/style.dart';
 
 /// @nodoc
 class ZegoLiveAudioRoomTopBar extends StatefulWidget {

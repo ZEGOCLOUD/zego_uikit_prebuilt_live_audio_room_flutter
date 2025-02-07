@@ -21,7 +21,6 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/components/message/view.
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/top_bar.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/style.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/connect/connect_manager.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/live_duration_manager.dart';
@@ -31,6 +30,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/events.defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/data.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/style.dart';
 
 /// @nodoc
 /// user and sdk should be login and init before page enter
