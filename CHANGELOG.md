@@ -1,4 +1,9 @@
 
+## 3.16.0-beta.8
+
+- Bugs
+  - Flutter version 3.29.0 Adaptation
+
 ## 3.16.0-beta.7
 
 - Update dependency
