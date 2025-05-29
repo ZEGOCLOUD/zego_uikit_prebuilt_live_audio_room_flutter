@@ -1,3 +1,6 @@
+## 3.16.2
+
+- Update dependency
 
 ## 3.16.0
 
