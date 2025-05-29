@@ -214,6 +214,12 @@ class ZegoUIKitPrebuiltLiveAudioRoomInnerText {
   /// Reverb effect：Gramophone
   String reverbTypeGramophoneTitle;
 
+  ///When sharing the screen, the text prompt on the sharing side.
+  String screenSharingTipText;
+
+  ///When screen sharing, stop sharing button on the sharing side
+  String stopScreenSharingButtonText;
+
   ZegoUIKitPrebuiltLiveAudioRoomInnerText({
     String? takeSeatMenuButton,
     String? switchSeatMenuButton,
@@ -267,6 +273,8 @@ class ZegoUIKitPrebuiltLiveAudioRoomInnerText {
     String? reverbTypeBasementTitle,
     String? reverbTypePopularTitle,
     String? reverbTypeGramophoneTitle,
+    String? screenSharingTipText,
+    String? stopScreenSharingButtonText,
   })  : takeSeatMenuButton = takeSeatMenuButton ?? 'Take the seat',
         switchSeatMenuButton = switchSeatMenuButton ?? 'Switch the seat',
         removeSpeakerMenuDialogButton =
@@ -364,5 +372,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomInnerText {
             reverbTypeRecordingStudioTitle ?? 'Recording studio',
         reverbTypeBasementTitle = reverbTypeBasementTitle ?? 'Basement',
         reverbTypePopularTitle = reverbTypePopularTitle ?? 'Pop',
-        reverbTypeGramophoneTitle = reverbTypeGramophoneTitle ?? 'Gramophone';
+        reverbTypeGramophoneTitle = reverbTypeGramophoneTitle ?? 'Gramophone',
+        screenSharingTipText = 'You are sharing screen',
+        stopScreenSharingButtonText = 'Stop sharing';
 }

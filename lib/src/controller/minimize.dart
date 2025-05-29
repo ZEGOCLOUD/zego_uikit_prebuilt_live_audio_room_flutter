@@ -121,7 +121,7 @@ class ZegoLiveAudioRoomControllerMinimizingImpl
     );
 
     try {
-      /// pop call page
+      /// pop audio room page
       Navigator.of(
         context,
         rootNavigator: rootNavigator,

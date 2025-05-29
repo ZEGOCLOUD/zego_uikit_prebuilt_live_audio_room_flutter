@@ -1,4 +1,14 @@
 
+## 3.16.0
+
+- Features
+  - Add signalingPlugin to config to fix the issue of not receiving invitations again when exiting LIVE(please set uninitOnDispose to false) if using LIVE and call-invitation at the same time.
+  - Support playing multimedia (video/audio) directly.
+    - API: Add **defaultPlayer** in **ZegoUIKitPrebuiltLiveAudioRoomController().media**. play on default player through **sharing/show/hide** API
+    - Config: Add **ZegoLiveAudioRoomMediaPlayerDefaultPlayerConfig** in **ZegoLiveAudioRoomMediaPlayerConfig**
+  - Support the member-list button can be added to the top toolbar, which is not displayed by default and can be configured through **topMenuBar.buttons**.
+  - Support the fully customizable function of the seat area, use **topLeft** positioning, specify the size by **containerSize**, and customize the seat display with **containerBuilder**
+
 ## 3.15.10
 
 - Update dependency
@@ -7,7 +17,7 @@
 
 - Bugs
   - Flutter version 3.29.0 Adaptation
-
+  
 ## 3.15.8
 
 - Update dependency

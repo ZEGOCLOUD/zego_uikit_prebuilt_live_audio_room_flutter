@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
-import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/audio_room_layout.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/pop_up_manager.dart';
@@ -213,6 +212,7 @@ class _ZegoLiveAudioRoomSeatForegroundState
         ));
 
         /// host can mute others
+
         addPopUpItemWithFilterConfig(ZegoLiveAudioRoomPopupItem(
           ZegoLiveAudioRoomPopupItemValue.muteSeat.index,
           widget.config.innerText.muteSpeakerMenuDialogButton.replaceFirst(

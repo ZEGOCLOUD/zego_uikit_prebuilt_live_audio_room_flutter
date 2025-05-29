@@ -295,6 +295,19 @@ class ZegoLiveAudioRoomSeatConfig {
   /// the topLeft point of seat
   Point<double>? topLeft;
 
+  /// the size of seat container
+  Size? containerSize;
+
+  /// Custom seat container totally
+  /// If you don't want to use the default seat container, you can pass a
+  /// custom component through this parameter. and if return null, will be
+  /// display the default view
+  ///
+  /// ```dart
+  /// containerBuilder = ZegoLiveAudioRoomAudioVideoContainerBuilderExtension.center()
+  /// ```
+  ZegoLiveAudioRoomAudioVideoContainerBuilder? containerBuilder;
+
   /// Specifies the seat to occupy when joining the live audio room.
   /// This is only valid when the role is set to host or speaker.
   int takeIndexWhenJoining;
@@ -381,6 +394,8 @@ class ZegoLiveAudioRoomSeatConfig {
   ZegoLiveAudioRoomSeatConfig({
     ZegoLiveAudioRoomLayoutConfig? layout,
     this.topLeft,
+    this.containerSize,
+    this.containerBuilder,
     this.takeIndexWhenJoining = -1,
     this.canAutoSwitchOnClicked,
     this.takeIndexWhenAudienceRequesting,
@@ -536,7 +551,7 @@ class ZegoLiveAudioRoomInRoomMessageConfig {
   /// For example, you can modify the background color, opacity, border radius, or add additional information like the sender's level or role.
   ZegoInRoomMessageItemBuilder? itemBuilder;
 
-  /// background
+  /// message view background(not item)
   Widget? background;
 
   /// If set to `false`, the message list will be hidden. The default value is `true`.
@@ -810,6 +825,7 @@ class ZegoLiveAudioRoomBackgroundMediaConfig {
     this.path,
     this.enableRepeat = true,
   });
+
   @override
   String toString() {
     return 'ZegoLiveAudioRoomBackgroundMediaConfig:{'
@@ -824,13 +840,80 @@ class ZegoLiveAudioRoomMediaPlayerConfig {
   /// In iOS, to achieve transparency for a video using a platform view, you need to set [supportTransparent] to true.
   bool supportTransparent;
 
+  /// default player
+  ZegoLiveAudioRoomMediaPlayerDefaultPlayerConfig defaultPlayer;
+
   ZegoLiveAudioRoomMediaPlayerConfig({
     this.supportTransparent = false,
-  });
+    ZegoLiveAudioRoomMediaPlayerDefaultPlayerConfig? defaultPlayer,
+  }) : defaultPlayer =
+            defaultPlayer ?? ZegoLiveAudioRoomMediaPlayerDefaultPlayerConfig();
+
   @override
   String toString() {
     return 'ZegoLiveAudioRoomMediaPlayerConfig:{'
         'supportTransparent:$supportTransparent, '
+        'defaultPlayer:$defaultPlayer, '
+        '}';
+  }
+}
+
+/// default media player query parameter
+class ZegoLiveAudioRoomMediaPlayerQueryParameter {
+  ZegoLiveAudioRoomRole localRole;
+
+  ZegoLiveAudioRoomMediaPlayerQueryParameter({
+    required this.localRole,
+  });
+
+  @override
+  String toString() {
+    return 'ZegoLiveAudioRoomMediaPlayerQueryParameter:{'
+        'localRole:$localRole, '
+        '}';
+  }
+}
+
+/// default media player config
+class ZegoLiveAudioRoomMediaPlayerDefaultPlayerConfig {
+  /// support or not
+  bool support;
+
+  /// roles can control(pick/start/stop)
+  List<ZegoLiveAudioRoomRole> rolesCanControl;
+
+  /// top-left position
+  Point<double> Function(ZegoLiveAudioRoomMediaPlayerQueryParameter)?
+      topLeftQuery;
+
+  /// rect query
+  Rect? Function(ZegoLiveAudioRoomMediaPlayerQueryParameter)? rectQuery;
+
+  /// config
+  ZegoUIKitMediaPlayerConfig? Function(
+    ZegoLiveAudioRoomMediaPlayerQueryParameter,
+  )? configQuery;
+
+  /// style
+  ZegoUIKitMediaPlayerStyle? Function(
+    ZegoLiveAudioRoomMediaPlayerQueryParameter,
+  )? styleQuery;
+
+  ZegoLiveAudioRoomMediaPlayerDefaultPlayerConfig({
+    this.support = false,
+    this.rolesCanControl = const [
+      ZegoLiveAudioRoomRole.host,
+    ],
+    this.topLeftQuery,
+    this.rectQuery,
+    this.configQuery,
+    this.styleQuery,
+  });
+
+  @override
+  String toString() {
+    return 'ZegoLiveAudioRoomMediaPlayerDefaultPlayerConfig:{'
+        'support:$support, '
         '}';
   }
 }
@@ -903,4 +986,12 @@ class ZegoLiveAudioRoomSignalingPluginConfig {
     this.leaveRoomOnDispose = true,
     this.uninitOnDispose = true,
   });
+
+  @override
+  String toString() {
+    return 'ZegoLiveAudioRoomSignalingPluginConfig:{'
+        'leaveRoomOnDispose:$leaveRoomOnDispose, '
+        'uninitOnDispose:$uninitOnDispose, '
+        '}';
+  }
 }

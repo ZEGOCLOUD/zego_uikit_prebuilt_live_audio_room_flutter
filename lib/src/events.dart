@@ -30,6 +30,9 @@ class ZegoUIKitPrebuiltLiveAudioRoomEvents {
   /// events about duration
   ZegoLiveAudioRoomDurationEvents duration;
 
+  /// events about media
+  ZegoUIKitMediaPlayerEvent media;
+
   /// Confirmation callback method before leaving the audio chat room.
   ///
   /// If you want to perform more complex business logic before exiting the audio chat room, such as updating some records to the backend, you can use the [onLeaveConfirmation] parameter to set it.
@@ -98,6 +101,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomEvents {
     ZegoLiveAudioRoomInRoomMessageEvents? inRoomMessage,
     ZegoLiveAudioRoomMemberListEvents? memberList,
     ZegoLiveAudioRoomDurationEvents? duration,
+    ZegoUIKitMediaPlayerEvent? media,
     ZegoLiveAudioRoomSeatEvents? seat,
     ZegoLiveAudioRoomUserEvents? user,
     ZegoLiveAudioRoomRoomEvents? room,
@@ -106,6 +110,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomEvents {
         inRoomMessage = inRoomMessage ?? ZegoLiveAudioRoomInRoomMessageEvents(),
         memberList = memberList ?? ZegoLiveAudioRoomMemberListEvents(),
         duration = duration ?? ZegoLiveAudioRoomDurationEvents(),
+        media = media ?? ZegoUIKitMediaPlayerEvent(),
         user = user ?? ZegoLiveAudioRoomUserEvents(),
         room = room ?? ZegoLiveAudioRoomRoomEvents(),
         audioVideo = audioVideo ?? ZegoLiveAudioRoomAudioVideoEvents();

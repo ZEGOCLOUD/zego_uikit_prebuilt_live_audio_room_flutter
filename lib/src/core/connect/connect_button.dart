@@ -87,10 +87,10 @@ class _ZegoLiveAudioRoomAudienceConnectButtonState
                                     case ZegoLiveAudioRoomConnectState.idle:
                                       return requestConnectButton();
                                     case ZegoLiveAudioRoomConnectState
-                                          .connecting:
+                                        .connecting:
                                       return cancelRequestConnectButton();
                                     case ZegoLiveAudioRoomConnectState
-                                          .connected:
+                                        .connected:
                                       return Container();
                                   }
                                 });

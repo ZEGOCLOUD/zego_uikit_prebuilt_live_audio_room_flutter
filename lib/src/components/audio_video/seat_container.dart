@@ -10,8 +10,8 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/audio_room_layout.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/config.defines.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/style.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/style.dart';
 
 /// @nodoc
 /// container of seat
