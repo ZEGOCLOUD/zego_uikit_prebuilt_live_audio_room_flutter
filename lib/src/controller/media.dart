@@ -9,7 +9,11 @@ mixin ZegoLiveAudioRoomControllerMedia {
 }
 
 /// media series API
-class ZegoLiveAudioRoomControllerMediaImpl {
+class ZegoLiveAudioRoomControllerMediaImpl
+    with ZegoLiveAudioRoomControllerMediaPrivate {
+  ZegoLiveAudioRoomControllerMediaDefaultPlayer get defaultPlayer =>
+      private.defaultPlayer;
+
   /// volume of current media
   int get volume => ZegoUIKit().getMediaVolume();
 
@@ -47,6 +51,7 @@ class ZegoLiveAudioRoomControllerMediaImpl {
   Future<ZegoUIKitMediaPlayResult> play({
     required String filePathOrURL,
     bool enableRepeat = false,
+    bool autoStart = true,
   }) async {
     ZegoLoggerService.logInfo(
       'play, '
@@ -59,6 +64,7 @@ class ZegoLiveAudioRoomControllerMediaImpl {
     return ZegoUIKit().playMedia(
       filePathOrURL: filePathOrURL,
       enableRepeat: enableRepeat,
+      autoStart: autoStart,
     );
   }
 
@@ -157,7 +163,7 @@ class ZegoLiveAudioRoomControllerMediaImpl {
   }
 
   /// pick pure audio media file
-  Future<List<PlatformFile>> pickPureAudioFile() async {
+  Future<List<ZegoUIKitPlatformFile>> pickPureAudioFile() async {
     ZegoLoggerService.logInfo(
       'pickPureAudioFile, ',
       tag: 'audio-room',
@@ -168,7 +174,7 @@ class ZegoLiveAudioRoomControllerMediaImpl {
   }
 
   /// pick video media file
-  Future<List<PlatformFile>> pickVideoFile() async {
+  Future<List<ZegoUIKitPlatformFile>> pickVideoFile() async {
     ZegoLoggerService.logInfo(
       'pickVideoFile, ',
       tag: 'audio-room',
@@ -181,26 +187,8 @@ class ZegoLiveAudioRoomControllerMediaImpl {
   /// If you want to specify the allowed formats, you can set them using [allowedExtensions].
   /// Currently, for video, we support "avi", "flv", "mkv", "mov", "mp4", "mpeg", "webm", "wmv".
   /// For audio, we support "aac", "midi", "mp3", "ogg", "wav".
-  Future<List<PlatformFile>> pickFile({
-    List<String>? allowedExtensions = const [
-      /// video
-      "avi",
-      "flv",
-      "mkv",
-      "mov",
-      "mp4",
-      "mpeg",
-      "webm",
-      "wmv",
-
-      /// audio
-      "aac",
-      "midi",
-      "mp3",
-      "ogg",
-      "wav",
-    ],
-  }) async {
+  Future<List<ZegoUIKitPlatformFile>> pickFile(
+      {List<String>? allowedExtensions}) async {
     ZegoLoggerService.logInfo(
       'pickFile, '
       'allowedExtensions:$allowedExtensions, ',

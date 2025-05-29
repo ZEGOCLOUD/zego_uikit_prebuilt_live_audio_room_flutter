@@ -108,6 +108,12 @@ class _ZegoLiveAudioRoomPopUpSheetMenuState
             popupItem.data as int,
             muted: true,
           );
+        } else if (ZegoLiveAudioRoomPopupItemValue.unMuteSeat.index ==
+            popupItem.index) {
+          await widget.seatManager.muteSeat(
+            popupItem.data as int,
+            muted: false,
+          );
         } else if (ZegoLiveAudioRoomPopupItemValue.inviteLink.index ==
             popupItem.index) {
           await widget.connectManager.inviteAudienceConnect(

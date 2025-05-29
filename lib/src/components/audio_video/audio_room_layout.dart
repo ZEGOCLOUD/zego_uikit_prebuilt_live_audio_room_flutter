@@ -6,10 +6,8 @@ import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/audio_video/defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/config.defines.dart';
-
-/// @nodoc
-const layoutGridItemIndexKey = 'index';
 
 /// @nodoc
 /// picture in picture layout
@@ -142,7 +140,7 @@ class _ZegoLiveAudioRoomLayoutState extends State<ZegoLiveAudioRoomLayout> {
                     showSoundWavesInAudioMode: widget.showSoundWavesInAudioMode,
                     builder: widget.avatarBuilder,
                     soundWaveColor:
-                        widget.soundWaveColor ?? const Color(0xff2254f6),
+                        widget.soundWaveColor ?? zegoLiveSoundWaveColor,
                     size: Size(seatIconWidth, seatIconHeight),
                     verticalAlignment: ZegoAvatarAlignment.start,
                   ),

@@ -102,10 +102,6 @@ class ZegoLiveAudioRoomControllerPIPImplPrivateImpl {
       return;
     }
 
-    ZegoUIKit()
-        .adapterService()
-        .registerMessageHandler(_onAppLifecycleStateChanged);
-
     subscription = floating.pipStatusStream.listen(onPIPStatusUpdated);
 
     if (config?.pip.enableWhenBackground ?? true) {
@@ -127,23 +123,6 @@ class ZegoLiveAudioRoomControllerPIPImplPrivateImpl {
     config = null;
 
     subscription?.cancel();
-
-    ZegoUIKit()
-        .adapterService()
-        .unregisterMessageHandler(_onAppLifecycleStateChanged);
-  }
-
-  /// sync app background state
-  void _onAppLifecycleStateChanged(AppLifecycleState appLifecycleState) async {
-    ZegoLoggerService.logInfo(
-      '_onAppLifecycleStateChanged, $appLifecycleState',
-      tag: 'audio room',
-      subTag: 'controller.pip.p',
-    );
-
-    /// app -> desktop  AppLifecycleState.inactive
-    /// desktop -> app AppLifecycleState.resumed
-    if (AppLifecycleState.paused == appLifecycleState) {}
   }
 
   void onPIPStatusUpdated(PiPStatus status) {

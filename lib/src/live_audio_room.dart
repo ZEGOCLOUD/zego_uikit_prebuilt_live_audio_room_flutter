@@ -15,6 +15,7 @@ import 'package:zego_uikit/zego_uikit.dart';
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/dialogs.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/live_page.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/components/mini_audio.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/permissions.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/toast.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/config.dart';
@@ -23,13 +24,12 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/core/core_managers.dart'
 import 'package:zego_uikit_prebuilt_live_audio_room/src/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/events.defines.dart';
+import 'package:zego_uikit_prebuilt_live_audio_room/src/internal/events.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/internal/reporter.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/data.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/defines.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/overlay_machine.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/style.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/components/mini_audio.dart';
-import 'package:zego_uikit_prebuilt_live_audio_room/src/internal/events.dart';
 
 /// Live Audio Room Widget.
 /// You can embed this widget into any page of your project to integrate the functionality of a audio chat room.
@@ -158,7 +158,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     ZegoUIKit().getZegoUIKitVersion().then((uikitVersion) {
       ZegoLoggerService.logInfo(
-        'version: zego_uikit_prebuilt_live_audio_room: ${ZegoUIKitPrebuiltLiveAudioRoomController().version};$uikitVersion, \n'
+        'version: zego_uikit_prebuilt_live_audio_room: ${ZegoUIKitPrebuiltLiveAudioRoomController().version}; $uikitVersion, \n'
         'config: ${widget.config}, '
         'events: ${widget.events}, ',
         tag: 'audio-room',
@@ -211,6 +211,9 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
             seatManager: ZegoLiveAudioRoomManagers().seatManager,
           );
       ZegoUIKitPrebuiltLiveAudioRoomController().user.private.initByPrebuilt(
+            config: widget.config,
+          );
+      ZegoUIKitPrebuiltLiveAudioRoomController().media.private.initByPrebuilt(
             config: widget.config,
           );
       ZegoUIKitPrebuiltLiveAudioRoomController().seat.private.initByPrebuilt(
@@ -315,6 +318,10 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
           .uninitByPrebuilt();
       ZegoUIKitPrebuiltLiveAudioRoomController()
           .user
+          .private
+          .uninitByPrebuilt();
+      ZegoUIKitPrebuiltLiveAudioRoomController()
+          .media
           .private
           .uninitByPrebuilt();
       ZegoUIKitPrebuiltLiveAudioRoomController()
@@ -635,7 +642,6 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
   Future<void> uninitContext() async {
     await ZegoUIKit().resetSoundEffect();
-    await ZegoUIKit().resetBeautyEffect();
 
     await ZegoUIKit().leaveRoom();
 
