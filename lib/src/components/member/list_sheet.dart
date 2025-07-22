@@ -520,18 +520,20 @@ void showMemberListSheet({
         child: AnimatedPadding(
           padding: MediaQuery.of(context).viewInsets,
           duration: const Duration(milliseconds: 50),
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            child: ZegoLiveAudioRoomMemberListSheet(
-              avatarBuilder: avatarBuilder,
-              itemBuilder: itemBuilder,
-              isPluginEnabled: isPluginEnabled,
-              seatManager: seatManager,
-              connectManager: connectManager,
-              popUpManager: popUpManager,
-              innerText: innerText,
-              onMoreButtonPressed: onMoreButtonPressed,
-              hiddenUserIDsNotifier: hiddenUserIDsNotifier,
+          child: SafeArea(
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+              child: ZegoLiveAudioRoomMemberListSheet(
+                avatarBuilder: avatarBuilder,
+                itemBuilder: itemBuilder,
+                isPluginEnabled: isPluginEnabled,
+                seatManager: seatManager,
+                connectManager: connectManager,
+                popUpManager: popUpManager,
+                innerText: innerText,
+                onMoreButtonPressed: onMoreButtonPressed,
+                hiddenUserIDsNotifier: hiddenUserIDsNotifier,
+              ),
             ),
           ),
         ),
