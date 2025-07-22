@@ -217,14 +217,16 @@ void showPopUpSheet({
       return AnimatedPadding(
         padding: MediaQuery.of(context).viewInsets,
         duration: const Duration(milliseconds: 50),
-        child: Container(
-          height: (popupItems.length * 101).zR,
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-          child: ZegoLiveAudioRoomPopUpSheetMenu(
-            popupItems: popupItems,
-            innerText: innerText,
-            seatManager: seatManager,
-            connectManager: connectManager,
+        child: SafeArea(
+          child: Container(
+            height: (popupItems.length * 101).zR,
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            child: ZegoLiveAudioRoomPopUpSheetMenu(
+              popupItems: popupItems,
+              innerText: innerText,
+              seatManager: seatManager,
+              connectManager: connectManager,
+            ),
           ),
         ),
       );
