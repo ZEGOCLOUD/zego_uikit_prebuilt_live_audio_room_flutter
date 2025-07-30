@@ -219,7 +219,7 @@
 >
 > The background of chat message list items
 > If you set the [backgroundColor], the [opacity] setting will be overridden.
-> You can use `backgroundColor.withOpacity(0.5)` to set the opacity of the background color.
+> You can use `backgroundColor.withValues(alpha: 0.5)` to set the opacity of the background color.
 
 - int? `maxLines`: The max lines of chat message list items, default value is not limit.
 

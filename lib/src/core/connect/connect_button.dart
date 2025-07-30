@@ -149,7 +149,7 @@ class _ZegoLiveAudioRoomAudienceConnectButtonState
         }
       },
       clickableTextColor: Colors.white,
-      clickableBackgroundColor: const Color(0xff1E2740).withOpacity(0.4),
+      clickableBackgroundColor: const Color(0xff1E2740).withValues(alpha: 0.4),
     );
   }
 
@@ -179,7 +179,7 @@ class _ZegoLiveAudioRoomAudienceConnectButtonState
         );
       },
       clickableTextColor: Colors.white,
-      clickableBackgroundColor: const Color(0xff1E2740).withOpacity(0.4),
+      clickableBackgroundColor: const Color(0xff1E2740).withValues(alpha: 0.4),
     );
   }
 
