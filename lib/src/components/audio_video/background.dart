@@ -66,7 +66,7 @@ class _ZegoSeatForegroundState extends State<ZegoLiveAudioRoomSeatBackground> {
           height: seatIconWidth,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: const Color(0xffE6E6E6).withOpacity(0.5),
+            color: const Color(0xffE6E6E6).withValues(alpha: 0.5),
           ),
           child: ValueListenableBuilder<List<int>>(
             valueListenable: widget.seatManager.lockedSeatNotifier,

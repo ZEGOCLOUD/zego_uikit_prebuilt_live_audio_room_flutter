@@ -229,9 +229,9 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    const Color(0xFF00008B).withOpacity(0.5),
-                    const Color(0xFF800080).withOpacity(0.3),
-                    const Color(0xFF006400).withOpacity(0.5),
+                    const Color(0xFF00008B).withValues(alpha: 0.5),
+                    const Color(0xFF800080).withValues(alpha: 0.3),
+                    const Color(0xFF006400).withValues(alpha: 0.5),
                   ],
                   stops: const [0.3, 0.5, 0.9], // color ratio
                   begin: Alignment.topLeft,

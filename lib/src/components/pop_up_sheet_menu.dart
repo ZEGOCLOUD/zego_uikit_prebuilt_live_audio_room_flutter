@@ -153,7 +153,7 @@ class _ZegoLiveAudioRoomPopUpSheetMenuState
               : Border(
                   bottom: BorderSide(
                     width: 0.5,
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                   ),
                 ),
         ),

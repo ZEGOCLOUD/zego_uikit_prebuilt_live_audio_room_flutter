@@ -20,9 +20,9 @@ dependencies:
   zego_plugin_adapter: ^2.13.9
 
   flutter_styled_toast: ^2.2.1
-  cached_network_image: ^3.3.0
+  cached_network_image: ^3.4.1
   statemachine: ^3.3.1
-  permission_handler: ^11.3.1
+  permission_handler: ^12.0.1
   collection: ^1.18.0
   floating: ^6.0.0
 

@@ -424,7 +424,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
                 BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 5.0),
                   child: Container(
-                    color: Colors.black.withOpacity(0.8),
+                    color: Colors.black.withValues(alpha: 0.8),
                   ),
                 ),
             withCircleBorder: false,
