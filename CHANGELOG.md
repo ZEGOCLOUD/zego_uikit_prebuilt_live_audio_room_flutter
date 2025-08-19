@@ -1,3 +1,9 @@
+# 3.16.4
+
+- Features
+  - The location for generating iOS logs has been changed to the same directory as the Zego SDK, and the folder name has been changed to ZegoUIKits 
+- Update dependency
+
 ## 3.16.3
 
 - Bugs 
