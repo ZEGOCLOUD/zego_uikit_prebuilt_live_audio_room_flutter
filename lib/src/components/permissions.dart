@@ -25,13 +25,21 @@ Future<void> checkPermissions({
     await Permission.camera.status.then((status) async {
       if (status != PermissionStatus.granted) {
         if (isShowDialog) {
-          await showAppSettingsDialog(
-            context,
-            translationText.cameraPermissionSettingDialogInfo,
-            rootNavigator: rootNavigator,
-            kickOutNotifier: kickOutNotifier,
-            popUpManager: popUpManager,
-          );
+          if (context.mounted) {
+            await showAppSettingsDialog(
+              context,
+              translationText.cameraPermissionSettingDialogInfo,
+              rootNavigator: rootNavigator,
+              kickOutNotifier: kickOutNotifier,
+              popUpManager: popUpManager,
+            );
+          } else {
+            ZegoLoggerService.logInfo(
+              'show app settings dialog, context is not mounted',
+              tag: 'audio-room',
+              subTag: 'permissions',
+            );
+          }
         }
       }
     });
@@ -41,13 +49,21 @@ Future<void> checkPermissions({
     await Permission.microphone.status.then((status) async {
       if (status != PermissionStatus.granted) {
         if (isShowDialog) {
-          await showAppSettingsDialog(
-            context,
-            translationText.microphonePermissionSettingDialogInfo,
-            rootNavigator: rootNavigator,
-            kickOutNotifier: kickOutNotifier,
-            popUpManager: popUpManager,
-          );
+          if (context.mounted) {
+            await showAppSettingsDialog(
+              context,
+              translationText.microphonePermissionSettingDialogInfo,
+              rootNavigator: rootNavigator,
+              kickOutNotifier: kickOutNotifier,
+              popUpManager: popUpManager,
+            );
+          } else {
+            ZegoLoggerService.logInfo(
+              'show app settings dialog, context is not mounted',
+              tag: 'audio-room',
+              subTag: 'permissions',
+            );
+          }
         }
       }
     });
@@ -69,13 +85,21 @@ Future<void> requestPermissions({
     if (checkStatuses.contains(Permission.camera) &&
         statuses[Permission.camera] != PermissionStatus.granted) {
       if (isShowDialog) {
-        await showAppSettingsDialog(
-          context,
-          innerText.cameraPermissionSettingDialogInfo,
-          rootNavigator: rootNavigator,
-          kickOutNotifier: kickOutNotifier,
-          popUpManager: popUpManager,
-        );
+        if (context.mounted) {
+          await showAppSettingsDialog(
+            context,
+            innerText.cameraPermissionSettingDialogInfo,
+            rootNavigator: rootNavigator,
+            kickOutNotifier: kickOutNotifier,
+            popUpManager: popUpManager,
+          );
+        } else {
+          ZegoLoggerService.logInfo(
+            'requestPermissions, context not mounted',
+            tag: 'audio-room',
+            subTag: 'permissions',
+          );
+        }
       }
     }
 

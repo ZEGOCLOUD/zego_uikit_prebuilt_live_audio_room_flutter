@@ -572,32 +572,41 @@ class ZegoLiveAudioRoomControllerSeatAudienceImpl
         return false;
       }
 
-      return requestPermissions(
-        context: context,
-        isShowDialog: true,
-        innerText: private.seatManager?.innerText ??
-            ZegoUIKitPrebuiltLiveAudioRoomInnerText(),
-        rootNavigator: rootNavigator,
-        kickOutNotifier: ZegoLiveAudioRoomManagers().kickOutNotifier,
-        popUpManager: ZegoLiveAudioRoomManagers().popUpManager,
-      ).then((_) async {
-        /// agree host's host, take seat, find the nearest seat index
-        return await private.seatManager
-                ?.takeOnSeat(
-              private.seatManager?.getNearestEmptyIndex() ?? -1,
-              ignoreLocked: true,
-              isForce: true,
-              isDeleteAfterOwnerLeft: true,
-            )
-                .then((result) async {
-              if (result) {
-                ZegoUIKit().turnMicrophoneOn(true);
-              }
+      if (context.mounted) {
+        return requestPermissions(
+          context: context,
+          isShowDialog: true,
+          innerText: private.seatManager?.innerText ??
+              ZegoUIKitPrebuiltLiveAudioRoomInnerText(),
+          rootNavigator: rootNavigator,
+          kickOutNotifier: ZegoLiveAudioRoomManagers().kickOutNotifier,
+          popUpManager: ZegoLiveAudioRoomManagers().popUpManager,
+        ).then((_) async {
+          /// agree host's host, take seat, find the nearest seat index
+          return await private.seatManager
+                  ?.takeOnSeat(
+                private.seatManager?.getNearestEmptyIndex() ?? -1,
+                ignoreLocked: true,
+                isForce: true,
+                isDeleteAfterOwnerLeft: true,
+              )
+                  .then((result) async {
+                if (result) {
+                  ZegoUIKit().turnMicrophoneOn(true);
+                }
 
-              return result;
-            }) ??
-            false;
-      });
+                return result;
+              }) ??
+              false;
+        });
+      } else {
+        ZegoLoggerService.logInfo(
+          'acceptTakingInvitation, context is not mounted',
+          tag: 'audio-room',
+          subTag: 'controller.seat',
+        );
+        return false;
+      }
     });
   }
 }

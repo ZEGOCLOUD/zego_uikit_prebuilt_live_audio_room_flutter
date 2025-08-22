@@ -106,7 +106,7 @@ class ZegoLiveAudioRoomControllerSeatMicrophoneMuteStateImpl {
   /// notifiers
   List<ValueNotifier<bool>> microphoneMuteStateNotifiers = [];
 
-  /// <user id, notifier>
+  /// user id to notifier mapping
   Map<String, ValueNotifier<bool>> microphoneMuteStateNotifierMap = {};
 
   ZegoLiveAudioRoomSeatManager? seatManager;

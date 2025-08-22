@@ -44,7 +44,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniPopScopeState
         return PopScope(
           /// Don't pop current widget directly when in minimizing
           canPop: false,
-          onPopInvoked: (didPop) {
+          onPopInvokedWithResult: (didPop, Object? result) async {
             if (didPop) {
               return;
             }
@@ -55,9 +55,11 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniPopScopeState
               }
 
               /// not pop if in minimizing
-              return;
+              // Prevent the default pop-up behavior in the minimized state
+              // Prevent popping by not calling Navigator.pop()
             } else {
               onPopInvoked(isMinimizing);
+              // Allows pop-up when not in minimized state
             }
           },
           child: widget.child,

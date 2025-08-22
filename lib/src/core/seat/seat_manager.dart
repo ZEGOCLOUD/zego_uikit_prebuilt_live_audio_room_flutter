@@ -132,7 +132,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
   ValueNotifier<Map<String, String>> seatsUserMapNotifier =
       ValueNotifier<Map<String, String>>({}); //  <seat id, user id>
 
-  void updateSeatsUserMap(value) {
+  void updateSeatsUserMap(Map<String, String> value) {
     const equality = DeepCollectionEquality();
     if (equality.equals(seatsUserMapNotifier.value, value)) {
       /// avoid causing value notify when map values if equal
