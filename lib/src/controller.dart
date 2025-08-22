@@ -82,7 +82,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomController
         ZegoLiveAudioRoomControllerUser {
   factory ZegoUIKitPrebuiltLiveAudioRoomController() => instance;
 
-  String get version => "3.16.3";
+  String get version => "3.16.4";
 
   /// This function is used to end the Live Audio Room.
   ///
