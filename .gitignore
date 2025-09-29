@@ -23,3 +23,7 @@ doc/api/
 Podfile.lock
 pubspec_overrides.yaml
 melos*.iml
+
+android/.gradle/
+local.properties
+ios/Flutter/
