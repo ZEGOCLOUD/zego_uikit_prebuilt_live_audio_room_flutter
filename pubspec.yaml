@@ -37,6 +37,13 @@ dev_dependencies:
 flutter:
   assets:
     - assets/icons/
+  plugin:
+    platforms:
+      android:
+        package: com.zegocloud.uikit.prebuilt_live_audio_room
+        pluginClass: ZegoUIKitPrebuiltLiveAudioRoomPlugin
+      ios:
+        pluginClass: ZegoUIKitPrebuiltLiveAudioRoomPlugin
 
 topics:
   - audio
