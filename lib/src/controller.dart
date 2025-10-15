@@ -42,6 +42,8 @@ part 'controller/minimize.dart';
 
 part 'controller/pip.dart';
 
+part 'controller/log.dart';
+
 part 'controller/room.dart';
 
 part 'controller/user.dart';
@@ -79,6 +81,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomController
         ZegoLiveAudioRoomControllerSeat,
         ZegoLiveAudioRoomControllerAudioVideo,
         ZegoLiveAudioRoomControllerRoom,
+        ZegoLiveAudioRoomControllerLog,
         ZegoLiveAudioRoomControllerUser {
   factory ZegoUIKitPrebuiltLiveAudioRoomController() => instance;
 
