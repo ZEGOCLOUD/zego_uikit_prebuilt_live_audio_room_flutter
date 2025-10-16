@@ -42,6 +42,8 @@ part 'controller/minimize.dart';
 
 part 'controller/pip.dart';
 
+part 'controller/log.dart';
+
 part 'controller/room.dart';
 
 part 'controller/user.dart';
@@ -79,10 +81,11 @@ class ZegoUIKitPrebuiltLiveAudioRoomController
         ZegoLiveAudioRoomControllerSeat,
         ZegoLiveAudioRoomControllerAudioVideo,
         ZegoLiveAudioRoomControllerRoom,
+        ZegoLiveAudioRoomControllerLog,
         ZegoLiveAudioRoomControllerUser {
   factory ZegoUIKitPrebuiltLiveAudioRoomController() => instance;
 
-  String get version => "3.16.6";
+  String get version => "3.16.7";
 
   /// This function is used to end the Live Audio Room.
   ///

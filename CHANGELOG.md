@@ -1,3 +1,7 @@
+## 3.16.7
+
+- Features
+  - Support export log by `ZegoUIKitPrebuiltLiveStreamingController().log.export()`
 
 ## 3.16.6
 
