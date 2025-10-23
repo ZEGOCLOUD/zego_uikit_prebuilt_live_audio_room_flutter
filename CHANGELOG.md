@@ -1,3 +1,9 @@
+
+
+## 3.16.8
+
+- Update dependency
+
 ## 3.16.7
 
 - Features
