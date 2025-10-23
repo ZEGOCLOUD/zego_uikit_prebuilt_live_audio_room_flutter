@@ -121,6 +121,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     super.initState();
 
     ZegoUIKit().reporter().create(
+      userID: widget.userID,
       appID: widget.appID,
       signOrToken: widget.appSign.isNotEmpty ? widget.appSign : widget.token,
       params: {
