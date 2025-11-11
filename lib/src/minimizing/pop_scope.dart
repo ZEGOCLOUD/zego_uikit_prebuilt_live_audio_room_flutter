@@ -10,11 +10,11 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 /// When minimizing, it is not allowed to directly return to the previous page, otherwise the page will be destroyed
 class ZegoUIKitPrebuiltLiveAudioRoomMiniPopScope extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveAudioRoomMiniPopScope({
-    Key? key,
+    super.key,
     required this.child,
     this.canPop = false,
     this.onPopInvoked,
-  }) : super(key: key);
+  });
 
   /// The widget below this widget in the tree.
   final Widget child;

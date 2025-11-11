@@ -22,6 +22,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 /// @nodoc
 class ZegoLiveAudioRoomConnectManager {
   ZegoLiveAudioRoomConnectManager({
+    required this.liveID,
     required this.config,
     required this.events,
     required this.seatManager,
@@ -33,6 +34,7 @@ class ZegoLiveAudioRoomConnectManager {
     listenStream();
   }
 
+  final String liveID;
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
   final ZegoUIKitPrebuiltLiveAudioRoomEvents events;
   final ZegoLiveAudioRoomSeatManager seatManager;
@@ -78,8 +80,9 @@ class ZegoLiveAudioRoomConnectManager {
       subTag: 'connect manager',
     );
 
-    _subscriptions
-        .add(ZegoUIKit().getUserLeaveStream().listen(onUserListLeaveUpdated));
+    _subscriptions.add(ZegoUIKit()
+        .getUserLeaveStream(targetRoomID: liveID)
+        .listen(onUserListLeaveUpdated));
   }
 
   void uninit() {
@@ -358,7 +361,7 @@ class ZegoLiveAudioRoomConnectManager {
             )
                 .then((result) {
               if (result) {
-                ZegoUIKit().turnMicrophoneOn(true);
+                ZegoUIKit().turnMicrophoneOn(targetRoomID: liveID, true);
               } else {
                 events.seat.audience?.onTakingFailed?.call();
               }
@@ -438,7 +441,7 @@ class ZegoLiveAudioRoomConnectManager {
           );
 
           if (result) {
-            ZegoUIKit().turnMicrophoneOn(true);
+            ZegoUIKit().turnMicrophoneOn(targetRoomID: liveID, true);
           } else {
             events.seat.audience?.onTakingFailed?.call();
             updateAudienceConnectState(ZegoLiveAudioRoomConnectState.idle);
@@ -493,7 +496,7 @@ class ZegoLiveAudioRoomConnectManager {
       events.seat.host?.onTakingInvitationRejected?.call(invitee);
 
       showDebugToast(
-          'Your request to take seat has been refused by ${ZegoUIKit().getUser(invitee.id).name}');
+          'Your request to take seat has been refused by ${ZegoUIKit().getUser(targetRoomID: liveID, invitee.id).name}');
     } else {
       /// audience's request is rejected by host
       events.seat.audience?.onTakingRequestRejected?.call();
@@ -577,7 +580,7 @@ class ZegoLiveAudioRoomConnectManager {
       case ZegoLiveAudioRoomConnectState.idle:
         ZegoUIKit().resetSoundEffect();
 
-        ZegoUIKit().turnMicrophoneOn(false);
+        ZegoUIKit().turnMicrophoneOn(targetRoomID: liveID, false);
 
         /// hide invite join take seat dialog
         if (_isInvitedTakeSeatDlgVisible) {
@@ -592,7 +595,7 @@ class ZegoLiveAudioRoomConnectManager {
       case ZegoLiveAudioRoomConnectState.connecting:
         break;
       case ZegoLiveAudioRoomConnectState.connected:
-        ZegoUIKit().turnMicrophoneOn(true);
+        ZegoUIKit().turnMicrophoneOn(targetRoomID: liveID, true);
         break;
     }
 

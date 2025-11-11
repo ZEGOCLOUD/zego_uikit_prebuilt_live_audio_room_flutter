@@ -27,6 +27,8 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/style.dart';
 
 /// @nodoc
 class ZegoLiveAudioRoomBottomBar extends StatefulWidget {
+  final String liveID;
+
   final Size buttonSize;
   final double height;
 
@@ -49,7 +51,8 @@ class ZegoLiveAudioRoomBottomBar extends StatefulWidget {
   final ZegoUIKitPrebuiltLiveAudioRoomMinimizeData minimizeData;
 
   const ZegoLiveAudioRoomBottomBar({
-    Key? key,
+    super.key,
+    required this.liveID,
     required this.config,
     required this.style,
     required this.events,
@@ -64,7 +67,7 @@ class ZegoLiveAudioRoomBottomBar extends StatefulWidget {
     required this.buttonSize,
     required this.minimizeData,
     this.avatarBuilder,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoLiveAudioRoomBottomBar> createState() =>
@@ -112,6 +115,7 @@ class _ZegoLiveAudioRoomBottomBarState
                   Opacity(
                     opacity: widget.style.opacity,
                     child: ZegoLiveAudioRoomInRoomMessageInputBoardButton(
+                      liveID: widget.liveID,
                       innerText: widget.config.innerText,
                       rootNavigator: widget.config.rootNavigator,
                       onSheetPopUp: (int key) {
@@ -188,7 +192,10 @@ class _ZegoLiveAudioRoomBottomBarState
             ? () {
                 /// if is minimizing, take the local device state
                 return ZegoUIKit()
-                    .getMicrophoneStateNotifier(ZegoUIKit().getLocalUser().id)
+                    .getMicrophoneStateNotifier(
+                      targetRoomID: widget.liveID,
+                      ZegoUIKit().getLocalUser().id,
+                    )
                     .value;
               }
             : null,
@@ -215,7 +222,9 @@ class _ZegoLiveAudioRoomBottomBarState
                     microphoneDefaultValueFunc: () {
                       return ZegoUIKit()
                           .getMicrophoneStateNotifier(
-                              ZegoUIKit().getLocalUser().id)
+                            targetRoomID: widget.liveID,
+                            ZegoUIKit().getLocalUser().id,
+                          )
                           .value;
                     },
                   ),
@@ -332,6 +341,7 @@ class _ZegoLiveAudioRoomBottomBarState
     switch (type) {
       case ZegoLiveAudioRoomMenuBarButtonName.showMemberListButton:
         return ZegoLiveAudioRoomMemberButton(
+          liveID: widget.liveID,
           buttonSize: buttonSize,
           iconSize: iconSize,
           icon: ButtonIcon(
@@ -363,6 +373,7 @@ class _ZegoLiveAudioRoomBottomBarState
             microphoneDefaultValueFunc?.call() ?? microphoneDefaultOn;
 
         return ZegoToggleMicrophoneButton(
+          roomID: widget.liveID,
           buttonSize: buttonSize,
           iconSize: iconSize,
           normalIcon: ButtonIcon(
@@ -380,6 +391,7 @@ class _ZegoLiveAudioRoomBottomBarState
         );
       case ZegoLiveAudioRoomMenuBarButtonName.leaveButton:
         return ZegoLiveAudioRoomLeaveButton(
+          liveID: widget.liveID,
           buttonSize: buttonSize,
           iconSize: iconSize,
           icon: ButtonIcon(

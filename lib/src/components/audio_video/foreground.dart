@@ -23,6 +23,8 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 
 /// @nodoc
 class ZegoLiveAudioRoomSeatForeground extends StatefulWidget {
+  final String liveID;
+
   final Size size;
   final ZegoUIKitUser? user;
   final Map<String, dynamic> extraInfo;
@@ -35,17 +37,18 @@ class ZegoLiveAudioRoomSeatForeground extends StatefulWidget {
   final ZegoUIKitPrebuiltLiveAudioRoomController? prebuiltController;
 
   const ZegoLiveAudioRoomSeatForeground({
-    Key? key,
-    this.user,
-    this.extraInfo = const {},
-    this.prebuiltController,
+    super.key,
+    required this.liveID,
     required this.size,
     required this.seatManager,
     required this.connectManager,
     required this.popUpManager,
     required this.config,
     required this.events,
-  }) : super(key: key);
+    this.user,
+    this.extraInfo = const {},
+    this.prebuiltController,
+  });
 
   @override
   State<ZegoLiveAudioRoomSeatForeground> createState() =>
@@ -64,7 +67,7 @@ class _ZegoLiveAudioRoomSeatForegroundState
         child: foreground(
           context,
           widget.size,
-          ZegoUIKit().getUser(widget.user?.id ?? ''),
+          widget.user,
           widget.extraInfo,
         ),
       ),
@@ -80,7 +83,10 @@ class _ZegoLiveAudioRoomSeatForegroundState
     final customForeground = widget.config.seat.foregroundBuilder?.call(
       context,
       widget.size,
-      ZegoUIKit().getUser(widget.user?.id ?? ''),
+      ZegoUIKit().getUser(
+        targetRoomID: widget.liveID,
+        widget.user?.id ?? '',
+      ),
       widget.extraInfo,
     );
 
@@ -287,6 +293,7 @@ class _ZegoLiveAudioRoomSeatForegroundState
 
     showPopUpSheet(
       context: context,
+      liveID: widget.liveID,
       userID: widget.user?.id ?? '',
       popupItems: popupItems,
       seatManager: widget.seatManager,

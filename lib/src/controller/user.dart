@@ -22,6 +22,9 @@ class ZegoLiveAudioRoomControllerUserImpl
       subTag: 'controller.user',
     );
 
-    return ZegoUIKit().removeUserFromRoom(userIDs);
+    return ZegoUIKit().removeUserFromRoom(
+      targetRoomID: ZegoUIKitPrebuiltLiveAudioRoomController().private.liveID,
+      userIDs,
+    );
   }
 }

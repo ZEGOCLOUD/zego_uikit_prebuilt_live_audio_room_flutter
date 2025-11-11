@@ -21,7 +21,7 @@ class ZegoLiveAudioRoomPlugins {
     required this.token,
     required this.userID,
     required this.userName,
-    required this.roomID,
+    required this.liveID,
     required this.plugins,
     required this.signalingPluginConfig,
     this.onPluginReLogin,
@@ -37,7 +37,7 @@ class ZegoLiveAudioRoomPlugins {
   final String userID;
   final String userName;
 
-  final String roomID;
+  final String liveID;
 
   final List<IZegoUIKitPlugin> plugins;
 
@@ -169,7 +169,7 @@ class ZegoLiveAudioRoomPlugins {
       subTag: 'plugin',
     );
 
-    return ZegoUIKit().getSignalingPlugin().joinRoom(roomID).then((result) {
+    return ZegoUIKit().getSignalingPlugin().joinRoom(liveID).then((result) {
       ZegoLoggerService.logInfo(
         'plugins login room result: $result',
         tag: 'audio-room',

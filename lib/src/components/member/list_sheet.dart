@@ -25,17 +25,20 @@ typedef ZegoLiveAudioRoomMemberListSheetMoreButtonPressed = void Function(
 /// @nodoc
 class ZegoLiveAudioRoomMemberListSheet extends StatefulWidget {
   const ZegoLiveAudioRoomMemberListSheet({
-    Key? key,
-    this.avatarBuilder,
-    this.itemBuilder,
-    this.hiddenUserIDsNotifier,
+    super.key,
+    required this.liveID,
     required this.isPluginEnabled,
     required this.seatManager,
     required this.connectManager,
     required this.innerText,
     required this.onMoreButtonPressed,
     required this.popUpManager,
-  }) : super(key: key);
+    this.avatarBuilder,
+    this.itemBuilder,
+    this.hiddenUserIDsNotifier,
+  });
+
+  final String liveID;
 
   final bool isPluginEnabled;
   final ZegoLiveAudioRoomSeatManager seatManager;
@@ -103,6 +106,7 @@ class _ZegoLiveAudioRoomMemberListSheetState
             widget.hiddenUserIDsNotifier ?? ValueNotifier<List<String>>([]),
         builder: (context, hiddenUserIDs, _) {
           return ZegoMemberList(
+            roomID: widget.liveID,
             showCameraState: false,
             showMicrophoneState: false,
             hiddenUserIDs: hiddenUserIDs,
@@ -167,7 +171,10 @@ class _ZegoLiveAudioRoomMemberListSheetState
                 ) {
                   return ValueListenableBuilder<Map<String, String>>(
                       valueListenable:
-                          ZegoUIKit().getInRoomUserAttributesNotifier(user.id),
+                          ZegoUIKit().getInRoomUserAttributesNotifier(
+                        targetRoomID: widget.liveID,
+                        user.id,
+                      ),
                       builder: (context, _, __) {
                         return GestureDetector(
                           onTap: () {
@@ -221,10 +228,12 @@ class _ZegoLiveAudioRoomMemberListSheetState
           ),
           SizedBox(width: 10.zR),
           StreamBuilder<List<ZegoUIKitUser>>(
-              stream: ZegoUIKit().getUserListStream(),
+              stream: ZegoUIKit().getUserListStream(
+                targetRoomID: widget.liveID,
+              ),
               builder: (context, snapshot) {
                 return Text(
-                  '${widget.innerText.memberListTitle} (${ZegoUIKit().getAllUsers().length})',
+                  '${widget.innerText.memberListTitle} (${ZegoUIKit().getAllUsers(targetRoomID: widget.liveID).length})',
                   style: TextStyle(
                     fontSize: 36.0.zR,
                     color: const Color(0xffffffff),
@@ -436,6 +445,7 @@ class _ZegoLiveAudioRoomMemberListSheetState
         if (popupItems.isNotEmpty) {
           showPopUpSheet(
             context: context,
+            liveID: widget.liveID,
             userID: user.id,
             popupItems: popupItems,
             seatManager: widget.seatManager,
@@ -489,6 +499,7 @@ class _ZegoLiveAudioRoomMemberListSheetState
 void showMemberListSheet({
   ZegoAvatarBuilder? avatarBuilder,
   ZegoMemberListItemBuilder? itemBuilder,
+  required String liveID,
   required bool isPluginEnabled,
   required BuildContext context,
   required ZegoLiveAudioRoomSeatManager seatManager,
@@ -524,6 +535,7 @@ void showMemberListSheet({
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
               child: ZegoLiveAudioRoomMemberListSheet(
+                liveID: liveID,
                 avatarBuilder: avatarBuilder,
                 itemBuilder: itemBuilder,
                 isPluginEnabled: isPluginEnabled,

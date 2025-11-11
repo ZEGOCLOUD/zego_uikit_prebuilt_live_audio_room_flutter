@@ -21,13 +21,13 @@ class ZegoLiveAudioRoomColoredText extends StatelessWidget {
   final double horizontalPadding;
 
   const ZegoLiveAudioRoomColoredText({
-    Key? key,
+    super.key,
     required this.text,
     required this.backgroundColor,
     this.fontSize,
     this.verticalPadding = 0.0,
     this.horizontalPadding = 0.0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -76,12 +76,12 @@ class LiveDurationTimeBoard extends StatefulWidget {
   final double? fontSize;
 
   const LiveDurationTimeBoard({
-    Key? key,
+    super.key,
     required this.config,
     required this.events,
     required this.manager,
     this.fontSize,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _CallDurationTimeBoardState();

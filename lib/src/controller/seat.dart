@@ -102,8 +102,10 @@ class ZegoLiveAudioRoomControllerSeatImpl
     int targetIndex, {
     bool isLocally = false,
   }) {
-    final targetUser = ZegoUIKit()
-        .getUser(private.seatManager?.getUserByIndex(targetIndex)?.id ?? '');
+    final targetUser = ZegoUIKit().getUser(
+      targetRoomID: ZegoUIKitPrebuiltLiveAudioRoomController().private.liveID,
+      private.seatManager?.getUserByIndex(targetIndex)?.id ?? '',
+    );
     if (targetUser.isEmpty()) {
       return ValueNotifier<bool>(false);
     }
@@ -151,7 +153,11 @@ class ZegoLiveAudioRoomControllerSeatImpl
 
     final targetUserID =
         private.seatManager?.getUserByIndex(targetIndex)?.id ?? '';
-    return await ZegoUIKit().muteUserAudio(targetUserID, muted);
+    return await ZegoUIKit().muteUserAudio(
+      targetRoomID: ZegoUIKitPrebuiltLiveAudioRoomController().private.liveID,
+      targetUserID,
+      muted,
+    );
   }
 
   /// Mute the seat by [targetUserID] **locally**.
@@ -190,7 +196,11 @@ class ZegoLiveAudioRoomControllerSeatImpl
       subTag: 'controller.seat',
     );
 
-    return await ZegoUIKit().muteUserAudio(targetUserID, muted);
+    return await ZegoUIKit().muteUserAudio(
+      targetRoomID: ZegoUIKitPrebuiltLiveAudioRoomController().private.liveID,
+      targetUserID,
+      muted,
+    );
   }
 }
 
@@ -279,8 +289,11 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
         subTag: 'controller.seat',
       );
       if (result.error == null) {
-        private.connectManager
-            ?.removeRequestCoHostUsers(ZegoUIKit().getUser(audienceUserID));
+        private.connectManager?.removeRequestCoHostUsers(ZegoUIKit().getUser(
+          targetRoomID:
+              ZegoUIKitPrebuiltLiveAudioRoomController().private.liveID,
+          audienceUserID,
+        ));
       } else {
         ZegoLoggerService.logInfo(
           'acceptTakingRequest, error:${result.error}',
@@ -318,8 +331,11 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
       );
 
       if (result.error == null) {
-        private.connectManager
-            ?.removeRequestCoHostUsers(ZegoUIKit().getUser(audienceUserID));
+        private.connectManager?.removeRequestCoHostUsers(ZegoUIKit().getUser(
+          targetRoomID:
+              ZegoUIKitPrebuiltLiveAudioRoomController().private.liveID,
+          audienceUserID,
+        ));
       } else {
         ZegoLoggerService.logInfo(
           'rejectTakingRequest error:${result.error}',
@@ -344,7 +360,11 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
     );
 
     return await private.connectManager
-            ?.inviteAudienceConnect(ZegoUIKit().getUser(userID)) ??
+            ?.inviteAudienceConnect(ZegoUIKit().getUser(
+          targetRoomID:
+              ZegoUIKitPrebuiltLiveAudioRoomController().private.liveID,
+          userID,
+        )) ??
         false;
   }
 
@@ -426,7 +446,7 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
     required ZegoUIKitUser targetUser,
   }) async {
     return await private.seatManager?.assignCoHost(
-          roomID: roomID,
+          liveID: roomID,
           targetUser: targetUser,
         ) ??
         false;
@@ -592,7 +612,12 @@ class ZegoLiveAudioRoomControllerSeatAudienceImpl
               )
                   .then((result) async {
                 if (result) {
-                  ZegoUIKit().turnMicrophoneOn(true);
+                  ZegoUIKit().turnMicrophoneOn(
+                    targetRoomID: ZegoUIKitPrebuiltLiveAudioRoomController()
+                        .private
+                        .liveID,
+                    true,
+                  );
                 }
 
                 return result;

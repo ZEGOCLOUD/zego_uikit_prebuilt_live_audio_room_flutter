@@ -25,7 +25,7 @@ class ZegoLiveAudioRoomSoundEffectButton extends StatefulWidget {
   final ZegoLiveAudioRoomPopUpManager popUpManager;
 
   const ZegoLiveAudioRoomSoundEffectButton({
-    Key? key,
+    super.key,
     required this.innerText,
     required this.voiceChangeEffect,
     required this.reverbEffect,
@@ -34,7 +34,7 @@ class ZegoLiveAudioRoomSoundEffectButton extends StatefulWidget {
     this.iconSize,
     this.buttonSize,
     this.icon,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoLiveAudioRoomSoundEffectButton> createState() =>

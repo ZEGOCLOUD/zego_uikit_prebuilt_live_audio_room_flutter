@@ -4,8 +4,13 @@ part of 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.
 mixin ZegoLiveSeatCoHost {
   ValueNotifier<List<String>> coHostsNotifier = ValueNotifier<List<String>>([]);
 
-  bool haveCoHost() {
-    return -1 != ZegoUIKit().getAllUsers().indexWhere((user) => isCoHost(user));
+  bool haveCoHost({
+    required String liveID,
+  }) {
+    return -1 !=
+        ZegoUIKit()
+            .getAllUsers(targetRoomID: liveID)
+            .indexWhere((user) => isCoHost(user));
   }
 
   bool isCoHost(ZegoUIKitUser? user) {
@@ -56,7 +61,7 @@ mixin ZegoLiveSeatCoHost {
   }
 
   Future<bool> assignCoHost({
-    required String roomID,
+    required String liveID,
     required ZegoUIKitUser targetUser,
   }) async {
     ZegoLoggerService.logInfo(
@@ -73,7 +78,7 @@ mixin ZegoLiveSeatCoHost {
       );
     }
 
-    ZegoUIKit().getAllUsers().forEach((user) async {
+    ZegoUIKit().getAllUsers(targetRoomID: liveID).forEach((user) async {
       if (isCoHost(user)) {
         ZegoLoggerService.logInfo(
           'target user($user) is co-host before, co-host is unique, so revoke this co-host now',
@@ -81,12 +86,12 @@ mixin ZegoLiveSeatCoHost {
           subTag: 'connect manager',
         );
 
-        await revokeCoHost(roomID: roomID, targetUser: user);
+        await revokeCoHost(roomID: liveID, targetUser: user);
       }
     });
 
     return setCoHostAttribute(
-      roomID: roomID,
+      roomID: liveID,
       targetUserID: targetUser.id,
       isCoHost: true,
     );

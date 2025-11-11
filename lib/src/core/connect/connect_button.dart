@@ -17,11 +17,11 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 /// @nodoc
 class ZegoLiveAudioRoomAudienceConnectButton extends StatefulWidget {
   const ZegoLiveAudioRoomAudienceConnectButton({
-    Key? key,
+    super.key,
     required this.seatManager,
     required this.connectManager,
     required this.innerText,
-  }) : super(key: key);
+  });
   final ZegoLiveAudioRoomSeatManager seatManager;
   final ZegoLiveAudioRoomConnectManager connectManager;
   final ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText;

@@ -23,14 +23,14 @@ class ZegoLiveAudioRoomSoundEffectSheet extends StatefulWidget {
   final bool rootNavigator;
 
   const ZegoLiveAudioRoomSoundEffectSheet({
-    Key? key,
+    super.key,
     required this.innerText,
     required this.voiceChangerEffect,
     required this.voiceChangerSelectedIDNotifier,
     required this.reverbEffect,
     required this.reverbSelectedIDNotifier,
     this.rootNavigator = false,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoLiveAudioRoomSoundEffectSheet> createState() =>

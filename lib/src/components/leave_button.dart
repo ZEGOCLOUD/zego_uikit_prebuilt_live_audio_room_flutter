@@ -14,6 +14,8 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/defines.dart'
 
 /// @nodoc
 class ZegoLiveAudioRoomLeaveButton extends StatefulWidget {
+  final String liveID;
+
   final ButtonIcon? icon;
 
   /// the size of button's icon
@@ -32,7 +34,8 @@ class ZegoLiveAudioRoomLeaveButton extends StatefulWidget {
   ) defaultLeaveConfirmationAction;
 
   const ZegoLiveAudioRoomLeaveButton({
-    Key? key,
+    super.key,
+    required this.liveID,
     required this.seatManager,
     required this.config,
     required this.events,
@@ -41,7 +44,7 @@ class ZegoLiveAudioRoomLeaveButton extends StatefulWidget {
     this.icon,
     this.iconSize,
     this.buttonSize,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoLiveAudioRoomLeaveButton> createState() =>
@@ -53,6 +56,7 @@ class _ZegoLiveAudioRoomLeaveButtonState
   @override
   Widget build(BuildContext context) {
     return ZegoLeaveButton(
+      roomID: widget.liveID,
       buttonSize: widget.buttonSize,
       iconSize: widget.iconSize,
       icon: widget.icon ??

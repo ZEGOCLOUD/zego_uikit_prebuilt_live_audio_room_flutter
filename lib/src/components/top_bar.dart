@@ -22,6 +22,8 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/style.dart';
 
 /// @nodoc
 class ZegoLiveAudioRoomTopBar extends StatefulWidget {
+  final String liveID;
+
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
   final ZegoUIKitPrebuiltLiveAudioRoomStyle style;
   final ZegoUIKitPrebuiltLiveAudioRoomEvents events;
@@ -41,7 +43,8 @@ class ZegoLiveAudioRoomTopBar extends StatefulWidget {
   final ZegoAvatarBuilder? avatarBuilder;
 
   const ZegoLiveAudioRoomTopBar({
-    Key? key,
+    super.key,
+    required this.liveID,
     required this.config,
     required this.style,
     required this.events,
@@ -54,7 +57,7 @@ class ZegoLiveAudioRoomTopBar extends StatefulWidget {
     required this.prebuiltController,
     required this.isPluginEnabled,
     this.avatarBuilder,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoLiveAudioRoomTopBar> createState() =>
@@ -126,6 +129,7 @@ class _ZegoLiveAudioRoomTopBarState extends State<ZegoLiveAudioRoomTopBar> {
         ? [
             buttonWrapper(
               ZegoLiveAudioRoomMemberButton(
+                liveID: widget.liveID,
                 buttonSize: Size(52.zR, 52.zR),
                 iconSize: Size(24.zR, 24.zR),
                 icon: ButtonIcon(
@@ -159,6 +163,7 @@ class _ZegoLiveAudioRoomTopBarState extends State<ZegoLiveAudioRoomTopBar> {
 
     return buttonWrapper(
       ZegoLiveAudioRoomLeaveButton(
+        liveID: widget.liveID,
         buttonSize: Size(52.zR, 52.zR),
         iconSize: Size(24.zR, 24.zR),
         icon: ButtonIcon(

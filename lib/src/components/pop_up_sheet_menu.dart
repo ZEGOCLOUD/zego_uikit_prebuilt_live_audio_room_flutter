@@ -17,13 +17,16 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 /// @nodoc
 class ZegoLiveAudioRoomPopUpSheetMenu extends StatefulWidget {
   const ZegoLiveAudioRoomPopUpSheetMenu({
-    Key? key,
+    super.key,
+    required this.liveID,
     required this.popupItems,
     required this.innerText,
     required this.seatManager,
     required this.connectManager,
     this.onPressed,
-  }) : super(key: key);
+  });
+
+  final String liveID;
 
   final List<ZegoLiveAudioRoomPopupItem> popupItems;
   final ZegoLiveAudioRoomSeatManager seatManager;
@@ -117,19 +120,28 @@ class _ZegoLiveAudioRoomPopUpSheetMenuState
         } else if (ZegoLiveAudioRoomPopupItemValue.inviteLink.index ==
             popupItem.index) {
           await widget.connectManager.inviteAudienceConnect(
-            ZegoUIKit().getUser(popupItem.data as String? ?? ''),
+            ZegoUIKit().getUser(
+              targetRoomID: widget.liveID,
+              popupItem.data as String? ?? '',
+            ),
           );
         } else if (ZegoLiveAudioRoomPopupItemValue.assignCoHost.index ==
             popupItem.index) {
           await widget.seatManager.assignCoHost(
-            roomID: widget.seatManager.roomID,
-            targetUser: ZegoUIKit().getUser(popupItem.data as String? ?? ''),
+            liveID: widget.liveID,
+            targetUser: ZegoUIKit().getUser(
+              targetRoomID: widget.liveID,
+              popupItem.data as String? ?? '',
+            ),
           );
         } else if (ZegoLiveAudioRoomPopupItemValue.revokeCoHost.index ==
             popupItem.index) {
           await widget.seatManager.revokeCoHost(
-            roomID: widget.seatManager.roomID,
-            targetUser: ZegoUIKit().getUser(popupItem.data as String? ?? ''),
+            roomID: widget.liveID,
+            targetUser: ZegoUIKit().getUser(
+              targetRoomID: widget.liveID,
+              popupItem.data as String? ?? '',
+            ),
           );
         } else if (ZegoLiveAudioRoomPopupItemValue.cancel.index ==
             popupItem.index) {
@@ -173,6 +185,7 @@ class _ZegoLiveAudioRoomPopUpSheetMenuState
 }
 
 void showPopUpSheet({
+  required String liveID,
   required String userID,
   required BuildContext context,
   required List<ZegoLiveAudioRoomPopupItem> popupItems,
@@ -222,6 +235,7 @@ void showPopUpSheet({
             height: (popupItems.length * 101).zR,
             padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             child: ZegoLiveAudioRoomPopUpSheetMenu(
+              liveID: liveID,
               popupItems: popupItems,
               innerText: innerText,
               seatManager: seatManager,

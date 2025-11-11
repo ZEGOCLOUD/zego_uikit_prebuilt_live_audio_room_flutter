@@ -25,7 +25,7 @@ class ZegoLiveAudioRoomControllerRoomPrivateImpl {
     required ZegoLiveAudioRoomSeatManager? seatManager,
   }) {
     ZegoLoggerService.logInfo(
-      'init by prebuilt',
+      'init by prebuilt, ',
       tag: 'audio-room',
       subTag: 'controller.room.p',
     );
@@ -126,7 +126,14 @@ class ZegoLiveAudioRoomControllerRoomPrivateImpl {
       await ZegoUIKit().resetBeautyEffect();
     }
 
-    final result = await ZegoUIKit().leaveRoom().then((result) {
+    final result = await ZegoUIKit()
+        .leaveRoom(
+      targetRoomID:
+          ZegoUIKitPrebuiltLiveAudioRoomController().private.liveID.isEmpty
+              ? ZegoUIKit().getCurrentRoom().id
+              : ZegoUIKitPrebuiltLiveAudioRoomController().private.liveID,
+    )
+        .then((result) {
       ZegoLoggerService.logInfo(
         'leave, leave room result, ${result.errorCode} ${result.extendedData}',
         tag: 'audio-room',

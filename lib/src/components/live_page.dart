@@ -36,7 +36,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/style.dart';
 /// user and sdk should be login and init before page enter
 class ZegoLiveAudioRoomPage extends StatefulWidget {
   const ZegoLiveAudioRoomPage({
-    Key? key,
+    super.key,
     this.prebuiltController,
     required this.appID,
     required this.appSign,
@@ -54,7 +54,7 @@ class ZegoLiveAudioRoomPage extends StatefulWidget {
     required this.liveDurationManager,
     required this.minimizeData,
     this.plugins,
-  }) : super(key: key);
+  });
 
   final int appID;
   final String appSign;
@@ -113,7 +113,7 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
     super.initState();
 
     subscriptions.add(ZegoUIKit()
-        .getTurnOnYourMicrophoneRequestStream()
+        .getTurnOnYourMicrophoneRequestStream(targetRoomID: widget.liveID)
         .listen(onTurnOnYourMicrophoneRequest));
   }
 
@@ -306,9 +306,13 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
 
     seatWidgetCreator(ZegoUIKitUser user, int seatIndex) {
       return ValueListenableBuilder<bool>(
-        valueListenable: ZegoUIKit().getMicrophoneStateNotifier(user.id),
+        valueListenable: ZegoUIKit().getMicrophoneStateNotifier(
+          targetRoomID: widget.liveID,
+          user.id,
+        ),
         builder: (context, isMicrophoneEnabled, _) {
           return ZegoAudioVideoView(
+            roomID: widget.liveID,
             user: user,
             borderColor: Colors.transparent,
             extraInfo: {layoutGridItemIndexKey: seatIndex},
@@ -334,16 +338,24 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
       height: containerSize.height,
       child: null != widget.config.seat.containerBuilder
           ? StreamBuilder<List<ZegoUIKitUser>>(
-              stream: ZegoUIKit().getUserListStream(),
+              stream: ZegoUIKit().getUserListStream(
+                targetRoomID: widget.liveID,
+              ),
               builder: (context, snapshot) {
-                final allUsers = ZegoUIKit().getAllUsers();
+                final allUsers = ZegoUIKit().getAllUsers(
+                  targetRoomID: widget.liveID,
+                );
                 return StreamBuilder<List<ZegoUIKitUser>>(
-                  stream: ZegoUIKit().getAudioVideoListStream(),
+                  stream: ZegoUIKit().getAudioVideoListStream(
+                    targetRoomID: widget.liveID,
+                  ),
                   builder: (context, snapshot) {
                     return widget.config.seat.containerBuilder?.call(
                           context,
                           allUsers,
-                          ZegoUIKit().getAudioVideoList(),
+                          ZegoUIKit().getAudioVideoList(
+                            targetRoomID: widget.liveID,
+                          ),
                           seatWidgetCreator,
                         ) ??
                         defaultAudioVideoContainer();
@@ -376,6 +388,7 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
 
   Widget defaultAudioVideoContainer() {
     return ZegoLiveAudioRoomSeatContainer(
+      liveID: widget.liveID,
       seatManager: widget.seatManager,
       layoutConfig: widget.config.seat.layout,
       style: widget.style,
@@ -395,6 +408,7 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
     Map<String, dynamic> extraInfo,
   ) {
     return ZegoLiveAudioRoomSeatForeground(
+      liveID: widget.liveID,
       user: user,
       extraInfo: extraInfo,
       size: size,
@@ -416,6 +430,7 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
     return Opacity(
       opacity: widget.style.opacity,
       child: ZegoLiveAudioRoomSeatBackground(
+        liveID: widget.liveID,
         user: user,
         extraInfo: extraInfo,
         size: size,
@@ -435,9 +450,12 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
       right: 0,
       top: 64.zR,
       child: ValueListenableBuilder<ZegoUIKitRoomState>(
-        valueListenable: ZegoUIKit().getRoomStateStream(),
+        valueListenable: ZegoUIKit().getRoomStateStream(
+          targetRoomID: widget.liveID,
+        ),
         builder: (context, roomState, _) {
           return ZegoLiveAudioRoomTopBar(
+            liveID: widget.liveID,
             config: widget.config,
             style: widget.style,
             events: widget.events,
@@ -461,6 +479,7 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
     return Align(
       alignment: Alignment.bottomCenter,
       child: ZegoLiveAudioRoomBottomBar(
+        liveID: widget.liveID,
         height: bottomBarHeight,
         buttonSize: zegoLiveButtonSize,
         config: widget.config,
@@ -546,6 +565,7 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
                               .sharingPathNotifier,
                       builder: (context, sharingPath, _) {
                         return ZegoUIKitMediaPlayer(
+                          roomID: widget.liveID,
                           size: playerSize,
                           initPosition: Offset(topLeft.x, topLeft.y),
                           config: config,
@@ -564,9 +584,13 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
                     return mediaPlayer;
                   } else {
                     return StreamBuilder<List<ZegoUIKitUser>>(
-                      stream: ZegoUIKit().getMediaListStream(),
+                      stream: ZegoUIKit().getMediaListStream(
+                        targetRoomID: widget.liveID,
+                      ),
                       builder: (context, snapshot) {
-                        final mediaUsers = ZegoUIKit().getMediaList();
+                        final mediaUsers = ZegoUIKit().getMediaList(
+                          targetRoomID: widget.liveID,
+                        );
                         if (mediaUsers.isEmpty) {
                           return Container();
                         }
@@ -618,6 +642,7 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
       child: ConstrainedBox(
         constraints: BoxConstraints.loose(listSize),
         child: ZegoLiveAudioRoomInRoomLiveMessageView(
+          liveID: widget.liveID,
           config: widget.config.inRoomMessage,
           avatarBuilder: widget.config.seat.avatarBuilder,
         ),
@@ -670,7 +695,7 @@ class _ZegoLiveAudioRoomPageState extends State<ZegoLiveAudioRoomPage>
       subTag: 'live page',
     );
     if (canMicrophoneTurnOnByOthers) {
-      ZegoUIKit().turnMicrophoneOn(true);
+      ZegoUIKit().turnMicrophoneOn(targetRoomID: widget.liveID, true);
     }
   }
 }

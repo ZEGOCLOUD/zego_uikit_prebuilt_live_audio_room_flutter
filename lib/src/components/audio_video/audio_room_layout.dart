@@ -13,7 +13,8 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/config.defines.dart';
 /// picture in picture layout
 class ZegoLiveAudioRoomLayout extends StatefulWidget {
   const ZegoLiveAudioRoomLayout({
-    Key? key,
+    super.key,
+    required this.liveID,
     required this.userList,
     required this.layoutConfig,
     this.avatarBuilder,
@@ -24,7 +25,9 @@ class ZegoLiveAudioRoomLayout extends StatefulWidget {
     this.usersItemIndex = const {},
     this.foregroundBuilder,
     this.backgroundBuilder,
-  }) : super(key: key);
+  });
+
+  final String liveID;
 
   final List<ZegoUIKitUser> userList;
   final Map<String, int> usersItemIndex; //  map<user id, item index>
@@ -125,10 +128,13 @@ class _ZegoLiveAudioRoomLayoutState extends State<ZegoLiveAudioRoomLayout> {
           width: seatItemWidth,
           height: seatItemHeight,
           child: ValueListenableBuilder<bool>(
-              valueListenable:
-                  ZegoUIKit().getMicrophoneStateNotifier(targetUser?.id ?? ''),
+              valueListenable: ZegoUIKit().getMicrophoneStateNotifier(
+                targetRoomID: widget.liveID,
+                targetUser?.id ?? '',
+              ),
               builder: (context, isMicrophoneEnabled, _) {
                 return ZegoAudioVideoView(
+                  roomID: widget.liveID,
                   user: targetUser,
                   borderRadius: widget.borderRadius,
                   borderColor: Colors.transparent,

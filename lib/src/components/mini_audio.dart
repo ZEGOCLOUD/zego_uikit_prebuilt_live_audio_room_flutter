@@ -18,7 +18,8 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 
 class ZegoMinimizingAudioRoomPage extends StatefulWidget {
   const ZegoMinimizingAudioRoomPage({
-    Key? key,
+    super.key,
+    required this.liveID,
     required this.size,
     this.borderRadius = 6.0,
     this.borderColor,
@@ -40,7 +41,9 @@ class ZegoMinimizingAudioRoomPage extends StatefulWidget {
     this.avatarBuilder,
     this.durationConfig,
     this.durationEvents,
-  }) : super(key: key);
+  });
+
+  final String liveID;
 
   final Size size;
   final double padding;
@@ -110,7 +113,10 @@ class ZegoMinimizingAudioRoomPageState
     return ValueListenableBuilder<String?>(
       valueListenable: activeUserIDNotifier,
       builder: (context, activeUserID, _) {
-        final activeUser = ZegoUIKit().getUser(activeUserID ?? '');
+        final activeUser = ZegoUIKit().getUser(
+          targetRoomID: widget.liveID,
+          activeUserID ?? '',
+        );
         return widget.withCircleBorder
             ? circleBorder(
                 child: minimizingUserWidget(activeUser),
@@ -150,6 +156,7 @@ class ZegoMinimizingAudioRoomPageState
           children: [
             widget.background ?? Container(),
             ZegoAudioVideoView(
+              roomID: widget.liveID,
               user: activeUser,
               avatarConfig: ZegoAvatarConfig(
                 showInAudioMode: true,
@@ -251,12 +258,16 @@ class ZegoMinimizingAudioRoomPageState
 
   Widget microphoneButton(ZegoUIKitUser activeUser) {
     return ValueListenableBuilder<bool>(
-      valueListenable: ZegoUIKit().getMicrophoneStateNotifier(activeUser.id),
+      valueListenable: ZegoUIKit().getMicrophoneStateNotifier(
+        targetRoomID: widget.liveID,
+        activeUser.id,
+      ),
       builder: (context, isMicrophoneEnabled, _) {
         return GestureDetector(
           onTap: activeUser.id == ZegoUIKit().getLocalUser().id
               ? () {
                   ZegoUIKit().turnMicrophoneOn(
+                    targetRoomID: widget.liveID,
                     !isMicrophoneEnabled,
                     userID: activeUser.id,
                     muteMode: true,
@@ -337,13 +348,18 @@ class ZegoMinimizingAudioRoomPageState
   }
 
   void listenAudioVideoList() {
-    audioVideoListSubscription =
-        ZegoUIKit().getAudioVideoListStream().listen(onAudioVideoListUpdated);
+    audioVideoListSubscription = ZegoUIKit()
+        .getAudioVideoListStream(targetRoomID: widget.liveID)
+        .listen(onAudioVideoListUpdated);
 
-    onAudioVideoListUpdated(ZegoUIKit().getAudioVideoList());
-    activeUserIDNotifier.value = ZegoUIKit().getAudioVideoList().isEmpty
+    onAudioVideoListUpdated(
+      ZegoUIKit().getAudioVideoList(targetRoomID: widget.liveID),
+    );
+    activeUserIDNotifier.value = ZegoUIKit()
+            .getAudioVideoList(targetRoomID: widget.liveID)
+            .isEmpty
         ? ZegoUIKit().getLocalUser().id
-        : ZegoUIKit().getAudioVideoList().first.id;
+        : ZegoUIKit().getAudioVideoList(targetRoomID: widget.liveID).first.id;
   }
 
   void onAudioVideoListUpdated(List<ZegoUIKitUser> users) {

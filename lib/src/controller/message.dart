@@ -24,7 +24,10 @@ class AudioRoomMessageControllerImpl {
       subTag: 'controller.message',
     );
 
-    return ZegoUIKit().sendInRoomMessage(message, type: type);
+    return ZegoUIKit().sendInRoomMessage(
+        targetRoomID: ZegoUIKitPrebuiltLiveAudioRoomController().private.liveID,
+        message,
+        type: type);
   }
 
   /// Retrieves a list of chat messages that already exist in the room.
@@ -34,7 +37,10 @@ class AudioRoomMessageControllerImpl {
   List<ZegoInRoomMessage> list({
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) {
-    return ZegoUIKit().getInRoomMessages(type: type);
+    return ZegoUIKit().getInRoomMessages(
+      targetRoomID: ZegoUIKitPrebuiltLiveAudioRoomController().private.liveID,
+      type: type,
+    );
   }
 
   /// Retrieves a list stream of chat messages that already exist in the room.
@@ -76,7 +82,10 @@ class AudioRoomMessageControllerImpl {
   Stream<List<ZegoInRoomMessage>> stream({
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) {
-    return ZegoUIKit().getInRoomMessageListStream(type: type);
+    return ZegoUIKit().getInRoomMessageListStream(
+      targetRoomID: ZegoUIKitPrebuiltLiveAudioRoomController().private.liveID,
+      type: type,
+    );
   }
 
   /// clear local message and remote message
@@ -91,6 +100,7 @@ class AudioRoomMessageControllerImpl {
     );
 
     return ZegoUIKit().clearMessage(
+      targetRoomID: ZegoUIKitPrebuiltLiveAudioRoomController().private.liveID,
       type: type,
       clearRemote: clearRemote,
     );

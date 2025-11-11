@@ -13,13 +13,13 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 /// @nodoc
 class ZegoMinimizingButton extends StatefulWidget {
   const ZegoMinimizingButton({
-    Key? key,
+    super.key,
     this.onWillPressed,
     this.icon,
     this.iconSize,
     this.buttonSize,
     this.rootNavigator = false,
-  }) : super(key: key);
+  });
 
   final bool rootNavigator;
 

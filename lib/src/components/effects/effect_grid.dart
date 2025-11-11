@@ -39,14 +39,14 @@ class ZegoLiveAudioRoomEffectGridModel {
 
 class ZegoLiveAudioRoomEffectGrid extends StatefulWidget {
   const ZegoLiveAudioRoomEffectGrid({
-    Key? key,
+    super.key,
     required this.model,
     required this.isSpaceEvenly,
     this.buttonSize,
     this.iconSize,
     this.withBorderColor = false,
     this.itemSpacing,
-  }) : super(key: key);
+  });
 
   final ZegoLiveAudioRoomEffectGridModel model;
   final bool withBorderColor;

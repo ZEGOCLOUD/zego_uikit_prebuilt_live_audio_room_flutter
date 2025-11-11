@@ -32,7 +32,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
   ZegoLiveAudioRoomSeatManager({
     this.contextQuery,
     required this.localUserID,
-    required this.roomID,
+    required this.liveID,
     required this.plugins,
     required this.config,
     required this.events,
@@ -43,7 +43,9 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
     localRole.value = config.role;
 
     _subscriptions
-      ..add(ZegoUIKit().getUserListStream().listen(onUserListUpdated))
+      ..add(ZegoUIKit()
+          .getUserListStream(targetRoomID: liveID)
+          .listen(onUserListUpdated))
       ..add(ZegoUIKit()
           .getSignalingPlugin()
           .getRoomPropertiesStream()
@@ -61,7 +63,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
   bool _initialized = false;
 
   final String localUserID;
-  final String roomID;
+  final String liveID;
   final ZegoLiveAudioRoomPlugins plugins;
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
   final ZegoUIKitPrebuiltLiveAudioRoomEvents events;
@@ -211,7 +213,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
 
     if (ZegoLiveAudioRoomMiniOverlayPageState.minimizing !=
         ZegoLiveAudioRoomInternalMiniOverlayMachine().state()) {
-      ZegoUIKit().turnMicrophoneOn(false);
+      ZegoUIKit().turnMicrophoneOn(targetRoomID: liveID, false);
     }
   }
 
@@ -247,7 +249,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
       ZegoLoggerService.logInfo(
         'only host or co-host can ${isLocked ? 'lock' : 'unlock'} seat, '
         'local role:${localRole.value}, host:${hostsNotifier.value}, '
-        'has co-host:${haveCoHost()}',
+        'has co-host:${haveCoHost(liveID: liveID)}',
         tag: 'audio-room-seat',
         subTag: 'seat manager',
       );
@@ -275,7 +277,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
       return ZegoUIKit()
           .getSignalingPlugin()
           .updateRoomProperty(
-            roomID: roomID,
+            roomID: liveID,
             key: attributeKeyLockRoomSeat,
             value: isLocked ? '1' : '0',
             isForce: true,
@@ -353,7 +355,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
     return ZegoUIKit()
         .getSignalingPlugin()
         .updateRoomProperty(
-          roomID: roomID,
+          roomID: liveID,
           key: attributeKeyLockSeats,
           value: jsonEncode(targetLockSeats),
           isForce: true,
@@ -393,7 +395,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
     return ZegoUIKit()
         .getSignalingPlugin()
         .queryUsersInRoomAttributes(
-          roomID: roomID,
+          roomID: liveID,
           nextFlag: nextFlag,
         )
         .then((result) async {
@@ -524,7 +526,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
           tag: 'audio-room-seat',
           subTag: 'seat manager',
         );
-        ZegoUIKit().turnMicrophoneOn(true);
+        ZegoUIKit().turnMicrophoneOn(targetRoomID: liveID, true);
       });
     } else {
       ZegoLoggerService.logInfo(
@@ -532,7 +534,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
         tag: 'audio-room-seat',
         subTag: 'seat manager',
       );
-      ZegoUIKit().turnMicrophoneOn(false);
+      ZegoUIKit().turnMicrophoneOn(targetRoomID: liveID, false);
       _connectManager
           ?.updateAudienceConnectState(ZegoLiveAudioRoomConnectState.idle);
 
@@ -576,7 +578,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
         tag: 'audio-room-seat',
         subTag: 'seat manager',
       );
-      ZegoUIKit().turnMicrophoneOn(false);
+      ZegoUIKit().turnMicrophoneOn(targetRoomID: liveID, false);
     }
 
     /// seat change callback
@@ -623,7 +625,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
     final takenSeats = <int, ZegoUIKitUser>{};
     seatsUserMapNotifier.value.forEach((seatIndex, seatUserID) {
       takenSeats[int.tryParse(seatIndex) ?? -1] =
-          ZegoUIKit().getUser(seatUserID);
+          ZegoUIKit().getUser(targetRoomID: liveID, seatUserID);
     });
     events.seat.onChanged?.call(
       takenSeats,
@@ -667,7 +669,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
     ZegoUIKit()
         .getSignalingPlugin()
         .updateRoomProperty(
-          roomID: roomID,
+          roomID: liveID,
           key: attributeKeyLockSeats,
           value: jsonEncode(updateValues),
           isForce: true,
@@ -736,7 +738,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
     );
 
     return ZegoUIKit().getSignalingPlugin().setUsersInRoomAttributes(
-      roomID: roomID,
+      roomID: liveID,
       key: attributeKeyRole,
       value: role.index.toString(),
       userIDs: [targetUserID],
@@ -823,7 +825,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
 
     _isRoomAttributesBatching = true;
     ZegoUIKit().getSignalingPlugin().beginRoomPropertiesBatchOperation(
-          roomID: roomID,
+          roomID: liveID,
           isForce: isForce,
           isUpdateOwner: isUpdateOwner,
           isDeleteAfterOwnerLeft: isDeleteAfterOwnerLeft,
@@ -831,7 +833,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
     ZegoUIKit()
         .getSignalingPlugin()
         .updateRoomProperty(
-          roomID: roomID,
+          roomID: liveID,
           key: index.toString(),
           value: localUserID,
         )
@@ -852,10 +854,14 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
     });
     return ZegoUIKit()
         .getSignalingPlugin()
-        .endRoomPropertiesBatchOperation(roomID: roomID)
+        .endRoomPropertiesBatchOperation(roomID: liveID)
         .then((result) {
       _isRoomAttributesBatching = false;
-      ZegoLoggerService.logInfo('room attribute batch is finished');
+      ZegoLoggerService.logInfo(
+        'room attribute batch is finished',
+        tag: 'audio-room-seat',
+        subTag: 'seat manager',
+      );
       if (result.error != null) {
         ZegoLoggerService.logError(
           'take on seat $index result, error:${result.error}',
@@ -923,14 +929,14 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
 
     _isRoomAttributesBatching = true;
     ZegoUIKit().getSignalingPlugin().beginRoomPropertiesBatchOperation(
-          roomID: roomID,
+          roomID: liveID,
           isForce: isForce,
           isDeleteAfterOwnerLeft: true,
         );
     ZegoUIKit()
         .getSignalingPlugin()
         .updateRoomProperty(
-          roomID: roomID,
+          roomID: liveID,
           key: index.toString(),
           value: localUserID,
         )
@@ -955,7 +961,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
       }
     });
     ZegoUIKit().getSignalingPlugin().deleteRoomProperties(
-      roomID: roomID,
+      roomID: liveID,
       keys: [oldSeatIndex.toString()],
     ).then((result) {
       if (result.error != null) {
@@ -979,7 +985,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
     });
     await ZegoUIKit()
         .getSignalingPlugin()
-        .endRoomPropertiesBatchOperation(roomID: roomID)
+        .endRoomPropertiesBatchOperation(roomID: liveID)
         .then((result) {
       _isRoomAttributesBatching = false;
       ZegoLoggerService.logInfo(
@@ -1182,11 +1188,11 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
 
     _isRoomAttributesBatching = true;
     ZegoUIKit().getSignalingPlugin().beginRoomPropertiesBatchOperation(
-          roomID: roomID,
+          roomID: liveID,
           isForce: isForce,
         );
     ZegoUIKit().getSignalingPlugin().deleteRoomProperties(
-        roomID: roomID, keys: [index.toString()]).then((result) {
+        roomID: liveID, keys: [index.toString()]).then((result) {
       if (result.error != null) {
         showError(innerText.removeSpeakerFailedToast
             .replaceFirst(innerText.param_1, targetUser.name));
@@ -1207,7 +1213,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
     });
     await ZegoUIKit()
         .getSignalingPlugin()
-        .endRoomPropertiesBatchOperation(roomID: roomID)
+        .endRoomPropertiesBatchOperation(roomID: liveID)
         .then((result) {
       _isRoomAttributesBatching = false;
       ZegoLoggerService.logInfo(
@@ -1230,7 +1236,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
             tag: 'audio-room-seat',
             subTag: 'seat manager',
           );
-          revokeCoHost(roomID: roomID, targetUser: targetUser);
+          revokeCoHost(roomID: liveID, targetUser: targetUser);
         }
 
         if (targetUser.id == ZegoUIKit().getLocalUser().id) {
@@ -1270,6 +1276,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
     );
 
     ZegoUIKit().turnMicrophoneOn(
+      targetRoomID: liveID,
       !muted,
       userID: targetUser.id,
       muteMode: true,
@@ -1279,8 +1286,10 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
   }
 
   ZegoUIKitUser? getUserByIndex(int index) {
-    return ZegoUIKit()
-        .getUser(seatsUserMapNotifier.value[index.toString()] ?? '');
+    return ZegoUIKit().getUser(
+      targetRoomID: liveID,
+      seatsUserMapNotifier.value[index.toString()] ?? '',
+    );
   }
 
   int getIndexByUserID(String userID) {
@@ -1305,7 +1314,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
     final takenSeats = <int, ZegoUIKitUser>{};
     seatsUserMapNotifier.value.forEach((seatIndex, seatUserID) {
       takenSeats[int.tryParse(seatIndex) ?? -1] =
-          ZegoUIKit().getUser(seatUserID);
+          ZegoUIKit().getUser(targetRoomID: liveID, seatUserID);
     });
 
     var emptyList = List<int>.generate(
@@ -1359,7 +1368,10 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
     );
 
     infos.forEach((updateUserID, updateUserAttributes) {
-      final updateUser = ZegoUIKit().getUser(updateUserID);
+      final updateUser = ZegoUIKit().getUser(
+        targetRoomID: liveID,
+        updateUserID,
+      );
       if (updateUser.isEmpty()) {
         _pendingUserRoomAttributes[updateUserID] = updateUserAttributes;
         ZegoLoggerService.logInfo(
@@ -1445,7 +1457,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
           subTag: 'seat manager',
         );
 
-        final user = ZegoUIKit().getUser(userID);
+        final user = ZegoUIKit().getUser(targetRoomID: liveID, userID);
         if (!user.isEmpty()) {
           updateRoleFromUserAttributes({userID: userAttributes});
 
@@ -1651,7 +1663,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
     );
     return ZegoUIKit()
         .getSignalingPlugin()
-        .queryRoomProperties(roomID: roomID)
+        .queryRoomProperties(roomID: liveID)
         .then((result) {
       final success = result.error == null;
       ZegoLoggerService.logInfo(
@@ -1695,7 +1707,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
     );
 
     return ZegoUIKit().getSignalingPlugin().setUsersInRoomAttributes(
-      roomID: roomID,
+      roomID: liveID,
       key: attributeKeyAvatar,
       value: config.userAvatarUrl ?? '',
       userIDs: [localUserID],
@@ -1730,7 +1742,7 @@ class ZegoLiveAudioRoomSeatManager with ZegoLiveSeatCoHost {
 
     config.userInRoomAttributes.forEach((key, value) async {
       return ZegoUIKit().getSignalingPlugin().setUsersInRoomAttributes(
-        roomID: roomID,
+        roomID: liveID,
         key: key,
         value: value,
         userIDs: [localUserID],

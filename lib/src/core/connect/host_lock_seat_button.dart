@@ -15,11 +15,11 @@ class ZegoLiveAudioRoomHostLockSeatButton extends StatefulWidget {
   final ZegoLiveAudioRoomSeatManager seatManager;
 
   const ZegoLiveAudioRoomHostLockSeatButton({
-    Key? key,
+    super.key,
     required this.seatManager,
     this.iconSize,
     this.buttonSize,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoLiveAudioRoomHostLockSeatButton> createState() =>

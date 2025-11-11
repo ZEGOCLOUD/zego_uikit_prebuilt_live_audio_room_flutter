@@ -13,6 +13,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.d
 /// @nodoc
 class ZegoLiveAudioRoomDurationManager {
   final ZegoLiveAudioRoomSeatManager seatManager;
+  final String roomID;
 
   bool _initialized = false;
 
@@ -20,9 +21,11 @@ class ZegoLiveAudioRoomDurationManager {
 
   ZegoLiveAudioRoomDurationManager({
     required this.seatManager,
+    required this.roomID,
   }) {
-    subscription =
-        ZegoUIKit().getRoomPropertiesStream().listen(onRoomPropertiesUpdated);
+    subscription = ZegoUIKit()
+        .getRoomPropertiesStream(targetRoomID: roomID)
+        .listen(onRoomPropertiesUpdated);
   }
 
   /// internal variables
@@ -73,7 +76,7 @@ class ZegoLiveAudioRoomDurationManager {
   }
 
   void onRoomPropertiesUpdated(Map<String, RoomProperty> updatedProperties) {
-    final roomProperties = ZegoUIKit().getRoomProperties();
+    final roomProperties = ZegoUIKit().getRoomProperties(targetRoomID: roomID);
     ZegoLoggerService.logInfo(
       'onRoomPropertiesUpdated roomProperties:$roomProperties, updatedProperties:$updatedProperties',
       tag: 'audio-room',
@@ -150,6 +153,7 @@ class ZegoLiveAudioRoomDurationManager {
     );
 
     ZegoUIKit().setRoomProperty(
+      targetRoomID: roomID,
       RoomPropertyKey.liveDuration.text,
       networkTimeNow.millisecondsSinceEpoch.toString(),
     );

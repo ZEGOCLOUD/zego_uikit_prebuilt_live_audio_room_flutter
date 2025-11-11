@@ -16,7 +16,6 @@ class ZegoLiveAudioRoomControllerRoomImpl
   /// @param isDeleteAfterOwnerLeft: Room attributes are automatically deleted after the owner leaves the room.
   /// @param isUpdateOwner: Whether to update the owner of the room attribute involved.
   Future<bool> updateProperty({
-    required String roomID,
     required String key,
     required String value,
     bool isForce = false,
@@ -24,7 +23,7 @@ class ZegoLiveAudioRoomControllerRoomImpl
     bool isUpdateOwner = false,
   }) async {
     return updateProperties(
-      roomID: roomID,
+      roomID: ZegoUIKitPrebuiltLiveAudioRoomController().private.liveID,
       roomProperties: {key: value},
       isForce: isForce,
       isDeleteAfterOwnerLeft: isDeleteAfterOwnerLeft,
@@ -275,12 +274,18 @@ class ZegoLiveAudioRoomControllerRoomImpl
       subTag: 'controller.room',
     );
 
-    return ZegoUIKit().removeUserFromRoom(userIDs);
+    return ZegoUIKit().removeUserFromRoom(
+      targetRoomID: ZegoUIKitPrebuiltLiveAudioRoomController().private.liveID,
+      userIDs,
+    );
   }
 
   /// when receives [ZegoLiveAudioRoomRoomEvents.onTokenExpired], you need use this API to update the token
   Future<void> renewToken(String token) async {
-    await ZegoUIKit().renewRoomToken(token);
+    await ZegoUIKit().renewRoomToken(
+      token,
+      targetRoomID: ZegoUIKit().getCurrentRoom().id,
+    );
 
     if (ZegoPluginAdapter().getPlugin(ZegoUIKitPluginType.signaling) != null) {
       ZegoUIKit().getSignalingPlugin().renewToken(token);

@@ -1,4 +1,4 @@
-library zego_uikit_prebuilt_live_audio_room;
+library;
 
 export 'src/config.defines.dart';
 export 'src/config.dart';

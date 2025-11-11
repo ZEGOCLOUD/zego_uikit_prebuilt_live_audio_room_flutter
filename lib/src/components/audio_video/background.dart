@@ -14,6 +14,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/core/seat/seat_manager.d
 
 /// @nodoc
 class ZegoLiveAudioRoomSeatBackground extends StatefulWidget {
+  final String liveID;
   final Size size;
   final ZegoUIKitUser? user;
   final Map<String, dynamic> extraInfo;
@@ -22,13 +23,14 @@ class ZegoLiveAudioRoomSeatBackground extends StatefulWidget {
   final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
 
   const ZegoLiveAudioRoomSeatBackground({
-    Key? key,
-    this.user,
-    this.extraInfo = const {},
+    super.key,
+    required this.liveID,
     required this.size,
     required this.seatManager,
     required this.config,
-  }) : super(key: key);
+    this.user,
+    this.extraInfo = const {},
+  });
 
   @override
   State<ZegoLiveAudioRoomSeatBackground> createState() =>
@@ -44,7 +46,10 @@ class _ZegoSeatForegroundState extends State<ZegoLiveAudioRoomSeatBackground> {
         widget.config.seat.backgroundBuilder?.call(
               context,
               widget.size,
-              ZegoUIKit().getUser(widget.user?.id ?? ''),
+              ZegoUIKit().getUser(
+                targetRoomID: widget.liveID,
+                widget.user?.id ?? '',
+              ),
               widget.extraInfo,
             ) ??
             Container(color: Colors.transparent),

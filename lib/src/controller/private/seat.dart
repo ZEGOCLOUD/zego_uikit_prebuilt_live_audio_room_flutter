@@ -132,7 +132,10 @@ class ZegoLiveAudioRoomControllerSeatMicrophoneMuteStateImpl {
       listeningUserIDs.add(userID);
     });
     for (var userID in listeningUserIDs) {
-      removeMicrophoneMuteStateNotifier(ZegoUIKit().getUser(userID));
+      removeMicrophoneMuteStateNotifier(ZegoUIKit().getUser(
+        targetRoomID: ZegoUIKitPrebuiltLiveAudioRoomController().private.liveID,
+        userID,
+      ));
     }
     microphoneMuteStateNotifierMap.clear();
     microphoneMuteStateNotifierCallbacks.clear();
@@ -184,7 +187,11 @@ class ZegoLiveAudioRoomControllerSeatMicrophoneMuteStateImpl {
 
     for (var userID in listeningUserIDs) {
       if (!seatUserIDs.contains(userID)) {
-        removeMicrophoneMuteStateNotifier(ZegoUIKit().getUser(userID));
+        removeMicrophoneMuteStateNotifier(ZegoUIKit().getUser(
+          targetRoomID:
+              ZegoUIKitPrebuiltLiveAudioRoomController().private.liveID,
+          userID,
+        ));
       }
     }
   }

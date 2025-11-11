@@ -10,6 +10,12 @@ mixin ZegoLiveAudioRoomControllerPrivate {
 
 /// @nodoc
 class ZegoLiveAudioRoomControllerPrivateImpl {
+  String _liveID = '';
+  String get liveID {
+    assert(_liveID.isNotEmpty);
+    return _liveID;
+  }
+
   ZegoUIKitPrebuiltLiveAudioRoomConfig? prebuiltConfig;
   ZegoUIKitPrebuiltLiveAudioRoomEvents? prebuiltEvents;
   ZegoLiveAudioRoomConnectManager? connectManager;
@@ -24,17 +30,20 @@ class ZegoLiveAudioRoomControllerPrivateImpl {
   /// Call Inside By Prebuilt
   /// prebuilt assign value to internal variables
   void initByPrebuilt({
+    required String roomID,
     required ZegoUIKitPrebuiltLiveAudioRoomConfig config,
     required ZegoUIKitPrebuiltLiveAudioRoomEvents events,
     required ZegoLiveAudioRoomConnectManager? connectManager,
     required ZegoLiveAudioRoomSeatManager? seatManager,
   }) {
     ZegoLoggerService.logInfo(
-      'init by prebuilt',
+      'init by prebuilt'
+      'room id:$roomID, ',
       tag: 'audio-room',
       subTag: 'controller.p',
     );
 
+    _liveID = roomID;
     prebuiltConfig = config;
     prebuiltEvents = events;
     this.connectManager = connectManager;
@@ -51,6 +60,7 @@ class ZegoLiveAudioRoomControllerPrivateImpl {
       subTag: 'controller.p',
     );
 
+    _liveID = '';
     prebuiltConfig = null;
     prebuiltEvents = null;
     connectManager = null;

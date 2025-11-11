@@ -81,7 +81,10 @@ class ZegoLiveAudioRoomInternalMiniOverlayMachine {
         break;
       case ZegoLiveAudioRoomMiniOverlayPageState.minimizing:
         kickOutSubscription = ZegoUIKit()
-            .getMeRemovedFromRoomStream()
+            .getMeRemovedFromRoomStream(
+              targetRoomID:
+                  ZegoUIKitPrebuiltLiveAudioRoomController().private.liveID,
+            )
             .listen(onMeRemovedFromRoom);
 
         _stateMinimizing.enter();
@@ -106,7 +109,6 @@ class ZegoLiveAudioRoomInternalMiniOverlayMachine {
 
     await ZegoUIKitPrebuiltLiveAudioRoomController().pip.cancelBackground();
 
-    ZegoUIKitPrebuiltLiveAudioRoomController().private.uninitByPrebuilt();
     ZegoUIKitPrebuiltLiveAudioRoomController().seat.private.uninitByPrebuilt();
     ZegoUIKitPrebuiltLiveAudioRoomController().room.private.uninitByPrebuilt();
     ZegoUIKitPrebuiltLiveAudioRoomController().user.private.uninitByPrebuilt();
@@ -120,6 +122,7 @@ class ZegoLiveAudioRoomInternalMiniOverlayMachine {
         .audioVideo
         .private
         .uninitByPrebuilt();
+    ZegoUIKitPrebuiltLiveAudioRoomController().private.uninitByPrebuilt();
 
     ZegoUIKitPrebuiltLiveAudioRoomController()
         .minimize

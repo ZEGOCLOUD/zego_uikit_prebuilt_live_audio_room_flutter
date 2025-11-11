@@ -10,10 +10,12 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 /// @nodoc
 class ZegoLiveAudioRoomInRoomMessageInputBoard extends ModalRoute<String> {
   ZegoLiveAudioRoomInRoomMessageInputBoard({
+    required this.liveID,
     required this.innerText,
     this.rootNavigator = false,
   }) : super();
 
+  final String liveID;
   final ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText;
   final bool rootNavigator;
 
@@ -56,6 +58,7 @@ class ZegoLiveAudioRoomInRoomMessageInputBoard extends ModalRoute<String> {
             ),
           ),
           ZegoInRoomMessageInput(
+            roomID: liveID,
             placeHolder: innerText.messageEmptyToast,
             backgroundColor: Colors.white,
             inputBackgroundColor: const Color(0xffF7F7F8),

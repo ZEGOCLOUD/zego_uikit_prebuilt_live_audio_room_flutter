@@ -8,35 +8,60 @@ import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 
 class ZegoLiveAudioRoomEventListener {
+  final String liveID;
+
   final ZegoUIKitPrebuiltLiveAudioRoomEvents? events;
   final List<StreamSubscription<dynamic>?> _subscriptions = [];
 
-  ZegoLiveAudioRoomEventListener(this.events);
+  ZegoLiveAudioRoomEventListener(
+    this.events, {
+    required this.liveID,
+  });
 
   void init() {
     _subscriptions
-      ..add(ZegoUIKit().getUserJoinStream().listen(_onUserJoin))
-      ..add(ZegoUIKit().getUserLeaveStream().listen(_onUserLeave));
+      ..add(ZegoUIKit()
+          .getUserJoinStream(targetRoomID: liveID)
+          .listen(_onUserJoin))
+      ..add(ZegoUIKit()
+          .getUserLeaveStream(targetRoomID: liveID)
+          .listen(_onUserLeave));
 
     ZegoUIKit()
-        .getMicrophoneStateNotifier(ZegoUIKit().getLocalUser().id)
+        .getMicrophoneStateNotifier(
+          targetRoomID: liveID,
+          ZegoUIKit().getLocalUser().id,
+        )
         .addListener(_onMicrophoneStateChanged);
     ZegoUIKit()
-        .getAudioOutputDeviceNotifier(ZegoUIKit().getLocalUser().id)
+        .getAudioOutputDeviceNotifier(
+          targetRoomID: liveID,
+          ZegoUIKit().getLocalUser().id,
+        )
         .addListener(_onAudioOutputChanged);
 
-    ZegoUIKit().getRoomStateStream().addListener(_onRoomStateChanged);
+    ZegoUIKit()
+        .getRoomStateStream(targetRoomID: liveID)
+        .addListener(_onRoomStateChanged);
   }
 
   void uninit() {
     ZegoUIKit()
-        .getMicrophoneStateNotifier(ZegoUIKit().getLocalUser().id)
+        .getMicrophoneStateNotifier(
+          targetRoomID: liveID,
+          ZegoUIKit().getLocalUser().id,
+        )
         .removeListener(_onMicrophoneStateChanged);
     ZegoUIKit()
-        .getAudioOutputDeviceNotifier(ZegoUIKit().getLocalUser().id)
+        .getAudioOutputDeviceNotifier(
+          targetRoomID: liveID,
+          ZegoUIKit().getLocalUser().id,
+        )
         .removeListener(_onAudioOutputChanged);
 
-    ZegoUIKit().getRoomStateStream().removeListener(_onRoomStateChanged);
+    ZegoUIKit()
+        .getRoomStateStream(targetRoomID: liveID)
+        .removeListener(_onRoomStateChanged);
 
     for (final subscription in _subscriptions) {
       subscription?.cancel();
@@ -56,13 +81,17 @@ class ZegoLiveAudioRoomEventListener {
   }
 
   void _onRoomStateChanged() {
-    events?.room.onStateChanged?.call(ZegoUIKit().getRoomStateStream().value);
+    events?.room.onStateChanged
+        ?.call(ZegoUIKit().getRoomStateStream(targetRoomID: liveID).value);
   }
 
   void _onMicrophoneStateChanged() {
     events?.audioVideo.onMicrophoneStateChanged?.call(
       ZegoUIKit()
-          .getMicrophoneStateNotifier(ZegoUIKit().getLocalUser().id)
+          .getMicrophoneStateNotifier(
+            targetRoomID: liveID,
+            ZegoUIKit().getLocalUser().id,
+          )
           .value,
     );
   }
@@ -70,7 +99,10 @@ class ZegoLiveAudioRoomEventListener {
   void _onAudioOutputChanged() {
     events?.audioVideo.onAudioOutputChanged?.call(
       ZegoUIKit()
-          .getAudioOutputDeviceNotifier(ZegoUIKit().getLocalUser().id)
+          .getAudioOutputDeviceNotifier(
+            targetRoomID: liveID,
+            ZegoUIKit().getLocalUser().id,
+          )
           .value,
     );
   }

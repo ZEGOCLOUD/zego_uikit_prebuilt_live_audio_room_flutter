@@ -17,7 +17,8 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/style.dart';
 /// container of seat
 class ZegoLiveAudioRoomSeatContainer extends StatefulWidget {
   const ZegoLiveAudioRoomSeatContainer({
-    Key? key,
+    super.key,
+    required this.liveID,
     required this.seatManager,
     required this.style,
     required this.layoutConfig,
@@ -27,8 +28,9 @@ class ZegoLiveAudioRoomSeatContainer extends StatefulWidget {
     this.sortAudioVideo,
     this.showSoundWavesInAudioMode = true,
     this.soundWaveColor,
-  }) : super(key: key);
+  });
 
+  final String liveID;
   final ZegoLiveAudioRoomSeatManager seatManager;
   final ZegoUIKitPrebuiltLiveAudioRoomStyle style;
   final ZegoLiveAudioRoomLayoutConfig layoutConfig;
@@ -66,8 +68,9 @@ class _ZegoAudioVideoContainerState
     super.initState();
 
     widget.seatManager.seatsUserMapNotifier.addListener(onSeatsUserChanged);
-    subscriptions
-        .add(ZegoUIKit().getUserListStream().listen(onUserListUpdated));
+    subscriptions.add(ZegoUIKit()
+        .getUserListStream(targetRoomID: widget.liveID)
+        .listen(onUserListUpdated));
   }
 
   @override
@@ -86,9 +89,10 @@ class _ZegoAudioVideoContainerState
     updateUserList(widget.seatManager.seatsUserMapNotifier.value);
 
     return StreamBuilder<List<ZegoUIKitUser>>(
-      stream: ZegoUIKit().getAudioVideoListStream(),
+      stream: ZegoUIKit().getAudioVideoListStream(targetRoomID: widget.liveID),
       builder: (context, snapshot) {
         return ZegoLiveAudioRoomLayout(
+          liveID: widget.liveID,
           layoutConfig: widget.layoutConfig,
           backgroundBuilder: widget.backgroundBuilder,
           foregroundBuilder: widget.foregroundBuilder,
@@ -136,7 +140,10 @@ class _ZegoAudioVideoContainerState
     userList.clear();
 
     seatsUser.forEach((seatIndex, seatUserID) {
-      final seatUser = ZegoUIKit().getUser(seatUserID);
+      final seatUser = ZegoUIKit().getUser(
+        targetRoomID: widget.liveID,
+        seatUserID,
+      );
       if (!seatUser.isEmpty()) {
         userList.add(seatUser);
       } else {

@@ -43,7 +43,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/style.dart';
 /// {@category Migration_v3.x}
 class ZegoUIKitPrebuiltLiveAudioRoom extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveAudioRoom({
-    Key? key,
+    super.key,
     required this.appID,
     required this.userID,
     required this.userName,
@@ -53,7 +53,7 @@ class ZegoUIKitPrebuiltLiveAudioRoom extends StatefulWidget {
     this.appSign = '',
     this.token = '',
     this.events,
-  }) : super(key: key);
+  });
 
   /// You can create a project and obtain an appID from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com).
   final int appID;
@@ -167,15 +167,25 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       );
     });
 
-    _eventListener = ZegoLiveAudioRoomEventListener(widget.events);
+    _eventListener = ZegoLiveAudioRoomEventListener(
+      widget.events,
+      liveID: widget.roomID,
+    );
     _eventListener?.init();
 
     subscriptions
-      ..add(ZegoUIKit().getUserJoinStream().listen(onUserJoined))
-      ..add(ZegoUIKit().getUserLeaveStream().listen(onUserLeave))
-      ..add(
-          ZegoUIKit().getMeRemovedFromRoomStream().listen(onMeRemovedFromRoom))
-      ..add(ZegoUIKit().getRoomTokenExpiredStream().listen(onRoomTokenExpired))
+      ..add(ZegoUIKit()
+          .getUserJoinStream(targetRoomID: widget.roomID)
+          .listen(onUserJoined))
+      ..add(ZegoUIKit()
+          .getUserLeaveStream(targetRoomID: widget.roomID)
+          .listen(onUserLeave))
+      ..add(ZegoUIKit()
+          .getMeRemovedFromRoomStream(targetRoomID: widget.roomID)
+          .listen(onMeRemovedFromRoom))
+      ..add(ZegoUIKit()
+          .getRoomTokenExpiredStream(targetRoomID: widget.roomID)
+          .listen(onRoomTokenExpired))
       ..add(ZegoUIKit().getErrorStream().listen(onUIKitError));
 
     final isPrebuiltFromMinimizing =
@@ -192,7 +202,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
         appID: widget.appID,
         appSign: widget.appSign,
         token: widget.token,
-        roomID: widget.roomID,
+        liveID: widget.roomID,
         userID: widget.userID,
         userName: widget.userName,
         config: widget.config,
@@ -200,6 +210,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       );
 
       ZegoUIKitPrebuiltLiveAudioRoomController().private.initByPrebuilt(
+            roomID: widget.roomID,
             config: widget.config,
             events: events,
             connectManager: ZegoLiveAudioRoomManagers().connectManager,
@@ -308,7 +319,6 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
       uninitContext();
 
-      ZegoUIKitPrebuiltLiveAudioRoomController().private.uninitByPrebuilt();
       ZegoUIKitPrebuiltLiveAudioRoomController()
           .seat
           .private
@@ -334,6 +344,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
           .audioVideo
           .private
           .uninitByPrebuilt();
+      ZegoUIKitPrebuiltLiveAudioRoomController().private.uninitByPrebuilt();
     } else {
       ZegoLoggerService.logInfo(
         'mini machine state is minimizing, room will not be leave',
@@ -420,6 +431,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       body: LayoutBuilder(
         builder: (context, constraints) {
           return ZegoMinimizingAudioRoomPage(
+            liveID: widget.roomID,
             size: Size(constraints.maxWidth, constraints.maxHeight),
             background: widget.config.pip.android.background ??
                 BackdropFilter(
@@ -571,7 +583,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
       appID: widget.appID,
       appSign: widget.appSign,
       token: widget.token,
-      scenario: ZegoScenario.Broadcast,
+      scenario: ZegoUIKitScenario.Broadcast,
       enablePlatformView: enablePlatformView,
     )
         .then((_) async {
@@ -583,13 +595,17 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
   void onContextInit() {
     ZegoUIKit()
-      ..turnCameraOn(false)
+      ..turnCameraOn(targetRoomID: widget.roomID, false)
       ..turnMicrophoneOn(
+        targetRoomID: widget.roomID,
         widget.config.turnOnMicrophoneWhenJoining,
         muteMode: true,
       )
       ..setAudioOutputToSpeaker(widget.config.useSpeakerWhenJoining)
-      ..setAudioVideoResourceMode(ZegoAudioVideoResourceMode.onlyRTC);
+      ..setPlayerResourceMode(
+        targetRoomID: widget.roomID,
+        ZegoUIKitStreamResourceMode.OnlyRTC,
+      );
 
     ZegoUIKit()
         .joinRoom(widget.roomID, token: widget.token)
@@ -598,7 +614,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
     });
   }
 
-  Future<void> onRoomLogin(ZegoRoomLoginResult result) async {
+  Future<void> onRoomLogin(ZegoUIKitRoomLoginResult result) async {
     if (result.errorCode != 0) {
       ZegoLoggerService.logError(
         'failed to login room:${result.errorCode},${result.extendedData}',
@@ -644,7 +660,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
   Future<void> uninitContext() async {
     await ZegoUIKit().resetSoundEffect();
 
-    await ZegoUIKit().leaveRoom();
+    await ZegoUIKit().leaveRoom(targetRoomID: widget.roomID);
 
     // await ZegoUIKit().uninit();
   }
@@ -755,7 +771,10 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     for (final user in users) {
       ZegoUIKit()
-          .getInRoomUserAttributesNotifier(user.id)
+          .getInRoomUserAttributesNotifier(
+            targetRoomID: widget.roomID,
+            user.id,
+          )
           .addListener(onInRoomUserAttributesUpdated);
     }
   }
@@ -763,7 +782,10 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
   void onUserLeave(List<ZegoUIKitUser> users) {
     for (final user in users) {
       ZegoUIKit()
-          .getInRoomUserAttributesNotifier(user.id)
+          .getInRoomUserAttributesNotifier(
+            targetRoomID: widget.roomID,
+            user.id,
+          )
           .removeListener(onInRoomUserAttributesUpdated);
     }
 
@@ -819,7 +841,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
   void onInRoomUserAttributesUpdated() {
     events.user.onCountOrPropertyChanged?.call(
-      ZegoUIKit().getAllUsers(),
+      ZegoUIKit().getAllUsers(targetRoomID: widget.roomID),
     );
   }
 }

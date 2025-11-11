@@ -11,14 +11,14 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 /// @nodoc
 class ZegoAudioRoomPIPButton extends StatefulWidget {
   const ZegoAudioRoomPIPButton({
-    Key? key,
+    super.key,
     this.afterClicked,
     this.icon,
     this.iconSize,
     this.buttonSize,
     this.aspectWidth = 1,
     this.aspectHeight = 1,
-  }) : super(key: key);
+  });
 
   final ButtonIcon? icon;
 

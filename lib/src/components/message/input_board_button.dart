@@ -11,6 +11,8 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 
 /// @nodoc
 class ZegoLiveAudioRoomInRoomMessageInputBoardButton extends StatefulWidget {
+  final String liveID;
+
   final Size? iconSize;
   final Size? buttonSize;
   final ZegoUIKitPrebuiltLiveAudioRoomInnerText innerText;
@@ -20,14 +22,15 @@ class ZegoLiveAudioRoomInRoomMessageInputBoardButton extends StatefulWidget {
   final Function(int)? onSheetPop;
 
   const ZegoLiveAudioRoomInRoomMessageInputBoardButton({
-    Key? key,
+    super.key,
+    required this.liveID,
     required this.innerText,
     this.rootNavigator = false,
     this.iconSize,
     this.buttonSize,
     this.onSheetPopUp,
     this.onSheetPop,
-  }) : super(key: key);
+  });
 
   @override
   State<ZegoLiveAudioRoomInRoomMessageInputBoardButton> createState() =>
@@ -50,6 +53,7 @@ class _ZegoLiveAudioRoomInRoomMessageInputBoardButtonState
         )
             .push(
           ZegoLiveAudioRoomInRoomMessageInputBoard(
+            liveID: widget.liveID,
             innerText: widget.innerText,
             rootNavigator: widget.rootNavigator,
           ),

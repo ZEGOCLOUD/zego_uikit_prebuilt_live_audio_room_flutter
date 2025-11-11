@@ -16,12 +16,10 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/events.dart';
 
 /// @nodoc
 class ZegoLiveAudioRoomManagers {
-  factory ZegoLiveAudioRoomManagers() => _instance;
-
-  ZegoLiveAudioRoomManagers._internal();
-
-  static final ZegoLiveAudioRoomManagers _instance =
-      ZegoLiveAudioRoomManagers._internal();
+  String get liveID {
+    assert(_liveID.isNotEmpty);
+    return _liveID;
+  }
 
   void updateContextQuery(BuildContext Function() contextQuery) {
     ZegoLoggerService.logInfo(
@@ -40,7 +38,7 @@ class ZegoLiveAudioRoomManagers {
     required String token,
     required String userID,
     required String userName,
-    required String roomID,
+    required String liveID,
     required ZegoUIKitPrebuiltLiveAudioRoomConfig config,
     required ZegoUIKitPrebuiltLiveAudioRoomEvents events,
   }) {
@@ -62,13 +60,15 @@ class ZegoLiveAudioRoomManagers {
 
     _initialized = true;
 
+    _liveID = liveID;
+
     plugins = ZegoLiveAudioRoomPlugins(
       appID: appID,
       appSign: appSign,
       token: token,
       userID: userID,
       userName: userName,
-      roomID: roomID,
+      liveID: liveID,
       plugins: [ZegoUIKitSignalingPlugin()],
       signalingPluginConfig: config.signalingPlugin,
       onPluginReLogin: () {
@@ -80,7 +80,7 @@ class ZegoLiveAudioRoomManagers {
     );
     seatManager = ZegoLiveAudioRoomSeatManager(
       localUserID: userID,
-      roomID: roomID,
+      liveID: liveID,
       plugins: plugins!,
       config: config,
       events: events,
@@ -89,6 +89,7 @@ class ZegoLiveAudioRoomManagers {
       kickOutNotifier: kickOutNotifier,
     );
     connectManager = ZegoLiveAudioRoomConnectManager(
+      liveID: liveID,
       config: config,
       events: events,
       seatManager: seatManager!,
@@ -99,6 +100,7 @@ class ZegoLiveAudioRoomManagers {
     seatManager?.setConnectManager(connectManager!);
 
     liveDurationManager = ZegoLiveAudioRoomDurationManager(
+      roomID: liveID,
       seatManager: seatManager!,
     );
   }
@@ -127,12 +129,14 @@ class ZegoLiveAudioRoomManagers {
     await liveDurationManager?.uninit();
     await plugins?.uninit();
 
+    _liveID = '';
     connectManager = null;
     seatManager = null;
     liveDurationManager = null;
     plugins = null;
   }
 
+  String _liveID = '';
   bool _initialized = false;
   ZegoLiveAudioRoomPlugins? plugins;
   ZegoLiveAudioRoomSeatManager? seatManager;
@@ -141,4 +145,11 @@ class ZegoLiveAudioRoomManagers {
 
   final popUpManager = ZegoLiveAudioRoomPopUpManager();
   final kickOutNotifier = ValueNotifier<bool>(false);
+
+  factory ZegoLiveAudioRoomManagers() => _instance;
+
+  ZegoLiveAudioRoomManagers._internal();
+
+  static final ZegoLiveAudioRoomManagers _instance =
+      ZegoLiveAudioRoomManagers._internal();
 }

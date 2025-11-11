@@ -83,7 +83,7 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/minimizing/overlay_machi
 /// ```
 class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage extends StatefulWidget {
   const ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage({
-    Key? key,
+    super.key,
     required this.contextQuery,
     this.rootNavigator = true,
     this.navigatorWithSafeArea = true,
@@ -104,7 +104,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage extends StatefulWidget {
     this.foregroundBuilder,
     this.backgroundBuilder,
     this.avatarBuilder,
-  }) : super(key: key);
+  });
 
   final Size? size;
   final double padding;
@@ -285,6 +285,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPageState
                 );
           },
           child: ZegoMinimizingAudioRoomPage(
+            liveID: ZegoUIKitPrebuiltLiveAudioRoomController().private.liveID,
             size: Size(
               preferItemSizeNotifier.value.width,
               preferItemSizeNotifier.value.height,

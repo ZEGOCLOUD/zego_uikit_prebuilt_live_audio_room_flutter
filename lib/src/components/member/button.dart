@@ -16,20 +16,23 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 /// @nodoc
 class ZegoLiveAudioRoomMemberButton extends StatefulWidget {
   const ZegoLiveAudioRoomMemberButton({
-    Key? key,
-    this.avatarBuilder,
-    this.itemBuilder,
+    super.key,
+    required this.liveID,
     required this.isPluginEnabled,
     required this.seatManager,
     required this.connectManager,
     required this.popUpManager,
     required this.innerText,
     required this.onMoreButtonPressed,
+    this.avatarBuilder,
+    this.itemBuilder,
     this.hiddenUserIDsNotifier,
     this.iconSize,
     this.buttonSize,
     this.icon,
-  }) : super(key: key);
+  });
+
+  final String liveID;
 
   final ZegoAvatarBuilder? avatarBuilder;
   final ZegoMemberListItemBuilder? itemBuilder;
@@ -74,6 +77,7 @@ class _ZegoLiveAudioRoomMemberButtonState
       onTap: () {
         showMemberListSheet(
           context: context,
+          liveID: widget.liveID,
           avatarBuilder: widget.avatarBuilder,
           itemBuilder: widget.itemBuilder,
           isPluginEnabled: widget.isPluginEnabled,

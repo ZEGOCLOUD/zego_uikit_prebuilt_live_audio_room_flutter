@@ -113,7 +113,6 @@ class ZegoUIKitPrebuiltLiveAudioRoomController
 
     await ZegoUIKitPrebuiltLiveAudioRoomController().pip.cancelBackground();
 
-    private.uninitByPrebuilt();
     seat.private.uninitByPrebuilt();
     room.private.uninitByPrebuilt();
     user.private.uninitByPrebuilt();
@@ -121,6 +120,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomController
     minimize.private.uninitByPrebuilt();
     pip.private.uninitByPrebuilt();
     audioVideo.private.uninitByPrebuilt();
+    private.uninitByPrebuilt();
 
     ZegoLoggerService.logInfo(
       'leave, finished',
