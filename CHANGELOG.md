@@ -1,4 +1,6 @@
+## 3.16.9
 
+- Update dependency
 
 ## 3.16.8
 
