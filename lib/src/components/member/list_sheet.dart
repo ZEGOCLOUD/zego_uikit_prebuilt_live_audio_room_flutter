@@ -1,9 +1,7 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
-
 // Project imports:
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/avatar_default_item.dart';
 import 'package:zego_uikit_prebuilt_live_audio_room/src/components/defines.dart';
@@ -421,41 +419,43 @@ class _ZegoLiveAudioRoomMemberListSheetState
       ));
     }
 
-    return ZegoTextIconButton(
-      buttonSize: Size(60.zR, 60.zR),
-      iconSize: Size(60.zR, 60.zR),
-      icon: ButtonIcon(
-        icon: ZegoLiveAudioRoomImage.asset(
-          ZegoLiveAudioRoomIconUrls.memberMore,
-        ),
-      ),
-      onPressed: () {
-        /// product manager say close sheet together
-        Navigator.of(
-          context,
-          rootNavigator: widget.seatManager.config.rootNavigator,
-        ).pop();
+    return popupItems.isEmpty && widget.onMoreButtonPressed == null
+        ? Container()
+        : ZegoTextIconButton(
+            buttonSize: Size(60.zR, 60.zR),
+            iconSize: Size(60.zR, 60.zR),
+            icon: ButtonIcon(
+              icon: ZegoLiveAudioRoomImage.asset(
+                ZegoLiveAudioRoomIconUrls.memberMore,
+              ),
+            ),
+            onPressed: () {
+              /// product manager say close sheet together
+              Navigator.of(
+                context,
+                rootNavigator: widget.seatManager.config.rootNavigator,
+              ).pop();
 
-        if (widget.onMoreButtonPressed != null) {
-          /// No more popup menus, let the customer handle
-          widget.onMoreButtonPressed!.call(user);
-          return;
-        }
+              if (widget.onMoreButtonPressed != null) {
+                /// No more popup menus, let the customer handle
+                widget.onMoreButtonPressed!.call(user);
+                return;
+              }
 
-        if (popupItems.isNotEmpty) {
-          showPopUpSheet(
-            context: context,
-            liveID: widget.liveID,
-            userID: user.id,
-            popupItems: popupItems,
-            seatManager: widget.seatManager,
-            connectManager: widget.connectManager,
-            innerText: widget.innerText,
-            popUpManager: widget.popUpManager,
+              if (popupItems.isNotEmpty) {
+                showPopUpSheet(
+                  context: context,
+                  liveID: widget.liveID,
+                  userID: user.id,
+                  popupItems: popupItems,
+                  seatManager: widget.seatManager,
+                  connectManager: widget.connectManager,
+                  innerText: widget.innerText,
+                  popUpManager: widget.popUpManager,
+                );
+              }
+            },
           );
-        }
-      },
-    );
   }
 
   Widget controlButton({
