@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
@@ -35,16 +36,16 @@ class ZegoLiveAudioRoomSeatContainer extends StatefulWidget {
   final ZegoUIKitPrebuiltLiveAudioRoomStyle style;
   final ZegoLiveAudioRoomLayoutConfig layoutConfig;
 
-  /// foreground builder of audio video view
+  //// foreground builder of audio video view
   final ZegoAudioVideoViewForegroundBuilder? foregroundBuilder;
 
-  /// background builder of audio video view
+  //// background builder of audio video view
   final ZegoAudioVideoViewBackgroundBuilder? backgroundBuilder;
 
-  /// sorter
+  //// sorter
   final ZegoAudioVideoViewSorter? sortAudioVideo;
 
-  ///avatar
+  ////avatar
   final ZegoAvatarBuilder? avatarBuilder;
 
   final bool showSoundWavesInAudioMode;
@@ -59,18 +60,25 @@ class ZegoLiveAudioRoomSeatContainer extends StatefulWidget {
 /// @nodoc
 class _ZegoAudioVideoContainerState
     extends State<ZegoLiveAudioRoomSeatContainer> {
-  bool pendingUsers = false;
-  List<ZegoUIKitUser> userList = [];
+  bool waitingUserJoinRoom = false;
+  final userListNotifier = ValueNotifier<List<ZegoUIKitUser>>([]);
   List<StreamSubscription<dynamic>?> subscriptions = [];
+  Map<String, String>? previousSeatsUser;
+
+  /// Store previous seatsUser (seat index -> user id)
 
   @override
   void initState() {
     super.initState();
 
+    updateUserList(widget.seatManager.seatsUserMapNotifier.value);
     widget.seatManager.seatsUserMapNotifier.addListener(onSeatsUserChanged);
     subscriptions.add(ZegoUIKit()
         .getUserListStream(targetRoomID: widget.liveID)
         .listen(onUserListUpdated));
+    subscriptions.add(ZegoUIKit()
+        .getAudioVideoListStream(targetRoomID: widget.liveID)
+        .listen(onAudioVideoListUpdated));
   }
 
   @override
@@ -86,35 +94,34 @@ class _ZegoAudioVideoContainerState
 
   @override
   Widget build(BuildContext context) {
-    updateUserList(widget.seatManager.seatsUserMapNotifier.value);
+    return ValueListenableBuilder<List<ZegoUIKitUser>>(
+        valueListenable: userListNotifier,
+        builder: (context, users, _) {
+          return ZegoLiveAudioRoomLayout(
+            liveID: widget.liveID,
+            layoutConfig: widget.layoutConfig,
+            backgroundBuilder: widget.backgroundBuilder,
+            foregroundBuilder: widget.foregroundBuilder,
+            userList: users,
+            usersItemIndex: getUsersItemIndexIfSpecify(),
+            showSoundWavesInAudioMode: widget.showSoundWavesInAudioMode,
+            soundWaveColor: widget.soundWaveColor,
+            avatarBuilder: widget.avatarBuilder,
+          );
+        });
+  }
 
-    return StreamBuilder<List<ZegoUIKitUser>>(
-      stream: ZegoUIKit().getAudioVideoListStream(targetRoomID: widget.liveID),
-      builder: (context, snapshot) {
-        return ZegoLiveAudioRoomLayout(
-          liveID: widget.liveID,
-          layoutConfig: widget.layoutConfig,
-          backgroundBuilder: widget.backgroundBuilder,
-          foregroundBuilder: widget.foregroundBuilder,
-          userList: userList,
-          usersItemIndex: getUsersItemIndexIfSpecify(),
-          showSoundWavesInAudioMode: widget.showSoundWavesInAudioMode,
-          soundWaveColor: widget.soundWaveColor,
-          avatarBuilder: widget.avatarBuilder,
-        );
-      },
-    );
+  void onAudioVideoListUpdated(List<ZegoUIKitUser> users) {
+    updateUserList(widget.seatManager.seatsUserMapNotifier.value);
   }
 
   void onSeatsUserChanged() {
-    pendingUsers = false;
-    setState(() {
-      updateUserList(widget.seatManager.seatsUserMapNotifier.value);
-    });
+    waitingUserJoinRoom = false;
+    updateUserList(widget.seatManager.seatsUserMapNotifier.value);
   }
 
   void onUserListUpdated(List<ZegoUIKitUser> users) {
-    if (!pendingUsers) {
+    if (!waitingUserJoinRoom) {
       return;
     }
 
@@ -122,12 +129,14 @@ class _ZegoAudioVideoContainerState
   }
 
   Map<String, int> getUsersItemIndexIfSpecify() {
-    /// specify user item index by seat index
-    final usersItemIndex = <String, int>{}; //  map<user id, item index>
+    //// specify user item index by seat index
+    final usersItemIndex = <String, int>{};
 
-    // if (widget.seatManager.hostsNotifier.value.isNotEmpty) {
-    //   usersItemIndex[widget.seatManager.hostsNotifier.value.first] = 0;
-    // }
+    ///  map<user id, item index>
+
+    /// if (widget.seatManager.hostsNotifier.value.isNotEmpty) {
+    ///   usersItemIndex[widget.seatManager.hostsNotifier.value.first] = 0;
+    /// }
 
     widget.seatManager.seatsUserMapNotifier.value.forEach((seatIndex, userID) {
       usersItemIndex[userID] = int.parse(seatIndex);
@@ -137,22 +146,68 @@ class _ZegoAudioVideoContainerState
   }
 
   void updateUserList(Map<String, String> seatsUser) {
-    userList.clear();
+    final audioVideoUserIDList = ZegoUIKit()
+        .getAudioVideoList(targetRoomID: widget.liveID)
+        .map((e) => e.id)
+        .toList();
 
+    List<ZegoUIKitUser> newUsers = [];
     seatsUser.forEach((seatIndex, seatUserID) {
       final seatUser = ZegoUIKit().getUser(
         targetRoomID: widget.liveID,
         seatUserID,
       );
-      if (!seatUser.isEmpty()) {
-        userList.add(seatUser);
+      if (seatUser.isEmpty()) {
+        //// user not enter room now
+        waitingUserJoinRoom = true;
       } else {
-        pendingUsers = true;
+        if (audioVideoUserIDList.contains(seatUser.id)) {
+          //// Only users already in the stream list are displayed; otherwise, wait for the stream list to update
+          newUsers.add(seatUser);
+        }
       }
     });
 
-    userList =
-        widget.sortAudioVideo?.call(List<ZegoUIKitUser>.from(userList)) ??
-            userList;
+    if (null != widget.sortAudioVideo) {
+      newUsers = widget.sortAudioVideo!.call(newUsers);
+    }
+    final newUserIDs = newUsers.map((e) => e.id).toList();
+    final oldUserIDs = userListNotifier.value.map((e) => e.id).toList();
+
+    /// Check if user id list has changed
+    bool userIDsChanged =
+        !const DeepCollectionEquality().equals(newUserIDs, oldUserIDs);
+
+    /// Check if seat index for user id has changed (only if userIDs haven't changed)
+    bool seatIndexChanged = false;
+    if (!userIDsChanged && previousSeatsUser != null) {
+      /// Create reverse mapping: user id -> seat index
+      final previousUserToSeat = <String, String>{};
+      previousSeatsUser!.forEach((seatIndex, userID) {
+        previousUserToSeat[userID] = seatIndex;
+      });
+
+      final currentUserToSeat = <String, String>{};
+      seatsUser.forEach((seatIndex, userID) {
+        currentUserToSeat[userID] = seatIndex;
+      });
+
+      /// Check if any user id's seat index has changed
+      for (final userID in currentUserToSeat.keys) {
+        if (previousUserToSeat.containsKey(userID)) {
+          if (previousUserToSeat[userID] != currentUserToSeat[userID]) {
+            seatIndexChanged = true;
+            break;
+          }
+        }
+      }
+    }
+
+    if (userIDsChanged || seatIndexChanged) {
+      userListNotifier.value = newUsers;
+    }
+
+    /// Save current seatsUser as baseline for next comparison
+    previousSeatsUser = Map<String, String>.from(seatsUser);
   }
 }
