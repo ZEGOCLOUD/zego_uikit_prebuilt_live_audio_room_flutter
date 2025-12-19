@@ -2,10 +2,10 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
+import 'package:collection/collection.dart';
 import 'package:zego_uikit/zego_uikit.dart';
 
 // Project imports:
