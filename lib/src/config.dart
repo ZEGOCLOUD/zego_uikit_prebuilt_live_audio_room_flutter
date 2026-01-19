@@ -16,6 +16,8 @@ import 'package:zego_uikit_prebuilt_live_audio_room/src/inner_text.dart';
 /// Configuration for initializing the Live Audio Room.
 /// This class is used as the [config] parameter for the constructor of [ZegoUIKitPrebuiltLiveAudioRoom].
 class ZegoUIKitPrebuiltLiveAudioRoomConfig {
+  ZegoLiveAudioRoomAudioConfig audio;
+
   /// Configuration for all seats.
   ZegoLiveAudioRoomSeatConfig seat;
 
@@ -149,6 +151,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         rootNavigator = false,
         userInRoomAttributes = const {},
         advanceConfigs = const {},
+        audio = ZegoLiveAudioRoomAudioConfig(),
         seat = ZegoLiveAudioRoomSeatConfig(
           layout: ZegoLiveAudioRoomLayoutConfig(),
           takeIndexWhenJoining: 0,
@@ -190,6 +193,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         rootNavigator = false,
         userInRoomAttributes = const {},
         advanceConfigs = const {},
+        audio = ZegoLiveAudioRoomAudioConfig(),
         seat = ZegoLiveAudioRoomSeatConfig(
           layout: ZegoLiveAudioRoomLayoutConfig(),
           closeWhenJoining: false,
@@ -219,6 +223,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
     this.userInRoomAttributes = const {},
     this.advanceConfigs = const {},
     ZegoUIKitPrebuiltLiveAudioRoomInnerText? translationText,
+    ZegoLiveAudioRoomAudioConfig? audio,
     ZegoLiveAudioRoomSeatConfig? seat,
     ZegoLiveAudioRoomTopMenuBarConfig? topMenuBar,
     ZegoLiveAudioRoomBottomMenuBarConfig? bottomMenuBar,
@@ -232,7 +237,8 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
     ZegoLiveAudioRoomPIPConfig? pip,
     ZegoLiveAudioRoomMediaPlayerConfig? mediaPlayer,
     ZegoLiveAudioRoomBackgroundMediaConfig? backgroundMedia,
-  })  : seat = seat ??
+  })  : audio = audio ?? ZegoLiveAudioRoomAudioConfig(),
+        seat = seat ??
             ZegoLiveAudioRoomSeatConfig(
               layout: ZegoLiveAudioRoomLayoutConfig(),
               closeWhenJoining: true,
@@ -257,6 +263,7 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
   @override
   String toString() {
     return 'ZegoUIKitPrebuiltLiveAudioRoomConfig:{'
+        'audio:$audio, '
         'seat:$seat, '
         'topMenuBar:$topMenuBar, '
         'bottomMenuBar:$bottomMenuBar, '
@@ -281,6 +288,31 @@ class ZegoUIKitPrebuiltLiveAudioRoomConfig {
         'rootNavigator:$rootNavigator, '
         'advanceConfigs:$advanceConfigs, '
         'emptyAreaBuilder:$emptyAreaBuilder, '
+        '}';
+  }
+}
+
+class ZegoLiveAudioRoomAudioConfig {
+  /// example:
+  /// ```dart
+  /// ZegoLiveAudioRoomAudioConfig(channelConfig: {
+  ///   ZegoStreamType.main: ZegoUIKitAudioConfig(
+  ///     48,
+  ///     ZegoUIKitAudioChannel.Mono,
+  ///     ZegoUIKitAudioCodecID.Normal2,
+  ///   ),
+  /// })
+  /// ```
+  Map<ZegoStreamType, ZegoUIKitAudioConfig> channelConfig;
+
+  ZegoLiveAudioRoomAudioConfig({
+    this.channelConfig = const {},
+  });
+
+  @override
+  String toString() {
+    return 'ZegoLiveAudioRoomAudioConfig:{'
+        'channelConfig:${channelConfig.map((k, v) => MapEntry(k, v.toStringX()))}, '
         '}';
   }
 }

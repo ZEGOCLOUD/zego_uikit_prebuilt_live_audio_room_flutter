@@ -582,6 +582,10 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
   }
 
   void onContextInit() {
+    widget.config.audio.channelConfig.forEach((key, value) {
+      ZegoUIKit().setAudioConfig(value, streamType: key);
+    });
+
     ZegoUIKit()
       ..turnCameraOn(false)
       ..turnMicrophoneOn(
