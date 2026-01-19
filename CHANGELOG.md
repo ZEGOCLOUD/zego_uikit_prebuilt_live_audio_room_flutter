@@ -1,3 +1,7 @@
+## 3.16.10
+
+- Support set audio config by `audio` of `ZegoUIKitPrebuiltLiveAudioRoomConfig`
+
 ## 3.16.9
 
 - Update dependency

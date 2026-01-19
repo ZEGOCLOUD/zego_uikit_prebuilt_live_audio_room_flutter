@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'zego_uikit_prebuilt_live_audio_room'
-  s.version          = '3.16.9'
+  s.version          = '3.16.10'
   s.summary          = 'A new Flutter project.'
   s.description      = <<-DESC
 A new Flutter project.
