@@ -157,7 +157,7 @@ class _ZegoUIKitPrebuiltLiveAudioRoomState
 
     WidgetsBinding.instance.addObserver(this);
 
-    ZegoUIKit().getZegoUIKitVersion().then((uikitVersion) {
+    ZegoUIKit().version().then((uikitVersion) {
       ZegoLoggerService.logInfo(
         'version: zego_uikit_prebuilt_live_audio_room: ${ZegoUIKitPrebuiltLiveAudioRoomController().version}; $uikitVersion, \n'
         'config: ${widget.config}, '
