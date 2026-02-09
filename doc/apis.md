@@ -1,7 +1,82 @@
-- [ZegoUIKitPrebuiltLiveAudioRoom](#zegouikitprebuiltliveaudioroom)
+# APIs
+
 - [ZegoUIKitPrebuiltLiveAudioRoomController](#zegouikitprebuiltliveaudioroomcontroller)
-  - [leave](#leave)
-  - [hideInMemberList](#hideinmemberlist)
+  - [seat](#seat)
+    - [host](#host)
+      - [open](#open)
+      - [close](#close)
+      - [removeSpeaker](#removespeaker)
+      - [acceptTakingRequest](#accepttakingrequest)
+      - [rejectTakingRequest](#rejecttakingrequest)
+      - [inviteToTake](#invitetotake)
+      - [mute](#mute)
+      - [muteByUserID](#mutebyuserid)
+      - [assignCoHost](#assigncohost)
+    - [audience](#audience)
+      - [take](#take)
+      - [applyToTake](#applytotake)
+      - [cancelTakingRequest](#canceltakingrequest)
+      - [acceptTakingInvitation](#accepttakinginvitation)
+    - [speaker](#speaker)
+      - [leave](#leave)
+    - [userMapNotifier](#usermapnotifier)
+    - [localIsHost](#localishost)
+    - [localIsAudience](#localisaudience)
+    - [localIsSpeaker](#localisspeaker)
+    - [localIsCoHost](#localiscohost)
+    - [localHasHostPermissions](#localhashostpermissions)
+    - [isRoomSeatLocked](#isroomseatlocked)
+    - [getUserByIndex](#getuserbyindex)
+    - [getSeatIndexByUserID](#getseatindexbyuserid)
+    - [isAHostSeatIndex](#isahostseatindex)
+    - [getEmptySeats](#getemptyseats)
+    - [muteStateNotifier](#mutestatenotifier)
+    - [muteLocally](#mutelocally)
+    - [muteLocallyByUserID](#mutelocallybyuserid)
+  - [audioVideo](#audiovideo)
+    - [microphone](#microphone)
+      - [localState](#localstate)
+      - [localStateNotifier](#localstatenotifier)
+      - [state](#state)
+      - [stateNotifier](#statenotifier)
+      - [turnOn](#turnon)
+      - [switchState](#switchstate)
+    - [audioOutput](#audiooutput)
+      - [localNotifier](#localnotifier)
+      - [notifier](#notifier)
+      - [switchToSpeaker](#switchtospeaker)
+    - [seiStream](#seistream)
+    - [sendSEI](#sendsei)
+  - [message](#message)
+    - [send](#send)
+    - [list](#list)
+    - [stream](#stream)
+    - [clear](#clear)
+  - [user](#user)
+    - [remove](#remove)
+  - [room](#room)
+    - [updateProperty](#updateproperty)
+    - [updateProperties](#updateproperties)
+    - [deleteProperties](#deleteproperties)
+    - [queryProperties](#queryproperties)
+    - [propertiesStream](#propertiesstream)
+    - [sendCommand](#sendcommand)
+    - [commandReceivedStream](#commandreceivedstream)
+    - [removeUser](#removeuser)
+    - [renewToken](#renewtoken)
+  - [minimize](#minimize)
+    - [state](#state-1)
+    - [isMinimizing](#isminimizing)
+    - [isMinimizingNotifier](#isminimizingnotifier)
+    - [restore](#restore)
+    - [minimize](#minimize-1)
+    - [hide](#hide)
+  - [pip](#pip)
+    - [status](#status)
+    - [available](#available)
+    - [enable](#enable)
+    - [enableWhenBackground](#enablewhenbackground)
+    - [cancelBackground](#cancelbackground)
   - [media](#media)
     - [volume](#volume)
     - [totalDuration](#totalduration)
@@ -15,1349 +90,1368 @@
     - [info](#info)
     - [play](#play)
     - [stop](#stop)
-    - [destroy](#destroy)
     - [pause](#pause)
     - [resume](#resume)
-    - [seekTo](#seekto)
-    - [setVolume](#setvolume)
-    - [muteLocal](#mutelocal)
-    - [pickPureAudioFile](#pickpureaudiofile)
-    - [pickVideoFile](#pickvideofile)
     - [pickFile](#pickfile)
-  - [message](#message)
-    - [send](#send)
-    - [list](#list)
-    - [stream](#stream)
+    - [muteLocal](#mutelocal)
     - [clear](#clear)
-  - [minimizing](#minimizing)
-    - [state](#state)
-    - [isMinimizingNotifier(ValueNotifier)](#isminimizingnotifiervaluenotifier)
-    - [isMinimizing](#isminimizing)
-    - [restore](#restore)
-    - [minimize](#minimize)
-    - [hide](#hide)
-  - [pip](#pip)
-    - [enable](#enable)
-    - [enableWhenBackground](#enablewhenbackground)
-    - [cancelBackground](#cancelbackground)
-  - [seat](#seat)
-    - [userMapNotifier](#usermapnotifier)
-    - [localIsHost](#localishost)
-    - [localIsAudience](#localisaudience)
-    - [localIsSpeaker](#localisspeaker)
-    - [localIsCoHost](#localiscohost)
-    - [localHasHostPermissions](#localhashostpermissions)
-    - [isRoomSeatLocked](#isroomseatlocked)
-    - [isAHostSeatIndex](#isahostseatindex)
-    - [getUserByIndex](#getuserbyindex)
-    - [getEmptySeats](#getemptyseats)
-    - [getSeatIndexByUserID](#getseatindexbyuserid)
-    - [muteStateNotifier](#mutestatenotifier)
-    - [muteLocally](#mutelocally)
-    - [muteLocallyByUserID](#mutelocallybyuserid)
-    - [host](#host)
-      - [open](#open)
-      - [close](#close)
-      - [removeSpeaker](#removespeaker)
-      - [acceptTakingRequest](#accepttakingrequest)
-      - [rejectTakingRequest](#rejecttakingrequest)
-      - [inviteToTake](#invitetotake)
-      - [mute](#mute)
-      - [muteByUserID](#mutebyuserid)
-    - [audience](#audience)
-      - [take](#take)
-      - [applyToTake](#applytotake)
-      - [cancelTakingRequest](#canceltakingrequest)
-      - [acceptTakingInvitation](#accepttakinginvitation)
-    - [speaker](#speaker)
-      - [leave](#leave-1)
-  - [audio video](#audio-video)
-    - [microphone](#microphone)
-      - [localState](#localstate)
-      - [localStateNotifier](#localstatenotifier)
-      - [state](#state-1)
-      - [stateNotifier](#statenotifier)
-      - [turnOn](#turnon)
-      - [switchState](#switchstate)
-    - [seiStream](#seistream)
-    - [sendSEI](#sendsei)
-  - [room](#room)
-    - [property](#property)
-      - [updateProperty/updateProperties](#updatepropertyupdateproperties)
-      - [deleteProperties](#deleteproperties)
-      - [queryProperties](#queryproperties)
-      - [propertiesStream](#propertiesstream)
-    - [command](#command)
-      - [sendCommand](#sendcommand)
-      - [commandReceivedStream](#commandreceivedstream)
 
 ---
 
-# ZegoUIKitPrebuiltLiveAudioRoom
-
->
->
-> Live Audio Room Widget.
-> You can embed this widget into any page of your project to integrate the functionality of a audio chat room.
-> You can refer to our [documentation](https://docs.zegocloud.com/article/15079),
-> or our [sample code](https://github.com/ZEGOCLOUD/zego_uikit_prebuilt_live_audio_room_example_flutter/tree/master/live_audio_room).
->
-> - function prototype:
->
-> ```dart
->class ZegoUIKitPrebuiltLiveAudioRoom extends StatefulWidget {
->  const ZegoUIKitPrebuiltLiveAudioRoom({
->    Key? key,
->    required this.appID,
->    required this.appSign,
->    required this.userID,
->    required this.userName,
->    required this.roomID,
->    required this.config,
->    required this.events,
->  }) : super(key: key);
->
->  /// You can create a project and obtain an appID from the [ZEGOCLOUD Admin >Console](https://console.zegocloud.com).
->  final int appID;
->
->  /// You can create a project and obtain an appSign from the [ZEGOCLOUD Admin >Console](https://console.zegocloud.com).
->  final String appSign;
->
->  /// The ID of the currently logged-in user.
->  /// It can be any valid string.
->  /// Typically, you would use the ID from your own user system, such as Firebase.
->  final String userID;
->
->  /// The name of the currently logged-in user.
->  /// It can be any valid string.
->  /// Typically, you would use the name from your own user system, such as Firebase.
->  final String userName;
->
->  /// The ID of the audio chat room.
->  /// This ID serves as a unique identifier for the room, so you need to ensure its uniqueness.
->  /// It can be any valid string.
->  /// Users who enter the same [roomID] will be logged into the same room to chat or listen to others.
->  final String roomID;
->
->  /// Initialize the configuration for the voice chat room.
->  final ZegoUIKitPrebuiltLiveAudioRoomConfig config;
->
->  /// Initialize the event for the voice chat room.
->  final ZegoUIKitPrebuiltLiveAudioRoomEvents events;q
->}
-> ```
-
-# ZegoUIKitPrebuiltLiveAudioRoomController
-
-## leave
-
->
->
-
-> This function is used to end the Live Audio Room.
->
-> You can pass the context [context] for any necessary pop-ups or page transitions.
-> By using the [showConfirmation] parameter, you can control whether to display a confirmation dialog to confirm ending the Live Audio Room.
->
-> This function behaves the same as the close button in the calling interface's top right corner, and it is also affected by the [ZegoUIKitPrebuiltLiveAudioRoomEvents.onLeaveConfirmation]
-> and [ZegoUIKitPrebuiltLiveAudioRoomEvents.onEnded] settings in the config.
->
-> - function prototype:
->
-> ```dart
-> Future<bool> leave(
->   BuildContext context, {
->   bool showConfirmation = true,
-> }) async
-> ```
-
-## hideInMemberList
-
->
-> hide some user in member list
->
-> - function prototype:
->
-> ```dart
-> void hideInMemberList(List<String> userIDs)
-> ```
-
-## media
-
-media series API
-
-### volume
-
->
-> volume of current media
->
-> - function prototype:
->
-> ```dart
-> int get volume
-> ```
-
-### totalDuration
-
->
-> the total progress(millisecond) of current media resources
->
-> - function prototype:
->
-> ```dart
-> int get totalDuration
-> ```
-
-### currentProgress
-
->
-> current playing progress of current media
->
-> - function prototype:
->
-> ```dart
-> int get currentProgress
-> ```
-
-### type
-
->
-> type of current media
->
-> - function prototype:
->
-> ```dart
-> ZegoUIKitMediaType get type
->
-> enum ZegoUIKitMediaType {
->   pureAudio,
->   video,
->   unknown,
-> }
-> ```
-
-### volumeNotifier
-
->
-> volume notifier of current media
->
-> - function prototype:
->
-> ```dart
-> ValueNotifier<int> get volumeNotifier
-> ```
-
-### currentProgressNotifier
-
->
-> current progress notifier of current media
->
-> - function prototype:
->
-> ```dart
-> ValueNotifier<int> get currentProgressNotifier
-> ```
-
-### playStateNotifier
-
->
-> play state notifier of current media
->
-> - function prototype:
->
-> ```dart
-> ValueNotifier<ZegoUIKitMediaPlayState> get playStateNotifier
-> 
-> /// media play state
-> enum ZegoUIKitMediaPlayState {
->   /// Not playing
->   noPlay,
-> 
->   /// not start yet
->   loadReady,
-> 
->   /// Playing
->   playing,
-> 
->   /// Pausing 
->   pausing,
-> 
->   /// End of play
->   playEnded
-> }
-> ```
-
-### typeNotifier
-
->
-> type notifier of current media
->
-> - function prototype:
->
-> ```dart
-> ValueNotifier<ZegoUIKitMediaType> get typeNotifier
-> 
-> /// media type
-> enum ZegoUIKitMediaType {
->   pureAudio,
->   video,
->   unknown,
-> }
-> ```
-
-### muteNotifier
-
->
-> mute state notifier of current media
->
-> - function prototype:
->
-> ```dart
-> ValueNotifier<bool> get muteNotifier
-> ```
-
-### info
-
->
-> info of current media
->
-> - function prototype:
->
-> ```dart
-> ZegoUIKitMediaInfo get info
-> 
-> /// Media Infomration of media file.
-> ///
-> /// Meida information such as video resolution of media file.
-> class ZegoUIKitMediaInfo {
->   /// Video resolution width.
->   int width;
-> 
->   /// Video resolution height.
->   int height;
-> 
->   /// Video frame rate.
->   int frameRate;
-> }
-> ```
-
-### play
-
->
-> start play current media
->
-> - function prototype:
->
-> ```dart
-> Future<ZegoUIKitMediaPlayResult> play({
->   required String filePathOrURL,
->   bool enableRepeat = false,
-> }) async
->
-> /// media play result
-> class ZegoUIKitMediaPlayResult {
->   int errorCode;
->   String message;
-> }
-> ```
-
-### stop
-
->
-> stop play current media
->
-> - function prototype:
->
-> ```dart
-> Future<void> stop() async
-> ```
-
-### destroy
-
->
-> destroy current media
->
-> - function prototype:
->
-> ```dart
-> Future<void> destroy() async
-> ```
-
-### pause
-
->
-> pause current media
->
-> - function prototype:
->
-> ```dart
-> Future<void> pause() async
-> ```
-
-### resume
-
->
-> resume current media
->
-> - function prototype:
->
-> ```dart
-> Future<void> resume() async
-> ```
-
-### seekTo
-
->
-> set the current media playback progress
->
-> - function prototype:
->
-> ```dart
-> Future<ZegoUIKitMediaSeekToResult> seekTo(int millisecond)
-> 
-> class ZegoUIKitMediaSeekToResult {
->   int errorCode;
->   String message;
-> }
-> ```
-
-### setVolume
-
->
-> set media player volume. Both the local play volume and the publish volume are set.
-> the range is 0 ~ 100. The default is 30.
->
-> set **isSyncToRemote** to be true if you want to sync both the local play volume
-> and the publish volume, if **isSyncToRemote** is false, that will only adjust the
-> local play volume.
->
-> - function prototype:
->
-> ```dart
-> Future<void> setVolume(int volume, {bool isSyncToRemote = false,}) async
-> ```
-
-### muteLocal
-
->
-> mute current media
->
-> - function prototype:
->
-> ```dart
-> Future<void> muteLocal(bool mute) async
-> ```
-
-### pickPureAudioFile
-
->
-> pick pure audio media file
->
-> - function prototype:
->
-> ```dart
-> Future<List<PlatformFile>> pickPureAudioFile() async
-> ```
-
-### pickVideoFile
-
->
-> pick video media file
->
-> - function prototype:
->
-> ```dart
-> Future<List<PlatformFile>> pickVideoFile() async
-> ```
-
-### pickFile
-
->
-> If you want to specify the allowed formats, you can set them using [allowedExtensions].
-> Currently, for video, we support "avi", "flv", "mkv", "mov", "mp4", "mpeg", "webm", "wmv".
-> For audio, we support "aac", "midi", "mp3", "ogg", "wav".
->
-> - function prototype:
->
-> ```dart
-> Future<List<PlatformFile>> pickFile({
->   List<String>? allowedExtensions = const [
->     /// video
->     "avi",
->     "flv",
->     "mkv",
->     "mov",
->     "mp4",
->     "mpeg",
->     "webm",
->     "wmv",
->
->     /// audio
->     "aac",
->     "midi",
->     "mp3",
->     "ogg",
->     "wav",
->   ],
-> }) async
-> ```
-
-## message
-
-> media series API
->
->
-> - function prototype:
->
-> ```dart
->/// in-room message
->class ZegoInRoomMessage {
->  /// If the local message sending fails, then the message ID at this time is unreliable, and is a negative sequential value.
->  int messageID;
->
->  /// message sender.
->  ZegoUIKitUser user;
->
->  /// message content.
->  String message;
->
->  /// message attributes
->  Map<String, String> attributes;
->
->  /// The timestamp at which the message was sent.
->  /// You can format the timestamp, which is in milliseconds since epoch, using DateTime.fromMillisecondsSinceEpoch(timestamp).
->  int timestamp;
->
->  ///
->  var state = ValueNotifier<ZegoInRoomMessageState>(ZegoInRoomMessageState.success);
->}
->
-> 
-> /// in-room message send state
-> enum ZegoInRoomMessageState {
->   idle,
->   sending,
->   success,
->   failed,
-> }
-> ```
-
-### send
-
->
-> sends the chat message, @return Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
->
-> - function prototype:
->
-> ```dart
-> Future<bool> send(String message, {
->     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
-> }) async
-> ```
-
-### list
-
-> retrieves a list of chat messages that already exist in the room
->
-> return a `List` of `ZegoInRoomMessage` objects representing the chat messages that already exist in the room.
->
->
-> - function prototype:
->
-> ```dart
-> List<ZegoInRoomMessage> list({ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage})
-> ```
-
-### stream
-
->
->
-> retrieves a list stream of chat messages that already exist in the room.
->
-> the stream will dynamically update when new chat messages are received, and you can use a `StreamBuilder` to listen to it and update the UI in real time.
->
-> return a `List` of `ZegoInRoomMessage` objects representing the chat messages that already exist in the room.
->
-> Example:
->
-> ```dart
-> ..foreground = Positioned(
->     left: 10,
->     bottom: 50,
->     child: StreamBuilder<List<ZegoInRoomMessage>>(
->       stream: liveController.message.stream(),
->       builder: (context, snapshot) {
->         final messages = snapshot.data ?? <ZegoInRoomMessage>[];
->
->         return Container(
->           width: 200,
->           height: 200,
->           decoration: BoxDecoration(
->             color: Colors.white.withValues(alpha: 0.2),
->           ),
->           child: ListView.builder(
->             itemCount: messages.length,
->             itemBuilder: (context, index) {
->               final message = messages[index];
->               return Text('${message.user.name}: ${message.message}');
->             },
->           ),
->         );
->       },
->     ),
->   )
-> ```
->
-> - function prototype:
->
-> ```dart
-> Stream<List<ZegoInRoomMessage>> stream({ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage})
-> ```
-
-### clear
-
-> clear local messages and remote messages
->
->
-> - function prototype:
->
-> ```dart
-> List<ZegoInRoomMessage> clear({
->     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
->     bool clearRemote = true,
-> })
-> ```
-
-## minimizing
-
-the APIs related to minimizing.
-
-### state
-
->
-> current minimize state
->
-> - function prototype:
->
-> ```dart
-> ZegoLiveAudioRoomMiniOverlayPageState get state
-> 
-> /// page state of current minimize page
-> enum ZegoLiveAudioRoomMiniOverlayPageState {
->   idle,
->   inAudioRoom,
->   minimizing,
-> }
-> 
-> ```
-
-### isMinimizingNotifier(ValueNotifier<bool>)
-
-> is it currently in the minimized state or not
->
-> - example:
->
-> ```dart
-> ValueListenableBuilder<bool>(
->   valueListenable:
->   ZegoUIKitPrebuiltLiveAudioRoomController().minimize.isMinimizingNotifier,
->   builder: (context, isMinimized, _) {
->     ...
->   },
-> )
-> ```
-
-### isMinimizing
-
->
-> is it currently in the minimized state or not
->
-> - function prototype:
->
-> ```dart
-> bool get isMinimizing
-> ```
-
-### restore
-
->
-> restore the `ZegoUIKitPrebuiltLiveAudioRoom` from minimize
->
-> - function prototype:
->
-> ```dart
-> bool restore(
->   BuildContext context, {
->   bool rootNavigator = true,
->   bool withSafeArea = false,
-> })
-> ```
-
-### minimize
-
->
-> minimize the `ZegoUIKitPrebuiltLiveAudioRoom`
->
-> - function prototype:
->
-> ```dart
-> bool minimize(
->   BuildContext context, {
->   bool rootNavigator = true,
-> })
-> ```
-
-### hide
-
->
-> if audio room ended in minimizing state, not need to navigate, just hide the minimize widget.
->
-> - function prototype:
->
-> ```dart
-> void hide()
-> ```
-
-## pip
-
-### enable
-
->
-> - function prototype:
->
-> ```dart
-> Future<PiPStatus> enable({
->   int aspectWidth = 1,
->   int aspectHeight = 1,
-> }) async
-> ```
-
-### enableWhenBackground
-
->
-> - function prototype:
->
-> ```dart
-> Future<PiPStatus> enableWhenBackground({
->   int aspectWidth = 1,
->   int aspectHeight = 1,
-> }) async
-> ```
-
-### cancelBackground
-
->
-> - function prototype:
->
-> ```dart
-> Future<PiPStatus> cancelBackground() async
-> ```
-
-
-## seat
-
-### userMapNotifier
-
->
-> the seat user map of the current live audio room.
->
-> - function prototype:
->
-> ```dart
-> ValueNotifier<Map<String, String>>? get userMapNotifier
-> ```
-
-### localIsHost
-
->
-> local user is host or not
->
-> - function prototype:
->
-> ```dart
-> bool get localIsHost
-> ```
-
-### localIsAudience
-
->
-> local user is audience or not
->
-> - function prototype:
->
-> ```dart
-> bool get localIsAudience
-> ```
-
-### localIsSpeaker
-
->
-> local user is speaker or not
->
-> - function prototype:
->
-> ```dart
-> bool get localIsSpeaker
-> ```
-
-### localIsCoHost
-
->
-> local user is co-host or not
->
-> co-host have the same permissions as hosts if host is not exist
->
-> - function prototype:
->
-> ```dart
-> bool get localIsCoHost
-> ```
-
-### localHasHostPermissions
-
->
-> local user has host permission or not
->
-> co-host have the same permissions as hosts if host is not exist
->
-> - function prototype:
->
-> ```dart
-> bool get localHasHostPermissions
-> ```
-
-### isRoomSeatLocked
-
-> is room seat locked or not
-> 
-> - function prototype:
->
-> ```dart
-> bool get isRoomSeatLocked
-> ```
-
-### isAHostSeatIndex
-
->  is a host seat index or not
-> 
-> - function prototype:
->
-> ```dart
-> bool isAHostSeatIndex(int seatIndex)
-> ```
-
-### getUserByIndex
-
->
-> get user who on the target seat index
->
-> - function prototype:
->
-> ```dart
-> ZegoUIKitUser? getUserByIndex(int targetIndex)
-> ```
-
-### getEmptySeats
-
->
-> get the currently empty seat
-> 
-> set [includeHostSeats] to true if [ZegoLiveAudioRoomSeatConfig.hostIndexes] is included, default does not include
->
-> - function prototype:
->
-> ```dart
-> List<int> getEmptySeats({bool includeHostSeats = false,})
-> ```
-
-### getSeatIndexByUserID
-
->
-> get seat index of target user
->
-> - function prototype:
->
-> ```dart
-> int getSeatIndexByUserID(String targetUserID)
-> ```
-
-### muteStateNotifier
-
->
-> Is the current seat muted or not.
-> Set `isLocally` to true to find out if it is muted locally.
->
-> - function prototype:
->
-> ```dart
-> ValueNotifier<bool> muteStateNotifier(
->   int targetIndex, {
->   bool isLocally = false,
-> })
-> ```
-
-### muteLocally
-
->
->
-> Mute the user at the `targetIndex` seat **locally**.
-> After mute, if you want to un-mute, you can set `muted` to false.
->
-> And on side of the user at the `targetIndex` seat, return true/false in
-> the callback
-> of [ZegoLiveAudioRoomAudioVideoEvents.onMicrophoneTurnOnByOthersConfirmation](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Events-topic.html#onmicrophoneturnonbyothersconfirmation)
-> to open microphone or not.
->
-> - function prototype:
->
-> ```dart
-> Future<bool> muteLocally({
->   int targetIndex = -1,
->   bool muted = true,
-> }) async
-> ```
-
-### muteLocallyByUserID
-
->
-> Mute the seat by `targetUserID` **locally**.
-> After mute, if you want to un-mute, you can set `muted` to false.
->
-> And on side of the user at the `targetIndex` seat, return true/false in
-> the callback
-> of [ZegoLiveAudioRoomAudioVideoEvents.onMicrophoneTurnOnByOthersConfirmation](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Events-topic.html#onmicrophoneturnonbyothersconfirmation)
-> to open microphone or not.
->
-> - function prototype:
->
-> ```dart
-> Future<bool> muteLocallyByUserID(
->   String targetUserID, {
->   bool muted = true,
-> }) async
-> ```
-
-### host
-
-> APIs of host
-
-#### open
-
->
-> Opens (unlocks) the seat.
-> allows you to unlock all seats in the room at once, or only unlock specific seat by [targetIndex].
->
-> After opening(locks) the seat, all audience members can freely choose an empty seat to join and start chatting with others.
->
-> - function prototype:
->
-> ```dart
-> Future<bool> open({
->   int targetIndex = -1,
-> }) async
-> ```
-
-#### close
-
->
-> Closes (locks) the seat.
-> allows you to lock all seats in the room at once, or only lock specific seat by [targetIndex].
->
-> After closing(locks) the seat, audience members need to request permission from the host or be invited by the host to occupy the seat.
->
-> - function prototype:
->
-> ```dart
-> Future<bool> close({
->   int targetIndex = -1,
-> }) async 
-> ```
-
-#### removeSpeaker
-
->
-> Removes the speaker with the user ID `userID` from the seat.
->
-> - function prototype:
->
-> ```dart
-> Future<void> removeSpeaker(String userID, {bool showDialogConfirm = true,}) async
-> ```
-
-#### acceptTakingRequest
-
->
-> The host accepts the seat request from the audience with the ID [audienceUserID].
->
-> - function prototype:
->
-> ```dart
-> Future<bool> acceptTakingRequest(String audienceUserID) async
-> ```
-
-#### rejectTakingRequest
-
->
-> The host rejects the seat request from the audience with the ID [audienceUserID].
->
-> - function prototype:
->
-> ```dart
-> Future<bool> rejectTakingRequest(String audienceUserID) async
-> ```
-
-#### inviteToTake
-
->
-> Host invite the audience with id [userID] to take seat
->
-> - function prototype:
->
-> ```dart
-> Future<bool> inviteToTake(String userID) async
-> ```
-
-#### mute
-
->
-> Mute the user at the `targetIndex` seat
->
-> After mute, if you want to un-mute, you can set `muted` to true.
->
-> And on side of the user at the `targetIndex` seat, return true/false in
-> the callback
-> of [ZegoLiveAudioRoomAudioVideoEvents.onMicrophoneTurnOnByOthersConfirmation](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Events-topic.html#onmicrophoneturnonbyothersconfirmation)
-> to open microphone or not.
->
-> - function prototype:
->
-> ```dart
-> Future<bool> mute({
->   int targetIndex = -1,
->   bool muted = true,
-> }) async
-> ```
-
-#### muteByUserID
-
->
->  Mute the user on seat by `userID`
->
-> After mute, if you want to un-mute, you can set `muted` to true.
->
-> And on side of the user at the `targetIndex` seat, return true/false in
-> the callback
-> of [ZegoLiveAudioRoomAudioVideoEvents.onMicrophoneTurnOnByOthersConfirmation](https://pub.dev/documentation/zego_uikit_prebuilt_live_audio_room/latest/topics/Events-topic.html#onmicrophoneturnonbyothersconfirmation)
-> to open microphone or not.
->
-> - function prototype:
->
-> ```dart
-> Future<bool> muteByUserID(
->   String userID, {
->   bool muted = true,
-> }) async
-> ```
-
-### audience
-
-> APIs of audience
-
-#### take
-
->
-> Assigns the audience to the seat with the specified `index`, where the index represents the seat number starting from 0.
->
-> - function prototype:
->
-> ```dart
-> Future<bool> take(int index) async
-> ```
-
-#### applyToTake
-
->
-> The audience actively requests to occupy a seat.
->
-> - function prototype:
->
-> ```dart
-> Future<bool> applyToTake() async
-> ```
-
-#### cancelTakingRequest
-
->
-> The audience cancels the request to occupy a seat.
->
-> - function prototype:
->
-> ```dart
-> Future<bool> cancelTakingRequest() async
-> ```
-
-#### acceptTakingInvitation
-
->
-> Accept the seat invitation from the host. The [context] parameter represents the Flutter context object.
->
-> - function prototype:
->
-> ```dart
->  Future<bool> acceptTakingInvitation({
->    required BuildContext context,
->    bool rootNavigator = false,
->  }) async
-> ```
-
-### speaker
-
-> APIs of speaker
-
-#### leave
-
->
-> The speaker can use this method to leave the seat. If the showDialog parameter is set to true, a confirmation dialog will be displayed before leaving the seat.
->
-> - function prototype:
->
-> ```dart
-> Future<bool> leave({bool showDialog = true}) async
-> ```
-
-## audio video
-
-> APIs related to audio video
-
-### microphone
-
-> microphone series APIs
-
-#### localState
-
->
-> microphone state of local user
->
-> - function prototype:
->
-> ```dart
-> bool get localState
-> ```
-
-#### localStateNotifier
-
->
-> microphone state notifier of local user
->
-> - function prototype:
->
-> ```dart
-> ValueNotifier<bool> get localStateNotifier
-> ```
-
-#### state
-
->
-> microphone state of `userID`
->
-> - function prototype:
->
-> ```dart
-> bool state(String userID)
-> ```
-
-#### stateNotifier
-
->
-> microphone state notifier of `userID`
->
-> - function prototype:
->
-> ```dart
-> ValueNotifier<bool> stateNotifier(String userID)
-> ```
-
-#### turnOn
-
->
-> turn on/off `userID` microphone, if `userID` is empty, then it refers to local user
->
-> - function prototype:
->
-> ```dart
-> void turnOn(bool isOn, {String? userID})
-> ```
-
-#### switchState
-
->
-> switch `userID` microphone state, if `userID` is empty, then it refers to local user
->
-> - function prototype:
->
-> ```dart
-> void switchState({String? userID})
-> ```
-
-### seiStream
-
->
-> stream of SEI(Supplemental Enhancement Information)
->
-> - function prototype:
->
-> ```dart
-> Stream<ZegoUIKitReceiveSEIEvent> seiStream()
->
->class ZegoUIKitReceiveSEIEvent {
->  final String typeIdentifier;
->
->  final String senderID;
->  final Map<String, dynamic> sei;
->
->  final String streamID;
->  final ZegoStreamType streamType;
->}
-> ```
-
-### sendSEI
-
->
-> if you want synchronize some other additional information by audio-video,
-> send SEI(Supplemental Enhancement Information) with it.
->
-> - function prototype:
->
-> ```dart
-> Future<bool> sendSEI(
->   Map<String, dynamic> seiData, {
->   ZegoStreamType streamType = ZegoStreamType.main,
-> })
-> ```
-
-## room
-
-### property
-
-#### updateProperty/updateProperties
-
->
-> add/update room properties
->
-> - function prototype:
->
-> ```dart
-> Future<bool> updateProperty({
->   required String roomID,
->   required String key,
->   required String value,
->   bool isForce = false,
->   bool isDeleteAfterOwnerLeft = false,
->   bool isUpdateOwner = false,
-> }) async
->
-> Future<bool> updateProperties({
->  required String roomID,
->  required Map<String, String> roomProperties,
->  bool isForce = false,
->  bool isDeleteAfterOwnerLeft = false,
->  bool isUpdateOwner = false,
->}) async
-> ```
+## ZegoUIKitPrebuiltLiveAudioRoomController
+
+### leave
+
+- **Description**
+  - Ends the Live Audio Room.
+- **Prototype**
+  ```dart
+  Future<bool> leave(BuildContext context, {bool showConfirmation = true})
+  ```
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().leave(context);
+  ```
+
+### hideInMemberList
+
+- **Description**
+  - Hide some user in member list.
+- **Prototype**
+  ```dart
+  void hideInMemberList(List<String> userIDs)
+  ```
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().hideInMemberList(['userID']);
+  ```
+
+### seat
+
+#### host
+
+##### open
+
+- **Description**
+  - Opens (unlocks) the seat. Allows you to unlock all seats in the room at once, or only unlock specific seat by `targetIndex`. After opening (unlocks) the seat, all audience members can freely choose an empty seat to join and start chatting with others.
+
+- **Prototype**
+  ```dart
+  Future<bool> open({int targetIndex = -1})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().seat.host.open();
+  ```
+
+##### close
+
+- **Description**
+  - Closes (locks) the seat. Allows you to lock all seats in the room at once, or only lock specific seat by `targetIndex`. After closing (locks) the seat, audience members need to request permission from the host or be invited by the host to occupy the seat.
+
+- **Prototype**
+  ```dart
+  Future<bool> close({int targetIndex = -1})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().seat.host.close();
+  ```
+
+##### removeSpeaker
+
+- **Description**
+  - Removes the speaker with the user ID `userID` from the seat.
+
+- **Prototype**
+  ```dart
+  Future<void> removeSpeaker(String userID, {bool showDialogConfirm = true})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().seat.host.removeSpeaker('userID');
+  ```
+
+##### acceptTakingRequest
+
+- **Description**
+  - The host accepts the seat request from the audience with the ID `audienceUserID`.
+
+- **Prototype**
+  ```dart
+  Future<bool> acceptTakingRequest(String audienceUserID)
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().seat.host.acceptTakingRequest('audienceUserID');
+  ```
+
+##### rejectTakingRequest
+
+- **Description**
+  - The host rejects the seat request from the audience with the ID `audienceUserID`.
+
+- **Prototype**
+  ```dart
+  Future<bool> rejectTakingRequest(String audienceUserID)
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().seat.host.rejectTakingRequest('audienceUserID');
+  ```
+
+##### inviteToTake
+
+- **Description**
+  - Host invite the audience with id `userID` to take seat.
+
+- **Prototype**
+  ```dart
+  Future<bool> inviteToTake(String userID)
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().seat.host.inviteToTake('userID');
+  ```
+
+##### mute
+
+- **Description**
+  - Mute the user at the `targetIndex` seat. After mute, if you want to un-mute, you can set `muted` to false. And on side of the user at the `targetIndex` seat, return true/false in the callback of `ZegoLiveAudioRoomAudioVideoEvents.onMicrophoneTurnOnByOthersConfirmation` to open microphone or not.
+
+- **Prototype**
+  ```dart
+  Future<bool> mute({int targetIndex = -1, bool muted = true})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().seat.host.mute(targetIndex: 0, muted: true);
+  ```
+
+##### muteByUserID
+
+- **Description**
+  - Mute the seat by `targetUserID`. After mute, if you want to un-mute, you can set `muted` to false. And on side of the user at the `targetIndex` seat, return true/false in the callback of `ZegoLiveAudioRoomAudioVideoEvents.onMicrophoneTurnOnByOthersConfirmation` to open microphone or not.
+
+- **Prototype**
+  ```dart
+  Future<bool> muteByUserID(String targetUserID, {bool muted = true})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().seat.host.muteByUserID('targetUserID', muted: true);
+  ```
+
+##### assignCoHost
+
+- **Description**
+  - Assign the target user as a co-host.
+
+- **Prototype**
+  ```dart
+  Future<bool> assignCoHost({required String roomID, required ZegoUIKitUser targetUser})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().seat.host.assignCoHost(roomID: 'roomID', targetUser: targetUser);
+  ```
+
+#### audience
+
+##### take
+
+- **Description**
+  - Assigns the audience to the seat with the specified `index`, where the index represents the seat number starting from 0.
+
+- **Prototype**
+  ```dart
+  Future<bool> take(int index, {bool isForce = false})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().seat.audience.take(0);
+  ```
+
+##### applyToTake
+
+- **Description**
+  - The audience actively requests to occupy a seat.
+
+- **Prototype**
+  ```dart
+  Future<bool> applyToTake()
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().seat.audience.applyToTake();
+  ```
+
+##### cancelTakingRequest
+
+- **Description**
+  - The audience cancels the request to occupy a seat.
+
+- **Prototype**
+  ```dart
+  Future<bool> cancelTakingRequest()
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().seat.audience.cancelTakingRequest();
+  ```
+
+##### acceptTakingInvitation
+
+- **Description**
+  - Accept the seat invitation from the host.
+
+- **Prototype**
+  ```dart
+  Future<bool> acceptTakingInvitation({required BuildContext context, bool rootNavigator = false})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().seat.audience.acceptTakingInvitation(context: context);
+  ```
+
+#### speaker
+
+##### leave
+
+- **Description**
+  - The speaker can use this method to leave the seat. If the `showDialog` parameter is set to true, a confirmation dialog will be displayed before leaving the seat.
+
+- **Prototype**
+  ```dart
+  Future<bool> leave({bool showDialog = true})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().seat.speaker.leave();
+  ```
+
+#### userMapNotifier
+
+- **Description**
+  - The seat user map of the current live audio room.
+
+- **Prototype**
+  ```dart
+  ValueNotifier<Map<String, String>>? get userMapNotifier
+  ```
+
+- **Example**
+  ```dart
+  ValueListenableBuilder<Map<String, String>>(
+    valueListenable: ZegoUIKitPrebuiltLiveAudioRoomController().seat.userMapNotifier!,
+    builder: (context, userMap, _) {
+      return Text('Seat Users: $userMap');
+    },
+  );
+  ```
+
+#### localIsHost
+
+- **Description**
+  - Check if the local user is a host.
+
+- **Prototype**
+  ```dart
+  bool get localIsHost
+  ```
+
+- **Example**
+  ```dart
+  bool isHost = ZegoUIKitPrebuiltLiveAudioRoomController().seat.localIsHost;
+  ```
+
+#### localIsAudience
+
+- **Description**
+  - Check if the local user is an audience.
+
+- **Prototype**
+  ```dart
+  bool get localIsAudience
+  ```
+
+- **Example**
+  ```dart
+  bool isAudience = ZegoUIKitPrebuiltLiveAudioRoomController().seat.localIsAudience;
+  ```
+
+#### localIsSpeaker
+
+- **Description**
+  - Check if the local user is a speaker.
+
+- **Prototype**
+  ```dart
+  bool get localIsSpeaker
+  ```
+
+- **Example**
+  ```dart
+  bool isSpeaker = ZegoUIKitPrebuiltLiveAudioRoomController().seat.localIsSpeaker;
+  ```
+
+#### localIsCoHost
+
+- **Description**
+  - Check if the local user is a co-host.
+
+- **Prototype**
+  ```dart
+  bool get localIsCoHost
+  ```
+
+- **Example**
+  ```dart
+  bool isCoHost = ZegoUIKitPrebuiltLiveAudioRoomController().seat.localIsCoHost;
+  ```
+
+#### localHasHostPermissions
+
+- **Description**
+  - Check if the local user has host permissions. Co-hosts have the same permissions as hosts if host is not exist.
+
+- **Prototype**
+  ```dart
+  bool get localHasHostPermissions
+  ```
+
+- **Example**
+  ```dart
+  bool hasPermission = ZegoUIKitPrebuiltLiveAudioRoomController().seat.localHasHostPermissions;
+  ```
+
+#### isRoomSeatLocked
+
+- **Description**
+  - Check if the room seat is locked.
+
+- **Prototype**
+  ```dart
+  bool get isRoomSeatLocked
+  ```
+
+- **Example**
+  ```dart
+  bool isLocked = ZegoUIKitPrebuiltLiveAudioRoomController().seat.isRoomSeatLocked;
+  ```
+
+#### getUserByIndex
+
+- **Description**
+  - Get the user who is on the target seat index.
+
+- **Prototype**
+  ```dart
+  ZegoUIKitUser? getUserByIndex(int targetIndex)
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitUser? user = ZegoUIKitPrebuiltLiveAudioRoomController().seat.getUserByIndex(0);
+  ```
+
+#### getSeatIndexByUserID
+
+- **Description**
+  - Get the seat index of the target user.
+
+- **Prototype**
+  ```dart
+  int getSeatIndexByUserID(String targetUserID)
+  ```
+
+- **Example**
+  ```dart
+  int index = ZegoUIKitPrebuiltLiveAudioRoomController().seat.getSeatIndexByUserID('userID');
+  ```
+
+#### isAHostSeatIndex
+
+- **Description**
+  - Check if the seat index is a host seat index.
+
+- **Prototype**
+  ```dart
+  bool isAHostSeatIndex(int seatIndex)
+  ```
+
+- **Example**
+  ```dart
+  bool isHostSeat = ZegoUIKitPrebuiltLiveAudioRoomController().seat.isAHostSeatIndex(0);
+  ```
+
+#### getEmptySeats
+
+- **Description**
+  - Get the currently empty seats. Set `includeHostSeats` to true if `ZegoLiveAudioRoomSeatConfig.hostIndexes` is included, default does not include.
+
+- **Prototype**
+  ```dart
+  List<int> getEmptySeats({bool includeHostSeats = false})
+  ```
+
+- **Example**
+  ```dart
+  List<int> emptySeats = ZegoUIKitPrebuiltLiveAudioRoomController().seat.getEmptySeats();
+  ```
+
+#### muteStateNotifier
+
+- **Description**
+  - Is the current seat muted or not. Set `isLocally` to true to find out if it is muted locally.
+
+- **Prototype**
+  ```dart
+  ValueNotifier<bool> muteStateNotifier(int targetIndex, {bool isLocally = false})
+  ```
+
+- **Example**
+  ```dart
+  ValueListenableBuilder<bool>(
+    valueListenable: ZegoUIKitPrebuiltLiveAudioRoomController().seat.muteStateNotifier(0),
+    builder: (context, isMuted, _) {
+      return Icon(isMuted ? Icons.volume_mute : Icons.volume_up);
+    },
+  );
+  ```
+
+#### muteLocally
+
+- **Description**
+  - Mute the user at the `targetIndex` seat **locally**. After mute, if you want to un-mute, you can set `muted` to false.
+
+- **Prototype**
+  ```dart
+  Future<bool> muteLocally({int targetIndex = -1, bool muted = true})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().seat.muteLocally(targetIndex: 0, muted: true);
+  ```
+
+#### muteLocallyByUserID
+
+- **Description**
+  - Mute the seat by `targetUserID` **locally**. After mute, if you want to un-mute, you can set `muted` to false.
+
+- **Prototype**
+  ```dart
+  Future<bool> muteLocallyByUserID(String targetUserID, {bool muted = true})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().seat.muteLocallyByUserID('userID', muted: true);
+  ```
+
+### audioVideo
+
+#### microphone
+
+##### localState
+
+- **Description**
+  - Microphone state of local user.
+
+- **Prototype**
+  ```dart
+  bool get localState
+  ```
+
+- **Example**
+  ```dart
+  bool isMicOn = ZegoUIKitPrebuiltLiveAudioRoomController().audioVideo.microphone.localState;
+  ```
+
+##### localStateNotifier
+
+- **Description**
+  - Microphone state notifier of local user.
+
+- **Prototype**
+  ```dart
+  ValueNotifier<bool> get localStateNotifier
+  ```
+
+- **Example**
+  ```dart
+  ValueListenableBuilder<bool>(
+    valueListenable: ZegoUIKitPrebuiltLiveAudioRoomController().audioVideo.microphone.localStateNotifier,
+    builder: (context, isMicOn, _) {
+      return Icon(isMicOn ? Icons.mic : Icons.mic_off);
+    },
+  );
+  ```
+
+##### state
+
+- **Description**
+  - Microphone state of `userID`.
+
+- **Prototype**
+  ```dart
+  bool state(String userID)
+  ```
+
+- **Example**
+  ```dart
+  bool isMicOn = ZegoUIKitPrebuiltLiveAudioRoomController().audioVideo.microphone.state('userID');
+  ```
+
+##### stateNotifier
+
+- **Description**
+  - Microphone state notifier of `userID`.
+
+- **Prototype**
+  ```dart
+  ValueNotifier<bool> stateNotifier(String userID)
+  ```
+
+- **Example**
+  ```dart
+  ValueListenableBuilder<bool>(
+    valueListenable: ZegoUIKitPrebuiltLiveAudioRoomController().audioVideo.microphone.stateNotifier('userID'),
+    builder: (context, isMicOn, _) {
+      return Icon(isMicOn ? Icons.mic : Icons.mic_off);
+    },
+  );
+  ```
+
+##### turnOn
+
+- **Description**
+  - Turn on/off `userID` microphone, if `userID` is empty, then it refers to local user.
+
+- **Prototype**
+  ```dart
+  Future<void> turnOn(bool isOn, {String? userID, bool muteMode = true})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().audioVideo.microphone.turnOn(true);
+  ```
+
+##### switchState
+
+- **Description**
+  - Switch `userID` microphone state, if `userID` is empty, then it refers to local user.
+
+- **Prototype**
+  ```dart
+  void switchState({String? userID})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().audioVideo.microphone.switchState();
+  ```
+
+#### audioOutput
+
+##### localNotifier
+
+- **Description**
+  - Local audio output device notifier.
+
+- **Prototype**
+  ```dart
+  ValueNotifier<ZegoUIKitAudioRoute> get localNotifier
+  ```
+
+- **Example**
+  ```dart
+  ValueListenableBuilder<ZegoUIKitAudioRoute>(
+    valueListenable: ZegoUIKitPrebuiltLiveAudioRoomController().audioVideo.audioOutput.localNotifier,
+    builder: (context, route, _) {
+      return Text('Audio Route: $route');
+    },
+  );
+  ```
+
+##### notifier
+
+- **Description**
+  - Get audio output device notifier for `userID`.
+
+- **Prototype**
+  ```dart
+  ValueNotifier<ZegoUIKitAudioRoute> notifier(String userID)
+  ```
+
+- **Example**
+  ```dart
+  ValueListenableBuilder<ZegoUIKitAudioRoute>(
+    valueListenable: ZegoUIKitPrebuiltLiveAudioRoomController().audioVideo.audioOutput.notifier('userID'),
+    builder: (context, route, _) {
+      return Text('Audio Route: $route');
+    },
+  );
+  ```
+
+##### switchToSpeaker
+
+- **Description**
+  - Set audio output to speaker or earpiece (telephone receiver).
+
+- **Prototype**
+  ```dart
+  void switchToSpeaker(bool isSpeaker)
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().audioVideo.audioOutput.switchToSpeaker(true);
+  ```
+
+#### seiStream
+
+- **Description**
+  - Stream of SEI (Supplemental Enhancement Information).
+
+- **Prototype**
+  ```dart
+  Stream<ZegoUIKitReceiveSEIEvent> seiStream()
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().audioVideo.seiStream().listen((event) {
+    print('Received SEI: ${event.data}');
+  });
+  ```
+
+#### sendSEI
+
+- **Description**
+  - Send SEI (Supplemental Enhancement Information).
+
+- **Prototype**
+  ```dart
+  Future<bool> sendSEI(Map<String, dynamic> seiData, {ZegoStreamType streamType = ZegoStreamType.main})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().audioVideo.sendSEI({'key': 'value'});
+  ```
+
+### message
+
+#### send
+
+- **Description**
+  - Sends the chat message.
+
+- **Prototype**
+  ```dart
+  Future<bool> send(String message, {ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().message.send('Hello');
+  ```
+
+#### list
+
+- **Description**
+  - Retrieves a list of chat messages that already exist in the room.
+
+- **Prototype**
+  ```dart
+  List<ZegoInRoomMessage> list({ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage})
+  ```
+
+- **Example**
+  ```dart
+  List<ZegoInRoomMessage> messages = ZegoUIKitPrebuiltLiveAudioRoomController().message.list();
+  ```
+
+#### stream
+
+- **Description**
+  - Retrieves a list stream of chat messages that already exist in the room.
+
+- **Prototype**
+  ```dart
+  Stream<List<ZegoInRoomMessage>> stream({ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage})
+  ```
+
+- **Example**
+  ```dart
+  StreamBuilder<List<ZegoInRoomMessage>>(
+    stream: ZegoUIKitPrebuiltLiveAudioRoomController().message.stream(),
+    builder: (context, snapshot) {
+      return ListView(children: snapshot.data?.map((e) => Text(e.message)).toList() ?? []);
+    },
+  );
+  ```
+
+#### clear
+
+- **Description**
+  - Clear local message and remote message.
+
+- **Prototype**
+  ```dart
+  Future<bool> clear({ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage, bool clearRemote = true})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().message.clear();
+  ```
+
+### user
+
+#### remove
+
+- **Description**
+  - Remove user from live, kick out.
+
+- **Prototype**
+  ```dart
+  Future<bool> remove(List<String> userIDs)
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().user.remove(['userID1', 'userID2']);
+  ```
+
+### room
+
+#### updateProperty
+
+- **Description**
+  - Set/update room property.
+
+- **Prototype**
+  ```dart
+  Future<bool> updateProperty({required String key, required String value, bool isForce = false, bool isDeleteAfterOwnerLeft = false, bool isUpdateOwner = false})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().room.updateProperty(key: 'key', value: 'value');
+  ```
+
+#### updateProperties
+
+- **Description**
+  - Set/update room properties.
+
+- **Prototype**
+  ```dart
+  Future<bool> updateProperties({required String roomID, required Map<String, String> roomProperties, bool isForce = false, bool isDeleteAfterOwnerLeft = false, bool isUpdateOwner = false})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().room.updateProperties(roomID: 'roomID', roomProperties: {'key': 'value'});
+  ```
 
 #### deleteProperties
 
->
-> delete room properties
->
-> - function prototype:
->
-> ```dart
-> Future<bool> deleteProperties({
->   required String roomID,
->   required List<String> keys,
->   bool isForce = false,
-> }) async
-> ```
+- **Description**
+  - Delete room properties.
+
+- **Prototype**
+  ```dart
+  Future<bool> deleteProperties({required String roomID, required List<String> keys, bool isForce = false})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().room.deleteProperties(roomID: 'roomID', keys: ['key']);
+  ```
 
 #### queryProperties
 
->
-> query room properties
->
-> - function prototype:
->
-> ```dart
-> Future<Map<String, String>> queryProperties({
->   required String roomID,
-> }) async
-> ```
+- **Description**
+  - Query room properties.
+
+- **Prototype**
+  ```dart
+  Future<Map<String, String>> queryProperties({required String roomID})
+  ```
+
+- **Example**
+  ```dart
+  Map<String, String> properties = await ZegoUIKitPrebuiltLiveAudioRoomController().room.queryProperties(roomID: 'roomID');
+  ```
 
 #### propertiesStream
 
->
-> room properties stream notify
->
-> - function prototype:
->
-> ```dart
-> Stream<ZegoSignalingPluginRoomPropertiesUpdatedEvent> propertiesStream()
-> 
-> class ZegoSignalingPluginRoomPropertiesUpdatedEvent {
->   final String roomID;
->   final Map<String, String> setProperties;
->   final Map<String, String> deleteProperties;
-> }
-> ```
+- **Description**
+  - Room properties stream notify.
 
-### command
+- **Prototype**
+  ```dart
+  Stream<ZegoSignalingPluginRoomPropertiesUpdatedEvent> propertiesStream()
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().room.propertiesStream().listen((event) {
+    print('Properties updated: ${event.setProperties}');
+  });
+  ```
 
 #### sendCommand
 
->
-> send room command
+- **Description**
+  - Send room command.
 
->
->
->
-> - function prototype:
->
-> ```dart
->  Future<bool> sendCommand({
->    required String roomID,
->    required Uint8List command,
->  }) async
-> ```
+- **Prototype**
+  ```dart
+  Future<bool> sendCommand({required String roomID, required Uint8List command})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().room.sendCommand(roomID: 'roomID', command: Uint8List.fromList(utf8.encode('command')));
+  ```
 
 #### commandReceivedStream
 
->
-> room command stream notify
->
-> - function prototype:
->
-> ```dart
-> Stream<ZegoSignalingPluginInRoomCommandMessageReceivedEvent> commandReceivedStream()
->
->
-> class ZegoSignalingPluginInRoomCommandMessageReceivedEvent {
->   final List<ZegoSignalingPluginInRoomCommandMessage> messages;
->   final String roomID;
-> }
-> 
-> class ZegoSignalingPluginInRoomCommandMessage {
->   /// If you have a string encoded in UTF-8 and want to convert a Uint8List
->   /// to that string, you can use the following method:
->   ///
->   /// import 'dart:convert';
->   /// import 'dart:typed_data';
->   ///
->   /// String result = utf8.decode(commandMessage.message); // Convert the Uint8List to a string
->   ///
->   final Uint8List message;
-> 
->   final String senderUserID;
->   final int timestamp;
->   final int orderKey;
-> }
-> ```
+- **Description**
+  - Room command stream notify.
+
+- **Prototype**
+  ```dart
+  Stream<ZegoSignalingPluginInRoomCommandMessageReceivedEvent> commandReceivedStream()
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().room.commandReceivedStream().listen((event) {
+    print('Command received: ${event.message}');
+  });
+  ```
+
+#### removeUser
+
+- **Description**
+  - Remove user from live, kick out.
+
+- **Prototype**
+  ```dart
+  Future<bool> removeUser(List<String> userIDs)
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().room.removeUser(['userID']);
+  ```
+
+#### renewToken
+
+- **Description**
+  - Renew token.
+
+- **Prototype**
+  ```dart
+  Future<void> renewToken(String token)
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().room.renewToken('newToken');
+  ```
+
+### minimize
+
+#### state
+
+- **Description**
+  - Current minimize state.
+
+- **Prototype**
+  ```dart
+  ZegoLiveAudioRoomMiniOverlayPageState get state
+  ```
+
+- **Example**
+  ```dart
+  ZegoLiveAudioRoomMiniOverlayPageState state = ZegoUIKitPrebuiltLiveAudioRoomController().minimize.state;
+  ```
+
+#### isMinimizing
+
+- **Description**
+  - Is it currently in the minimized state or not.
+
+- **Prototype**
+  ```dart
+  bool get isMinimizing
+  ```
+
+- **Example**
+  ```dart
+  bool isMinimizing = ZegoUIKitPrebuiltLiveAudioRoomController().minimize.isMinimizing;
+  ```
+
+#### isMinimizingNotifier
+
+- **Description**
+  - Notifier for the minimizing state.
+
+- **Prototype**
+  ```dart
+  ValueNotifier<bool> get isMinimizingNotifier
+  ```
+
+- **Example**
+  ```dart
+  ValueListenableBuilder<bool>(
+    valueListenable: ZegoUIKitPrebuiltLiveAudioRoomController().minimize.isMinimizingNotifier,
+    builder: (context, isMinimizing, _) {
+      return Text(isMinimizing ? 'Minimizing' : 'Not Minimizing');
+    },
+  );
+  ```
+
+#### restore
+
+- **Description**
+  - Restore the `ZegoUIKitPrebuiltLiveAudioRoom` from minimize.
+
+- **Prototype**
+  ```dart
+  bool restore(BuildContext context, {bool rootNavigator = true, bool withSafeArea = false})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().minimize.restore(context);
+  ```
+
+#### minimize
+
+- **Description**
+  - Minimize the `ZegoUIKitPrebuiltLiveAudioRoom`.
+
+- **Prototype**
+  ```dart
+  bool minimize(BuildContext context, {bool rootNavigator = true})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().minimize.minimize(context);
+  ```
+
+#### hide
+
+- **Description**
+  - If audio room ended in minimizing state, not need to navigate, just hide the minimize widget.
+
+- **Prototype**
+  ```dart
+  void hide()
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().minimize.hide();
+  ```
+
+### pip
+
+#### status
+
+- **Description**
+  - Get PIP status.
+
+- **Prototype**
+  ```dart
+  Future<ZegoPiPStatus> get status
+  ```
+
+- **Example**
+  ```dart
+  ZegoPiPStatus status = await ZegoUIKitPrebuiltLiveAudioRoomController().pip.status;
+  ```
+
+#### available
+
+- **Description**
+  - Check if PIP is available.
+
+- **Prototype**
+  ```dart
+  Future<bool> get available
+  ```
+
+- **Example**
+  ```dart
+  bool available = await ZegoUIKitPrebuiltLiveAudioRoomController().pip.available;
+  ```
+
+#### enable
+
+- **Description**
+  - Enable PIP.
+
+- **Prototype**
+  ```dart
+  Future<ZegoPiPStatus> enable({int aspectWidth = 1, int aspectHeight = 1})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().pip.enable();
+  ```
+
+#### enableWhenBackground
+
+- **Description**
+  - Enable PIP when background.
+
+- **Prototype**
+  ```dart
+  Future<ZegoPiPStatus> enableWhenBackground({int aspectWidth = 1, int aspectHeight = 1})
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().pip.enableWhenBackground();
+  ```
+
+#### cancelBackground
+
+- **Description**
+  - Cancel background PIP.
+
+- **Prototype**
+  ```dart
+  Future<void> cancelBackground()
+  ```
+
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().pip.cancelBackground();
+  ```
+
+### media
+
+#### volume
+
+- **Description**
+  - Volume of current media.
+- **Prototype**
+  ```dart
+  int get volume
+  ```
+- **Example**
+  ```dart
+  int vol = ZegoUIKitPrebuiltLiveAudioRoomController().media.volume;
+  ```
+
+#### totalDuration
+
+- **Description**
+  - The total progress(millisecond) of current media resources.
+- **Prototype**
+  ```dart
+  int get totalDuration
+  ```
+- **Example**
+  ```dart
+  int duration = ZegoUIKitPrebuiltLiveAudioRoomController().media.totalDuration;
+  ```
+
+#### currentProgress
+
+- **Description**
+  - Current playing progress of current media.
+- **Prototype**
+  ```dart
+  int get currentProgress
+  ```
+- **Example**
+  ```dart
+  int progress = ZegoUIKitPrebuiltLiveAudioRoomController().media.currentProgress;
+  ```
+
+#### type
+
+- **Description**
+  - Media type of current media.
+- **Prototype**
+  ```dart
+  ZegoUIKitMediaType get type
+  ```
+- **Example**
+  ```dart
+  ZegoUIKitMediaType mediaType = ZegoUIKitPrebuiltLiveAudioRoomController().media.type;
+  ```
+
+#### volumeNotifier
+
+- **Description**
+  - Volume notifier of current media.
+- **Prototype**
+  ```dart
+  ValueNotifier<int> get volumeNotifier
+  ```
+- **Example**
+  ```dart
+  ValueListenableBuilder<int>(
+    valueListenable: ZegoUIKitPrebuiltLiveAudioRoomController().media.volumeNotifier,
+    builder: (context, volume, _) {
+      return Text('Volume: $volume');
+    },
+  );
+  ```
+
+#### currentProgressNotifier
+
+- **Description**
+  - Current progress notifier of current media.
+- **Prototype**
+  ```dart
+  ValueNotifier<int> get currentProgressNotifier
+  ```
+- **Example**
+  ```dart
+  ValueListenableBuilder<int>(
+    valueListenable: ZegoUIKitPrebuiltLiveAudioRoomController().media.currentProgressNotifier,
+    builder: (context, progress, _) {
+      return Text('Progress: $progress');
+    },
+  );
+  ```
+
+#### playStateNotifier
+
+- **Description**
+  - Play state notifier of current media.
+- **Prototype**
+  ```dart
+  ValueNotifier<ZegoUIKitMediaPlayState> get playStateNotifier
+  ```
+- **Example**
+  ```dart
+  ValueListenableBuilder<ZegoUIKitMediaPlayState>(
+    valueListenable: ZegoUIKitPrebuiltLiveAudioRoomController().media.playStateNotifier,
+    builder: (context, state, _) {
+      return Text('State: $state');
+    },
+  );
+  ```
+
+#### typeNotifier
+
+- **Description**
+  - Type notifier of current media.
+- **Prototype**
+  ```dart
+  ValueNotifier<ZegoUIKitMediaType> get typeNotifier
+  ```
+- **Example**
+  ```dart
+  ValueListenableBuilder<ZegoUIKitMediaType>(
+    valueListenable: ZegoUIKitPrebuiltLiveAudioRoomController().media.typeNotifier,
+    builder: (context, type, _) {
+      return Text('Type: $type');
+    },
+  );
+  ```
+
+#### muteNotifier
+
+- **Description**
+  - Mute state notifier of current media.
+- **Prototype**
+  ```dart
+  ValueNotifier<bool> get muteNotifier
+  ```
+- **Example**
+  ```dart
+  ValueListenableBuilder<bool>(
+    valueListenable: ZegoUIKitPrebuiltLiveAudioRoomController().media.muteNotifier,
+    builder: (context, isMuted, _) {
+      return Icon(isMuted ? Icons.volume_off : Icons.volume_up);
+    },
+  );
+  ```
+
+#### info
+
+- **Description**
+  - Info of current media.
+- **Prototype**
+  ```dart
+  ZegoUIKitMediaInfo get info
+  ```
+- **Example**
+  ```dart
+  ZegoUIKitMediaInfo mediaInfo = ZegoUIKitPrebuiltLiveAudioRoomController().media.info;
+  ```
+
+#### play
+
+- **Description**
+  - Start play current media.
+- **Prototype**
+  ```dart
+  Future<ZegoUIKitMediaPlayResult> play({required String filePathOrURL, bool enableRepeat = false, bool autoStart = true})
+  ```
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().media.play(filePathOrURL: 'url');
+  ```
+
+#### stop
+
+- **Description**
+  - Stop play current media.
+- **Prototype**
+  ```dart
+  Future<void> stop()
+  ```
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().media.stop();
+  ```
+
+#### destroy
+
+- **Description**
+  - Destroy current media.
+- **Prototype**
+  ```dart
+  Future<void> destroy()
+  ```
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().media.destroy();
+  ```
+
+#### pause
+
+- **Description**
+  - Pause current media.
+- **Prototype**
+  ```dart
+  Future<void> pause()
+  ```
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().media.pause();
+  ```
+
+#### resume
+
+- **Description**
+  - Resume current media.
+- **Prototype**
+  ```dart
+  Future<void> resume()
+  ```
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().media.resume();
+  ```
+
+#### seekTo
+
+- **Description**
+  - Set the current media playback progress.
+- **Prototype**
+  ```dart
+  Future<ZegoUIKitMediaSeekToResult> seekTo(int millisecond)
+  ```
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().media.seekTo(1000);
+  ```
+
+#### setVolume
+
+- **Description**
+  - Set media player volume.
+- **Prototype**
+  ```dart
+  Future<void> setVolume(int volume, {bool isSyncToRemote = false})
+  ```
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().media.setVolume(50);
+  ```
+
+#### muteLocal
+
+- **Description**
+  - Mute current media locally.
+- **Prototype**
+  ```dart
+  Future<void> muteLocal(bool mute)
+  ```
+- **Example**
+  ```dart
+  ZegoUIKitPrebuiltLiveAudioRoomController().media.muteLocal(true);
+  ```
+
+#### pickPureAudioFile
+
+- **Description**
+  - Pick pure audio media file.
+- **Prototype**
+  ```dart
+  Future<List<ZegoUIKitPlatformFile>> pickPureAudioFile()
+  ```
+- **Example**
+  ```dart
+  List<ZegoUIKitPlatformFile> files = await ZegoUIKitPrebuiltLiveAudioRoomController().media.pickPureAudioFile();
+  ```
+
+#### pickVideoFile
+
+- **Description**
+  - Pick video media file.
+- **Prototype**
+  ```dart
+  Future<List<ZegoUIKitPlatformFile>> pickVideoFile()
+  ```
+- **Example**
+  ```dart
+  List<ZegoUIKitPlatformFile> files = await ZegoUIKitPrebuiltLiveAudioRoomController().media.pickVideoFile();
+  ```
+
+#### pickFile
+
+- **Description**
+  - Pick media file with allowed extensions.
+- **Prototype**
+  ```dart
+  Future<List<ZegoUIKitPlatformFile>> pickFile({List<String>? allowedExtensions})
+  ```
+- **Example**
+  ```dart
+  List<ZegoUIKitPlatformFile> files = await ZegoUIKitPrebuiltLiveAudioRoomController().media.pickFile(allowedExtensions: ['mp3', 'mp4']);
+  ```

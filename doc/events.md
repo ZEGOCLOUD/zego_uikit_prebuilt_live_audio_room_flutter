@@ -1,902 +1,714 @@
-- [onLeaveConfirmation](#onleaveconfirmation)
-- [onEnded](#onended)
-- [onError](#onerror)
-- [seat](#seat)
-    - [onClosed](#onclosed)
-    - [onOpened](#onopened)
-    - [onClicked](#onclicked)
-    - [onChanged](#onchanged)
-        - [host](#host)
-            - [onTakingRequested](#ontakingrequested)
-            - [onTakingRequestCanceled](#ontakingrequestcanceled)
-            - [onTakingInvitationFailed](#ontakinginvitationfailed)
-            - [onTakingInvitationRejected](#ontakinginvitationrejected)
-        - [audience](#audience)
-            - [onTakingRequestFailed](#ontakingrequestfailed)
-            - [onTakingRequestRejected](#ontakingrequestrejected)
-            - [onTakingInvitationReceived](#ontakinginvitationreceived)
-- [user](#ZegoUIKitPrebuiltLiveAudioRoomuserevents)
-    - [onEnter](#onenter)
-    - [onLeave](#onleave)
-    - [onCountOrPropertyChanged](#oncountorpropertychanged)
-- [room](#ZegoUIKitPrebuiltLiveAudioRoomroomevents)
-    - [onStateChanged](#onstatechanged)
-- [audioVideo](#ZegoUIKitPrebuiltLiveAudioRoomaudiovideoevents)
-    - [onMicrophoneStateChanged](#onmicrophonestatechanged)
-    - [onAudioOutputChanged](#onaudiooutputchanged)
-    - [onMicrophoneTurnOnByOthersConfirmation](#onmicrophoneturnonbyothersconfirmation)
-- [memberList](#zegoliveaudioroommemberlistevents)
-    - [onClicked](#onclicked-2)
-    - [onMoreButtonPressed](#onmorebuttonpressed)
-- [inRoomMessage](#zegoliveaudioroominroommessageevents)
-    - [onClicked](#onclicked-3)
-    - [onLongPress](#onlongpress)
-- [duration](#zegoliveaudioroomdurationevents)
-    - [onUpdated](#onupdated)
+# Events
+
+- [ZegoUIKitPrebuiltLiveAudioRoomEvents](#zegouikitprebuiltliveaudioroomevents)
+  - [seat](#zegoliveaudioroomseatevents)
+    - [host](#zegoliveaudioroomseathostevents)
+    - [audience](#zegoliveaudioroomseataudienceevents)
+  - [user](#zegoliveaudioroomuserevents)
+  - [room](#zegoliveaudioroomroomevents)
+  - [audioVideo](#zegoliveaudioroomaudiovideoevents)
+  - [inRoomMessage](#zegoliveaudioroominroommessageevents)
+  - [memberList](#zegoliveaudioroommemberlistevents)
+  - [duration](#zegoliveaudioroomdurationevents)
+  - [media](#zegouikitmediaplayerevent)
+  - [onLeaveConfirmation](#onleaveconfirmation)
+  - [onEnded](#onended)
+  - [onError](#onerror)
 
 ---
 
-# onLeaveConfirmation
+## ZegoUIKitPrebuiltLiveAudioRoomEvents
 
->
-> Confirmation callback method before leaving the audio chat room.
->
-> If you want to perform more complex business logic before exiting the
-audio chat room, such as updating some records to the backend, you can use the [onLeaveConfirmation] parameter to set it.
-> This parameter requires you to provide a callback method that returns an
-asynchronous result.
-> If you return true in the callback, the prebuilt page will quit and
-return to your previous page, otherwise it will be ignored.
->
->- function prototype:
->```dart
-> Future<bool> Function(
->   ZegoLiveAudioRoomLeaveConfirmationEvent event,
->   /// defaultAction to return to the previous page
->   Future<bool> Function() defaultAction,
-> )? onLeaveConfirmation;
->
->class ZegoLiveAudioRoomLeaveConfirmationEvent {
->  BuildContext context;
->}
->```
->- example:
->```dart
-> ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->     onLeaveConfirmation: (
->       ZegoLiveAudioRoomLeaveConfirmationEvent event,
->       VoidCallback defaultAction,
->     ) {
->         debugPrint('onLeaveConfirmation, do whatever you want');
->         
->         /// you can call this defaultAction to return to the previous page,
->         return defaultAction.call();
->     },
->   ),
->   ...
-> );
->```
+- **Description**
+  You can listen to events that you are interested in here.
 
-# onEnded
+- **Properties**
 
->
-> This callback method is called when live audio room ended
->
-> The default behavior of host is return to the previous page(only host) or
-hide the minimize page.
-> If you override this callback, you must perform the page navigation
-> yourself while it was in a normal state, or hide the minimize page if in
-minimize state.
-> otherwise the user will remain on the live streaming page.
-> the easy way is call `defaultAction.call()`
->
-> The [ZegoLiveAudioRoomEndEvent.isFromMinimizing] it means that the user
-left the chat room while it was in a minimized state.
-> You **can not** return to the previous page while it was **in a minimized
-state**!!!
-> On the other hand, if the value of the parameter is false, it means that
-the user left the chat room while it was in a normal state (i.e., not minimized).
->
->- function prototype:
->```dart
-> void Function(
->   ZegoLiveAudioRoomEndEvent event,
->   VoidCallback defaultAction,
-> )? onEnded;
->
->class ZegoLiveAudioRoomEndEvent {
->  /// the user ID of who kick you out
->  String? kickerUserID;
->
->  /// end reason
->  ZegoLiveAudioRoomEndReason reason;
->
->  /// The [isFromMinimizing] it means that the user left the live streaming
->  /// while it was in a minimized state.
->  ///
->  /// You **can not** return to the previous page while it was **in a minimized state**!!!
->  /// just hide the minimize page by [ZegoUIKitPrebuiltLiveStreamingController().minimize.hide()]
->  ///
->  /// On the other hand, if the value of the parameter is false, it means
->  /// that the user left the live streaming while it was not minimized.
->  bool isFromMinimizing;
->}
->
->/// The default behavior is to return to the previous page.
->///
->/// If you override this callback, you must perform the page navigation
->/// yourself to return to the previous page!!!
->/// otherwise the user will remain on the current call page !!!!!
->enum ZegoLiveAudioRoomEndReason {
->  /// local user leave
->  localLeave,
->
->  /// being kicked out
->  kickOut,
->}
->```
->- example:
->```dart
-> ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->     onEnded: (
->       ZegoLiveAudioRoomEndEvent event,
->       VoidCallback defaultAction,
->     ) {
->         debugPrint('onEnded, do whatever you want');
->         
->         /// you can call this defaultAction to return to the previous page,
->         return defaultAction.call();
->     },
->   ),
->   ...
-> );
->```
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **seat** | Events about seat. | `ZegoLiveAudioRoomSeatEvents` | |
+| **user** | Events about user. | `ZegoLiveAudioRoomUserEvents` | |
+| **room** | Events about room. | `ZegoLiveAudioRoomRoomEvents` | |
+| **audioVideo** | Events about audio video. | `ZegoLiveAudioRoomAudioVideoEvents` | |
+| **inRoomMessage** | Events about message. | `ZegoLiveAudioRoomInRoomMessageEvents` | |
+| **memberList** | Events about member list. | `ZegoLiveAudioRoomMemberListEvents` | |
+| **duration** | Events about duration. | `ZegoLiveAudioRoomDurationEvents` | |
+| **media** | Events about media. | `ZegoUIKitMediaPlayerEvent` | |
+| **onLeaveConfirmation** | Confirmation callback before leaving the audio chat room. | `Future<bool> Function(ZegoLiveAudioRoomLeaveConfirmationEvent event, Future<bool> Function() defaultAction)?` | `null` |
+| **onEnded** | Callback when live audio room ended. | `void Function(ZegoLiveAudioRoomEndEvent event, VoidCallback defaultAction)?` | `null` |
+| **onError** | Error callback. | `Function(ZegoUIKitError)?` | `null` |
 
-# onError
+## ZegoLiveAudioRoomSeatEvents
 
->
-> error stream
->
->- function prototype:
->```dart
->Function(ZegoUIKitError)? onError
->```
->- example:
->```dart
-> ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->     onError: (
->       ZegoUIKitError error,
->     ) {
->     },
->   ),
->   ...
-> );
->```
+- **Description**
+  Events about seats.
 
-# ZegoLiveAudioRoomSeatEvents
+- **Properties**
 
-> events about seats
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **host** | Events about seat's host. | `ZegoLiveAudioRoomSeatHostEvents?` | |
+| **audience** | Events about seat's audience. | `ZegoLiveAudioRoomSeatAudienceEvents?` | |
+| **onClosed** | Notification that a seat has been closed (locked). | `VoidCallback?` | `null` |
+| **onOpened** | Notification that a seat has been opened (unlocked). | `VoidCallback?` | `null` |
+| **onClicked** | Callback when a seat is clicked. | `void Function(int index, ZegoUIKitUser? user)?` | `null` |
+| **onChanged** | Callback when someone gets on/off/switches seat. | `void Function(Map<int, ZegoUIKitUser> takenSeats, List<int> untakenSeats)?` | `null` |
 
 ### onClosed
 
->
-> Notification that a seat has been closed (locked).
-> After closing a seat, audience members need to request permission from
-the host to join the seat, or the host can invite audience members directly.
->
->- function prototype:
->```dart
->VoidCallback? onClosed
->```
->- example:
->```dart
->ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->       seat: ZegoLiveAudioRoomSeatEvents(
->           onClosed: () {
->               ...
->           },
->       ),
->   ),
->);
->```
+- **Description**
+  Notification that a seat has been closed (locked). After closing a seat, audience members need to request permission from the host to join the seat, or the host can invite audience members directly.
+
+- **Prototype**
+  ```dart
+  VoidCallback?
+  ```
+
+- **Example**
+  ```dart
+  onClosed: () {
+    // Seat closed logic
+  }
+  ```
 
 ### onOpened
 
->
-> Notification that a seat has been opened (unlocked).
-> After opening a seat, all audience members can freely choose an empty
-seat to join and start chatting with others.
->
->- function prototype:
->```dart
->VoidCallback? onOpened;
->```
->- example:
->```dart
->ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->       seat: ZegoLiveAudioRoomSeatEvents(
->           onOpened: () {
->               ...
->           },
->       ),
->   ),
->);
->```
+- **Description**
+  Notification that a seat has been opened (unlocked). After opening a seat, all audience members can freely choose an empty seat to join and start chatting with others.
+
+- **Prototype**
+  ```dart
+  VoidCallback?
+  ```
+
+- **Example**
+  ```dart
+  onOpened: () {
+    // Seat opened logic
+  }
+  ```
 
 ### onClicked
 
->
-> A callback function that is called when a seat is clicked.
->
-> The [index] parameter is the index of the seat that was clicked.
-> The [user] parameter is the user who is currently sitting in the seat, or
-`null` if the seat is empty.
->
-> Note that when you set this callback, the **default behavior** of
-clicking on a seat to display a menu **will be disabled**.
-> You need to handle it yourself.
-> You can refer to the usage of [ZegoUIKitPrebuiltLiveAudioRoomController] for reference.
->
->- function prototype:
->```dart
->void Function(int index, ZegoUIKitUser? user)? onClicked
->```
->- example:
->```dart
->ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->       seat: ZegoLiveAudioRoomSeatEvents(
->           onClicked: (int index, ZegoUIKitUser? user) {
->               ...
->           },
->       ),
->   ),
->);
->```
+- **Description**
+  A callback function that is called when a seat is clicked. The [index] parameter is the index of the seat that was clicked. The [user] parameter is the user who is currently sitting in the seat, or `null` if the seat is empty. Note that when you set this callback, the default behavior of clicking on a seat to display a menu will be disabled.
+
+- **Prototype**
+  ```dart
+  void Function(int index, ZegoUIKitUser? user)?
+  ```
+
+- **Example**
+  ```dart
+  onClicked: (int index, ZegoUIKitUser? user) {
+    // Handle seat click
+  }
+  ```
 
 ### onChanged
 
->
-> A callback function that is called when someone gets on/off/switches seat
->
-> The [takenSeats] parameter is a map that maps the index of each taken
-seat to the user who is currently sitting in that seat.
-> The [untakenSeats] parameter is a list of the indexes of all untaken seats.
->
->- function prototype:
->```dart
->  void Function(
->   Map<int, ZegoUIKitUser> takenSeats,
->   List<int> untakenSeats,
-> )? onChanged;
->```
->- example:
->```dart
->ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->       seat: ZegoLiveAudioRoomSeatEvents(
->           onChanged: (Map<int, ZegoUIKitUser> takenSeats, List<int> untakenSeats) {
->               ...
->           },
->       ),
->   ),
->);
->```
+- **Description**
+  A callback function that is called when someone gets on/off/switches seat. The [takenSeats] parameter is a map that maps the index of each taken seat to the user who is currently sitting in that seat. The [untakenSeats] parameter is a list of the indexes of all untaken seats.
 
-## host
+- **Prototype**
+  ```dart
+  void Function(
+    Map<int, ZegoUIKitUser> takenSeats,
+    List<int> untakenSeats,
+  )?
+  ```
 
-> events about seat's host
+- **Example**
+  ```dart
+  onChanged: (Map<int, ZegoUIKitUser> takenSeats, List<int> untakenSeats) {
+    // Handle seat changes
+  }
+  ```
+
+## ZegoLiveAudioRoomSeatHostEvents
+
+- **Description**
+  Events about seat's host.
+
+- **Properties**
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **onTakingRequested** | The host has received a seat request from an audience. | `void Function(ZegoUIKitUser audience)?` | `null` |
+| **onTakingRequestCanceled** | The host has received a notification that the audience has canceled the seat request. | `void Function(ZegoUIKitUser audience)?` | `null` |
+| **onTakingInvitationFailed** | The host has received a notification that the invitation for the audience to take a seat has failed. | `VoidCallback?` | `null` |
+| **onTakingInvitationRejected** | The host has received a notification that the invitation for the audience to take a seat has been rejected. | `void Function(ZegoUIKitUser audience)?` | `null` |
 
 ### onTakingRequested
 
->
-> The host has received a seat request from an `audience`.
->
->- function prototype:
->```dart
->void Function(ZegoUIKitUser audience)? onTakingRequested
->```
->- example:
->```dart
->ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->       seat: ZegoLiveAudioRoomSeatEvents(
->           host: ZegoLiveAudioRoomSeatHostEvents(
->               onTakingRequested: (audience){
->                   ...
->               },
->           ),
->       ),
->   ),
->);
->```
+- **Description**
+  The host has received a seat request from an audience.
+
+- **Prototype**
+  ```dart
+  void Function(ZegoUIKitUser audience)?
+  ```
+
+- **Example**
+  ```dart
+  onTakingRequested: (ZegoUIKitUser audience) {
+    // Handle seat request
+  }
+  ```
 
 ### onTakingRequestCanceled
 
->
-> The host has received a notification that the `audience` has canceled the seat request.
->
->- function prototype:
->```dart
->void Function(ZegoUIKitUser audience)? onTakingRequestCanceled
->```
->- example:
->```dart
->ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->       seat: ZegoLiveAudioRoomSeatEvents(
->           host: ZegoLiveAudioRoomSeatHostEvents(
->               onTakingRequestCanceled: (audience){
->                   ...
->               },
->           ),
->       ),
->   ),
->);
->```
+- **Description**
+  The host has received a notification that the audience has canceled the seat request.
+
+- **Prototype**
+  ```dart
+  void Function(ZegoUIKitUser audience)?
+  ```
+
+- **Example**
+  ```dart
+  onTakingRequestCanceled: (ZegoUIKitUser audience) {
+    // Handle request cancellation
+  }
+  ```
 
 ### onTakingInvitationFailed
 
->
-> The host has received a notification that the invitation for the audience
-to take a seat has failed.
-> This is usually due to network issues or if the audience has already
-logged out of the app and can no longer receive the invitation.
->
->- function prototype:
->```dart
->VoidCallback? onTakingInvitationFailed
->```
->- example:
->```dart
->ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->       seat: ZegoLiveAudioRoomSeatEvents(
->           host: ZegoLiveAudioRoomSeatHostEvents(
->               onTakingInvitationFailed: (){
->                   ...
->               },
->           ),
->       ),
->   ),
->);
->```
+- **Description**
+  The host has received a notification that the invitation for the audience to take a seat has failed. This is usually due to network issues or if the audience has already logged out of the app.
+
+- **Prototype**
+  ```dart
+  VoidCallback?
+  ```
+
+- **Example**
+  ```dart
+  onTakingInvitationFailed: () {
+    // Handle invitation failure
+  }
+  ```
 
 ### onTakingInvitationRejected
 
->
-> The host has received a notification that the invitation for the audience to take a seat has been rejected.
->
->- function prototype:
->```dart
->VoidCallback? onTakingInvitationRejected
->```
->- example:
->```dart
->ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->       seat: ZegoLiveAudioRoomSeatEvents(
->           host: ZegoLiveAudioRoomSeatHostEvents(
->               onTakingInvitationRejected: (){
->                   ...
->               },
->           ),
->       ),
->   ),
->);
->```
+- **Description**
+  The host has received a notification that the invitation for the audience to take a seat has been rejected.
 
-## audience
+- **Prototype**
+  ```dart
+  void Function(ZegoUIKitUser audience)?
+  ```
 
-> events about seat's audience
+- **Example**
+  ```dart
+  onTakingInvitationRejected: (ZegoUIKitUser audience) {
+    // Handle invitation rejection
+  }
+  ```
+
+## ZegoLiveAudioRoomSeatAudienceEvents
+
+- **Description**
+  Events about seat's audience.
+
+- **Properties**
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **onTakingRequestFailed** | The audience has received a notification that the application to take a seat has failed. | `VoidCallback?` | `null` |
+| **onTakingRequestRejected** | The audience received a notification that their request to take seats was declined by the host. | `VoidCallback?` | `null` |
+| **onTakingInvitationReceived** | The audience has received a notification that the host has invited them to take a seat. | `VoidCallback?` | `null` |
+| **onTakingFailed** | The audience take a seat has failed, invited or requested. | `VoidCallback?` | `null` |
 
 ### onTakingRequestFailed
 
->
-> The audience has received a notification that the application to take a
-seat has failed.
-> This is usually due to network issues or the host has logged out of the
-app and can no longer receive seat applications.
->
->- function prototype:
->```dart
->VoidCallback? onTakingRequestFailed;
->```
->- example:
->```dart
->ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->       seat: ZegoLiveAudioRoomSeatEvents(
->           audience: ZegoLiveAudioRoomSeatAudienceEvents(
->               onTakingRequestFailed: (){
->                   ...
->               },
->           ),
->       ),
->   ),
->);
->```
+- **Description**
+  The audience has received a notification that the application to take a seat has failed. This is usually due to network issues or the host has logged out of the app.
+
+- **Prototype**
+  ```dart
+  VoidCallback?
+  ```
+
+- **Example**
+  ```dart
+  onTakingRequestFailed: () {
+    // Handle request failure
+  }
+  ```
 
 ### onTakingRequestRejected
 
->
-> The audience received a notification that their request to take seats was declined by the host.
->
->- function prototype:
->```dart
->VoidCallback? onTakingRequestRejected
->```
->- example:
->```dart
->ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->       seat: ZegoLiveAudioRoomSeatEvents(
->           audience: ZegoLiveAudioRoomSeatAudienceEvents(
->               onTakingRequestRejected: (){
->                   ...
->               },
->           ),
->       ),
->   ),
->);
->```
+- **Description**
+  The audience received a notification that their request to take seats was declined by the host.
+
+- **Prototype**
+  ```dart
+  VoidCallback?
+  ```
+
+- **Example**
+  ```dart
+  onTakingRequestRejected: () {
+    // Handle request rejection
+  }
+  ```
 
 ### onTakingInvitationReceived
 
->
-> The audience has received a notification that the host has invited them to take a seat.
->
->- function prototype:
->```dart
->VoidCallback? onTakingInvitationReceived
->```
->- example:
->```dart
->ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->       seat: ZegoLiveAudioRoomSeatEvents(
->           audience: ZegoLiveAudioRoomSeatAudienceEvents(
->               onTakingInvitationReceived: (){
->                   ...
->               },
->           ),
->       ),
->   ),
->);
->```
+- **Description**
+  The audience has received a notification that the host has invited them to take a seat.
 
-# ZegoLiveAudioRoomUserEvents
+- **Prototype**
+  ```dart
+  VoidCallback?
+  ```
 
-> events about user
+- **Example**
+  ```dart
+  onTakingInvitationReceived: () {
+    // Handle invitation receipt
+  }
+  ```
 
-## onEnter
+### onTakingFailed
 
->
-> This callback is triggered when user enter
->
->- function prototype:
->```dart
->void Function(ZegoUIKitUser)? onEnter;
->```
->- example:
->```dart
->ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->       user: ZegoLiveAudioRoomUserEvents(
->           onEnter: (user) {
->               ...
->           },
->       ),
->   ),
->);
->```
+- **Description**
+  The audience take a seat has failed, invited or requested.
 
-## onLeave
+- **Prototype**
+  ```dart
+  VoidCallback?
+  ```
 
->
-> This callback is triggered when user leave
->
->- function prototype:
->```dart
->void Function(ZegoUIKitUser)? onLeave;
->```
->- example:
->```dart
->ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->       user: ZegoLiveAudioRoomUserEvents(
->           onLeave: (user) {
->               ...
->           },
->       ),
->   ),
->);
->```
+- **Example**
+  ```dart
+  onTakingFailed: () {
+    // Handle taking seat failure
+  }
+  ```
 
-## onCountOrPropertyChanged
+## ZegoLiveAudioRoomUserEvents
 
->
-> This callback method is triggered when the user count or attributes related to these users change
->
->- function prototype:
->```dart
->void Function(List<ZegoUIKitUser> users)? onCountOrPropertyChanged
->```
->- example:
->```dart
->ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->       user: ZegoLiveAudioRoomUserEvents(
->           onCountOrPropertyChanged: (users) {
->               ...
->           },
->       ),
->   ),
->);
->```
+- **Description**
+  Events about user.
 
-# ZegoLiveAudioRoomRoomEvents
+- **Properties**
 
->
-> events about room
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **onEnter** | This callback is triggered when user enter. | `void Function(ZegoUIKitUser)?` | `null` |
+| **onLeave** | This callback is triggered when user leave. | `void Function(ZegoUIKitUser)?` | `null` |
+| **onCountOrPropertyChanged** | This callback method is triggered when the user count or attributes related to these users change. | `void Function(List<ZegoUIKitUser> users)?` | `null` |
 
-## onStateChanged
+### onEnter
 
->
-> This callback is triggered when room state changed, you can get the current call room entry status by using the **state.reason**.
->
->- function prototype:
->```dart
->void Function(ZegoUIKitRoomState)? onStateChanged;
->
->class ZegoUIKitRoomState {
->  ///  Room state change reason.
->  ZegoRoomStateChangedReason reason;
->
->  /// Error code, please refer to the error codes document https://doc-en.zego.im/en/5548.html for >details.
->  int errorCode;
->
->  /// Extended Information with state updates. When the room login is successful, the key >"room_session_id" can be used to obtain the unique RoomSessionID of each audio and video communication, >which identifies the continuous communication from the first user in the room to the end of the audio and >video communication. It can be used in scenarios such as call quality scoring and call problem diagnosis.
->  Map<String, dynamic> extendedData;
->}
->
->/// Room state change reason.
->enum ZegoRoomStateChangedReason {
->  /// Logging in to the room. When calling [loginRoom] to log in to the room or [switchRoom] to switch to >the target room, it will enter this state, indicating that it is requesting to connect to the server. The >application interface is usually displayed through this state.
->  Logining,
->
->  /// Log in to the room successfully. When the room is successfully logged in or switched, it will enter >this state, indicating that the login to the room has been successful, and users can normally receive >callback notifications of other users in the room and all stream information additions and deletions.
->  Logined,
->
->  /// Failed to log in to the room. When the login or switch room fails, it will enter this state, >indicating that the login or switch room has failed, for example, AppID or Token is incorrect, etc.
->  LoginFailed,
->
->  /// The room connection is temporarily interrupted. If the interruption occurs due to poor network >quality, the SDK will retry internally.
->  Reconnecting,
->
->  /// The room is successfully reconnected. If there is an interruption due to poor network quality, the >SDK will retry internally, and enter this state after successful reconnection.
->  Reconnected,
->
->  /// The room fails to reconnect. If there is an interruption due to poor network quality, the SDK will >retry internally, and enter this state after the reconnection fails.
->  ReconnectFailed,
->
->  /// Kicked out of the room by the server. For example, if you log in to the room with the same user >name in other places, and the local end is kicked out of the room, it will enter this state.
->  KickOut,
->
->  /// Logout of the room is successful. It is in this state by default before logging into the room. When >calling [logoutRoom] to log out of the room successfully or [switchRoom] to log out of the current room >successfully, it will enter this state.
->  Logout,
->
->  /// Failed to log out of the room. Enter this state when calling [logoutRoom] fails to log out of the >room or [switchRoom] fails to log out of the current room internally.
->  LogoutFailed
->}
->```
->- example:
->```dart
->ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->       user: ZegoLiveAudioRoomRoomEvents(
->           onStateChanged: (state) {
->               ...
->           },
->       ),
->   ),
->);
->```
+- **Description**
+  This callback is triggered when user enter.
 
-# ZegoLiveAudioRoomAudioVideoEvents
+- **Prototype**
+  ```dart
+  void Function(ZegoUIKitUser)?
+  ```
 
->
-> events about audio video
+- **Example**
+  ```dart
+  onEnter: (ZegoUIKitUser user) {
+    // Handle user enter
+  }
+  ```
 
-## onMicrophoneStateChanged
+### onLeave
 
->
-> This callback is triggered when microphone state changed
->
->- function prototype:
->``` dart
->void Function(bool)? onMicrophoneStateChanged;
->```
->- example:
->```dart
->ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->       audioVideo: ZegoLiveAudioRoomAudioVideoEvents(
->           onMicrophoneStateChanged: (isOpened) {
->               ...
->           },
->       ),
->   ),
->);
->```
+- **Description**
+  This callback is triggered when user leave.
 
-## onAudioOutputChanged
+- **Prototype**
+  ```dart
+  void Function(ZegoUIKitUser)?
+  ```
 
->
-> This callback is triggered when audio output device changed
->
->- function prototype:
->``` dart
->void Function(ZegoUIKitAudioRoute)? onAudioOutputChanged;
->```
->- example:
->```dart
->ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->       audioVideo: ZegoLiveAudioRoomAudioVideoEvents(
->           onAudioOutputChanged: (audioRoute) {
->               ...
->           },
->       ),
->   ),
->);
->```
+- **Example**
+  ```dart
+  onLeave: (ZegoUIKitUser user) {
+    // Handle user leave
+  }
+  ```
 
-## onMicrophoneTurnOnByOthersConfirmation
+### onCountOrPropertyChanged
 
->
-> This callback method is called when someone requests to open your
-> microphone, typically when the host wants to open your microphone.
->
-> This method requires returning an asynchronous result.
->
-> You can display a dialog in this callback to confirm whether to open the
-> microphone.
->
-> Alternatively, you can return `true` without any processing, indicating
-> that when someone requests to open your microphone, it can be directly opened.
->
-> By default, this method does nothing and returns `false`, indicating that
-> others cannot open your microphone.
->
-> Example：
->
-> ```dart
->
->  // eg:
-> ..onMicrophoneTurnOnByOthersConfirmation =
->     (BuildContext context) async {
->   const textStyle = TextStyle(
->     fontSize: 10,
->     color: Colors.white70,
->   );
->
->   return await showDialog(
->     context: context,
->     barrierDismissible: false,
->     builder: (BuildContext context) {
->       return AlertDialog(
->         backgroundColor: Colors.blue[900]!.withValues(alpha: 0.9),
->         title: const Text(
->           'You have a request to turn on your microphone',
->           style: textStyle,
->         ),
->         content: const Text(
->           'Do you agree to turn on the microphone?',
->           style: textStyle,
->         ),
->         actions: [
->           ElevatedButton(
->             child: const Text('Cancel', style: textStyle),
->             onPressed: () => Navigator.of(context).pop(false),
->           ),
->           ElevatedButton(
->             child: const Text('OK', style: textStyle),
->             onPressed: () {
->               Navigator.of(context).pop(true);
->             },
->           ),
->         ],
->       );
->     },
->   );
-> },
-> ```
->
->- function prototype:
->```dart
->Future<bool> Function(BuildContext context)? onMicrophoneTurnOnByOthersConfirmation
->```
->- example:
->```dart
-> ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->     audioVideo: ZegoLiveAudioRoomAudioVideoEvents(
->       onMicrophoneTurnOnByOthersConfirmation: (
->         context,
->       ) {
->       },
->     ),
->   ),
->   ...
-> );
->```
+- **Description**
+  This callback method is triggered when the user count or attributes related to these users change.
 
-# ZegoLiveAudioRoomMemberListEvents
+- **Prototype**
+  ```dart
+  void Function(List<ZegoUIKitUser> users)?
+  ```
 
-## onClicked
+- **Example**
+  ```dart
+  onCountOrPropertyChanged: (List<ZegoUIKitUser> users) {
+    // Handle user count or property changes
+  }
+  ```
 
->
-> Local message sending callback, This callback method is called when a message is sent successfully or fails to send.
->
->- function prototype:
->```dart
->void Function(ZegoUIKitUser user)? onClicked
->```
->- example:
->```dart
-> ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->     memberList: ZegoLiveAudioRoomMemberListEvents(
->       onClicked: (ZegoUIKitUser) {
->
->       },
->     ),
->   ),
->   ...
-> );
->```
+## ZegoLiveAudioRoomRoomEvents
 
-## onMoreButtonPressed
+- **Description**
+  Events about room.
 
->
-> Callback method when the "More" button on the row corresponding to `user`
-in the member list is pressed.
-> If you want to perform additional operations when the "More" button on the
-member list is clicked, such as viewing the profile of `user`.
->
-> Note that when you set this callback, the **default behavior** of popping
-up a menu when clicking the "More" button on the member list will be **overridden**, and you need to handle it yourself.
-> You can refer to the usage of `ZegoUIKitPrebuiltLiveAudioRoomController`.
->
->- function prototype:
->```dart
->void Function(ZegoUIKitUser user)? onMoreButtonPressed
->```
->- example:
->```dart
-> ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->     memberList: ZegoLiveAudioRoomMemberListEvents(
->       onMoreButtonPressed: (ZegoUIKitUser) {
->
->       },
->     ),
->   ),
->   ...
-> );
->```
+- **Properties**
 
-# ZegoLiveAudioRoomInRoomMessageEvents
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **onStateChanged** | Triggered when room state changed. | `void Function(ZegoUIKitRoomState)?` | `null` |
+| **onTokenExpired** | The room Token authentication is about to expire. | `String? Function(int remainSeconds)?` | `null` |
 
-## onClicked
+### onStateChanged
 
->
-> Triggered when has click on the message item
->
->- function prototype:
->```dart
->void Function(ZegoInRoomMessage message) onClicked
->```
->- example:
->```dart
-> ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->     inRoomMessage: ZegoLiveAudioRoomInRoomMessageEvents(
->       onClicked: (ZegoInRoomMessage) {
->
->       },
->     ),
->   ),
->   ...
-> );
->```
+- **Description**
+  Triggered when room state changed.
 
-## onLongPress
+- **Prototype**
+  ```dart
+  void Function(ZegoUIKitRoomState)?
+  ```
 
->
-> Triggered when a pointer has remained in contact with the message item at
-> the same location for a long period of time.
->
->- function prototype:
->```dart
->void Function(ZegoInRoomMessage message) onLongPress
->```
->- example:
->```dart
-> ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->     inRoomMessage: ZegoLiveAudioRoomInRoomMessageEvents(
->       onLongPress: (ZegoInRoomMessage) {
->
->       },
->     ),
->   ),
->   ...
-> );
->```
+- **Example**
+  ```dart
+  onStateChanged: (ZegoUIKitRoomState state) {
+    // Handle room state change
+  }
+  ```
 
-# ZegoLiveAudioRoomDurationEvents
+### onTokenExpired
 
-## onUpdate
+- **Description**
+  The room Token authentication is about to expire. It will be sent 30 seconds before the Token expires. After receiving this callback, the Token can be updated through `ZegoUIKitPrebuiltLiveAudioRoomController.room.renewToken`.
 
->
-> Call timing callback function, called every second.
->
-> Example: Set to automatically leave after 5 minutes.
->```dart
-> ..duration.onUpdate = (Duration duration) {
->   if (duration.inSeconds >= 5 * 60) {
->     ZegoUIKitPrebuiltLiveAudioRoomController().leave(context);
->   }
-> }
-> ```
->
->- function prototype:
->```dart
->void Function(Duration)? onUpdate
->```
->- example:
->```dart
-> ZegoUIKitPrebuiltLiveAudioRoom(
->   ...
->   events: ZegoUIKitPrebuiltLiveAudioRoomEvents(
->     duration: ZegoLiveAudioRoomDurationEvents(
->       onUpdate: (Duration) {
->
->       },
->     ),
->   ),
->   ...
-> );
->```
+- **Prototype**
+  ```dart
+  String? Function(int remainSeconds)?
+  ```
+
+- **Example**
+  ```dart
+  onTokenExpired: (int remainSeconds) {
+    // Renew token
+    return 'new_token';
+  }
+  ```
+
+## ZegoLiveAudioRoomAudioVideoEvents
+
+- **Description**
+  Events about audio-video.
+
+- **Properties**
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **onMicrophoneStateChanged** | This callback is triggered when microphone state changed. | `void Function(bool)?` | `null` |
+| **onAudioOutputChanged** | This callback is triggered when audio output device changed. | `void Function(ZegoUIKitAudioRoute)?` | `null` |
+| **onMicrophoneTurnOnByOthersConfirmation** | This callback is called when someone requests to open your microphone. | `Future<bool> Function(BuildContext context)?` | `null` |
+
+### onMicrophoneStateChanged
+
+- **Description**
+  This callback is triggered when microphone state changed.
+
+- **Prototype**
+  ```dart
+  void Function(bool)?
+  ```
+
+- **Example**
+  ```dart
+  onMicrophoneStateChanged: (bool isOpened) {
+    // Handle microphone state change
+  }
+  ```
+
+### onAudioOutputChanged
+
+- **Description**
+  This callback is triggered when audio output device changed.
+
+- **Prototype**
+  ```dart
+  void Function(ZegoUIKitAudioRoute)?
+  ```
+
+- **Example**
+  ```dart
+  onAudioOutputChanged: (ZegoUIKitAudioRoute route) {
+    // Handle audio output change
+  }
+  ```
+
+### onMicrophoneTurnOnByOthersConfirmation
+
+- **Description**
+  This callback method is called when someone requests to open your microphone, typically when the host wants to open the speaker's microphone. This method requires returning an asynchronous result. You can display a dialog in this callback to confirm whether to open the microphone.
+
+- **Prototype**
+  ```dart
+  Future<bool> Function(BuildContext context)?
+  ```
+
+- **Example**
+  ```dart
+  onMicrophoneTurnOnByOthersConfirmation: (BuildContext context) async {
+    const textStyle = TextStyle(
+      fontSize: 10,
+      color: Colors.white70,
+    );
+
+    return await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.blue[900]!.withValues(alpha: 0.9),
+          title: const Text(
+            'You have a request to turn on your microphone',
+            style: textStyle,
+          ),
+          content: const Text(
+            'Do you agree to turn on the microphone?',
+            style: textStyle,
+          ),
+          actions: [
+            ElevatedButton(
+              child: const Text('Cancel', style: textStyle),
+              onPressed: () => Navigator.of(context).pop(false),
+            ),
+            ElevatedButton(
+              child: const Text('OK', style: textStyle),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  ```
+
+## ZegoLiveAudioRoomInRoomMessageEvents
+
+- **Description**
+  Events about in-room message.
+
+- **Properties**
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **onClicked** | Triggered when has click on the message item. | `ZegoInRoomMessageViewItemPressEvent?` | `null` |
+| **onLongPress** | Triggered when a pointer has remained in contact with the message item at the same location for a long period of time. | `ZegoInRoomMessageViewItemPressEvent?` | `null` |
+
+### onClicked
+
+- **Description**
+  Triggered when has click on the message item.
+
+- **Prototype**
+  ```dart
+  ZegoInRoomMessageViewItemPressEvent?
+  ```
+
+- **Example**
+  ```dart
+  onClicked: (ZegoInRoomMessageViewItemPressEvent event) {
+    // Handle message click
+  }
+  ```
+
+### onLongPress
+
+- **Description**
+  Triggered when a pointer has remained in contact with the message item at the same location for a long period of time.
+
+- **Prototype**
+  ```dart
+  ZegoInRoomMessageViewItemPressEvent?
+  ```
+
+- **Example**
+  ```dart
+  onLongPress: (ZegoInRoomMessageViewItemPressEvent event) {
+    // Handle message long press
+  }
+  ```
+
+## ZegoLiveAudioRoomMemberListEvents
+
+- **Description**
+  Events about member list.
+
+- **Properties**
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **onClicked** | You can listen to the user click event on the member list. | `void Function(ZegoUIKitUser user)?` | `null` |
+| **onMoreButtonPressed** | Callback when the "More" button on the member list is pressed. | `void Function(ZegoUIKitUser user)?` | `null` |
+
+### onClicked
+
+- **Description**
+  You can listen to the user click event on the member list, for example, if you want to display specific information about a member after they are clicked.
+
+- **Prototype**
+  ```dart
+  void Function(ZegoUIKitUser user)?
+  ```
+
+- **Example**
+  ```dart
+  onClicked: (ZegoUIKitUser user) {
+    // Handle member list click
+  }
+  ```
+
+### onMoreButtonPressed
+
+- **Description**
+  Callback method when the "More" button on the row corresponding to `user` in the member list is pressed. If you want to perform additional operations when the "More" button on the member list is clicked. Note that when you set this callback, the default behavior of popping up a menu will be overridden.
+
+- **Prototype**
+  ```dart
+  void Function(ZegoUIKitUser user)?
+  ```
+
+- **Example**
+  ```dart
+  onMoreButtonPressed: (ZegoUIKitUser user) {
+    // Handle more button press
+  }
+  ```
+
+## ZegoLiveAudioRoomDurationEvents
+
+- **Description**
+  Events about duration.
+
+- **Properties**
+
+| Name | Description | Type | Default Value |
+| :--- | :--- | :--- | :--- |
+| **onUpdated** | Call timing callback function, called every second. | `void Function(Duration)?` | `null` |
+
+### onUpdated
+
+- **Description**
+  Call timing callback function, called every second.
+
+- **Prototype**
+  ```dart
+  void Function(Duration)?
+  ```
+
+- **Example**
+  ```dart
+  // Example: Do something after 5 minutes.
+  onUpdated: (Duration duration) {
+    if (duration.inSeconds >= 5 * 60) {
+      ///  Do something...
+    }
+  }
+  ```
+
+## ZegoUIKitMediaPlayerEvent
+
+- **Description**
+  Events about media player.
+
+### onPlayStateChanged
+
+- **Description**
+  Play state callback.
+
+- **Prototype**
+  ```dart
+  void Function(ZegoUIKitMediaPlayState)?
+  ```
+
+- **Example**
+  ```dart
+  onPlayStateChanged: (ZegoUIKitMediaPlayState state) {
+    // Handle play state change
+  }
+  ```
+
+## onLeaveConfirmation
+
+- **Description**
+  Confirmation callback method before leaving the audio chat room. If you want to perform more complex business logic before exiting the audio chat room, such as updating some records to the backend, you can use this parameter. This parameter requires you to provide a callback method that returns an asynchronous result. If you return true in the callback, the prebuilt page will quit and return to your previous page, otherwise it will be ignored.
+
+- **Prototype**
+  ```dart
+  Future<bool> Function(
+    ZegoLiveAudioRoomLeaveConfirmationEvent event,
+    Future<bool> Function() defaultAction,
+  )?
+  ```
+
+- **Example**
+  ```dart
+  onLeaveConfirmation: (
+      ZegoLiveAudioRoomLeaveConfirmationEvent event,
+      /// defaultAction to return to the previous page
+      Future<bool> Function() defaultAction,
+  ) {
+    debugPrint('onLeaveConfirmation, do whatever you want');
+
+    /// you can call this defaultAction to return to the previous page,
+    return defaultAction.call();
+  }
+  ```
+
+## onEnded
+
+- **Description**
+  This callback method is called when live audio room ended. The default behavior of host is return to the previous page (only host) or hide the minimize page. If you override this callback, you must perform the page navigation yourself while it was in a normal state, or hide the minimize page if in minimize state. The easy way is call `defaultAction.call()`.
+
+- **Prototype**
+  ```dart
+  void Function(
+    ZegoLiveAudioRoomEndEvent event,
+    VoidCallback defaultAction,
+  )?
+  ```
+
+- **Example**
+  ```dart
+  onEnded: (
+      ZegoLiveAudioRoomEndEvent event,
+      /// defaultAction to return to the previous page
+      VoidCallback defaultAction,
+  ) {
+    debugPrint('onEnded, do whatever you want');
+
+    /// you can call this defaultAction to return to the previous page,
+    defaultAction.call();
+  }
+  ```
+
+## onError
+
+- **Description**
+  Error stream.
+
+- **Prototype**
+  ```dart
+  Function(ZegoUIKitError)?
+  ```
+
+- **Example**
+  ```dart
+  onError: (ZegoUIKitError error) {
+    debugPrint('onError: $error');
+  }
+  ```
