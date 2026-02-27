@@ -1,20 +1,26 @@
 part of 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 
-/// @nodoc
+/// Mixin for user-related functionality.
+///
+/// This mixin provides access to the user controller.
 mixin ZegoLiveAudioRoomControllerUser {
   final _userImpl = ZegoLiveAudioRoomControllerUserImpl();
 
+  /// Gets the user controller instance.
   ZegoLiveAudioRoomControllerUserImpl get user => _userImpl;
 }
 
-/// Here are the APIs related to screen sharing.
+/// Controller for user operations.
+///
+/// This class provides APIs for managing users in the audio room.
 class ZegoLiveAudioRoomControllerUserImpl
     with ZegoLiveAudioRoomControllerUserPrivate {
-  /// remove user from live, kick out
+  /// Removes users from the room (kicks them out).
   ///
-  /// @return Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
+  /// [userIDs] - A list of user IDs to remove from the room.
   ///
-  /// @return A `Future` that representing whether the request was successful.
+  /// Returns `true` if successful, `false` otherwise.
+  /// Error codes can be found at: https://docs.zegocloud.com/en/5548.html
   Future<bool> remove(List<String> userIDs) async {
     ZegoLoggerService.logInfo(
       'remove user:$userIDs',

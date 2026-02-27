@@ -25,6 +25,21 @@
 | **events** | Initialize the event for the voice chat room. | `ZegoUIKitPrebuiltLiveAudioRoomEvents?` | `null` |
 | **style** | Style configuration for the live audio room. | `ZegoUIKitPrebuiltLiveAudioRoomStyle?` | `null` |
 
+- **Example**
+
+```dart
+ZegoUIKitPrebuiltLiveAudioRoom(
+  appID: appID,
+  appSign: appSign,
+  userID: userID,
+  userName: userName,
+  roomID: roomID,
+  config: ZegoUIKitPrebuiltLiveAudioRoomConfig(
+    role: ZegoLiveAudioRoomRole.host,
+  ),
+);
+```
+
 ---
 
 ## ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage
@@ -57,6 +72,14 @@
 | **backgroundBuilder** | Background builder for customizing the user view. | `ZegoAudioVideoViewBackgroundBuilder?` | `null` |
 | **avatarBuilder** | Avatar builder for customizing the user avatar. | `ZegoAvatarBuilder?` | `null` |
 
+- **Example**
+
+```dart
+ZegoUIKitPrebuiltLiveAudioRoomMiniOverlayPage(
+  contextQuery: () => MyApp.navigatorKey.currentContext!,
+);
+```
+
 ---
 
 ## ZegoUIKitPrebuiltLiveAudioRoomMiniPopScope
@@ -71,3 +94,12 @@
 | **child** | The widget below this widget in the tree. | `Widget` | |
 | **canPop** | When in the minimizing state, is it allowed back to the desktop or not. | `bool` | |
 | **onPopInvoked** | If you don't want to back to the desktop directly, you can customize the pop logic. | `void Function(bool isMinimizing)?` | `null` |
+
+- **Example**
+
+```dart
+ZegoUIKitPrebuiltLiveAudioRoomMiniPopScope(
+  canPop: false,
+  child: YourApp(),
+);
+```

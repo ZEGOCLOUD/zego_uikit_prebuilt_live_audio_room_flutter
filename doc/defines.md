@@ -232,3 +232,20 @@
     Widget Function(ZegoUIKitUser user, int seatIndex) audioVideoViewCreator,
   );
   ```
+
+- **Helper Methods**
+
+### center()
+
+- **Description**
+  Creates a center-aligned layout builder. This creates a horizontally scrollable container with seats centered in each row.
+
+- **Prototype**
+  ```dart
+  static ZegoLiveAudioRoomAudioVideoContainerBuilder center()
+  ```
+
+- **Example**
+  ```dart
+  ZegoLiveAudioRoomAudioVideoContainerBuilder.center()
+  ```

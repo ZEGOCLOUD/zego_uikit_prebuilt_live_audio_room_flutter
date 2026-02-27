@@ -97,6 +97,9 @@ class ZegoUIKitPrebuiltLiveAudioRoomController
   /// interface's top right corner, and it is also affected by the
   /// [ZegoUIKitPrebuiltLiveAudioRoomEvents.onLeaveConfirmation] and
   /// [ZegoUIKitPrebuiltLiveAudioRoomEvents.onEnded] settings in the config.
+  ///
+  /// [context] - The Flutter context object for navigation.
+  /// [showConfirmation] - Whether to show a confirmation dialog before leaving.
   Future<bool> leave(
     BuildContext context, {
     bool showConfirmation = true,
@@ -133,6 +136,8 @@ class ZegoUIKitPrebuiltLiveAudioRoomController
   }
 
   /// hide some user in member list
+  ///
+  /// [userIDs] - The list of user IDs to hide from the member list.
   void hideInMemberList(List<String> userIDs) {
     ZegoLoggerService.logInfo(
       'hideInMemberList',

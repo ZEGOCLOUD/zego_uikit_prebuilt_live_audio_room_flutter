@@ -46,20 +46,26 @@ class ZegoLiveAudioRoomControllerSeatImpl
       private.seatManager?.isRoomSeatLockedNotifier.value ?? false;
 
   /// get user who on the target seat index
+  ///
+  /// [targetIndex] - The seat index to get the user from.
   ZegoUIKitUser? getUserByIndex(int targetIndex) =>
       private.seatManager?.getUserByIndex(targetIndex);
 
   /// get seat index of target user
+  ///
+  /// [targetUserID] - The user ID to get the seat index for.
   int getSeatIndexByUserID(String targetUserID) =>
       private.seatManager?.getIndexByUserID(targetUserID) ?? -1;
 
   ///  is a host seat index or not
+  ///
+  /// [seatIndex] - The seat index to check.
   bool isAHostSeatIndex(int seatIndex) =>
       private.seatManager?.isAHostSeat(seatIndex) ?? false;
 
   /// get the currently empty seat
   ///
-  /// set [includeHostSeats] to true if [ZegoLiveAudioRoomSeatConfig.hostIndexes] is included, default does not include
+  /// [includeHostSeats] - Set to true if [ZegoLiveAudioRoomSeatConfig.hostIndexes] is included, default does not include.
   List<int> getEmptySeats({
     bool includeHostSeats = false,
   }) {
@@ -72,7 +78,9 @@ class ZegoLiveAudioRoomControllerSeatImpl
   }
 
   /// Is the current seat muted or not.
-  /// Set [isLocally] to true to find out if it is muted locally.
+  ///
+  /// [targetIndex] - The seat index to get mute state for.
+  /// [isLocally] - Set to true to find out if it is muted locally.
   ///
   /// Related APIs:
   /// [muteLocally]
@@ -123,6 +131,9 @@ class ZegoLiveAudioRoomControllerSeatImpl
   /// the callback of [ZegoLiveAudioRoomAudioVideoEvents.onMicrophoneTurnOnByOthersConfirmation]
   /// to open microphone or not.
   ///
+  /// [targetIndex] - The index of the seat to mute/unmute.
+  /// [muted] - Whether to mute the user. Set to true to mute, false to unmute.
+  ///
   /// Related APIs:
   /// [muteStateNotifier]
   /// [muteLocallyByUserID]
@@ -166,6 +177,9 @@ class ZegoLiveAudioRoomControllerSeatImpl
   /// And on side of the user at the [targetIndex] seat, return true/false in
   /// the callback of [ZegoLiveAudioRoomAudioVideoEvents.onMicrophoneTurnOnByOthersConfirmation]
   /// to open microphone or not.
+  ///
+  /// [targetUserID] - The user ID of the speaker to mute/unmute.
+  /// [muted] - Whether to mute the user. Set to true to mute, false to unmute.
   ///
   /// Related APIs:
   /// [muteStateNotifier]
@@ -211,6 +225,8 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
   /// allows you to unlock all seats in the room at once, or only unlock specific seat by [targetIndex].
   ///
   /// After opening(locks) the seat, all audience members can freely choose an empty seat to join and start chatting with others.
+  ///
+  /// [targetIndex] - The index of the seat to unlock. If not specified, all seats will be unlocked.
   Future<bool> open({
     int targetIndex = -1,
   }) async {
@@ -231,6 +247,8 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
   /// allows you to lock all seats in the room at once, or only lock specific seat by [targetIndex].
   ///
   /// After closing(locks) the seat, audience members need to request permission from the host or be invited by the host to occupy the seat.
+  ///
+  /// [targetIndex] - The index of the seat to lock. If not specified, all seats will be locked.
   Future<bool> close({
     int targetIndex = -1,
   }) async {
@@ -248,6 +266,9 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
   }
 
   /// Removes the speaker with the user ID [userID] from the seat.
+  ///
+  /// [userID] - The user ID of the speaker to remove from the seat.
+  /// [showDialogConfirm] - Whether to show a confirmation dialog before removing.
   Future<void> removeSpeaker(
     String userID, {
     bool showDialogConfirm = true,
@@ -266,6 +287,8 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
   }
 
   /// The host accepts the seat request from the audience with the ID [audienceUserID].
+  ///
+  /// [audienceUserID] - The user ID of the audience who requested to take the seat.
   ///
   /// Related APIs:
   /// [rejectTakingRequest]
@@ -307,6 +330,8 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
   }
 
   /// The host rejects the seat request from the audience with the ID [audienceUserID].
+  ///
+  /// [audienceUserID] - The user ID of the audience whose request is being rejected.
   ///
   /// Related APIs:
   /// [acceptTakingRequest]
@@ -350,6 +375,8 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
 
   /// Host invite the audience with id [userID] to take seat
   ///
+  /// [userID] - The user ID of the audience to invite to take a seat.
+  ///
   /// Related APIs:
   /// [ZegoLiveAudioRoomControllerSeatAudienceImpl.acceptTakingInvitation]
   Future<bool> inviteToTake(String userID) async {
@@ -374,6 +401,9 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
   /// And on side of the user at the [targetIndex] seat, return true/false in
   /// the callback of [ZegoLiveAudioRoomAudioVideoEvents.onMicrophoneTurnOnByOthersConfirmation]
   /// to open microphone or not.
+  ///
+  /// [targetIndex] - The index of the seat to mute/unmute.
+  /// [muted] - Whether to mute the user. Set to true to mute, false to unmute.
   ///
   /// Related APIs:
   /// [muteByUserID]
@@ -404,6 +434,9 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
   /// And on side of the user at the [targetIndex] seat, return true/false in
   /// the callback of [ZegoLiveAudioRoomAudioVideoEvents.onMicrophoneTurnOnByOthersConfirmation]
   /// to open microphone or not.
+  ///
+  /// [targetUserID] - The user ID of the speaker to mute/unmute.
+  /// [muted] - Whether to mute the user. Set to true to mute, false to unmute.
   ///
   /// Related APIs:
   /// [mute]
@@ -441,6 +474,10 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
         false;
   }
 
+  /// Make the audience as co-host by assigning them a seat.
+  ///
+  /// [roomID] - The room ID.
+  /// [targetUser] - The user to assign as co-host.
   Future<bool> assignCoHost({
     required String roomID,
     required ZegoUIKitUser targetUser,
@@ -457,6 +494,9 @@ class ZegoLiveAudioRoomControllerSeatHostImpl
 class ZegoLiveAudioRoomControllerSeatAudienceImpl
     with ZegoLiveAudioRoomControllerSeatRolePrivate {
   /// Assigns the audience to the seat with the specified [index], where the index represents the seat number starting from 0.
+  ///
+  /// [index] - The index of the seat to take.
+  /// [isForce] - Whether to force take the seat even if it's locked.
   Future<bool> take(
     int index, {
     bool isForce = false,
@@ -558,6 +598,9 @@ class ZegoLiveAudioRoomControllerSeatAudienceImpl
 
   /// Accept the seat invitation from the host. The [context] parameter represents the Flutter context object.
   ///
+  /// [context] - The Flutter context object for navigation.
+  /// [rootNavigator] - Whether to use the root navigator.
+  ///
   /// Related APIs:
   /// [ZegoLiveAudioRoomControllerSeatHostImpl.inviteToTake]
   Future<bool> acceptTakingInvitation({
@@ -639,7 +682,9 @@ class ZegoLiveAudioRoomControllerSeatAudienceImpl
 /// APIs of speaker
 class ZegoLiveAudioRoomControllerSeatSpeakerImpl
     with ZegoLiveAudioRoomControllerSeatRolePrivate {
-  /// The speaker can use this method to leave the seat. If the showDialog parameter is set to true, a confirmation dialog will be displayed before leaving the seat.
+  /// The speaker can use this method to leave the seat.
+  ///
+  /// [showDialog] - If set to true, a confirmation dialog will be displayed before leaving the seat.
   Future<bool> leave({bool showDialog = true}) async {
     ZegoLoggerService.logInfo(
       'leave, showDialog:$showDialog',

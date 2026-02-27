@@ -1,24 +1,41 @@
 part of 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 
-/// @nodoc
+/// Mixin for minimizing functionality.
+///
+/// This mixin provides access to the minimize controller.
 mixin ZegoLiveAudioRoomControllerMinimizing {
   final _minimizingImpl = ZegoLiveAudioRoomControllerMinimizingImpl();
 
+  /// Gets the minimize controller instance.
   ZegoLiveAudioRoomControllerMinimizingImpl get minimize => _minimizingImpl;
 }
 
-/// Here are the APIs related to minimizing.
+/// Controller for minimizing operations.
+///
+/// This class provides APIs for minimizing and restoring the audio room.
 class ZegoLiveAudioRoomControllerMinimizingImpl
     with ZegoLiveAudioRoomControllerMinimizingPrivate {
-  /// current minimize state
+  /// Gets the current minimize state.
   ZegoLiveAudioRoomMiniOverlayPageState get state =>
       ZegoLiveAudioRoomInternalMiniOverlayMachine().state();
 
-  /// is it currently in the minimized state or not
+  /// Checks if the audio room is currently minimized.
+  ///
+  /// Returns `true` if minimized, `false` otherwise.
   bool get isMinimizing => isMinimizingNotifier.value;
+
+  /// Gets the notifier for the minimizing state.
+  ///
+  /// Use this to listen to minimize state changes.
   ValueNotifier<bool> get isMinimizingNotifier => _private.isMinimizingNotifier;
 
-  /// restore the [ZegoUIKitPrebuiltLiveAudioRoom] from minimize
+  /// Restores the audio room from minimized state to full screen.
+  ///
+  /// [context] - The build context for navigation.
+  /// [rootNavigator] - Whether to use the root navigator. Default is true.
+  /// [withSafeArea] - Whether to wrap the page in a SafeArea. Default is false.
+  ///
+  /// Returns `true` if restoration was successful, `false` otherwise.
   bool restore(
     BuildContext context, {
     bool rootNavigator = true,
@@ -92,7 +109,12 @@ class ZegoLiveAudioRoomControllerMinimizingImpl
     return true;
   }
 
-  /// minimize the [ZegoUIKitPrebuiltLiveAudioRoom]
+  /// Minimizes the audio room to a small floating window.
+  ///
+  /// [context] - The build context for navigation.
+  /// [rootNavigator] - Whether to use the root navigator. Default is true.
+  ///
+  /// Returns `true` if minimization was successful, `false` otherwise.
   bool minimize(
     BuildContext context, {
     bool rootNavigator = true,
@@ -139,7 +161,9 @@ class ZegoLiveAudioRoomControllerMinimizingImpl
     return true;
   }
 
-  /// if audio room ended in minimizing state, not need to navigate, just hide the minimize widget.
+  /// Hides the minimized widget without navigating.
+  ///
+  /// Use this when the audio room ends while in minimized state.
   void hide() {
     ZegoLoggerService.logInfo(
       'hide, ',

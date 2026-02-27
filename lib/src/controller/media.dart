@@ -1,53 +1,77 @@
 part of 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 
-/// @nodoc
+/// Mixin for media player functionality.
+///
+/// This mixin provides access to the media player controller.
 mixin ZegoLiveAudioRoomControllerMedia {
   final ZegoLiveAudioRoomControllerMediaImpl _mediaController =
       ZegoLiveAudioRoomControllerMediaImpl();
 
+  /// Gets the media player controller instance.
   ZegoLiveAudioRoomControllerMediaImpl get media => _mediaController;
 }
 
-/// media series API
+/// Controller for media player operations.
+///
+/// This class provides APIs for controlling media playback in the audio room.
 class ZegoLiveAudioRoomControllerMediaImpl
     with ZegoLiveAudioRoomControllerMediaPrivate {
+  /// Gets the default media player configuration.
   ZegoLiveAudioRoomControllerMediaDefaultPlayer get defaultPlayer =>
       private.defaultPlayer;
 
-  /// volume of current media
+  /// Gets the current volume of the media player.
+  ///
+  /// Returns a value from 0 to 100.
   int get volume => ZegoUIKit().getMediaVolume();
 
-  /// the total progress(millisecond) of current media resources
+  /// Gets the total duration of the current media.
+  ///
+  /// Returns the duration in milliseconds.
   int get totalDuration => ZegoUIKit().getMediaTotalDuration();
 
-  /// current playing progress of current media
+  /// Gets the current playback progress of the media.
+  ///
+  /// Returns the current position in milliseconds.
   int get currentProgress => ZegoUIKit().getMediaCurrentProgress();
 
-  /// media type  of current media
+  /// Gets the current media type.
   ZegoUIKitMediaType get type => ZegoUIKit().getMediaType();
 
-  /// volume notifier of current media
+  /// Gets the volume notifier of the media player.
+  ///
+  /// Use this to listen to volume changes.
   ValueNotifier<int> get volumeNotifier => ZegoUIKit().getMediaVolumeNotifier();
 
-  /// current progress notifier of current media
+  /// Gets the current progress notifier of the media player.
+  ///
+  /// Use this to listen to playback progress changes.
   ValueNotifier<int> get currentProgressNotifier =>
       ZegoUIKit().getMediaCurrentProgressNotifier();
 
-  /// play state notifier of current media
+  /// Gets the play state notifier of the media player.
+  ///
+  /// Use this to listen to play state changes (playing, paused, stopped).
   ValueNotifier<ZegoUIKitMediaPlayState> get playStateNotifier =>
       ZegoUIKit().getMediaPlayStateNotifier();
 
-  /// type notifier of current media
+  /// Gets the media type notifier.
+  ///
+  /// Use this to listen to media type changes.
   ValueNotifier<ZegoUIKitMediaType> get typeNotifier =>
       ZegoUIKit().getMediaTypeNotifier();
 
-  /// mute state notifier of current media
+  /// Gets the mute state notifier of the media player.
   ValueNotifier<bool> get muteNotifier => ZegoUIKit().getMediaMuteNotifier();
 
-  /// info of current media
+  /// Gets the info of the current media.
   ZegoUIKitMediaInfo get info => ZegoUIKit().getMediaInfo();
 
-  /// start play current media
+  /// Starts playing the specified media file.
+  ///
+  /// [filePathOrURL] - The file path or URL of the media to play.
+  /// [enableRepeat] - Whether to repeat playback. Default is false.
+  /// [autoStart] - Whether to start playing immediately. Default is true.
   Future<ZegoUIKitMediaPlayResult> play({
     required String filePathOrURL,
     bool enableRepeat = false,
@@ -68,7 +92,7 @@ class ZegoLiveAudioRoomControllerMediaImpl
     );
   }
 
-  /// stop play current media
+  /// Stops playing the current media.
   Future<void> stop() async {
     ZegoLoggerService.logInfo(
       'stop, ',
@@ -79,7 +103,7 @@ class ZegoLiveAudioRoomControllerMediaImpl
     return ZegoUIKit().stopMedia();
   }
 
-  /// destroy current media
+  /// Destroys the media player and releases resources.
   Future<void> destroy() async {
     ZegoLoggerService.logInfo(
       'destroy, ',
@@ -90,7 +114,7 @@ class ZegoLiveAudioRoomControllerMediaImpl
     return ZegoUIKit().destroyMedia();
   }
 
-  /// pause current media
+  /// Pauses the current media playback.
   Future<void> pause() async {
     ZegoLoggerService.logInfo(
       'pause, ',
@@ -101,7 +125,7 @@ class ZegoLiveAudioRoomControllerMediaImpl
     return ZegoUIKit().pauseMedia();
   }
 
-  /// resume current media
+  /// Resumes the paused media playback.
   Future<void> resume() async {
     ZegoLoggerService.logInfo(
       'resume, ',
@@ -112,8 +136,9 @@ class ZegoLiveAudioRoomControllerMediaImpl
     return ZegoUIKit().resumeMedia();
   }
 
-  /// set the current media playback progress
-  /// - [millisecond] Point in time of specified playback progress
+  /// Seeks to the specified position in the media.
+  ///
+  /// [millisecond] - The position to seek to, in milliseconds.
   Future<ZegoUIKitMediaSeekToResult> seekTo(int millisecond) async {
     ZegoLoggerService.logInfo(
       'seekTo, '
@@ -125,13 +150,12 @@ class ZegoLiveAudioRoomControllerMediaImpl
     return ZegoUIKit().seekTo(millisecond);
   }
 
-  /// Set media player volume. Both the local play volume and the publish volume are set.
+  /// Sets the media player volume.
   ///
-  /// set [isSyncToRemote] to be true if you want to sync both the local play volume
-  /// and the publish volume, if [isSyncToRemote] is false, that will only adjust the
-  /// local play volume.
+  /// This sets both the local play volume and the publish volume.
   ///
-  /// - [volume] The range is 0 ~ 100. The default is 30.
+  /// [volume] - The volume level from 0 to 100. Default is 30.
+  /// [isSyncToRemote] - If true, syncs both local play and publish volume. If false, only adjusts local play volume. Default is false.
   Future<void> setVolume(
     int volume, {
     bool isSyncToRemote = false,
@@ -150,7 +174,9 @@ class ZegoLiveAudioRoomControllerMediaImpl
     );
   }
 
-  /// mute current media
+  /// Mutes or unmutes the media player locally.
+  ///
+  /// [mute] - If true, mutes the media; if false, unmutes it.
   Future<void> muteLocal(bool mute) async {
     ZegoLoggerService.logInfo(
       'muteLocal, '
@@ -162,7 +188,9 @@ class ZegoLiveAudioRoomControllerMediaImpl
     return ZegoUIKit().muteMediaLocal(mute);
   }
 
-  /// pick pure audio media file
+  /// Opens the file picker to select a pure audio file.
+  ///
+  /// Returns a list of selected audio files.
   Future<List<ZegoUIKitPlatformFile>> pickPureAudioFile() async {
     ZegoLoggerService.logInfo(
       'pickPureAudioFile, ',
@@ -173,7 +201,9 @@ class ZegoLiveAudioRoomControllerMediaImpl
     return ZegoUIKit().pickPureAudioMediaFile();
   }
 
-  /// pick video media file
+  /// Opens the file picker to select a video file.
+  ///
+  /// Returns a list of selected video files.
   Future<List<ZegoUIKitPlatformFile>> pickVideoFile() async {
     ZegoLoggerService.logInfo(
       'pickVideoFile, ',
@@ -184,9 +214,11 @@ class ZegoLiveAudioRoomControllerMediaImpl
     return ZegoUIKit().pickVideoMediaFile();
   }
 
-  /// If you want to specify the allowed formats, you can set them using [allowedExtensions].
-  /// Currently, for video, we support "avi", "flv", "mkv", "mov", "mp4", "mpeg", "webm", "wmv".
-  /// For audio, we support "aac", "midi", "mp3", "ogg", "wav".
+  /// Opens the file picker to select a media file (audio or video).
+  ///
+  /// [allowedExtensions] - If specified, only files with these extensions will be shown.
+  ///   - Supported video formats: "avi", "flv", "mkv", "mov", "mp4", "mpeg", "webm", "wmv"
+  ///   - Supported audio formats: "aac", "midi", "mp3", "ogg", "wav"
   Future<List<ZegoUIKitPlatformFile>> pickFile(
       {List<String>? allowedExtensions}) async {
     ZegoLoggerService.logInfo(

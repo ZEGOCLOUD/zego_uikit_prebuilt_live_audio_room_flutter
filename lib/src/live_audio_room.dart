@@ -58,7 +58,7 @@ class ZegoUIKitPrebuiltLiveAudioRoom extends StatefulWidget {
   /// You can create a project and obtain an appID from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com).
   final int appID;
 
-  /// log in by using [appID] + [appSign].
+  /// log in by using [appID] + `appSign`.
   ///
   /// You can create a project and obtain an appSign from the [ZEGOCLOUD Admin Console](https://console.zegocloud.com).
   ///
@@ -68,9 +68,9 @@ class ZegoUIKitPrebuiltLiveAudioRoom extends StatefulWidget {
   /// log in by using [appID] + [token].
   ///
   /// The token issued by the developer's business server is used to ensure security.
-  /// Please note that if you want to use [appID] + [token] login, do not assign a value to [appSign]
+  /// Please note that if you want to use [appID] + [token] login, do not assign a value to `appSign`
   ///
-  /// For the generation rules, please refer to [Using Token Authentication] (https://doc-zh.zego.im/article/10360), the default is an empty string, that is, no authentication.
+  /// For the generation rules, please refer to `Using Token Authentication` (https://doc-zh.zego.im/article/10360), the default is an empty string, that is, no authentication.
   ///
   /// if appSign is not passed in or if appSign is empty, this parameter must be set for authentication when logging in to a room.
   final String token;

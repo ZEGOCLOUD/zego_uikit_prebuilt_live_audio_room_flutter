@@ -285,7 +285,7 @@ class ZegoLiveAudioRoomRoomEvents {
   /// the room Token authentication is about to expire,
   /// it will be sent 30 seconds before the Token expires.
   ///
-  /// After receiving this callback, the Token can be updated through [ZegoUIKitPrebuiltLiveStreamingController.room.renewToken].
+  /// After receiving this callback, the Token can be updated through `ZegoUIKitPrebuiltLiveAudioRoomController.room.renewToken`.
   /// If there is no update, it will affect the user's next login and publish streaming operation, and will not affect the current operation.
   String? Function(int remainSeconds)? onTokenExpired;
 

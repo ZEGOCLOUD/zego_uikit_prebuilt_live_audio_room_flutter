@@ -1,19 +1,26 @@
 part of 'package:zego_uikit_prebuilt_live_audio_room/src/controller.dart';
 
-/// @nodoc
+/// Mixin for in-room message functionality.
+///
+/// This mixin provides access to the message controller.
 mixin ZegoLiveAudioRoomControllerMessage {
   final _messageImpl = AudioRoomMessageControllerImpl();
 
+  /// Gets the message controller instance.
   AudioRoomMessageControllerImpl get message => _messageImpl;
 }
 
-/// Here are the APIs related to message.
+/// Controller for in-room messaging operations.
+///
+/// This class provides APIs for sending and receiving chat messages in the audio room.
 class AudioRoomMessageControllerImpl {
-  /// sends the chat message
+  /// Sends a chat message to the room.
   ///
-  /// @return Error code, please refer to the error codes document https://docs.zegocloud.com/en/5548.html for details.
+  /// [message] - The message content to send.
+  /// [type] - The type of message. Default is broadcast message.
   ///
-  /// @return A `Future` that representing whether the request was successful.
+  /// Returns `true` if the message was sent successfully, `false` otherwise.
+  /// Error codes can be found at: https://docs.zegocloud.com/en/5548.html
   Future<bool> send(
     String message, {
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
@@ -32,8 +39,9 @@ class AudioRoomMessageControllerImpl {
 
   /// Retrieves a list of chat messages that already exist in the room.
   ///
-  /// @return A `List` of [ZegoInRoomMessage] objects representing the chat messages that
-  /// already exist in the room.
+  /// [type] - The type of messages to retrieve. Default is broadcast message.
+  ///
+  /// Returns a list of [ZegoInRoomMessage] objects.
   List<ZegoInRoomMessage> list({
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
   }) {
@@ -43,41 +51,28 @@ class AudioRoomMessageControllerImpl {
     );
   }
 
-  /// Retrieves a list stream of chat messages that already exist in the room.
-  /// the stream will dynamically update when new chat messages are received,
-  /// and you can use a `StreamBuilder` to listen to it and update the UI in real time.
+  /// Gets a stream of chat messages that dynamically updates when new messages are received.
   ///
-  /// @return A `List` of [ZegoInRoomMessage] objects representing the chat messages that
-  /// already exist in the room.
+  /// [type] - The type of messages to listen for. Default is broadcast message.
+  ///
+  /// You can use a `StreamBuilder` to listen to this stream and update the UI in real time.
   ///
   /// Example:
   ///
   /// ```dart
-  /// ..foreground = Positioned(
-  ///     left: 10,
-  ///     bottom: 50,
-  ///     child: StreamBuilder<List<ZegoInRoomMessage>>(
-  ///       stream: liveController.message.stream(),
-  ///       builder: (context, snapshot) {
-  ///         final messages = snapshot.data ?? <ZegoInRoomMessage>[];
-  ///
-  ///         return Container(
-  ///           width: 200,
-  ///           height: 200,
-  ///           decoration: BoxDecoration(
-  ///             color: Colors.white.withValues(alpha: 0.2),
-  ///           ),
-  ///           child: ListView.builder(
-  ///             itemCount: messages.length,
-  ///             itemBuilder: (context, index) {
-  ///               final message = messages[index];
-  ///               return Text('${message.user.name}: ${message.message}');
-  ///             },
-  ///           ),
-  ///         );
+  /// StreamBuilder<List<ZegoInRoomMessage>>(
+  ///   stream: liveController.message.stream(),
+  ///   builder: (context, snapshot) {
+  ///     final messages = snapshot.data ?? <ZegoInRoomMessage>[];
+  ///     return ListView.builder(
+  ///       itemCount: messages.length,
+  ///       itemBuilder: (context, index) {
+  ///         final message = messages[index];
+  ///         return Text('${message.user.name}: ${message.message}');
   ///       },
-  ///     ),
-  ///   )
+  ///     );
+  ///   },
+  /// )
   /// ```
   Stream<List<ZegoInRoomMessage>> stream({
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
@@ -88,7 +83,12 @@ class AudioRoomMessageControllerImpl {
     );
   }
 
-  /// clear local message and remote message
+  /// Clears chat messages.
+  ///
+  /// [type] - The type of messages to clear. Default is broadcast message.
+  /// [clearRemote] - Whether to clear messages from remote users as well. Default is true.
+  ///
+  /// Returns `true` if the messages were cleared successfully.
   Future<bool> clear({
     ZegoInRoomMessageType type = ZegoInRoomMessageType.broadcastMessage,
     bool clearRemote = true,
