@@ -24,6 +24,10 @@ class ZegoLiveAudioRoomEffectGridItem<T> {
   });
 }
 
+/// Model class for the audio effect grid.
+///
+/// This class holds the title, selected item ID, and list of effect items
+/// for the audio effect selection grid.
 class ZegoLiveAudioRoomEffectGridModel {
   String title;
 
@@ -37,6 +41,10 @@ class ZegoLiveAudioRoomEffectGridModel {
   });
 }
 
+/// Widget that displays a grid of audio effect options.
+///
+/// This widget renders a grid layout for selecting audio effects
+/// like voice changers and reverb effects.
 class ZegoLiveAudioRoomEffectGrid extends StatefulWidget {
   const ZegoLiveAudioRoomEffectGrid({
     super.key,

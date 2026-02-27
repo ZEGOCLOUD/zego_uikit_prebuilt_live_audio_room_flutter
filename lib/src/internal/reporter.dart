@@ -1,6 +1,9 @@
 // Package imports:
 import 'package:zego_uikit/zego_uikit.dart';
 
+/// Internal reporter class for the Live Audio Room.
+///
+/// This class is used to report events and analytics for the Live Audio Room.
 class ZegoAudioRoomReporter {
   static String eventInit = "liveaudioroom/init";
   static String eventUninit = "liveaudioroom/unInit";

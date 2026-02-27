@@ -17,6 +17,10 @@ enum ZegoLiveAudioRoomInvitationType {
   inviteToTakeSeat,
 }
 
+/// Represents an audience member who has requested to take a seat.
+///
+/// This class holds the user information and additional data for an audience
+/// member who has requested to become a speaker in the live audio room.
 class ZegoLiveAudioRoomRequestingTakeSeatListItem {
   const ZegoLiveAudioRoomRequestingTakeSeatListItem({
     required this.user,

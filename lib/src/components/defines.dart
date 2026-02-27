@@ -60,6 +60,10 @@ extension ZegoLiveAudioRoomPopupItemValueExtension
   }
 }
 
+/// Represents a custom popup menu item.
+///
+/// This class is used to define custom menu items that can be displayed
+/// when clicking on a seat in the live audio room.
 class ZegoLiveAudioRoomPopupItem {
   final int index;
   final String text;
