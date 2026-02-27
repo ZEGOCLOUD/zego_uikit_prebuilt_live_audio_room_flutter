@@ -27,3 +27,5 @@ melos*.iml
 android/.gradle/
 local.properties
 ios/Flutter/
+.claude
+.settings

@@ -256,8 +256,9 @@
   ZegoUIKitPrebuiltLiveAudioRoomController().seat.host.removeSpeaker('userID');
   ```
 
-| audienceUserID | . | `String` | `Optional` |  - **Description**
+##### acceptTakingRequest
 
+  - **Description**
 
   The host accepts the seat request from the audience with the ID `audienceUserID`.
 
@@ -282,8 +283,9 @@
   ZegoUIKitPrebuiltLiveAudioRoomController().seat.host.acceptTakingRequest('audienceUserID');
   ```
 
-| audienceUserID | . | `String` | `Optional` |  - **Description**
+##### rejectTakingRequest
 
+  - **Description**
 
   The host rejects the seat request from the audience with the ID `audienceUserID`.
 
@@ -299,7 +301,6 @@
     | Name | Description | Type | Default Value |
     | :--- | :--- | :--- | :--- |
     | audienceUserID | . | `String` | `Optional` |
-    | acceptTakingRequest | /// | `dynamic` | `Optional` |
 
   - **Example**
 
@@ -335,8 +336,9 @@
   ZegoUIKitPrebuiltLiveAudioRoomController().seat.host.inviteToTake('userID');
   ```
 
-| targetIndex | seat, return true/false in | `int` | `-1` |  - **Description**
+##### mute
 
+  - **Description**
 
   Mute the user at the `targetIndex` seat. After mute, if you want to un-mute, you can set `muted` to false. And on side of the user at the `targetIndex` seat, return true/false in the callback of `ZegoLiveAudioRoomAudioVideoEvents.onMicrophoneTurnOnByOthersConfirmation` to open microphone or not.
 
@@ -362,7 +364,9 @@
   ZegoUIKitPrebuiltLiveAudioRoomController().seat.host.mute(targetIndex: 0, muted: true);
   ```
 
-| targetUserID | . | `String` | `Optional` |  - **Description**
+##### muteByUserID
+
+  - **Description**
 
 
   Mute the seat by `targetUserID`. After mute, if you want to un-mute, you can set `muted` to false. And on side of the user at the `targetIndex` seat, return true/false in the callback of `ZegoLiveAudioRoomAudioVideoEvents.onMicrophoneTurnOnByOthersConfirmation` to open microphone or not.
